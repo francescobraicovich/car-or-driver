@@ -66,12 +66,24 @@ First-visit download down 98% (2.53 MB to 0.06 MB). The measured 0.4 s of proces
 
 ## One-time setup
 
-1. **Set the contact details** in `site/js/site-identity.js` (`operatorName`, `contactEmail`). The privacy notice must name a person responsible and a way to reach them; `npm run check:publication` fails until they are set, and the deploy workflow runs it.
-2. **Create a Cloudflare account** (free) and a Pages project named `driver-or-car` (Workers & Pages, create a project with *Direct Upload*, or `npx wrangler pages project create driver-or-car --production-branch=main`).
-3. **Add the credentials to the repository** (Settings, Secrets and variables, Actions): secrets `CLOUDFLARE_API_TOKEN` (an API token with the *Cloudflare Pages: Edit* permission) and `CLOUDFLARE_ACCOUNT_ID`, and the variable `SITE_URL` (the address of the site with a trailing slash, for example `https://driver-or-car.pages.dev/`). The deploy job stays skipped until `SITE_URL` is set.
-4. **Cloudflare settings that must stay off** (the privacy notice depends on them; the full list is in [compliance.md](compliance.md), section 6): Web Analytics, Logpush, Bot Fight Mode, Waiting Room, Email Address Obfuscation and automatic script injection.
-5. Push to `main`. The workflow lints, runs the tests, runs the publication check, builds `dist/` (`node tools/build-pages.mjs`), deploys it, and then runs `node tools/check-live-site.mjs` against the live address, which fails if any response sets a cookie, a policy header is missing, or the page loads anything from another origin.
-6. Open the live site once with the browser's developer tools: *Application* should show no cookies and empty local storage, and *Network* only your own domain.
+1. **Set the contact details** in `site/js/site-identity.js` (`operatorName`, `contactEmail`). The privacy notice must name a person responsible and a way to reach them; `npm run check:publication` fails until they are set, and both deployment routes below run it.
+2. **Create a free Cloudflare account** and connect the repository. There are two routes; the first needs no secrets.
+
+   **Route A: Cloudflare builds from GitHub (simplest).** In the dashboard: *Workers & Pages*, *Create application*, *Pages*, *Connect to Git*, choose this repository (GitHub asks you to authorise Cloudflare for it). Then set:
+
+   - Project name: `driver-or-car` (the site will be at `https://driver-or-car.pages.dev/`)
+   - Production branch: `main`; framework preset: none
+   - Build command: `npm ci && npm run lint && npm test && npm run check:publication && node tools/build-pages.mjs https://driver-or-car.pages.dev/`
+   - Build output directory: `dist`
+   - Environment variable: `NODE_VERSION` = `24`
+
+   Every push to `main` is then tested, checked and published; a failing test or an empty contact address stops the deploy. (This setup has not been run end to end; the first build will show whether the build image needs anything more.)
+
+   **Route B: GitHub Actions and Direct Upload.** `.github/workflows/deploy.yml` does the same with `cloudflare/wrangler-action` ([Cloudflare's CI guide](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/)). Create the Pages project with *Direct Upload*, add the repository secrets `CLOUDFLARE_API_TOKEN` (an API token with the *Cloudflare Pages: Edit* permission) and `CLOUDFLARE_ACCOUNT_ID`, and the repository variable `SITE_URL` (the address with a trailing slash). The deploy job stays skipped until `SITE_URL` is set. Use one route, not both.
+
+3. **Cloudflare settings that must stay off** (the privacy notice depends on them; the full list is in [compliance.md](compliance.md), section 6): Web Analytics, Logpush, Bot Fight Mode, Waiting Room, Email Address Obfuscation and automatic script injection.
+4. **After the first deploy**, run `node tools/check-live-site.mjs https://driver-or-car.pages.dev/` (route B does it automatically). It fails if any response sets a cookie, a policy header is missing, or the page loads anything from another origin. Then open the site once with the browser's developer tools: *Application* should show no cookies and empty local storage, and *Network* only your own domain.
+5. **A custom domain** is optional (see the costs above): in the Pages project, *Custom domains*. Then update the address in the build command or `SITE_URL`, and in the README.
 
 ## Keeping the ratings current
 

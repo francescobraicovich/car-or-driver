@@ -5,6 +5,7 @@
 // trains (heads = null, `onRow` receives every feature row) and builds (heads given, per-weekend diagnostics out).
 import { FormFeatures } from '../forecast/form.js';
 import { scoreHead, selectHeads } from '../forecast/inference.js';
+import { hitScore } from '../math.js';
 import { pairHazard, ssBaseline, ssGap } from './inputs.js';
 
 function accumulator() {
@@ -14,7 +15,7 @@ function add(a, y, p, w) {
   a.weight += w;
   a.loss -= w * Math.log(Math.max(1e-12, y ? p : 1 - p));
   a.brier += w * (y - p) ** 2;
-  a.hits += w * +(p > 0.5 === !!y);
+  a.hits += w * hitScore(p, y);
 }
 const mean = (a, key) => (a.weight ? a[key] / a.weight : NaN);
 

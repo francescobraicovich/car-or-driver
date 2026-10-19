@@ -1,5 +1,7 @@
 // Per-weekend ratings-alone diagnostics, in the shape backtest.js reads: log-loss, Brier and accuracy of a rating system's forecast of
 // the exam's observations, accumulated pair by pair.
+import { hitScore } from '../math.js';
+
 export const logit = (p) => Math.log(Math.min(1 - 1e-12, Math.max(1e-12, p)) / (1 - Math.min(1 - 1e-12, Math.max(1e-12, p))));
 const nll = (z, o) => -Math.log(Math.min(1 - 1e-12, Math.max(1e-12, 1 / (1 + Math.exp(-(o ? z : -z))))));
 
@@ -13,7 +15,7 @@ export function addDiag(a, z, o, w) {
   a.weight += w;
   a.loss += w * nll(z, o);
   a.brier += w * (o - p) ** 2;
-  a.hits += w * +(p > 0.5 === !!o);
+  a.hits += w * hitScore(p, o);
 }
 export function finishDiag(race, qual) {
   const r = (a, key) => (a.weight ? a[key] / a.weight : NaN);

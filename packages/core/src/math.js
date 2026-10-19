@@ -1,6 +1,15 @@
 // Small numeric/array helpers shared by the model and the site.
 export const BASE = 1000; // every rating scale is centred here
 
+/**
+ * How much a forecast p of "the first entry finishes ahead" counts as a correct call when the outcome was `outcome`: 1 or 0, and half when the forecast is
+ * a tie. A tie (two entries with identical ratings, as at the start of the data) is exactly 0.5 in exact arithmetic but 0.5 plus or minus the last bit
+ * on a given machine, so deciding it by `p > 0.5` made the accuracy depend on the CPU.
+ */
+export function hitScore(p, outcome) {
+  return Math.abs(p - 0.5) < 1e-9 ? 0.5 : +(p > 0.5 === !!outcome);
+}
+
 export function clamp(x, a, b) {
   return Math.max(a, Math.min(b, x));
 }
