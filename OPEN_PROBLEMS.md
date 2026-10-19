@@ -11,4 +11,4 @@ What is not solved, in the order the evidence says it matters. The evidence and 
 
 7. **Elo benchmark, in-progress season.** `seasonSize` (`weekends.js`) counts the races *with results* in a season, so the Elo core's early-season learning-rate schedule for the current season changes when races are added (the Elo values of 2026 moved by up to about 1 point when rounds 15–17 arrived; every complete season is unaffected, and so are the state-space ratings, which were verified identical for all earlier weekends). Use the length of the published calendar (all rows of `races.csv` for the year) instead, then refresh the goldens and `research/final-results.json`.
 
-Housekeeping: `tests/golden.json` was regenerated with rounded hashes; if CI disagrees, run `node tests/golden.mjs --update` on Linux with Node 24 and commit the result.
+Housekeeping: `tests/golden.json` holds tolerant digests (exact shape, summarised numbers; see the comment in `tests/golden.mjs`), so it agrees across CPU architectures. The earlier hashes of numbers rounded to 7 digits failed on Linux x64 while passing on Apple silicon.

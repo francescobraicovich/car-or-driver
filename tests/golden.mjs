@@ -21,24 +21,63 @@ import { TUNED_ELO } from '../packages/core/src/presets/tuned-elo.js';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const GOLDEN = fileURLToPath(new URL('./golden.json', import.meta.url));
 
-// Numbers are rounded to 7 significant digits before hashing. The model code is deterministic, but Math.exp/log/pow are not bit-identical across Node/V8
-// versions and platforms, and a difference of one unit in the last place grows through the iterated filters to about 1e-12 relative: far below 7 digits, far above
-// a bit-exact hash. A change to the model moves outputs by much more than that, so the test still catches every behavioural change.
-const round = (_key, v) => (typeof v === 'number' && Number.isFinite(v) ? +v.toPrecision(7) : v);
-// Object keys are sorted before hashing: the order in which a builder happens to create a row's fields is not part of the model (arrays and map entries keep theirs).
-const sorted = (_key, v) =>
-  v && typeof v === 'object' && !Array.isArray(v)
-    ? Object.fromEntries(
-        Object.keys(v)
-          .sort()
-          .map((k) => [k, v[k]]),
-      )
-    : v;
-const hash = (value) =>
-  createHash('sha256')
-    .update(JSON.stringify(value, (k, v) => sorted(k, round(k, v))))
-    .digest('hex')
-    .slice(0, 32);
+// Each output is reduced to a digest that does not change when the last bits of a floating-point number do. The model code is deterministic, but a
+// different CPU architecture or JavaScript engine can differ by a unit in the last place of Math.exp/log/pow or of a fused multiply-add, and that grows
+// through the iterated filters to about 1e-12 relative. Hashing each number rounded to 7 digits looked tolerant but is not: with half a million numbers,
+// a few land on either side of a rounding boundary on another machine (this failed on Linux x64 while passing on Apple silicon). So the digest has two
+// parts. The *shape* is hashed exactly: keys, array and map lengths, strings, booleans and non-finite values, and where numbers sit. The *numbers* are
+// summarised: their count, the sum of their magnitudes and of their squares, and two signed ratios (plain and position-weighted) that expose a sign or
+// ordering change, each kept to 6 digits. A rounding boundary is then crossed with a chance of about 1e-6, not about 5 numbers in a million. A change to
+// the model moves these summaries by far more than 1e-6, so the test still catches every behavioural change (a parameter, an observation weight, an update rule moves almost every rating); a change confined to a few values, each below about 1e-6 of the whole, would not be seen, and `tests/test-model-file.mjs` and the other tests guard the details.
+function digest(value) {
+  const shape = createHash('sha256');
+  let count = 0;
+  let magnitudes = 0;
+  let squares = 0;
+  let signed = 0;
+  let weighted = 0;
+  let weightedMagnitudes = 0;
+  const visit = (v) => {
+    if (typeof v === 'number' && Number.isFinite(v)) {
+      count++;
+      const weight = (count % 9973) + 1;
+      magnitudes += Math.abs(v);
+      squares += v * v;
+      signed += v;
+      weighted += v * weight;
+      weightedMagnitudes += Math.abs(v) * weight;
+      shape.update('n');
+    } else if (v instanceof Map) {
+      shape.update(`M${v.size}`);
+      for (const [key, item] of v) {
+        visit(key);
+        visit(item);
+      }
+    } else if (Array.isArray(v) || ArrayBuffer.isView(v)) {
+      shape.update(`A${v.length}`);
+      for (const item of v) visit(item);
+    } else if (v && typeof v === 'object') {
+      const keys = Object.keys(v).sort(); // the order in which a builder creates a row's fields is not part of the model
+      shape.update(`O${keys.length}`);
+      for (const key of keys) {
+        shape.update(key);
+        visit(v[key]);
+      }
+    } else shape.update(`${typeof v}:${String(v)}`);
+  };
+  visit(value);
+  const ratio = (a, b) => (b === 0 ? 0 : (a / b).toFixed(6));
+  return [
+    shape.digest('hex').slice(0, 16),
+    count,
+    magnitudes.toPrecision(6),
+    squares.toPrecision(6),
+    ratio(signed, magnitudes),
+    weightedMagnitudes.toPrecision(6),
+    ratio(weighted, weightedMagnitudes),
+  ].join(':');
+}
+const hash = digest;
 const entries = (m) => [...m].map(([k, v]) => [k, v]);
 const nested = (m) => entries(m).map(([k, v]) => [k, v instanceof Map ? entries(v) : v]);
 
