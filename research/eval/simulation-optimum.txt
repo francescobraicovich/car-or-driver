@@ -1,0 +1,20 @@
+
+== default world: ratings-alone loss (multiplier fitted on 2002-2007), mean of 4 worlds
+window.pairs      oracle(true levels)  filter(shipped)  filter(before this phase)
+2008-11.all              0.3502           0.3815               0.3862
+2008-11.mates            0.5406           0.5671               0.5736
+2008-11.cars             0.2870           0.3198               0.3239
+2012-15.all              0.3571           0.3829               0.3853
+2012-15.mates            0.5760           0.5947               0.5976
+2012-15.cars             0.2839           0.3121               0.3144
+truth metrics of the shipped filter: rmse driver 16.8, car 33.2, teammate gap 27.7, cross-car gap 58.9, leak vs true car swing 0.165  (optimum 0; a correct filter keeps a floor set by its posterior sd)
+
+== driver-car fit x3: ratings-alone loss (multiplier fitted on 2002-2007), mean of 4 worlds
+window.pairs      oracle(true levels)  filter(shipped)  filter(before this phase)
+2008-11.all              0.3882           0.3770               0.3808
+2008-11.mates            0.5533           0.5250               0.5281
+2008-11.cars             0.3318           0.3265               0.3305
+2012-15.all              0.3845           0.3844               0.3875
+2012-15.mates            0.6024           0.5820               0.5854
+2012-15.cars             0.3101           0.3170               0.3200
+truth metrics of the shipped filter: rmse driver 19.9, car 33.0, teammate gap 34.2, cross-car gap 60.1, leak vs true car swing 0.160  (optimum 0; a correct filter keeps a floor set by its posterior sd)

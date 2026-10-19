@@ -1,0 +1,16 @@
+
+== base  P-windows: fit 0.3862 w2 0.3877 w3 0.3656  mates w2 0.6079 w3 0.6329  D2 0.577
+  2002-11.k5 teammates n  220 loss 0.7061 slope 0.43 (stayers 1.03) | field n  6176 loss 0.3863 slope 0.89
+  2012-15.k5 teammates n  116 loss 0.8140 slope 0.07 (stayers 1.14) | field n  2949 loss 0.3141 slope 0.98
+  2016+.k5  teammates n  250 loss 0.6860 slope 0.49 (stayers 0.98) | field n  5675 loss 0.3670 slope 1.01
+  2002-11.k10 teammates n  399 loss 0.6586 slope 0.61 (stayers 0.97) | field n 11947 loss 0.3663 slope 0.90
+  2012-15.k10 teammates n  222 loss 0.7631 slope 0.21 (stayers 1.17) | field n  5752 loss 0.2944 slope 1.04
+  2016+.k10 teammates n  489 loss 0.7063 slope 0.40 (stayers 0.92) | field n 11174 loss 0.3804 slope 0.94
+
+== final  P-windows: fit 0.3866 w2 0.3846 w3 0.3639  mates w2 0.6075 w3 0.6310  D2 0.452
+  2002-11.k5 teammates n  220 loss 0.6492 slope 0.84 (stayers 1.05) | field n  6176 loss 0.3757 slope 0.92
+  2012-15.k5 teammates n  116 loss 0.7244 slope 0.30 (stayers 1.05) | field n  2949 loss 0.3092 slope 1.02
+  2016+.k5  teammates n  250 loss 0.6442 slope 0.60 (stayers 0.95) | field n  5675 loss 0.3582 slope 1.04
+  2002-11.k10 teammates n  399 loss 0.6424 slope 0.89 (stayers 0.97) | field n 11947 loss 0.3602 slope 0.91
+  2012-15.k10 teammates n  222 loss 0.6956 slope 0.43 (stayers 1.03) | field n  5752 loss 0.2962 slope 1.06
+  2016+.k10 teammates n  489 loss 0.6779 slope 0.48 (stayers 0.90) | field n 11174 loss 0.3809 slope 0.95

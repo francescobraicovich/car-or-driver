@@ -1,0 +1,76 @@
+{
+  "elo-core": {
+    "snaps": "9df9d453cd92d57dd9f198f3c855a271",
+    "exportRows": "ae935d34f05a1ea170e3f05ff57fdba5",
+    "driverHistory": "cfa21960fe8e2827fe18d75a4d103692",
+    "carHistory": "959467591dea18523001ed6f884a1fb4",
+    "counters": [
+      204,
+      2475,
+      476
+    ],
+    "form": null,
+    "ss": null,
+    "params": "efbacb9b59f0e6cb52bfecfb572d40f7",
+    "names": "ad34b5db131761114df929917352d298",
+    "tracks": "d32797eebea4f773abefb075e9988dd3",
+    "forecastState": null,
+    "forecasts": "74234e98afe7498fb5daf1f36ac2d78a"
+  },
+  "elo-full": {
+    "snaps": "b3d7b42b547b1812bd75e6e1c4e53586",
+    "exportRows": "ae935d34f05a1ea170e3f05ff57fdba5",
+    "driverHistory": "cfa21960fe8e2827fe18d75a4d103692",
+    "carHistory": "959467591dea18523001ed6f884a1fb4",
+    "counters": [
+      204,
+      2475,
+      476
+    ],
+    "form": "e644f8ce6336564a6e01c19a1520779d",
+    "ss": null,
+    "params": "4f2efc8ee436c40882d8475a8d95f44b",
+    "names": "ad34b5db131761114df929917352d298",
+    "tracks": "d32797eebea4f773abefb075e9988dd3",
+    "forecastState": "3e1b4e9468fa8de273d0be70bd360c97",
+    "forecasts": "ad0900a162dec5f1c8ea34a9cd51c01a"
+  },
+  "state-space-full": {
+    "snaps": "fd37be75f6d095c4b35ff20a3cab26a2",
+    "exportRows": "77c4a79383d17e833aa7a4d90cbe2281",
+    "driverHistory": "5b034d28b38cae4328b632ac682664a9",
+    "carHistory": "780dfb1fb33e70e20887db646ed3b95f",
+    "counters": [
+      204,
+      2475,
+      476
+    ],
+    "form": "e644f8ce6336564a6e01c19a1520779d",
+    "ss": "a7813f9dc66656c8d305db4faf282dc4",
+    "params": "c67c3b2223984561567e393971588200",
+    "names": "ad34b5db131761114df929917352d298",
+    "tracks": "d32797eebea4f773abefb075e9988dd3",
+    "forecastState": "3e1b4e9468fa8de273d0be70bd360c97",
+    "forecasts": "eaba1e86dbc70ab56f85f4e66a83f004"
+  },
+  "state-space-plain": {
+    "snaps": "cc1e37275570d3a05d595310e1e4ba52",
+    "exportRows": "77c4a79383d17e833aa7a4d90cbe2281",
+    "driverHistory": "58d8b64620acd91f94a44d598bd87b8e",
+    "carHistory": "e70627a2b47e9e11d633d3314efc6e9b",
+    "counters": [
+      204,
+      2475,
+      476
+    ],
+    "form": "e644f8ce6336564a6e01c19a1520779d",
+    "ss": "a7813f9dc66656c8d305db4faf282dc4",
+    "params": "c67c3b2223984561567e393971588200",
+    "names": "ad34b5db131761114df929917352d298",
+    "tracks": "cf8c51a33ac68a21aa50c70111914024",
+    "forecastState": "3e1b4e9468fa8de273d0be70bd360c97",
+    "forecasts": "eaba1e86dbc70ab56f85f4e66a83f004"
+  },
+  "state-space-exam": "d69d2909a13c76d449f1dbe0ee84c9e5",
+  "elo-score-2008-2011": 0.3519974
+}

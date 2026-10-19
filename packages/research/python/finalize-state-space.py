@@ -1,0 +1,148 @@
+"""Refit the shipped head designs on state-space rating inputs (research/state-space/pairs.jsonl) and compare with the Elo heads.
+
+python finalize-state-space.py            fit, score the selection years only (<= 2015), apply research/state-space/ACCEPTANCE.md, write
+                                 research/state-space/heads-candidate.js and research/state-space/selection-report.json
+python finalize-state-space.py --ship     also write packages/core/src/state-space/forecast-heads.js and the inference fixtures (only if accepted)
+python finalize-state-space.py --second-look   additionally score 2016 onward (read last, once, reported as a second look)
+
+Nothing under research/ other than research/state-space/ is written. The Elo heads are never modified: their
+predictions on the same observations are in the rows as elo_post / elo_pre / elo_qual.
+"""
+import importlib.util, json, sys, hashlib
+from pathlib import Path
+import numpy as np
+import pandas as pd
+
+P = Path(__file__).resolve().parent
+ROOT = P.parents[2]
+SS_OUT = ROOT / 'research' / 'state-space'
+
+
+def load(name, file):
+    spec = importlib.util.spec_from_file_location(name, P / file)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+r = load('r', 'heads.py')
+
+SHIP = '--ship' in sys.argv
+SECOND = '--second-look' in sys.argv
+STARTS = [(2008, 2007), (2012, 2011), (2016, 2015)]
+MODES = ['post', 'pre', 'qual', 'grid']
+HEAD_COL = {'post': 'elo_post', 'pre': 'elo_pre', 'qual': 'elo_qual'}
+
+
+def main():
+    selected = json.loads((r.OUT / 'selection.json').read_text())
+    grid = r.GRID_SPEC
+    df = pd.read_json(SS_OUT / 'pairs.jsonl', lines=True)
+    train_pool = df[df.year <= 2015]
+    bundles, heads = {}, {}
+    for start, end in STARTS:
+        bundles[start], heads[start] = {}, {}
+        for mode in MODES:
+            part = train_pool[(train_pool.year <= end) & train_pool.session.eq('qual' if mode == 'qual' else 'race')]
+            spec = grid if mode == 'grid' else selected[mode]['spec']
+            b = r.fit(part, 'post' if mode == 'grid' else mode, spec)
+            bundles[start][mode] = b
+            heads[start][mode] = r.portable(b)
+            print('fit', start, mode, spec['name'], flush=True)
+
+    def score(lo, hi):
+        out = {}
+        for start, _ in STARTS:
+            pass
+        win = df[df.year.between(lo, hi)]
+        res = {}
+        for mode in ['post', 'pre', 'qual']:
+            part = win[win.session.eq('qual' if mode == 'qual' else 'race')]
+            if not len(part):
+                continue
+            new = np.zeros(len(part))
+            for start, _ in STARTS:
+                end_year = {2008: 2011, 2012: 2015, 2016: 2100}[start]
+                mask = part.year.between(start, end_year).to_numpy()
+                if mask.any():
+                    new[mask] = r.predict(bundles[start][mode], part[mask])
+            old = part[HEAD_COL[mode]].to_numpy().astype(float)
+            ok = ~np.isnan(old)
+            sub = part[ok]
+            res[mode] = {
+                'new': r.metrics(sub, new[ok])['loss'],
+                'old': r.metrics(sub, old[ok])['loss'],
+                'weight': float(sub.w.sum()),
+            }
+        return res
+
+    def combined(res, kind):
+        # race-day = post + qual weights, Thursday = pre + qual weights (the site's two combined figures)
+        a = res['post' if kind == 'race' else 'pre']
+        q = res['qual']
+        tot = a['weight'] + q['weight']
+        return {k: (a[k] * a['weight'] + q[k] * q['weight']) / tot for k in ['new', 'old']}
+
+    report = {}
+    for name, lo, hi in [('2008-2011', 2008, 2011), ('2012-2015', 2012, 2015), ('2008-2015', 2008, 2015)]:
+        res = score(lo, hi)
+        report[name] = {'heads': res, 'race_day_combined': combined(res, 'race'), 'thursday_combined': combined(res, 'thu')}
+        print(name, json.dumps({k: {m: round(v, 5) for m, v in report[name][k].items()} for k in ['race_day_combined', 'thursday_combined']}), flush=True)
+        for mode, v in res.items():
+            print('   ', mode, round(v['new'], 5), 'vs shipped', round(v['old'], 5), 'diff', round(v['new'] - v['old'], 5), flush=True)
+
+    # ACCEPTANCE.md
+    pooled = report['2008-2015']
+    d = lambda blk: blk['new'] - blk['old']
+    checks = {
+        'race_day_combined <= +0.001': d(pooled['race_day_combined']) <= 0.001,
+        'thursday_combined <= +0.001': d(pooled['thursday_combined']) <= 0.001,
+        'qualifying head <= +0.001': d(pooled['heads']['qual']) <= 0.001,
+        'no 4-year window worse than +0.002': all(
+            d(report[w][k]) <= 0.002 for w in ['2008-2011', '2012-2015'] for k in ['race_day_combined', 'thursday_combined']
+        ),
+    }
+    report['acceptance'] = checks
+    report['accepted'] = all(checks.values())
+    print('ACCEPTANCE', json.dumps(checks), '->', 'ACCEPTED' if report['accepted'] else 'REJECTED', flush=True)
+
+    text = '// Generated by packages/research/python/finalize-state-space.py. Each key is the first forecast year.\nexport const STATE_SPACE_HEADS = ' + json.dumps(heads, separators=(',', ':')) + ';\n'
+    (SS_OUT / 'heads-candidate.js').write_text(text)
+
+    if SECOND:
+        res = score(2016, 2100)
+        report['second_look_2016plus'] = {'heads': res, 'race_day_combined': combined(res, 'race'), 'thursday_combined': combined(res, 'thu'),
+                                          'note': 'This window was read once before for the ratings; a second look, not independent evidence.'}
+        print('2016+ (second look)', json.dumps({k: {m: round(v, 5) for m, v in report['second_look_2016plus'][k].items()} for k in ['race_day_combined', 'thursday_combined']}))
+        for mode, v in res.items():
+            print('   ', mode, round(v['new'], 5), 'vs shipped', round(v['old'], 5), 'diff', round(v['new'] - v['old'], 5))
+    (SS_OUT / 'selection-report.json').write_text(json.dumps(report, indent=2) + '\n')
+
+    if SHIP:
+        if not report['accepted']:
+            print('Not shipping: acceptance rule failed.')
+            return
+        (ROOT / 'packages/core/src/state-space/forecast-heads.js').write_text(text)
+        fixtures = []
+        for start, end_year in [(2008, 2011), (2012, 2015), (2016, 2100)]:
+            for mode in MODES:
+                mask = df.year.between(start, end_year) & df.session.eq('qual' if mode == 'qual' else 'race')
+                part = df[mask]
+                if not len(part):
+                    continue
+                pp = r.predict(bundles[start][mode], part)
+                rng = np.random.default_rng(start)
+                for ix in rng.choice(len(part), size=min(30, len(part)), replace=False):
+                    row = part.iloc[ix].to_dict()
+                    row = {k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in row.items()}
+                    fixtures.append({'year': start, 'mode': mode, 'features': row, 'expected': float(pp[ix])})
+        (SS_OUT / 'inference-fixtures.json').write_text(json.dumps(fixtures, separators=(',', ':')) + '\n')
+        (SS_OUT / 'frozen-protocol.json').write_text(json.dumps({
+            'designs': 'research/selection.json (unchanged)', 'fit_through': [2007, 2011, 2015],
+            'export_sha256': hashlib.sha256(text.encode()).hexdigest(),
+            'acceptance': 'research/state-space/ACCEPTANCE.md', 'report': 'research/state-space/selection-report.json'}, indent=2) + '\n')
+        print('Shipped packages/core/src/state-space/forecast-heads.js')
+
+
+if __name__ == '__main__':
+    main()

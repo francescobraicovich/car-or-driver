@@ -1,0 +1,202 @@
+
+> f1-elo@9.0.0 evaluate
+> node packages/research/node/evaluate.mjs --compare /tmp/claude-0/-home-user-f1-elo-v2/2ff19f8d-fce4-5b80-8314-429f7a7e94c6/scratchpad/ss-baseline.json /tmp/claude-0/-home-user-f1-elo-v2/2ff19f8d-fce4-5b80-8314-429f7a7e94c6/scratchpad/ss-final.json
+
+metric                                                                                    baseline       final    change  note
+
+## Forecast layer
+Forecast layer (ss inputs), qualifying head, 2008-2011                                       0.349       0.349   -0.0002  
+Forecast layer (ss inputs), qualifying head, 2012-2015                                       0.362       0.362   +0.0003  
+Forecast layer (ss inputs), race-day (race and qualifying combined), 2008-2011               0.337       0.337   +0.0003  
+Forecast layer (ss inputs), race-day (race and qualifying combined), 2012-2015               0.325       0.325   +0.0002  
+Forecast layer (ss inputs), Thursday (combined, no grid), 2008-2011                          0.382       0.382   +0.0003  
+Forecast layer (ss inputs), Thursday (combined, no grid), 2012-2015                          0.359       0.360   +0.0006  worse
+
+## Health (qualifying)
+Next revision on last revision, car (0 = updates unpredictable)                             -0.013      -0.013   -0.0000  
+Next revision on last revision, driver (0 = updates unpredictable)                           0.006       0.006   -0.0000  
+Share of car revisions inside the 90% bar                                                    0.975       0.975   +0.0000  
+Squared standardised 6-race revision, car (1 = bars right)                                   0.665       0.665   -0.0000  
+Share of driver revisions inside the 90% bar                                                 0.904       0.904   +0.0000  
+Squared standardised 6-race revision, driver (1 = bars right)                                1.039       1.039   -0.0000  
+Error bar of a car in a regulation year vs typical (should widen where less is known         1.020       1.020   -0.0000  
+Error bar of a mover vs typical (should widen where less is known)                           1.415       1.415   -0.0000  
+Error bar of a rookie vs typical (should widen where less is known)                          1.264       1.264   +0.0000  
+
+## Health (race)
+Next revision on last revision, car (0 = updates unpredictable)                              0.018       0.066   +0.0479  
+Next revision on last revision, driver (0 = updates unpredictable)                           0.030       0.056   +0.0268  
+Share of car revisions inside the 90% bar                                                    0.352       0.759   +0.4074  up
+Squared standardised 6-race revision, car (1 = bars right)                                  11.080       1.968   -9.1127  down
+Share of driver revisions inside the 90% bar                                                 0.413       0.904   +0.4910  up
+Squared standardised 6-race revision, driver (1 = bars right)                                8.837       1.052   -7.7850  down
+Error bar of a car in a regulation year vs typical (should widen where less is known         1.014       1.006   -0.0076  
+Error bar of a mover vs typical (should widen where less is known)                           1.210       1.162   -0.0483  
+Error bar of a rookie vs typical (should widen where less is known)                          1.908       1.946   +0.0382  
+
+## 1. Movers (qualifying)
+Frozen-rating duel log-loss, 10 races (coin flip 0.693)                                      0.616       0.616   -0.0000  
+Frozen-rating duel log-loss, 5 races (coin flip 0.693)                                       0.619       0.619   -0.0000  
+Frozen-rating duel calibration vs new teammate, first 10 races (movers)                      0.871       0.871   +0.0000  
+Frozen-rating duel calibration vs new teammate, first 5 races (movers)                       0.856       0.856   +0.0000  
+... same forecast for teammates who stayed, 10                                               1.023       1.023   +0.0000  
+... same forecast for teammates who stayed, 5                                                1.064       1.064   +0.0000  
+Mover step on car-strength change, slope, 1 races (0 = no leak)                             -0.014      -0.014   +0.0000  
+Mover step on car-strength change, slope, 10 races (0 = no leak)                            -0.038      -0.038   +0.0000  
+Mover step on car-strength change, slope, 3 races (0 = no leak)                             -0.028      -0.028   +0.0000  
+Mover step on car-strength change, slope, 5 races (0 = no leak)                             -0.033      -0.033   +0.0000  
+Online forecast of the same duels, 10 races                                                  0.582       0.582   -0.0000  
+Online forecast of the same duels, 5 races                                                   0.575       0.575   -0.0000  
+Mover rating step after 1 races, mean (points)                                               0.422       0.422   +0.0000  
+Mover step after 1 races, size vs stable drivers                                             4.399       4.399   +0.0000  
+Mover rating step after 10 races, mean (points)                                              1.310       1.310   +0.0000  
+Mover step after 10 races, size vs stable drivers                                            2.509       2.509   +0.0000  
+Mover rating step after 3 races, mean (points)                                               0.013       0.013   +0.0000  
+Mover step after 3 races, size vs stable drivers                                             3.503       3.503   +0.0000  
+Mover rating step after 5 races, mean (points)                                              -0.376      -0.376   +0.0000  
+Mover step after 5 races, size vs stable drivers                                             2.904       2.904   +0.0000  
+
+## 1. Movers (race)
+Frozen-rating duel log-loss, 10 races (coin flip 0.693)                                      0.719       0.714   -0.0041  better
+Frozen-rating duel log-loss, 5 races (coin flip 0.693)                                       0.730       0.726   -0.0042  better
+Frozen-rating duel calibration vs new teammate, first 10 races (movers)                      0.369       0.408   +0.0387  
+Frozen-rating duel calibration vs new teammate, first 5 races (movers)                       0.346       0.383   +0.0372  
+... same forecast for teammates who stayed, 10                                               0.999       1.060   +0.0613  
+... same forecast for teammates who stayed, 5                                                1.044       1.109   +0.0647  
+Mover step on car-strength change, slope, 1 races (0 = no leak)                             -0.009      -0.005   +0.0045  
+Mover step on car-strength change, slope, 10 races (0 = no leak)                             0.045       0.041   -0.0046  
+Mover step on car-strength change, slope, 3 races (0 = no leak)                              0.009       0.008   -0.0015  
+Mover step on car-strength change, slope, 5 races (0 = no leak)                             -0.002      -0.008   -0.0066  
+Online forecast of the same duels, 10 races                                                  0.633       0.633   +0.0005  
+Online forecast of the same duels, 5 races                                                   0.631       0.635   +0.0035  worse
+Mover rating step after 1 races, mean (points)                                               0.133       0.233   +0.1001  
+Mover step after 1 races, size vs stable drivers                                             2.843       2.559   -0.2845  
+Mover rating step after 10 races, mean (points)                                              1.317       1.071   -0.2461  
+Mover step after 10 races, size vs stable drivers                                            1.778       1.888   +0.1100  
+Mover rating step after 3 races, mean (points)                                              -0.767      -0.246   +0.5210  
+Mover step after 3 races, size vs stable drivers                                             2.374       2.366   -0.0079  
+Mover rating step after 5 races, mean (points)                                              -2.020      -1.466   +0.5545  
+Mover step after 5 races, size vs stable drivers                                             1.983       1.955   -0.0275  
+
+## Predictive
+Calibration slope, qualifying, all                                                           1.009       1.009   +0.0000  
+Calibration slope, qualifying, cars                                                          1.008       1.008   +0.0000  
+Calibration slope, qualifying, highVariance                                                  1.011       1.011   +0.0000  
+Calibration slope, qualifying, mates                                                         1.014       1.014   +0.0000  
+Calibration slope, race, all                                                                 1.005       0.991   -0.0137  
+Calibration slope, race, cars                                                                1.019       1.003   -0.0162  
+Calibration slope, race, highVariance                                                        0.977       0.999   +0.0219  
+Calibration slope, race, mates                                                               0.920       0.920   -0.0002  
+Expected calibration error, qualifying                                                       0.009       0.009   +0.0000  
+Expected calibration error, race                                                             0.009       0.007   -0.0022  better
+Log-loss, combined, all pairs, 2002-2007                                                     0.386       0.386   -0.0005  better
+Log-loss, combined, all pairs, 2008-2011                                                     0.388       0.388   -0.0001  
+Log-loss, combined, all pairs, 2012-2015                                                     0.366       0.366   +0.0003  
+Log-loss, combined, cars pairs, 2002-2007                                                    0.312       0.311   -0.0005  better
+Log-loss, combined, cars pairs, 2008-2011                                                    0.318       0.318   +0.0004  
+Log-loss, combined, cars pairs, 2012-2015                                                    0.286       0.287   +0.0003  
+Log-loss, combined, mates pairs, 2002-2007                                                   0.603       0.603   -0.0006  better
+Log-loss, combined, mates pairs, 2008-2011                                                   0.608       0.606   -0.0019  better
+Log-loss, combined, mates pairs, 2012-2015                                                   0.633       0.633   +0.0005  
+Log-loss, qual, all pairs, 2002-2007                                                         0.404       0.404   +0.0000  
+Log-loss, qual, all pairs, 2008-2011                                                         0.354       0.354   +0.0000  
+Log-loss, qual, all pairs, 2012-2015                                                         0.365       0.365   -0.0000  
+Log-loss, qual, cars pairs, 2002-2007                                                        0.329       0.329   +0.0000  
+Log-loss, qual, cars pairs, 2008-2011                                                        0.285       0.285   +0.0000  
+Log-loss, qual, cars pairs, 2012-2015                                                        0.285       0.285   -0.0000  
+Log-loss, qual, mates pairs, 2002-2007                                                       0.620       0.620   +0.0000  
+Log-loss, qual, mates pairs, 2008-2011                                                       0.576       0.576   +0.0000  
+Log-loss, qual, mates pairs, 2012-2015                                                       0.622       0.622   -0.0000  
+Log-loss, race, all pairs, 2002-2007                                                         0.384       0.383   -0.0006  better
+Log-loss, race, all pairs, 2008-2011                                                         0.392       0.392   -0.0001  
+Log-loss, race, all pairs, 2012-2015                                                         0.366       0.366   +0.0004  
+Log-loss, race, cars pairs, 2002-2007                                                        0.310       0.309   -0.0006  better
+Log-loss, race, cars pairs, 2008-2011                                                        0.322       0.323   +0.0005  
+Log-loss, race, cars pairs, 2012-2015                                                        0.286       0.287   +0.0004  
+Log-loss, race, mates pairs, 2002-2007                                                       0.601       0.600   -0.0007  better
+Log-loss, race, mates pairs, 2008-2011                                                       0.612       0.610   -0.0021  better
+Log-loss, race, mates pairs, 2012-2015                                                       0.634       0.635   +0.0005  worse
+Log-loss with a walk-forward multiplier, qualifying, 2008-2011                               0.355       0.355   +0.0000  
+Log-loss with a walk-forward multiplier, qualifying, 2012-2015                               0.365       0.365   +0.0000  
+Log-loss with a walk-forward multiplier, race, 2008-2011                                     0.393       0.393   -0.0000  
+Log-loss with a walk-forward multiplier, race, 2012-2015                                     0.366       0.366   +0.0004  
+
+## Rookies (qualifying)
+Rookie duels, first5: mean (outcome - forecast)                                             -0.012      -0.012   -0.0000  
+Rookie duels, next5: mean (outcome - forecast)                                              -0.007      -0.007   -0.0000  
+Rookie rating after 1 races minus after 40 (points; rookies who lasted 40 races)           -43.647     -43.647   -0.0000  
+Rookie rating after 10 races minus after 40 (points; rookies who lasted 40 races)           -6.636      -6.636   -0.0000  
+Rookie rating after 20 races minus after 40 (points; rookies who lasted 40 races)            2.096       2.096   -0.0000  
+Rookie rating after 5 races minus after 40 (points; rookies who lasted 40 races)           -21.773     -21.773   -0.0000  
+Car change on rookie rating change over 5 races, slope                                       0.400       0.400   +0.0000  
+Rookie duels, first5: calibration slope                                                      1.133       1.133   +0.0000  
+Rookie duels, next5: calibration slope                                                       1.057       1.057   +0.0000  
+
+## Rookies (race)
+Rookie duels, first5: mean (outcome - forecast)                                             -0.028      -0.029   -0.0010  
+Rookie duels, next5: mean (outcome - forecast)                                              -0.015      -0.013   +0.0020  
+Rookie rating after 1 races minus after 40 (points; rookies who lasted 40 races)           -15.727     -13.307   +2.4192  
+Rookie rating after 10 races minus after 40 (points; rookies who lasted 40 races)          -13.973     -12.963   +1.0099  
+Rookie rating after 20 races minus after 40 (points; rookies who lasted 40 races)           -6.032      -5.519   +0.5124  
+Rookie rating after 5 races minus after 40 (points; rookies who lasted 40 races)           -16.719     -15.003   +1.7160  
+Car change on rookie rating change over 5 races, slope                                      -0.249      -0.111   +0.1373  
+Rookie duels, first5: calibration slope                                                      1.160       1.219   +0.0592  
+Rookie duels, next5: calibration slope                                                       0.963       0.966   +0.0026  
+
+## 3. Car shocks (qualifying)
+Car rating change, regulation winters vs normal (rms ratio, shows the shock exists)          1.238       1.238   -0.0000  
+Driver rating change, regulation winters vs normal (rms ratio)                               0.900       0.900   -0.0000  
+Teammate gap change on |car change|, slope (0 = gap not shaken by the car)                   0.043       0.043   -0.0000  
+Driver rating change on car rating change, slope: in-season windows                          0.024       0.024   +0.0000  
+Driver rating change on car rating change, slope: winter, a driver joined                   -0.012      -0.012   -0.0000  
+Driver rating change on car rating change, slope: winter, no regulation change               0.016       0.016   +0.0000  
+Driver rating change on car rating change, slope: winter, regulation change                  0.004       0.004   -0.0000  
+Driver rating change on car rating change, slope: winter, lineup unchanged                   0.025       0.025   -0.0000  
+Driver rating change on OBSERVED team performance change, slope: in-season windows           0.014       0.014   -0.0000  
+Driver rating change on OBSERVED team performance change, slope: winter, a driver jo         0.000       0.000   -0.0000  
+Driver rating change on OBSERVED team performance change, slope: winter, no regulati         0.015       0.015   +0.0000  
+Driver rating change on OBSERVED team performance change, slope: winter, regulation          0.005       0.005   -0.0000  
+Driver rating change on OBSERVED team performance change, slope: winter, lineup unch         0.019       0.019   +0.0000  
+
+## 3. Car shocks (race)
+Car rating change, regulation winters vs normal (rms ratio, shows the shock exists)          1.256       1.307   +0.0507  
+Driver rating change, regulation winters vs normal (rms ratio)                               0.968       0.967   -0.0012  
+Teammate gap change on |car change|, slope (0 = gap not shaken by the car)                  -0.012      -0.006   +0.0062  
+Driver rating change on car rating change, slope: in-season windows                          0.113       0.152   +0.0389  
+Driver rating change on car rating change, slope: winter, a driver joined                    0.043       0.035   -0.0087  
+Driver rating change on car rating change, slope: winter, no regulation change               0.059       0.058   -0.0014  
+Driver rating change on car rating change, slope: winter, regulation change                  0.076       0.075   -0.0014  
+Driver rating change on car rating change, slope: winter, lineup unchanged                   0.074       0.078   +0.0034  
+Driver rating change on OBSERVED team performance change, slope: in-season windows           0.033       0.034   +0.0012  
+Driver rating change on OBSERVED team performance change, slope: winter, a driver jo         0.068       0.053   -0.0144  
+Driver rating change on OBSERVED team performance change, slope: winter, no regulati         0.052       0.044   -0.0083  
+Driver rating change on OBSERVED team performance change, slope: winter, regulation          0.057       0.047   -0.0097  
+Driver rating change on OBSERVED team performance change, slope: winter, lineup unch         0.046       0.040   -0.0059  
+
+## 2. Teammates of movers (qualifying)
+Share of the pair's gap revision that lands on the car                                       0.386       0.386   +0.0000  
+Share of the pair's gap revision that lands on the mate (mover - mate = 1)                  -0.268      -0.268   +0.0000  
+Share of the pair's gap revision that lands on the mover (mover - mate = 1)                  0.732       0.732   +0.0000  
+Stayer's step on (incoming - replaced) strength, slope, 10 races                             0.036       0.036   +0.0000  
+Stayer's step on (incoming - replaced) strength, slope, 3 races                             -0.021      -0.021   +0.0000  
+Stayer's step on (incoming - replaced) strength, slope, 5 races                              0.015       0.015   +0.0000  
+Stayer's rating step after 10 races with a new teammate, mean (points)                       2.743       2.743   -0.0000  
+Stayer's step after 10 races, size vs stable drivers                                         1.468       1.468   +0.0000  
+Stayer's rating step after 3 races with a new teammate, mean (points)                        1.183       1.183   -0.0000  
+Stayer's step after 3 races, size vs stable drivers                                          1.946       1.946   +0.0000  
+Stayer's rating step after 5 races with a new teammate, mean (points)                        1.618       1.618   -0.0000  
+Stayer's step after 5 races, size vs stable drivers                                          1.409       1.409   -0.0000  
+
+## 2. Teammates of movers (race)
+Share of the pair's gap revision that lands on the car                                       0.158       0.292   +0.1339  
+Share of the pair's gap revision that lands on the mate (mover - mate = 1)                  -0.385      -0.383   +0.0021  
+Share of the pair's gap revision that lands on the mover (mover - mate = 1)                  0.615       0.617   +0.0021  
+Stayer's step on (incoming - replaced) strength, slope, 10 races                             0.206       0.190   -0.0163  
+Stayer's step on (incoming - replaced) strength, slope, 3 races                              0.119       0.104   -0.0152  
+Stayer's step on (incoming - replaced) strength, slope, 5 races                              0.128       0.112   -0.0159  
+Stayer's rating step after 10 races with a new teammate, mean (points)                       3.884       3.702   -0.1818  
+Stayer's step after 10 races, size vs stable drivers                                         1.897       2.022   +0.1257  
+Stayer's rating step after 3 races with a new teammate, mean (points)                        2.579       2.253   -0.3262  
+Stayer's step after 3 races, size vs stable drivers                                          1.918       2.013   +0.0950  
+Stayer's rating step after 5 races with a new teammate, mean (points)                        3.185       2.668   -0.5172  
+Stayer's step after 5 races, size vs stable drivers                                          1.552       1.572   +0.0198  

@@ -1,0 +1,43 @@
+{
+  "name": "driver-or-car",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "author": "Francesco Braicovich",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/francescobraicovich/driver-or-car.git"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "type": "module",
+  "description": "Ratings that separate Formula 1 driver pace from car pace, since 2000: the website and the research code",
+  "scripts": {
+    "serve": "node tools/serve.mjs",
+    "test": "node tests/run-all.mjs",
+    "test:golden": "node tests/golden.mjs",
+    "test:browser": "node tests/smoke-browser.mjs",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "evaluate": "node packages/research/node/evaluate.mjs",
+    "verify:exam": "node packages/research/node/verify-exam-invariance.mjs",
+    "research:state-space-calibrate": "node packages/research/node/state-space-calibrate.mjs",
+    "research:state-space-fit": "node packages/research/node/state-space-fit.mjs",
+    "research:backbone": "node packages/research/node/search-backbone.mjs",
+    "research:backbone:quick": "node packages/research/node/search-backbone.mjs --evals 300",
+    "research:gate": "node packages/research/node/gate-backbone.mjs research/backbone/search.json",
+    "research:suite": "node packages/research/node/suite.mjs",
+    "research:diagnose": "node packages/research/node/diagnose.mjs",
+    "research:heads-metrics": "node packages/research/node/heads-metrics.mjs",
+    "research:findings": "node packages/research/node/export-ratings-table.mjs tmp/findings && python3 packages/research/python/compute-findings.py tmp/findings",
+    "check:publication": "node tools/check-publication.mjs",
+    "build:model": "node tools/build-model.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.9"
+  }
+}

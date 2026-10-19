@@ -1,0 +1,48 @@
+name: Deploy to Cloudflare Pages
+
+# The privacy notice says the site is hosted on Cloudflare Pages and that the response headers in tools/deploy-headers.txt (published as _headers) are on
+# every response. Only Cloudflare Pages reads _headers, so this is the only deploy target that matches the notice.
+#
+# One-time setup (see docs/deployment.md): create the Pages project named below, add the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID,
+# and set the repository variable SITE_URL to the address of the site (for example https://driver-or-car.pages.dev/). The job is skipped until SITE_URL
+# is set, and in forks, which have no access to the secrets.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: ${{ vars.SITE_URL != '' && github.repository == 'francescobraicovich/driver-or-car' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - name: Publication checks (the privacy notice must name the controller and a contact address)
+        run: npm run check:publication
+      - name: Assemble site
+        run: node tools/build-pages.mjs "${{ vars.SITE_URL }}"
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=driver-or-car --branch=main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check the live site against the privacy notice
+        run: node tools/check-live-site.mjs "${{ vars.SITE_URL }}"

@@ -1,0 +1,33 @@
+# Forecast heads of the shipped model on the metric suite (through 2015)
+
+## H1. Log-loss by window and pair type (race observations): ratings alone (+ hazard mix) | Thursday head | race-day head. Coin 0.6931.
+2008-11              all         0.3913 | 0.3856 | 0.3357
+2008-11              teammates   0.6109 | 0.6087 | 0.5415
+2008-11              other cars  0.3217 | 0.3149 | 0.2705
+2012-15              all         0.3655 | 0.3595 | 0.3211
+2012-15              teammates   0.6317 | 0.6269 | 0.5658
+2012-15              other cars  0.2868 | 0.2804 | 0.2488
+
+## H2. Qualifying: ratings alone | qualifying head
+2008-11              all 0.3563 | 0.3495
+2012-15              all 0.3732 | 0.3622
+
+## H3. Calibration of each forecast on race observations (slope through the origin of the log-odds; 1 = right) and expected calibration error
+ratings alone   slope 1.121 (se 0.034)  ECE 0.0112
+Thursday head   slope 1.018 (se 0.032)  ECE 0.0072
+race-day head   slope 0.964 (se 0.030)  ECE 0.0095
+
+## H4. Drivers in a new car (71 moves, 962 duels; first 10 weekends), forecast online. Loss: ratings alone | Thursday | race-day, movers vs stayers' duels of the same years
+2002-15   movers 0.6303 | 0.6240 | 0.5936      stayers 0.6150 | 0.6137 | 0.5639
+2002-11   movers 0.6159 | 0.6159 | 0.5849      stayers 0.6123 | 0.6118 | 0.5732
+2012-15   movers 0.6595 | 0.6404 | 0.6114      stayers 0.6199 | 0.6173 | 0.5472
+
+## H5. Calibration slope of each online forecast: movers | stayers, and the ratio (1 = movers are as forecastable as stayers)
+ratings alone   movers 0.82 (se 0.16) | stayers 1.13 (se 0.09) | ratio 0.73
+Thursday head   movers 0.86 (se 0.16) | stayers 1.02 (se 0.08) | ratio 0.85
+race-day head   movers 0.84 (se 0.15) | stayers 0.98 (se 0.07) | ratio 0.86
+
+## H6. Mover-centred residual (outcome - forecast) by weekend since the move, as the forecast sees the move: ratings alone | Thursday | race-day (optimum 0)
+weekend 1-1    -0.071 | -0.070 | -0.024   (n 93)
+weekend 2-3    0.037 | 0.048 | 0.036   (n 201)
+weekend 4-10   0.023 | 0.030 | 0.018   (n 668)

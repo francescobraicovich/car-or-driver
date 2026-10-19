@@ -1,0 +1,16 @@
+node_modules
+package-lock.json
+/data
+/research
+/dist
+/docs
+packages/core/src/elo-forecast-heads.js
+packages/core/src/state-space/forecast-heads.js
+packages/core/src/presets/tuned-*.js
+packages/core/src/presets/state-space-fit.js
+tests/golden.json
+*.md
+site/js/insights-data.js
+.claude/launch.json
+tmp
+site/vendor

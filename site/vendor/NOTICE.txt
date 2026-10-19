@@ -1,0 +1,24 @@
+Third-party files served by this site
+
+These files are copied unmodified (except where noted) from the npm packages named below, so that visitors' browsers never contact another company's servers. Each licence text is in the licenses/ folder and must stay with the files.
+
+Inter (variable, Latin and Latin Extended subsets), fonts/inter-*.woff2
+  Package: @fontsource-variable/inter 5.3.0 (https://www.npmjs.com/package/@fontsource-variable/inter)
+  Upstream: https://github.com/rsms/inter
+  Copyright 2016 The Inter Project Authors
+  Licence: SIL Open Font License 1.1 (licenses/inter-OFL-1.1.txt)
+
+Space Grotesk (variable, Latin subset), fonts/space-grotesk-latin-wght-normal.woff2
+  Package: @fontsource-variable/space-grotesk 5.3.0 (https://www.npmjs.com/package/@fontsource-variable/space-grotesk)
+  Upstream: https://github.com/floriankarsten/space-grotesk
+  Copyright 2020 The Space Grotesk Project Authors
+  Licence: SIL Open Font License 1.1 (licenses/space-grotesk-OFL-1.1.txt)
+
+KaTeX 0.16.9, katex/
+  Package: katex 0.16.9 (https://www.npmjs.com/package/katex)
+  Upstream: https://github.com/KaTeX/KaTeX
+  Copyright (c) 2013-2020 Khan Academy and other contributors
+  Licence: MIT (licenses/katex-MIT.txt)
+  Changes: katex.min.css lists only the WOFF2 font files (the WOFF and TTF fallbacks were removed); the fonts folder holds only the WOFF2 files. katex.min.js is unchanged.
+
+fonts/fonts.css was written for this site and declares the font families.

@@ -1,0 +1,144 @@
+{
+  "post": {
+    "mode": "post",
+    "name": "ensemble_segment_trees_segment_robust_0.5",
+    "score": 0.32836636412980147,
+    "folds": [
+      {
+        "loss": 0.33533278367528685,
+        "unweighted_loss": 0.35068798389818706,
+        "brier": 0.10566720240440214,
+        "weight": 384808.70607427636,
+        "pairs": 26635,
+        "weekends": 73
+      },
+      {
+        "loss": 0.32139994458431603,
+        "unweighted_loss": 0.3386430225854597,
+        "brier": 0.10079299032264172,
+        "weight": 413752.6061971363,
+        "pairs": 28187,
+        "weekends": 77
+      }
+    ],
+    "spec": {
+      "name": "ensemble_segment_trees_segment_robust_0.5",
+      "family": "ensemble",
+      "members": [
+        {
+          "name": "segment_trees",
+          "family": "tree",
+          "signals": "rich",
+          "leaves": 8,
+          "iterations": 180,
+          "l2": 50
+        },
+        {
+          "name": "segment_robust",
+          "family": "linear",
+          "signals": "rich_robust",
+          "C": 0.03
+        }
+      ],
+      "weights": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "pre": {
+    "mode": "pre",
+    "name": "ensemble_trees_medium_segment_linear_0.5",
+    "score": 0.37385911375191344,
+    "folds": [
+      {
+        "loss": 0.3868571422168517,
+        "unweighted_loss": 0.393925156414366,
+        "brier": 0.12697880249974033,
+        "weight": 384808.70607427636,
+        "pairs": 26635,
+        "weekends": 73
+      },
+      {
+        "loss": 0.3608610852869752,
+        "unweighted_loss": 0.36882062555509604,
+        "brier": 0.11671855484685358,
+        "weight": 413752.6061971363,
+        "pairs": 28187,
+        "weekends": 77
+      }
+    ],
+    "spec": {
+      "name": "ensemble_trees_medium_segment_linear_0.5",
+      "family": "ensemble",
+      "members": [
+        {
+          "name": "trees_medium",
+          "family": "tree",
+          "signals": "form",
+          "leaves": 8,
+          "iterations": 150,
+          "l2": 50
+        },
+        {
+          "name": "segment_linear",
+          "family": "linear",
+          "signals": "rich",
+          "C": 0.03
+        }
+      ],
+      "weights": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "qual": {
+    "mode": "qual",
+    "name": "ensemble_recent8_segment_robust_0.5",
+    "score": 0.3635430814086235,
+    "folds": [
+      {
+        "loss": 0.3598738353124096,
+        "unweighted_loss": 0.34938566726541137,
+        "brier": 0.11550598995336002,
+        "weight": 47258.001853037735,
+        "pairs": 16948,
+        "weekends": 73
+      },
+      {
+        "loss": 0.36721232750483745,
+        "unweighted_loss": 0.34834375382459937,
+        "brier": 0.11910217489617697,
+        "weight": 48431.963755611425,
+        "pairs": 17204,
+        "weekends": 77
+      }
+    ],
+    "spec": {
+      "name": "ensemble_recent8_segment_robust_0.5",
+      "family": "ensemble",
+      "members": [
+        {
+          "name": "recent8",
+          "family": "tree",
+          "signals": "rich",
+          "leaves": 8,
+          "iterations": 180,
+          "l2": 50,
+          "recent": 8
+        },
+        {
+          "name": "segment_robust",
+          "family": "linear",
+          "signals": "rich_robust",
+          "C": 0.03
+        }
+      ],
+      "weights": [
+        0.5,
+        0.5
+      ]
+    }
+  }
+}

@@ -1,0 +1,13 @@
+race: world drawn from the baseline settings (v1); tuned tau of the correct filter 0.003
+qual: world drawn from the baseline settings (v1); tuned tau of the correct filter 0.1
+
+mean over 4 worlds, timeline through 2015
+point                    D_session     T1     T2     T3     T4   | mover swing k1  k5 | frozen ratio k5
+race.baseline                0.322  0.626  0.327  0.101  0.236   |           2.68  1.62 |       0.99
+race.prev-final              0.316  0.653  0.343  0.061  0.207   |           2.41  1.75 |       0.99
+race.new-final               0.268  0.536  0.264  0.065  0.208   |           2.10  1.56 |       1.01
+race.correct                 0.290  0.629  0.297  0.064  0.170   |           1.93  1.84 |       0.95
+qual.baseline                0.471  1.173  0.282  0.165  0.263   |           4.16  2.87 |       0.84
+qual.prev-final              0.471  1.173  0.282  0.165  0.263   |           4.16  2.87 |       0.84
+qual.new-final               0.471  1.173  0.282  0.165  0.263   |           4.16  2.87 |       0.84
+qual.correct                 0.481  1.203  0.292  0.163  0.266   |           4.41  2.95 |       0.83

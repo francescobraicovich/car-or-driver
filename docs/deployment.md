@@ -1,0 +1,85 @@
+# Deploying and running the site
+
+The site is static files. It is published on **Cloudflare Pages**; the privacy notice names that host, and only Cloudflare reads the `_headers` file that carries the Content-Security-Policy, so the workflow deploys nowhere else. Prices were read from the vendors' pages on 19 October 2026 and move; check each before relying on it.
+
+## What it costs
+
+| Item | Cost | Source |
+| --- | --- | --- |
+| Hosting, HTTPS certificate and bandwidth on Cloudflare Pages (free plan) | $0. Static requests are free and unlimited; free-plan limits are 25 MiB per file, 20,000 files and 500 builds a month (this site: the largest file is about 6 MB, under 300 files, one build per push) | [Cloudflare Pages limits](https://developers.cloudflare.com/pages/platform/limits/), [pricing](https://developers.cloudflare.com/pages/functions/pricing/) |
+| A free address ending `.pages.dev` | $0 | Cloudflare Pages |
+| A custom domain (optional), for example a `.com` bought at Cloudflare at cost | about $10.46 the first year if bought before 1 November 2026, then about $11.17 (the registry price rises from $10.26 to $10.97 on 1 November 2026, plus a $0.20 ICANN fee) | [Verisign notice](https://domainnamewire.com/2025/11/19/verisign-can-increase-com-prices-in-2026/), [Cloudflare Registrar](https://www.cloudflare.com/products/registrar/) |
+| GitHub Actions for building and testing | $0 for a public repository | |
+| Analytics | None, deliberately (see [compliance.md](compliance.md)) | |
+
+The project is non-commercial because of the licence of its data, so there is no income to set against these costs; see [compliance.md](compliance.md), section 8.
+
+## Load time and traffic
+
+Measured on this build (19 October 2026), compressed the way a CDN serves it:
+
+| Piece | Brotli | Gzip |
+| --- | --- | --- |
+| `data/model-latest.json` (first screen) | 0.03 MB | about 0.04 MB (estimate) |
+| Site code and the model package for the first page (Head to head forecasting, about 0.5 MB, and the Insights and Methodology code are fetched when those pages open) | 0.03 MB | about 0.15 MB (estimate) |
+| `data/model.json` (full history, fetched after the first screen is shown) | 0.59 MB | about 0.9 MB (estimate) |
+| Fonts, if self-hosted | about 0.1 MB (estimate) | |
+| **Before the ratings show** | **about 0.06 MB** | **about 0.1 MB (estimate)** |
+| **First visit, everything** | **about 0.75 MB** | **about 1.1 MB** |
+| Repeat visit | model revalidated, "not modified" | |
+
+If every visit were a first visit (worst case), at 1.1 MB:
+
+| Visits a month | Data a month | Cloudflare Pages (free) | GitHub Pages (for comparison) |
+| --- | --- | --- | --- |
+| 1,000 | 1.1 GB | $0 | within the 100 GB soft limit |
+| 10,000 | 11 GB | $0 | within |
+| 100,000 | 110 GB | $0 (static requests are free and unlimited per Cloudflare's docs; "unlimited bandwidth" comes from secondary sources only) | over the [100 GB soft limit](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits) |
+
+So traffic does not drive cost at any scale this project will reach. It would drive the risk of being asked to leave a free host, which is one more reason to use Cloudflare.
+
+**Measured time to a working page** (headless Chrome, 19 October 2026, local server, CPU slowed 4 times to stand in for a mid-range phone; the network speed is applied to the compressed size a CDN would send, 2.6 MB):
+
+| Case | Time until the ratings show |
+| --- | --- |
+| First visit, slow 4G (1.6 Mbit/s, 150 ms) | **17 s**, almost all of it the download |
+| First visit, ordinary 4G (about 9 Mbit/s) | about 4 s (2.6 MB takes 2.3 s; computed, not measured) |
+| Repeat visit, network fast, CPU slowed 4 times | **1.2 s** (this is the parse and decode of the file) |
+| Repeat visit, slow network | not measured meaningfully: the local test server cannot answer "not modified", so the file was downloaded again. A CDN does; confirm after deploying |
+
+So the 10 seconds of computing is gone, but on a poor mobile connection the first visit is still slow because of the download.
+
+**Lighter first visit** (same method, measured by `node tools/measure-load-time.mjs`: the page reports the moment the ratings show; download time is computed from the brotli size of every file fetched before that moment, plus 150 ms). Changes, in the order tried:
+
+| Step | Downloaded before the ratings show (brotli) | Slow 4G | Ordinary 4G |
+| --- | --- | --- | --- |
+| Before | 2.53 MB | about 14.2 s | about 3.8 s |
+| 1. The per-driver and per-car histories (`dh`, `ch`) left out of the file and rebuilt in the browser from the weekends (`packages/core/src/weekend-histories.js`; identical to the original, checked row by row) | 1.65 MB | about 9.4 s | about 2.7 s |
+| 2. The recent-form column computed when the file is built; the forecasting code (0.5 MB with the fitted tables) loads when Head to head opens | 1.08 MB | about 6.5 s | about 2.1 s |
+| 3. Weekend ratings kept to 4 significant digits (the pages show whole points) | | | |
+| 4. A first-screen file, `data/model-latest.json` (the latest weekend and each entry's previous row); the full 0.59 MB history is fetched after the ratings are on screen and replaces it. An address that names another page or a weekend waits for the full file | | | |
+| 5. `modulepreload` for the 35 modules and a `preload` of the first-screen file, so the browser does not discover imports one level at a time (`tests/test-site-imports.mjs` fails if one is missing) | 0.14 MB | about 1.2 s | about 0.6 s |
+| 6. The first-screen file drops what only other pages read (the circuit and wet-weather skills were more than half of it; also the name lists); Insights and Methodology code is fetched when those pages are first opened. `tests/test-site-imports.mjs` also fails if `index.html` announces a module that is not loaded at start | **0.06 MB** | **about 0.8 s** | **about 0.6 s** |
+
+First-visit download down 98% (2.53 MB to 0.06 MB). The measured 0.4 s of processing is with the CPU slowed 4 times; the same page takes roughly 0.1 s on an unthrottled laptop. The full history arrives about 0.1 s later on a fast connection (0.59 MB more on a slow one) and is only needed for History, Head to head, Insights, Methodology and the weekend slider. Repeat visits still revalidate each file (a round trip each, answered "not modified"); a service worker or a content-hashed file name would remove that and is not done. The 4-digit rounding limits the sum of several ratings (a Head to head gap) to about one rating point of error; `tests/test-model-file.mjs` states the tolerances.
+
+
+## One-time setup
+
+1. **Set the contact details** in `site/js/site-identity.js` (`operatorName`, `contactEmail`). The privacy notice must name a person responsible and a way to reach them; `npm run check:publication` fails until they are set, and the deploy workflow runs it.
+2. **Create a Cloudflare account** (free) and a Pages project named `driver-or-car` (Workers & Pages, create a project with *Direct Upload*, or `npx wrangler pages project create driver-or-car --production-branch=main`).
+3. **Add the credentials to the repository** (Settings, Secrets and variables, Actions): secrets `CLOUDFLARE_API_TOKEN` (an API token with the *Cloudflare Pages: Edit* permission) and `CLOUDFLARE_ACCOUNT_ID`, and the variable `SITE_URL` (the address of the site with a trailing slash, for example `https://driver-or-car.pages.dev/`). The deploy job stays skipped until `SITE_URL` is set.
+4. **Cloudflare settings that must stay off** (the privacy notice depends on them; the full list is in [compliance.md](compliance.md), section 6): Web Analytics, Logpush, Bot Fight Mode, Waiting Room, Email Address Obfuscation and automatic script injection.
+5. Push to `main`. The workflow lints, runs the tests, runs the publication check, builds `dist/` (`node tools/build-pages.mjs`), deploys it, and then runs `node tools/check-live-site.mjs` against the live address, which fails if any response sets a cookie, a policy header is missing, or the page loads anything from another origin.
+6. Open the live site once with the browser's developer tools: *Application* should show no cookies and empty local storage, and *Network* only your own domain.
+
+## Keeping the ratings current
+
+This costs no money, but it is the real ongoing price: about 24 race weekends a year, and each one changes the ratings.
+
+Per race, in order (from `data/README.md`): fetch the new data; rebuild the ratings file (`node tools/build-model.mjs`, about 20 seconds); regenerate the findings (`npm run research:findings`, needs Python); run `npm test`; update the golden hashes on purpose; commit and deploy. Estimate: 15 to 30 minutes each, so 6 to 12 hours a year.
+
+It cannot be fully automated today, for two reasons I can see in the repository: the golden hashes are updated by a person deliberately, and the findings step needs Python with pinned packages. The pieces that can be automated are fetching the data and rebuilding the model; Those two could be automated first (a scheduled workflow that opens a pull request), leaving the golden update as the human step.
+
+Note the `data/model.json` file is committed, so each refresh adds about 3 MB (compressed) to the repository history: about 70 MB a year. Not a problem for years; the repository is 52 MB today.
+

@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Driver or Car — who is really fastest in Formula 1?</title>
+    <meta
+      name="description"
+      content="Driver or Car separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 2000, head to head forecasts and twenty findings."
+    />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3efe6" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#080b15" />
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <!-- CANONICAL_TAGS: replaced at deploy time by .github/workflows/deploy.yml with canonical + og:url for the Pages URL -->
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Driver or Car — who is really fastest in Formula 1?" />
+    <meta
+      property="og:description"
+      content="Who is really fastest? Ratings that separate driver pace from car speed, with error bars, for every F1 weekend since 2000."
+    />
+    <meta property="og:image" content="./assets/favicon.svg" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Driver or Car — who is really fastest in Formula 1?" />
+    <meta
+      name="twitter:description"
+      content="Ratings that separate driver pace from car speed, with error bars, for every F1 weekend since 2000."
+    />
+    <link rel="stylesheet" href="./vendor/fonts/fonts.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="preload" href="../data/model-latest.json" as="fetch" crossorigin />
+    <link rel="modulepreload" href="js/app.js" />
+    <link rel="modulepreload" href="js/dom.js" />
+    <link rel="modulepreload" href="js/model-loader.js" />
+    <link rel="modulepreload" href="js/state.js" />
+    <link rel="modulepreload" href="js/utils.js" />
+    <link rel="modulepreload" href="js/ratings-view.js" />
+    <link rel="modulepreload" href="../packages/core/src/math.js" />
+    <link rel="modulepreload" href="js/export.js" />
+    <link rel="modulepreload" href="js/charts.js" />
+    <link rel="modulepreload" href="js/chart-renderer.js" />
+    <link rel="modulepreload" href="js/chart-math.js" />
+    <link rel="modulepreload" href="js/metric-text.js" />
+    <link rel="modulepreload" href="../packages/core/src/weekend-histories.js" />
+    <link rel="modulepreload" href="../packages/core/src/json-serialization.js" />
+    <link rel="modulepreload" href="js/workspace.js" />
+    <link rel="modulepreload" href="js/theme.js" />
+    <link rel="modulepreload" href="js/history-view.js" />
+    <link rel="modulepreload" href="../packages/core/src/lineage.js" />
+    <link rel="modulepreload" href="js/head-to-head-view.js" />
+    <link rel="modulepreload" href="../packages/core/src/backtest.js" />
+    <link rel="modulepreload" href="../packages/core/src/presets/tuned-elo.js" />
+    <link rel="modulepreload" href="../packages/core/src/presets/model-settings.js" />
+    <link rel="modulepreload" href="../packages/core/src/presets/state-space.js" />
+    <link rel="modulepreload" href="../packages/core/src/presets/state-space-fit.js" />
+    <link rel="modulepreload" href="../packages/core/src/state-space/filter.js" />
+    <script src="./js/boot-probe.js"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Driver or Car",
+        "applicationCategory": "SportsApplication",
+        "operatingSystem": "Web",
+        "description": "Ratings that separate F1 driver pace from car speed, with uncertainty, since 2000."
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#/ratings">Skip to ratings</a>
+
+    <nav class="site-nav workspace-nav" aria-label="Main navigation">
+      <a class="brand" href="#/ratings" aria-label="Driver or Car home"
+        ><img src="./assets/favicon.svg" alt="" width="26" height="26" /><span class="brand-name"
+          >Driver <span class="brand-join">or</span> Car</span
+        ></a
+      >
+      <div class="nav-links" id="workspaceLinks">
+        <a href="#/ratings"
+          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></svg
+          ><span class="label-full">Ratings</span></a
+        >
+        <a href="#/history"
+          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-9" /></svg><span class="label-full">History</span></a
+        >
+        <a href="#/head-to-head"
+          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l-3-3M17 17H7l3 3" /></svg
+          ><span class="label-full">Head to head</span><span class="label-short" aria-hidden="true">Versus</span></a
+        >
+        <a href="#/insights"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0012 3z" /></svg
+          ><span class="label-full">Insights</span></a
+        >
+        <a href="#/methodology"
+          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 21V5M9 8h6" /></svg
+          ><span class="label-full">Methodology</span><span class="label-short" aria-hidden="true">Method</span></a
+        >
+      </div>
+      <button id="shareView" type="button">Share</button>
+      <input id="shareURL" aria-label="Share URL" readonly hidden />
+      <span id="shareStatus" class="small" role="status"></span>
+    </nav>
+
+    <div id="veil" role="status" aria-live="polite">
+      <p class="veil-brand" aria-hidden="true">Driver <span class="brand-join">or</span> Car</p>
+      <div class="spinner" aria-hidden="true"></div>
+      <p>
+        <strong id="veilTitle">Loading race data…</strong><br /><span id="veilMsg">Fetching the ratings for every weekend since 2000.</span>
+      </p>
+      <p id="veilError" class="veil-error" hidden></p>
+    </div>
+
+    <header class="workspace-status" id="top">
+      <span class="status-pill" id="statusPill"
+        ><span class="dot" aria-hidden="true"></span><span id="status" class="status" role="status">Loading data…</span></span
+      >
+    </header>
+
+    <main id="workspace" class="workspace" hidden>
+      <section id="ratings" aria-label="Ratings">
+        <div class="hero">
+          <p class="hero-kicker">Formula 1, every weekend since 2000</p>
+          <h1 class="hero-title">Driver <em>or</em> Car?</h1>
+          <p class="hero-text">
+            Every result is part driver and part machine. These ratings pull the two apart, with error bars, so you can see who is really
+            fast and whose car did the work.
+          </p>
+          <div class="hero-split" aria-hidden="true"><span class="hero-driver">Driver</span><span class="hero-car">Car</span></div>
+          <p class="hero-links">
+            <a href="#/insights">Twenty findings</a><a href="#/head-to-head">Settle an argument</a><a href="#/methodology">How it works</a>
+          </p>
+        </div>
+        <div id="ratingsHost" hidden></div>
+      </section>
+
+      <section id="headToHead" aria-label="Head to head">
+        <figure class="frame" id="headToHeadPanel" hidden>
+          <header class="frame-head">
+            <h2 class="frame-title">Head to head</h2>
+            <p class="frame-sub">The chance that one driver finishes ahead of another in a race, from their ratings and recent form.</p>
+          </header>
+          <div class="head-to-head">
+            <div class="head-to-head-pick">
+              <div class="head-to-head-side" id="headToHeadSideA">
+                <label class="field">Driver A<select id="headToHeadA"></select></label>
+              </div>
+              <span class="vs" aria-hidden="true">vs</span>
+              <div class="head-to-head-side" id="headToHeadSideB">
+                <label class="field">Driver B<select id="headToHeadB"></select></label>
+              </div>
+            </div>
+            <div id="headToHeadOut" class="head-to-head-result" aria-live="polite"></div>
+            <details class="head-to-head-more">
+              <summary>Change the conditions</summary>
+              <div class="controls">
+                <label class="field"
+                  >Conditions<select id="headToHeadWet">
+                    <option value="dry">Dry</option>
+                    <option value="wet">Wet</option>
+                  </select></label
+                >
+                <label class="field" id="headToHeadSessionField">Forecast timing<select id="headToHeadSession"></select></label>
+                <label class="field"
+                  >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
+                /></label>
+                <label class="field">Circuit<select id="headToHeadCircuit"></select></label>
+                <span id="headToHeadGridFields" class="controls" hidden>
+                  <label class="field"
+                    >Grid slot, driver A<input id="headToHeadGridA" type="number" min="1" max="24" step="1" placeholder="1–24"
+                  /></label>
+                  <label class="field"
+                    >Grid slot, driver B<input id="headToHeadGridB" type="number" min="1" max="24" step="1" placeholder="1–24"
+                  /></label>
+                </span>
+              </div>
+            </details>
+          </div>
+          <div id="headToHeadChartWrap" class="frame-body" hidden>
+            <svg id="headToHeadChart" class="chart" role="group"></svg>
+          </div>
+          <footer class="frame-foot"><p class="notes" id="headToHeadNote"></p></footer>
+        </figure>
+      </section>
+
+      <section id="charts" aria-label="Rating history">
+        <div id="chartsPanel" hidden></div>
+      </section>
+
+      <section id="insights" aria-label="Insights">
+        <figure class="frame">
+          <header class="frame-head">
+            <h2 class="frame-title">Insights</h2>
+            <p class="frame-sub">Twenty findings from every weekend since 2000, each with its chart and how it was computed.</p>
+          </header>
+          <div class="frame-body insights-body" id="insightsBody"></div>
+          <footer class="frame-foot">
+            <p class="notes">
+              The numbers are computed from the data through the latest race in the bundle and do not update live. How the ratings work,
+              with full references for the methods named in the notes: <a href="#/methodology">Methodology</a>. Data sources and licence:
+              <a href="#/about">About</a>.
+            </p>
+          </footer>
+        </figure>
+      </section>
+
+      <section id="methodology" aria-label="Methodology">
+        <figure class="frame">
+          <header class="frame-head">
+            <h2 class="frame-title">Methodology</h2>
+            <p class="frame-sub">
+              How the ratings and forecasts are computed, from first principles. It assumes university-level mathematics and nothing about
+              Formula 1 or rating systems.
+            </p>
+          </header>
+          <nav class="toc" aria-label="Parts of this page">
+            <a href="#" data-jump="method-overview">1 Overview</a>
+            <a href="#" data-jump="method-data">2 Data</a>
+            <a href="#" data-jump="method-ratings">3 Ratings</a>
+            <a href="#" data-jump="method-forecasts">4 Forecasts</a>
+            <a href="#" data-jump="method-backtesting">5 Backtesting</a>
+            <a href="#" data-jump="method-limits">6 Limits</a>
+            <a href="#" data-jump="method-settings">7 Settings</a>
+            <a href="#" data-jump="method-references">8 References</a>
+          </nav>
+          <div class="frame-body prose method-body" id="methodologyBody"></div>
+          <footer class="frame-foot">
+            <p class="notes">
+              Data sources and licences: <a href="#/about">About</a>. This is an independent project and is not affiliated with Formula 1 or
+              the FIA.
+            </p>
+          </footer>
+        </figure>
+      </section>
+
+      <section id="privacy" aria-label="Privacy and cookies">
+        <figure class="frame">
+          <header class="frame-head">
+            <h2 class="frame-title">Privacy and cookies</h2>
+            <p class="frame-sub">What this site collects (almost nothing), who is responsible, and your rights.</p>
+          </header>
+          <div class="frame-body prose legal-body" id="privacyBody"></div>
+        </figure>
+      </section>
+
+      <section id="about" aria-label="About, data and licences">
+        <figure class="frame">
+          <header class="frame-head">
+            <h2 class="frame-title">About, data and licences</h2>
+            <p class="frame-sub">Who runs the site, where the data comes from, how it may be used, and the terms of use.</p>
+          </header>
+          <div class="frame-body prose legal-body" id="aboutBody"></div>
+        </figure>
+      </section>
+    </main>
+
+    <footer class="workspace-footer">
+      <div class="footer-inner">
+        <span>Independent · Not affiliated with Formula 1 or the FIA.</span>
+        <nav class="footer-links" aria-label="About this site">
+          <a href="#/methodology">Methodology</a><a href="#/privacy">Privacy and cookies</a><a href="#/about">About, data and licences</a>
+        </nav>
+      </div>
+    </footer>
+    <noscript><p style="padding: 20px; text-align: center">Driver or Car needs JavaScript to show the ratings and charts.</p></noscript>
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>

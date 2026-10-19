@@ -1,0 +1,24 @@
+{
+  "written": "2026-09-18, before any candidate was scored on the new exam outside 2008-2011",
+  "what_changed": "The BENCHMARK, not a model. Teammate scoring weight tmBoost/qTmBoost raised from v7's 3/4 to 8/8 (src/js/v8-exam.js), a deliberate choice to make same-car driver-vs-driver comparisons a large part of what is measured. Teammate pairs go from 11.5% to 25.7% of the scored weight.",
+  "why_numbers_move_without_any_model_change": "Same-car pairs score ~0.52 and different-car pairs ~0.28, so weighting teammates more raises the headline mechanically. v8's loss moves 0.3038 -> ~0.3370 with an identical model. Figures on this exam are NOT comparable to anything published before this change.",
+  "how_v7_stays_comparable": "Scoring and learning weights are decoupled in model.js (wd scores, wl teaches). V7_ON_V8_EXAM sets tmLearn = 3/8 and qTmLearn = 4/8, which exactly cancels the raised scoring weight on the learning side, so v7's ratings and every prediction are bit-identical to the original preset while being scored on the new exam. Verified: max rating difference 0.000e+0 across 16,302 rating rows and 517 weekends, and the exam hash matches the v8 backbone's.",
+  "baselines_on_the_new_exam": {
+    "v7_2008_2011": 0.393523, "v7_2012_2015": 0.355086, "v7_2016plus": 0.358989,
+    "v8_backbone_2008_2011": 0.353759, "v8_backbone_2012_2015": 0.342687, "v8_backbone_2016plus": 0.351411
+  },
+  "search": "slim calibration, scripts/run-backbone-quick.sh, 8 budgeted multi-start chains, ~17s, objective = walk-forward combined log-loss on 2008-2011 under the new exam. 28 free params including tmLearn/qTmLearn, which are free to adapt the learning side to the new scoring.",
+  "frozen": ["alpha", "cap", "tmBoost", "qTmBoost", "orderW", "paceW", "partialExp", "qualOn"],
+  "decision_rule": {
+    "gate": "combined log-loss on 2012-2015 under the new exam",
+    "incumbent_2012_2015": 0.342687,
+    "ship_if": "candidate < 0.342687",
+    "shots": 1,
+    "otherwise": "keep the current backbone parameters and report the null; the exam change itself still stands, since it is a definitional choice and not a result"
+  },
+  "known_weaknesses": [
+    "This is the THIRD use of the 2012-2015 gate window. Reuse erodes it; declared rather than hidden.",
+    "A re-tune under a re-weighted objective will naturally favour teammate accuracy; the terminal window is the only check on whether that generalises."
+  ],
+  "terminal_policy": "2016+ is not read during search, refinement or gating. It is opened once, at the end."
+}

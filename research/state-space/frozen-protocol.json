@@ -1,0 +1,11 @@
+{
+  "designs": "research/selection.json (unchanged)",
+  "fit_through": [
+    2007,
+    2011,
+    2015
+  ],
+  "export_sha256": "fe8935aeca3293fd0cfba8608cdf8e0d9859d2e372429ad561c5d1eba6709f97",
+  "acceptance": "research/state-space/ACCEPTANCE.md",
+  "report": "research/state-space/selection-report.json"
+}

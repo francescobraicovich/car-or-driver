@@ -1,0 +1,85 @@
+# Real-data diagnosis, race, first 10 weekends after a move, strict prior ratings (model: final). Windows: 2002-11 | 2012-15 | 2016+
+movers: 1141 duels, 83 moves; stayers: 4823 duels
+
+## D0. Calibration slope of the frozen rating gap, cluster-robust (clusters: a move; a pair-season)
+2002-11                           movers 0.89 (se 0.25, 32 moves)  stayers 0.97 (se 0.25)  difference -0.07 (se 0.35, z -0.2)
+2012-15                           movers 0.43 (se 0.46, 15 moves)  stayers 1.03 (se 0.35)  difference -0.60 (se 0.57, z -1.1)
+2016+                             movers 0.48 (se 0.20, 31 moves)  stayers 0.90 (se 0.18)  difference -0.42 (se 0.27, z -1.6)
+
+## D1. Calibration by size of the prior gap (observed win rate of the rated-better driver vs the stayers-calibrated forecast); gap in rating points
+2002-11 movers                    0-10: obs 0.62 / fcst 0.55 (n 117) | 10-25: obs 0.67 / fcst 0.63 (n 136) | 25-50: obs 0.72 / fcst 0.73 (n 132) | 50-999: n/a
+2002-11 stayers                   0-10: obs 0.45 / fcst 0.54 (n 364) | 10-25: obs 0.65 / fcst 0.63 (n 550) | 25-50: obs 0.72 / fcst 0.74 (n 344) | 50-999: obs 0.90 / fcst 0.86 (n 45)
+2012-15 movers                    0-10: obs 0.64 / fcst 0.52 (n 80) | 10-25: obs 0.53 / fcst 0.65 (n 42) | 25-50: obs 0.67 / fcst 0.75 (n 74) | 50-999: obs 0.50 / fcst 0.89 (n 26)
+2012-15 stayers                   0-10: obs 0.48 / fcst 0.54 (n 278) | 10-25: obs 0.60 / fcst 0.63 (n 222) | 25-50: obs 0.78 / fcst 0.75 (n 163) | 50-999: obs 0.86 / fcst 0.86 (n 69)
+2016+ movers                      0-10: obs 0.57 / fcst 0.54 (n 72) | 10-25: obs 0.45 / fcst 0.63 (n 156) | 25-50: obs 0.61 / fcst 0.72 (n 157) | 50-999: obs 0.79 / fcst 0.88 (n 104)
+2016+ stayers                     0-10: obs 0.54 / fcst 0.53 (n 541) | 10-25: obs 0.59 / fcst 0.62 (n 1103) | 25-50: obs 0.72 / fcst 0.72 (n 814) | 50-999: obs 0.94 / fcst 0.89 (n 141)
+
+## D2. Adaptation: mean (outcome - forecast) by weekend since the move (forecast = stayers-calibrated frozen rating); and slope by block
+2002-11                           j1-1: resid -0.193 slope 2.58±0.91 | j2-3: resid -0.011 slope 0.64±0.51 | j4-6: resid -0.105 slope 0.46±0.36 | j7-10: resid -0.046 slope 1.12±0.55
+2012-15                           j1-1: n/a | j2-3: resid 0.155 slope 0.30±0.52 | j4-6: resid -0.108 slope 0.26±0.66 | j7-10: resid 0.120 slope 0.49±0.40
+2016+                             j1-1: resid -0.174 slope 0.91±0.39 | j2-3: resid -0.139 slope 0.41±0.24 | j4-6: resid -0.045 slope 0.49±0.30 | j7-10: resid -0.017 slope 0.44±0.22
+
+## D3. Does anything known before the move predict the forecast error? logistic o ~ c*z + a*X, movers only, cluster-robust (a with se; z-score)
+qualifying gap (same scale)       2002-11: -0.04 (se 0.59, z -0.1) | 2012-15: 0.61 (se 0.39, z 1.5) | 2016+: 1.47 (se 0.47, z 3.2)
+old minus new car (k*pts)         2002-11: 0.22 (se 0.11, z 2.0) | 2012-15: 0.01 (se 0.19, z 0.0) | 2016+: 0.04 (se 0.16, z 0.2)
+momentum: rating change last 10 races (pts)2002-11: -0.70 (se 0.57, z -1.2) | 2012-15: 0.64 (se 1.40, z 0.5) | 2016+: -0.56 (se 0.55, z -1.0)
+mover age (years, centred 28)     2002-11: -0.44 (se 0.49, z -0.9) | 2012-15: -0.60 (se 0.75, z -0.8) | 2016+: -0.02 (se 0.42, z -0.0)
+mover experience (log prior races)2002-11: -0.09 (se 0.04, z -2.0) | 2012-15: -0.00 (se 0.07, z -0.0) | 2016+: -0.11 (se 0.06, z -1.8)
+mate is new to the team (tenure<10)2002-11: -0.60 (se 0.46, z -1.3) | 2012-15: 0.00 (se 0.32, z 0.0) | 2016+: -1.76 (se 0.08, z -22.4)
+winter move                       2002-11: -0.30 (se 0.18, z -1.7) | 2012-15: 0.06 (se 0.26, z 0.2) | 2016+: -0.37 (se 0.29, z -1.3)
+|prior gap| (pts/10)              2002-11: 0.03 (se 0.00, z n/a) | 2012-15: -0.10 (se 5995.93, z -0.0) | 2016+: -0.10 (se 0.00, z n/a)
+
+## D4. The same two-predictor regression for STAYERS (race gap z and qualifying gap zq): weights of each
+2002-11                           stayers: race 0.61±0.40  qual 0.50±0.43  movers: race 0.91±0.52  qual -0.04±0.59
+2012-15                           stayers: race 0.71±0.50  qual 0.47±0.52  movers: race 0.01±0.63  qual 0.61±0.39
+2016+                             stayers: race 0.32±0.33  qual 0.65±0.32  movers: race -0.57±0.34  qual 1.47±0.47
+
+## D5. Influence: leave-one-move-out slope; share of the movers loss from the five worst moves
+2002-11                           slope 0.89, leave-one-out range [0.77, 0.99] over 32 moves  five worst moves = 29% of loss (a uniform share would be 16%)
+2012-15                           slope 0.43, leave-one-out range [0.09, 0.88] over 15 moves  five worst moves = 47% of loss (a uniform share would be 33%)
+2016+                             slope 0.48, leave-one-out range [0.38, 0.60] over 31 moves  five worst moves = 31% of loss (a uniform share would be 16%)
+
+## D6. Could a mover-sized sample of stayers show a slope this low? (draw as many stayer pair-seasons as there are moves, 400 times)
+2002-11                           mover slope 0.89; stayer samples of 32 units: median 0.99, 5%-95% [-0.06, 2.09]; share at or below the mover slope 0.440
+2012-15                           mover slope 0.43; stayer samples of 15 units: median 1.05, 5%-95% [-0.91, 3.03]; share at or below the mover slope 0.265
+2016+                             mover slope 0.48; stayer samples of 31 units: median 0.91, 5%-95% [0.12, 1.85]; share at or below the mover slope 0.182
+
+## D7. By observation source (calibration slope; movers | stayers)
+2002-11                           finish: 0.90 (n 140) | 0.95   paceW: 0.78 (n 242) | 1.14   partial: n/a (n 11) | n/a
+2012-15                           finish: 0.43 (n 90) | 1.04   paceW: 0.47 (n 130) | 0.94   partial: n/a (n 2) | n/a
+2016+                             finish: 0.47 (n 214) | 0.89   paceW: 0.60 (n 265) | 1.01   partial: n/a (n 5) | 1.53
+
+## D8. Which part of the race gap is portable? z = beta*zq + zD (qualifying part + race-specific residual). logistic o ~ a*zD + b*zq, cluster-robust
+2002-11                           movers: residual weight a 0.91±0.52, qualifying weight b 0.33±0.42 | stayers: residual weight a 0.61±0.40, qualifying weight b 0.74±0.32
+2012-15                           movers: residual weight a 0.01±0.63, qualifying weight b 0.62±0.25 | stayers: residual weight a 0.71±0.50, qualifying weight b 0.75±0.40
+2016+                             movers: residual weight a -0.57±0.34, qualifying weight b 1.24±0.35 | stayers: residual weight a 0.32±0.33, qualifying weight b 0.78±0.22
+
+## D9. Pooled: movers vs stayers slope; and the mover-centred residual (outcome - forecast) by weekend since the move.
+(Residuals are oriented to the MOVER, so they are meaningful; stayers have no such orientation: the exam lists the winner as x, losses and slopes are unaffected by that.)
+slope difference (all years)      -0.37 (se 0.21, z -1.8), 561 clusters
+all moves                         weekend 1-1: -0.173 (se 0.065, 72 moves) | weekend 2-3: -0.051 (se 0.058, 82 moves) | weekend 4-10: -0.036 (se 0.036, 78 moves)
+winter moves (season opener is the first weekend)weekend 1-1: -0.155 (se 0.070, 58 moves) | weekend 2-3: -0.051 (se 0.066, 67 moves) | weekend 4-10: -0.021 (se 0.040, 66 moves)
+in-season moves                   weekend 1-1: -0.225 (se 0.153, 14 moves) | weekend 2-3: -0.054 (se 0.123, 15 moves) | weekend 4-10: -0.114 (se 0.078, 12 moves)
+  2002-11                         1-1: -0.195 (0.095) | 2-3: -0.013 (0.089) | 4-10: -0.077 (0.058)
+  2012-15                         1-1: -0.087 (0.178) | 2-3: 0.152 (0.135) | 4-10: 0.022 (0.066)
+  2016+                           1-1: -0.173 (0.103) | 2-3: -0.138 (0.094) | 4-10: -0.027 (0.057)
+
+## D10. The filter's own ONLINE forecast of the same duels (it sees the move): mover-centred residual by weekend since the move
+weekend 1-1                       frozen prior -0.173 | online forecast -0.158
+weekend 2-3                       frozen prior -0.051 | online forecast -0.004
+weekend 4-10                      frozen prior -0.036 | online forecast -0.004
+
+## D11. Is the shortfall at large prior gaps? slope for |gap| < 25 pts and >= 25 pts, movers vs stayers (all windows pooled and 2012+), cluster-robust
+2002+                             movers: small gaps 0.46±0.40, large gaps 0.55±0.18 (n 507 large) | stayers: small gaps 0.73±0.27, large gaps 1.00±0.15 (n 1576 large)
+2012+                             movers: small gaps 0.04±0.57, large gaps 0.51±0.20 (n 361 large) | stayers: small gaps 0.65±0.33, large gaps 1.00±0.17 (n 1187 large)
+
+## D12. Reliability proxies known before the move: connectivity of the mover (number of different teammates so far) and length of his last stint
+few teammates (<= 3)              slope 0.36±0.20 (46 moves)
+many teammates (> 3)              slope 0.80±0.25 (37 moves)
+short last stint (< median tenure)slope 0.42±0.18 (51 moves)
+long last stint                   slope 0.86±0.31 (32 moves)
+
+## D13. Does the filter know which ratings are unreliable? Slope by tercile of the gap sd (sqrt(sd_x^2 + sd_y^2), reported scale), terciles within each group
+stayers                           low sd (mean 8.7 pts): slope 0.95±0.21 | mid sd (mean 9.4 pts): slope 1.02±0.20 | high sd (mean 10.2 pts): slope 0.80±0.22
+movers                            low sd (mean 8.5 pts): slope 0.64±0.25 | mid sd (mean 9.1 pts): slope 0.92±0.28 | high sd (mean 9.9 pts): slope 0.21±0.29
+mean gap sd                       movers 9.2 pts | stayers 9.5 pts

@@ -1,0 +1,12 @@
+# Response headers for every page and file, in the format Cloudflare Pages reads (_headers); tools/build-pages.mjs publishes this file as _headers
+# and tools/serve.mjs applies it locally, so the tests run under the same policy as the live site.
+#
+# The Content-Security-Policy is a guarantee, not only a precaution: it stops a page from loading anything from another origin, so no visitor's
+# address can reach another company through this site (see the privacy notice). Styles may be inline because the charts set them from script;
+# scripts may not.
+/*
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  Referrer-Policy: no-referrer
+  X-Content-Type-Options: nosniff
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin

@@ -1,0 +1,7 @@
+baseline                               tm 0.6824 0.7885 0.6962 | fd 0.3763 0.3043 0.3737 | P w2 0.3877 w3 0.3656 | tm slope k5 0.43 0.07 0.49
+retune only (no link)                  tm 0.6492 0.7239 0.6655 | fd 0.3683 0.3111 0.3726 | P w2 0.3878 w3 0.3651 | tm slope k5 0.84 0.21 0.60
+link only (old settings)               tm 0.6642 0.7674 0.6785 | fd 0.3730 0.3017 0.3720 | P w2 0.3854 w3 0.3660 | tm slope k5 0.53 0.11 0.53
+link + retune but no team-fit A        tm 0.6510 0.7411 0.6723 | fd 0.3677 0.3025 0.3660 | P w2 0.3836 w3 0.3641 | tm slope k5 0.72 0.18 0.58
+driver link only (gamma 0) + retune    tm 0.6387 0.7146 0.6713 | fd 0.3699 0.3077 0.3721 | P w2 0.3872 w3 0.3650 | tm slope k5 0.88 0.28 0.56
+car link only (beta 0) + retune        tm 0.6572 0.7189 0.6553 | fd 0.3674 0.3061 0.3704 | P w2 0.3851 w3 0.3640 | tm slope k5 0.78 0.23 0.65
+final (link + retune + A)              tm 0.6458 0.7100 0.6611 | fd 0.3679 0.3027 0.3695 | P w2 0.3846 w3 0.3639 | tm slope k5 0.84 0.30 0.60

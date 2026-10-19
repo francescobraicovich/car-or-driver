@@ -1,0 +1,21 @@
+
+== baseline: D2 0.543  (race 0.621, qualifying 0.465)
+session  T1 mover swing  T2 stayer swing  T3 stayer leak  T4 frozen transfer
+race             0.712           0.493          0.535              0.741
+qual             1.076           0.454          0.121              0.210
+  race: mover/control swing k1 2.74 k3 2.27 k5 1.80 k10 1.55 | stayer/control k3 1.93 k5 1.34 k10 1.70 | leak (slope, in control swings) k3 0.102, 0.53 k5 0.100, 0.38 k10 0.180, 0.69 | frozen mover/stayer slope k5 0.46/1.01=0.46 k10 0.46/0.93=0.50
+  qual: mover/control swing k1 3.94 k3 3.05 k5 2.54 k10 2.42 | stayer/control k3 1.85 k5 1.32 k10 1.61 | leak (slope, in control swings) k3 -0.014, 0.09 k5 0.025, 0.11 k10 0.041, 0.16 | frozen mover/stayer slope k5 0.94/1.11=0.85 k10 0.84/1.09=0.77
+
+== prev-final: D2 0.529  (race 0.592, qualifying 0.465)
+session  T1 mover swing  T2 stayer swing  T3 stayer leak  T4 frozen transfer
+race             0.674           0.514          0.498              0.682
+qual             1.076           0.454          0.121              0.210
+  race: mover/control swing k1 2.33 k3 2.17 k5 1.70 k10 1.73 | stayer/control k3 1.98 k5 1.26 k10 1.88 | leak (slope, in control swings) k3 0.083, 0.51 k5 0.079, 0.32 k10 0.155, 0.66 | frozen mover/stayer slope k5 0.56/1.11=0.51 k10 0.51/1.02=0.50
+  qual: mover/control swing k1 3.94 k3 3.05 k5 2.54 k10 2.42 | stayer/control k3 1.85 k5 1.32 k10 1.61 | leak (slope, in control swings) k3 -0.014, 0.09 k5 0.025, 0.11 k10 0.041, 0.16 | frozen mover/stayer slope k5 0.94/1.11=0.85 k10 0.84/1.09=0.77
+
+== new-final: D2 0.509  (race 0.553, qualifying 0.465)
+session  T1 mover swing  T2 stayer swing  T3 stayer leak  T4 frozen transfer
+race             0.585           0.463          0.500              0.665
+qual             1.076           0.454          0.121              0.210
+  race: mover/control swing k1 2.02 k3 1.96 k5 1.63 k10 1.61 | stayer/control k3 1.79 k5 1.23 k10 1.82 | leak (slope, in control swings) k3 0.071, 0.46 k5 0.069, 0.31 k10 0.168, 0.74 | frozen mover/stayer slope k5 0.54/1.05=0.51 k10 0.51/0.99=0.52
+  qual: mover/control swing k1 3.94 k3 3.05 k5 2.54 k10 2.42 | stayer/control k3 1.85 k5 1.32 k10 1.61 | leak (slope, in control swings) k3 -0.014, 0.09 k5 0.025, 0.11 k10 0.041, 0.16 | frozen mover/stayer slope k5 0.94/1.11=0.85 k10 0.84/1.09=0.77
