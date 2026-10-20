@@ -33,6 +33,7 @@ export function initStage() {
     ledgerClose: $('stageLedgerClose'),
     trackTable: $('stageTrackTable'),
     trackPause: $('stageTrackPause'),
+    trackSpeeds: $('stageTrackSpeeds'),
     tagline: stage.querySelector('.stage-tagline'),
     bottomBar: stage.querySelector('.stage-bottom'),
     hotspots: { car: $('hotspotCar'), driver: $('hotspotDriver') },
@@ -379,6 +380,7 @@ export function initStage() {
   hold(parts.ledger);
   hold(parts.trackTable);
   hold(parts.trackPause);
+  hold(parts.trackSpeeds);
 
   // the picture's area and the word are two ways to the same subject
   for (const subject of SUBJECTS) {

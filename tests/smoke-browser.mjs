@@ -708,6 +708,53 @@ check(
 await evaluate("document.getElementById('stageTrackPause').click()");
 await sleep(500);
 check('and play starts it again', JSON.stringify((await trackState()).first) !== JSON.stringify(frozen.first));
+// the speed: the visitor chooses how many times faster than the real race it goes
+const speedButtons = await evaluate(
+  "[...document.querySelectorAll('#stageTrackSpeeds button')].map((button) => [button.textContent, button.getAttribute('aria-pressed')])",
+);
+check(
+  'six speeds to choose from (1, 2, 5, 10, 30 and 50 times), and 10 is the one chosen to begin with',
+  JSON.stringify(speedButtons.map(([name]) => name)) === JSON.stringify(['1×', '2×', '5×', '10×', '30×', '50×']) &&
+    JSON.stringify(speedButtons.filter(([, pressed]) => pressed === 'true').map(([name]) => name)) === JSON.stringify(['10×']),
+  JSON.stringify(speedButtons),
+);
+const chooseSpeed = async (speed) => {
+  await evaluate(`document.querySelector('#stageTrackSpeeds button[data-speed="${speed}"]').click()`);
+  await sleep(500);
+};
+const pace = async () => {
+  const before = await trackState();
+  await sleep(1500);
+  return ((await trackState()).raceTime - before.raceTime) / 1.5; // seconds of race for each second on the screen
+};
+const paces = {};
+for (const speed of [10, 1, 5, 50]) {
+  const justBefore = await trackState();
+  await chooseSpeed(speed);
+  const justAfter = await trackState();
+  paces[speed] = await pace();
+  if (speed === 1)
+    check(
+      'changing the speed does not move the race: it stays where it was (a few seconds of race time, not a jump)',
+      Math.abs(justAfter.raceTime - justBefore.raceTime) < 12,
+      `${justBefore.raceTime} then ${justAfter.raceTime}`,
+    );
+}
+check(
+  'the race goes at the speed chosen: 1, 5, 10 and 50 seconds of race for each second on the screen (within a third)',
+  Object.entries(paces).every(([speed, measured]) => Math.abs(measured / Number(speed) - 1) < 0.34),
+  JSON.stringify(paces),
+);
+check(
+  'and only the speed chosen is marked',
+  JSON.stringify(
+    await evaluate(
+      "[...document.querySelectorAll('#stageTrackSpeeds button')].filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.textContent)",
+    ),
+  ) === JSON.stringify(['50×']),
+);
+await chooseSpeed(10);
+
 // the cars: still a dot for each driver; the row of a team lights both of its drivers
 await evaluate("document.getElementById('ratingsCars').click()");
 await sleep(600);

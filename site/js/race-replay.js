@@ -6,9 +6,11 @@
 // at which it crosses the line, exactly; between two crossings it moves through the lap by a speed profile (speed-profile.js) so that it is slow in the
 // bends. A red flag is a stretch of the race clock in which every car stands still: the clock of the replay jumps over most of it.
 
-export const TIME_SCALE = 10; // a second on the screen is ten seconds of race
+export const SPEEDS = [1, 2, 5, 10, 30, 50]; // how many times faster than the real race the visitor can have it go
+export const DEFAULT_SPEED = 10; // a second on the screen is ten seconds of race
+export const STOP_SCREEN = 3; // seconds on the screen that a red flag takes, whatever the speed
 export const GRID_SPACING = 0.002; // laps between two places on the grid (about 8 metres on a 4 kilometre lap)
-export const STOP_PAUSE = 30; // seconds of race that a red flag takes on the screen (three seconds)
+export const STOP_PAUSE = STOP_SCREEN * DEFAULT_SPEED; // seconds of race that a red flag takes on the screen at the default speed
 const COOL_DOWN = 1.5; // a car that has finished goes on at this multiple of its lap time, and so does not stop on the line
 export const LEAST_DRIVING = 0.7; // a lap that contains a stoppage is driven in at least this share of a typical lap
 const MOST_BEFORE_STOP = 0.98; // a car that stops goes at most this far through its lap first, so that the line is crossed at its recorded moment
@@ -190,16 +192,17 @@ export function gapsAt(replay, time, progresses, standings) {
 }
 
 /**
- * The clock of the screen: a red flag is stood still for in the race clock, and takes only STOP_PAUSE seconds on the screen. `realAt` turns a moment of
- * the screen's race clock into the race clock, and `shownAt` is the inverse. Both are the identity in a race with no stoppage.
+ * The clock of the screen: a red flag is stood still for in the race clock, and takes only `pause` seconds of it on the screen (STOP_SCREEN seconds of the
+ * screen's time, so `pause` is that many times the speed). `realAt` turns a moment of the screen's race clock into the race clock, and `shownAt` is the
+ * inverse. Both are the identity in a race with no stoppage.
  */
-export function screenClock(stops) {
-  const long = stops.filter(([from, to]) => to - from > STOP_PAUSE);
+export function screenClock(stops, pause = STOP_PAUSE) {
+  const long = stops.filter(([from, to]) => to - from > pause);
   const before = []; // seconds taken out of the clock before each stoppage
   let removed = 0;
   for (const [from, to] of long) {
     before.push(removed);
-    removed += to - from - STOP_PAUSE;
+    removed += to - from - pause;
   }
   return {
     realAt(shown) {
@@ -207,7 +210,7 @@ export function screenClock(stops) {
         const [from, to] = long[i];
         const start = from - before[i];
         if (shown < start) return shown + before[i];
-        if (shown < start + STOP_PAUSE) return from + ((shown - start) / STOP_PAUSE) * (to - from);
+        if (shown < start + pause) return from + ((shown - start) / pause) * (to - from);
       }
       return shown + removed;
     },
@@ -215,7 +218,7 @@ export function screenClock(stops) {
       for (let i = 0; i < long.length; i++) {
         const [from, to] = long[i];
         if (real < from) return real - before[i];
-        if (real < to) return from - before[i] + ((real - from) / (to - from)) * STOP_PAUSE;
+        if (real < to) return from - before[i] + ((real - from) / (to - from)) * pause;
       }
       return real - removed;
     },

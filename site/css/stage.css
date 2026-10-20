@@ -1084,7 +1084,7 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   line-height: var(--row-height, 13px);
   white-space: nowrap;
   transition:
-    transform 0.55s cubic-bezier(0.3, 0.1, 0.2, 1),
+    transform var(--glide, 0.55s) cubic-bezier(0.3, 0.1, 0.2, 1),
     background-color 0.12s;
 }
 .track-table .place {
@@ -1143,6 +1143,35 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 }
 .track-dot.hot {
   fill: var(--hot);
+}
+.track-speeds {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  pointer-events: auto;
+}
+.track-speeds > span {
+  margin-right: 6px;
+}
+.track-speeds button {
+  min-height: 22px;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.track-speeds button:hover {
+  border-color: var(--ink);
+}
+.track-speeds button[aria-pressed='true'] {
+  background: var(--ink);
+  color: #fff;
 }
 .track-pause {
   min-height: 22px;

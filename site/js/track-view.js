@@ -1,5 +1,5 @@
 // The race on the front page: while the ratings are shown, the circuit of the weekend appears at the bottom right and the real race is replayed on it, from
-// the lap times of every car, ten times faster than it was run: each dot is a car, going round at the pace of the real laps (slowing into the bends and
+// the lap times of every car, at the speed the visitor chooses (1 to 50 times faster than it was run, 10 to begin with): each dot is a car, going round at the pace of the real laps (slowing into the bends and
 // speeding up out of them), passing and being passed when the real cars did, stopping when the real ones retired and when the race was red-flagged. Beside
 // the circuit is the live timing table: the places, the three letters of each driver and the gap to the leader, which moves when the order changes.
 // Pointing at a row of the ratings turns the dot and the table row of that driver (or, in the cars, of both of the team's drivers) red; pointing at a row of
@@ -10,7 +10,7 @@
 // site's own files are requested. The race can be paused, and starts paused under reduced motion.
 import { outlineTable, pointAt, smoothPath, startLine } from './track-geometry.js';
 import { lapClock, uniformClock } from './speed-profile.js';
-import { TIME_SCALE, buildReplay, gapsAt, progressesAt, screenClock, standingsAt } from './race-replay.js';
+import { DEFAULT_SPEED, SPEEDS, STOP_SCREEN, buildReplay, gapsAt, progressesAt, screenClock, standingsAt } from './race-replay.js';
 
 const SVG = 'http://www.w3.org/2000/svg';
 const DOT = 4.2; // radius of a dot on the screen, in pixels
@@ -61,6 +61,7 @@ export function initTrack() {
     dots: $('stageTrackDots'),
     table: $('stageTrackTable'),
     pause: $('stageTrackPause'),
+    speeds: [...box.querySelectorAll('#stageTrackSpeeds button')],
   };
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const view = {
@@ -82,6 +83,7 @@ export function initTrack() {
     last: 0,
     lastGaps: 0,
     paused: reducedMotion.matches,
+    speed: DEFAULT_SPEED, // times faster than the real race; kept while the page is open, not stored
     frame: 0,
     hotRatings: null, // the id of the row of the ratings under the pointer (a driver or a team, whichever the ratings show)
     hotTable: null, // the driver id of the row of the table under the pointer
@@ -155,6 +157,27 @@ export function initTrack() {
     paintHot();
   }
 
+  /**
+   * Changes how many times faster than the real race it goes. The race stays where it is: the moment it has reached is kept, and a red flag still takes
+   * STOP_SCREEN seconds on the screen at the new speed.
+   */
+  function setSpeed(speed) {
+    if (!SPEEDS.includes(speed)) return;
+    if (view.race) {
+      if (view.elapsed < 0)
+        view.elapsed = (view.elapsed / view.speed) * speed; // still on the grid: the same time left to wait
+      else {
+        const real = view.race.screen.realAt(view.elapsed);
+        view.race.screen = screenClock(view.race.stops, STOP_SCREEN * speed);
+        view.elapsed = view.race.screen.shownAt(real);
+      }
+    }
+    view.speed = speed;
+    for (const button of parts.speeds) button.setAttribute('aria-pressed', String(Number(button.dataset.speed) === speed));
+    parts.table.style.setProperty('--glide', `${Math.min(0.55, 5.5 / speed).toFixed(2)}s`); // the rows have less time to glide when places change faster
+    if (view.race && !box.hidden) draw(performance.now());
+  }
+
   function setPaused(paused) {
     view.paused = paused;
     parts.pause.textContent = paused ? 'play' : 'pause';
@@ -210,12 +233,12 @@ export function initTrack() {
   function tick(now) {
     view.frame = 0;
     const seconds = Math.max(0, Math.min(0.1, (now - view.last) / 1000)); // the time since the last frame, never negative or long (a tab left alone)
-    if (!view.paused) view.elapsed += seconds * TIME_SCALE;
+    if (!view.paused) view.elapsed += seconds * view.speed;
     view.last = now;
     const { real } = draw(now);
     const { replay, screen } = view.race;
-    if (real > replay.end && view.elapsed > screen.shownAt(replay.end) + SHOWN_FINISHED * TIME_SCALE)
-      view.elapsed = -START_HOLD * TIME_SCALE; // and it starts again
+    if (real > replay.end && view.elapsed > screen.shownAt(replay.end) + SHOWN_FINISHED * view.speed)
+      view.elapsed = -START_HOLD * view.speed; // and it starts again
     if (!view.paused) schedule();
   }
 
@@ -254,7 +277,8 @@ export function initTrack() {
     const replay = buildReplay(race, track.speeds ? lapClock(track.speeds) : uniformClock);
     view.race = {
       replay,
-      screen: screenClock(race.stops),
+      stops: race.stops,
+      screen: screenClock(race.stops, STOP_SCREEN * view.speed),
       table: outlineTable(track.points, 720),
       codes: season.codes,
       causes: season.statuses,
@@ -297,7 +321,7 @@ export function initTrack() {
     parts.name.textContent = `${view.snap.name.replace(/ Grand Prix$/, ' GP')} · ${view.snap.year}`;
     box.hidden = false;
     box.dataset.raceId = view.snap.raceId;
-    view.elapsed = -START_HOLD * TIME_SCALE;
+    view.elapsed = -START_HOLD * view.speed;
     view.lastGaps = 0;
     layoutTable();
     paintHot();
@@ -332,7 +356,9 @@ export function initTrack() {
     paintHot();
     draw(performance.now()); // (paused, nothing else would put the table where it belongs)
   }).observe(box);
+  for (const button of parts.speeds) button.addEventListener('click', () => setSpeed(Number(button.dataset.speed)));
   parts.pause.addEventListener('click', () => setPaused(!view.paused));
   reducedMotion.addEventListener('change', () => setPaused(reducedMotion.matches)); // it follows the setting, in both directions
+  setSpeed(view.speed);
   setPaused(view.paused);
 }

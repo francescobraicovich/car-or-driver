@@ -22,12 +22,15 @@ import { outlineTable, pointAt, smoothPath, startLine } from '../site/js/track-g
 import { lapClock, speedProfile, uniformClock } from '../site/js/speed-profile.js';
 import {
   GRID_SPACING,
-  TIME_SCALE,
+  DEFAULT_SPEED,
+  SPEEDS,
+  STOP_SCREEN,
   buildReplay,
   gapsAt,
   progress,
   progressesAt,
   raceTypical,
+  screenClock,
   standingsAt,
   timeAtProgress,
 } from '../site/js/race-replay.js';
@@ -319,8 +322,25 @@ assert.deepEqual(barScale([]), { low: 0, high: 0 });
     ) < 2,
     'a typical lap leaves out the very long laps',
   );
-  assert.equal(TIME_SCALE, 10);
+  assert.deepEqual(SPEEDS, [1, 2, 5, 10, 30, 50], 'the speeds the visitor can choose from');
+  assert.equal(DEFAULT_SPEED, 10);
+  assert.ok(SPEEDS.includes(DEFAULT_SPEED));
   assert.ok(GRID_SPACING > 0 && GRID_SPACING < 0.01);
+  // a red flag takes the same few seconds on the screen at every speed
+  for (const speed of SPEEDS) {
+    const clock = screenClock([[100, 2100]], STOP_SCREEN * speed);
+    assert.ok(
+      Math.abs(clock.shownAt(2100) - clock.shownAt(100) - STOP_SCREEN * speed) < 1e-9,
+      `at ${speed}x the stoppage is ${STOP_SCREEN * speed} seconds of race time`,
+    );
+    assert.ok(
+      Math.abs((clock.shownAt(2100) - clock.shownAt(100)) / speed - STOP_SCREEN) < 1e-9,
+      `which is ${STOP_SCREEN} seconds on the screen`,
+    );
+    assert.ok(Math.abs(clock.realAt(clock.shownAt(1500)) - 1500) < 1e-6, 'and the clock is its own inverse');
+  }
+  // a stoppage shorter than the pause is not shortened (at 50x the pause is 150 seconds of race)
+  assert.equal(screenClock([[100, 220]], STOP_SCREEN * 50).realAt(400), 400);
 }
 
 // ── the title and the line from a word to its picture ──

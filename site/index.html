@@ -222,7 +222,16 @@
               <ol class="track-table" id="stageTrackTable" aria-hidden="true"></ol>
             </div>
             <p class="track-foot">
-              <span>race speed ×10</span><button type="button" class="track-pause" id="stageTrackPause">pause</button>
+              <span class="track-speeds" id="stageTrackSpeeds" role="group" aria-label="Race speed, times faster than the real race">
+                <span>speed</span>
+                <button type="button" data-speed="1" aria-pressed="false">1×</button>
+                <button type="button" data-speed="2" aria-pressed="false">2×</button>
+                <button type="button" data-speed="5" aria-pressed="false">5×</button>
+                <button type="button" data-speed="10" aria-pressed="true">10×</button>
+                <button type="button" data-speed="30" aria-pressed="false">30×</button>
+                <button type="button" data-speed="50" aria-pressed="false">50×</button>
+              </span>
+              <button type="button" class="track-pause" id="stageTrackPause">pause</button>
             </p>
           </aside>
 
