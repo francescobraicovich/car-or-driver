@@ -323,6 +323,33 @@ await evaluate(
 await click(8, 300);
 await sleep(400);
 check('letting go of the panel puts the address back to the front page', (await evaluate('location.hash')) === '#/');
+// the choice made in the panel stands even though the pointer came to it from a picture: point at the car, go into the panel, press Drivers, then Cars
+const pressInPanel = async (id) => {
+  const box = await rectangleOf(id);
+  await mouse('mouseMoved', ...centreOf(box));
+  await mouse('mousePressed', ...centreOf(box));
+  await mouse('mouseReleased', ...centreOf(box));
+  await sleep(600);
+};
+await mouse('mouseMoved', ...centreOf(car));
+await sleep(500);
+const scrubAgain = await rectangleOf('ratingsScrub');
+await mouse('mouseMoved', scrubAgain.x + scrubAgain.width * 0.2, scrubAgain.y - 40);
+await sleep(700);
+await pressInPanel('ratingsDrivers');
+check(
+  'pressing Drivers in the panel, after pointing at the car, shows the drivers',
+  (await isState('open', 'driver')) && /^Driver ratings/.test(await panelTitle()),
+);
+await pressInPanel('ratingsCars');
+check(
+  'pressing Cars in the panel shows the cars',
+  (await isState('open', 'car')) && /^Car ratings/.test(await panelTitle()) && (await chartRows()) <= 14,
+  JSON.stringify([await stageState(), await panelTitle(), await chartRows()]),
+);
+await click(8, 300);
+await sleep(400);
+
 await click(...centreOf(car));
 await sleep(400);
 await mouse('mouseMoved', 8, 300);
@@ -437,6 +464,19 @@ check(
 );
 await evaluate("document.getElementById('ratingsSd').click()");
 await sleep(200);
+const barBox = await rectangleOfSelector('#ratingsList .ledger-row .bar');
+const nameBox = await rectangleOfSelector('#ratingsList .ledger-row .name');
+const ratingBox = await rectangleOfSelector('#ratingsList .ledger-row .rating');
+check(
+  'the bars are wide and the ratings are close to the names',
+  barBox.width >= 150 && ratingBox.x - (nameBox.x + nameBox.width) < 30,
+  JSON.stringify({ barBox, nameBox, ratingBox }),
+);
+const mean = await evaluate(
+  "(() => { const list = document.getElementById('ratingsList'); const bar = list.querySelector('.bar'); const line = getComputedStyle(bar, '::after'); return [parseFloat(list.style.getPropertyValue('--mean')), line.width, line.content]; })()",
+);
+check('a vertical line marks the average', mean[0] > 0 && mean[0] < 100 && mean[1] === '2px' && mean[2] !== 'none', JSON.stringify(mean));
+check('no orange shows while recent form is off', (await evaluate("document.querySelectorAll('#ratingsList .bar-form').length")) === 0);
 const ratingsOff = await evaluate("[...document.querySelectorAll('#ratingsList .ledger-row .rating')].map((cell) => cell.textContent)");
 await evaluate("document.getElementById('ratingsLayerForm').click()");
 await sleep(300);
@@ -446,6 +486,14 @@ check(
   (await evaluate("document.getElementById('ratingsLayerForm').getAttribute('aria-pressed')")) === 'true' &&
     ratingsOn.length === ratingsOff.length &&
     JSON.stringify(ratingsOn) !== JSON.stringify(ratingsOff),
+);
+const formBars = await evaluate(
+  "(() => { const bars = [...document.querySelectorAll('#ratingsList .bar-form')]; return [bars.length, bars.filter((bar) => bar.classList.contains('loss')).length, bars.every((bar) => parseFloat(bar.style.width) > 0), getComputedStyle(bars.find((bar) => !bar.classList.contains('loss'))).backgroundColor]; })()",
+);
+check(
+  'with recent form the shift is stacked on the bars in orange: solid where it adds, an outline where it takes away',
+  formBars[0] >= 5 && formBars[1] >= 1 && formBars[1] < formBars[0] && formBars[2] && formBars[3] === 'rgb(255, 106, 0)',
+  JSON.stringify(formBars),
 );
 await evaluate("document.getElementById('ratingsLayerForm').click()");
 await sleep(200);

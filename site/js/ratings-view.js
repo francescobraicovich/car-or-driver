@@ -7,7 +7,7 @@ import { clamp } from '../../packages/core/src/math.js';
 import { exportCSV } from './export.js';
 import { metricLabel, metricValue } from './charts.js';
 import { hideTooltip, inspectTarget } from './chart-renderer.js';
-import { bar, barScale } from './ratings-bars.js';
+import { barScale, barShare } from './ratings-bars.js';
 import { DESCRIPTIONS, NAMES, isProbability } from './metric-text.js';
 
 // Recent form adjusts the race-pace ratings only.
@@ -294,49 +294,70 @@ function toggleSelected(row) {
   controls.ratingsList.querySelector(`[data-id="${CSS.escape(row.id)}"]`)?.focus(); // the rows are drawn again: the one pressed keeps the focus
 }
 
-/** The ratings, ranked, as rows: rank, name (and team when there is room), rating, error, a bar of block characters, and the last column. */
+/**
+ * The ratings, ranked, as rows: rank, name (and team when there is room), rating, error, a bar, and the last column. The bar runs from the left to
+ * the rating, in blue; with recent form on, the shift is stacked on it in orange (solid where form adds to the rating, an outline where it takes
+ * away from it). A vertical line marks the average, 1,000 on the rating scale, or the mean of what is shown for the probabilities.
+ */
 function drawList(rows, snap, metric, probability, st) {
   const list = controls.ratingsList;
   const selected = preferences[entity].selected;
   const width = panel.getBoundingClientRect().width;
-  const barWidth = width < 400 ? 9 : 14;
-  const shown = (row) => (st.showForm ? row.formValue : row.value);
-  const { low, high } = barScale(rows.map(shown));
+  const total = (row) => (st.showForm ? row.formValue : row.value);
+  const finite = rows.map((row) => row.value).filter(Number.isFinite);
+  const mean = probability ? finite.reduce((sum, value) => sum + value, 0) / (finite.length || 1) : 1000;
+  const { low, high } = barScale([...rows.flatMap((row) => (st.showForm ? [row.value, row.formValue] : [row.value])), mean]);
+  const share = (value) => `${(100 * barShare(value, low, high)).toFixed(2)}%`;
+  const names = rows.map((row) => (row.newDriver ? `${row.name} · new` : row.name));
+  const teams = rows.map((row) => (entity === 'driver' ? row.car || '' : ''));
+  const showTeam = entity === 'driver' && width >= 560;
+  // the name column is as wide as the longest name (up to a limit), so that the ratings are close to the names and the bars take the rest
   list.style.setProperty('--rows', String(rows.length));
-  list.style.setProperty('--bar', String(barWidth));
-  list.classList.toggle('with-team', entity === 'driver' && width >= 560);
+  list.style.setProperty('--name', `${Math.min(Math.max(...names.map((name) => name.length), 4), width >= 500 ? 22 : 18)}ch`);
+  list.style.setProperty('--team', `${Math.min(Math.max(...teams.map((team) => team.length), 4), 16)}ch`);
+  list.style.setProperty('--mean', share(mean));
+  list.classList.toggle('with-team', showTeam);
   list.classList.toggle('with-sd', st.sd && width >= 400); // a phone has no room for the error beside every rating
   list.setAttribute(
     'aria-label',
     `${entity === 'driver' ? 'Driver' : 'Car'} ratings, ${NAMES[metric] || metric}${st.showForm ? ', with recent form' : ''}, ranked. Press a row to select it for comparison.`,
   );
-  const cell = (className, text) => {
-    const node = document.createElement('span');
+  const element = (tag, className, text) => {
+    const node = document.createElement(tag);
     node.className = className;
-    node.textContent = text;
+    if (text != null) node.textContent = text;
     return node;
   };
   list.replaceChildren(
-    ...rows.map((row) => {
+    ...rows.map((row, index) => {
       const item = document.createElement('li');
-      const line = document.createElement('div');
-      line.className = 'ledger-row';
+      const line = element('div', 'ledger-row');
       line.dataset.id = row.id;
       line.classList.toggle('selected', selected.has(row.id));
       line.setAttribute('aria-pressed', String(selected.has(row.id)));
       const last = lastColumn(row, probability, st.showForm);
-      const change = cell(`change ${last.tone}`.trim(), last.text);
       const deviation = Number.isFinite(sdOf(row, metric)) ? `±${sdOf(row, metric).toFixed(0)}` : '';
+      const bar = element('span', 'bar');
+      bar.setAttribute('aria-hidden', 'true');
+      const base = st.showForm ? Math.min(row.value, row.formValue) : row.value;
+      const baseBar = element('i', 'bar-base');
+      baseBar.style.width = share(base);
+      bar.append(element('i', 'bar-track'), baseBar);
+      if (st.showForm && row.shift) {
+        const formBar = element('i', row.shift < 0 ? 'bar-form loss' : 'bar-form');
+        formBar.style.left = share(base);
+        formBar.style.width = `${(100 * (barShare(Math.max(row.value, row.formValue), low, high) - barShare(base, low, high))).toFixed(2)}%`;
+        bar.append(formBar);
+      }
       line.append(
-        cell('rank', row.rank),
-        cell('name', row.newDriver ? `${row.name} · new` : row.name),
-        cell('team', entity === 'driver' ? row.car || '' : ''),
-        cell('rating', fmt(shown(row), probability)),
-        cell('deviation', deviation),
-        cell('bar', bar(shown(row), low, high, barWidth)),
-        change,
+        element('span', 'rank', row.rank),
+        element('span', 'name', names[index]),
+        element('span', 'team', teams[index]),
+        element('span', 'rating', fmt(total(row), probability)),
+        element('span', 'deviation', deviation),
+        bar,
+        element('span', `change ${last.tone}`.trim(), last.text),
       );
-      for (const decoration of line.querySelectorAll('.bar')) decoration.setAttribute('aria-hidden', 'true');
       line.addEventListener('click', () => toggleSelected(row));
       inspectTarget(
         line,
@@ -428,14 +449,14 @@ export function renderRatings() {
   // the weekend is in the pickers beside the title, so only a screen reader is told it twice
   controls.ratingsTitle.innerHTML = `${entity === 'driver' ? 'Driver' : 'Car'} ratings<span class="sr-only"> after the ${esc(`${snap.year} ${snap.name}`)}</span>`;
   const formNote = st.showForm
-    ? ' With recent form is the rating plus the forecast model’s adjustment for the last few races, in rating points, relative to the teammate; the last column is that shift.'
+    ? ' With recent form is the rating plus the forecast model’s adjustment for the last few races, in rating points, relative to the teammate. The orange part of a bar is that shift (solid when it adds to the rating, an outline when it takes away from it), and the last column gives it.'
     : st.reason && formOn
       ? ` ${st.reason}`
       : ' The last column is the change since the previous appearance.';
   const sdNote = st.sd
     ? ' ± is one standard deviation; it is approximate. Race driver bars are scaled to match how much ratings actually revise; car bars are somewhat narrow still. Differences smaller than the bars are not reliable.'
     : '';
-  controls.ratingsNote.textContent = `${DESCRIPTIONS[pref.metric]}${probability ? '' : ' 1,000 is the average; higher is faster.'} Each rating uses only results up to this weekend.${sdNote}${formNote} Data through ${dateFormat.format(Date.parse(latest.date))}${isLatest ? '' : ' (you are viewing history)'}. Press a row to select it for comparison.`;
+  controls.ratingsNote.textContent = `${DESCRIPTIONS[pref.metric]}${probability ? ' The vertical line is the average of those shown.' : ' 1,000 is the average, marked by the vertical line; higher is faster.'} Each rating uses only results up to this weekend.${sdNote}${formNote} Data through ${dateFormat.format(Date.parse(latest.date))}${isLatest ? '' : ' (you are viewing history)'}. Press a row to select it for comparison.`;
   hideTooltip();
   drawList(rows, snap, pref.metric, probability, st);
   syncTimeline(snap);

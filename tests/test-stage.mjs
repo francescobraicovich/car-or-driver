@@ -17,7 +17,7 @@ import {
   titleLayout,
 } from '../site/js/stage-geometry.js';
 import { shake, smoothNoise, sway } from '../site/js/stage-noise.js';
-import { bar, barScale } from '../site/js/ratings-bars.js';
+import { barScale, barShare } from '../site/js/ratings-bars.js';
 
 const VIEWPORTS = [
   [375, 812],
@@ -125,16 +125,17 @@ assert.notEqual(smoothNoise(2.5, 1), smoothNoise(2.5, 2), 'different seeds move 
 assert.ok(Math.abs(shake(0.5, 3)) <= 1 && Math.abs(sway(0.5, 3)) <= 1);
 
 // ── the bars beside the ratings ────────────────────────
-for (const width of [9, 14]) {
-  assert.equal([...bar(1100, 1000, 1100, width)].length, width, 'a bar is as wide as it is asked to be');
-  assert.equal(bar(1100, 1000, 1100, width), '█'.repeat(width), 'the highest rating fills the bar');
-  assert.equal(bar(1000, 1000, 1100, width), '█' + '░'.repeat(width - 1), 'the lowest end of the scale still gets one block');
-  assert.equal(bar(NaN, 1000, 1100, width), '░'.repeat(width), 'no rating, no block');
-}
-assert.ok(bar(1050, 1000, 1100, 14).split('█').length < bar(1090, 1000, 1100, 14).split('█').length, 'a higher rating has a longer bar');
-const scale = barScale([1101, 1081, NaN, 879]);
+assert.equal(barShare(1100, 1000, 1100), 1, 'the highest value fills the bar');
+assert.equal(barShare(1000, 1000, 1100), 0, 'the bottom of the scale is empty');
+assert.equal(barShare(1050, 1000, 1100), 0.5);
+assert.equal(barShare(NaN, 1000, 1100), 0, 'no rating, no bar');
+assert.equal(barShare(1200, 1000, 1100), 1, 'a value above the scale is held at the end');
+assert.equal(barShare(900, 1000, 1100), 0, 'a value below the scale is held at the start');
+assert.equal(barShare(5, 7, 7), 0, 'an empty scale gives no bar');
+const scale = barScale([1101, 1081, NaN, 879, 1000]);
 assert.equal(scale.high, 1101);
-assert.ok(scale.low < 879 && bar(879, scale.low, scale.high, 14).includes('█'), 'the lowest rating shown still has a bar');
+assert.ok(scale.low < 879 && barShare(879, scale.low, scale.high) > 0.1, 'the lowest value shown still has a bar');
+assert.ok(barShare(1000, scale.low, scale.high) > barShare(879, scale.low, scale.high), 'the average is to the right of the lowest');
 assert.deepEqual(barScale([]), { low: 0, high: 0 });
 
 // ── the title and the line from a word to its picture ──
@@ -367,7 +368,8 @@ for (const [width, height] of VIEWPORTS) {
       ['gain', 4.5, 'pos'],
       ['loss', 4.5, 'neg'],
       ['link and selection', 4.5, 'accent-text'],
-      ['bars', 4.5, 'frame'], // the bars are block characters in the blue of the box
+      ['bars', 3, 'frame'], // the bars are marks, not text: 3 to 1 is what they need
+      ['edge of the recent-form part of a bar', 3, 'form-edge'],
     ],
     'panel-plate',
   );

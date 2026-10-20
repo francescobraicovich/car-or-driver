@@ -315,7 +315,7 @@ export function initStage() {
   /** Using the panel (a press, or the keyboard moving into it) keeps it open, so that letting go of a slider outside it does not close it. */
   const keepOpen = () => {
     const subject = active();
-    if (subject && !view.selected) {
+    if (subject && view.selected !== subject) {
       view.selected = subject;
       update();
     }
@@ -387,6 +387,8 @@ export function initStage() {
   // the panel's Drivers and Cars buttons choose what is kept open
   window.addEventListener('f1:entity-chosen', (event) => {
     view.selected = event.detail.entity;
+    clearTimeout(view.release);
+    view.hover = null; // the picture that was pointed at on the way to the panel would otherwise outrank the choice
     update();
   });
   window.addEventListener('f1:ratings-failed', (event) => {

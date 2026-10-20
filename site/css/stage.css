@@ -480,6 +480,8 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   --on-accent: #fff;
   --pos: #04431f;
   --neg: #7d0c11;
+  --form: #ff6a00; /* the orange of the main page, for recent form */
+  --form-edge: #8a2f00;
   --panel-plate: rgb(236 238 242 / 0.26);
   position: absolute;
   z-index: 5;
@@ -650,6 +652,15 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 #ratingsLayerForm {
   margin-left: auto;
 }
+#ratingsLayerForm::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 5px;
+  background: var(--form);
+  box-shadow: inset 0 0 0 1px var(--form-edge);
+}
 
 /* the ratings: rank, name, rating, error, a bar of blocks, and the change; every row visible, and the one under the pointer inverted */
 .ratings-list {
@@ -672,22 +683,22 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 .ledger-row {
   display: grid;
   flex: 1 1 auto;
-  grid-template-columns: 3ch minmax(0, 1fr) 4.5ch calc(var(--bar, 14) * 1ch) 6ch;
+  grid-template-columns: 3ch var(--name, 18ch) 4.5ch minmax(0, 1fr) 6ch;
   align-items: center;
-  gap: 0 1.2ch;
+  gap: 0 1ch;
   padding: 0 6px;
   border-radius: 2px;
   cursor: pointer;
   white-space: nowrap;
 }
 .ratings-list.with-sd .ledger-row {
-  grid-template-columns: 3ch minmax(0, 1fr) 4.5ch 4.5ch calc(var(--bar, 14) * 1ch) 6ch;
+  grid-template-columns: 3ch var(--name, 18ch) 4.5ch 4.5ch minmax(0, 1fr) 6ch;
 }
 .ratings-list.with-team .ledger-row {
-  grid-template-columns: 3ch minmax(0, 1.4fr) minmax(0, 1fr) 4.5ch calc(var(--bar, 14) * 1ch) 6ch;
+  grid-template-columns: 3ch var(--name, 18ch) var(--team, 12ch) 4.5ch minmax(0, 1fr) 6ch;
 }
 .ratings-list.with-team.with-sd .ledger-row {
-  grid-template-columns: 3ch minmax(0, 1.4fr) minmax(0, 1fr) 4.5ch 4.5ch calc(var(--bar, 14) * 1ch) 6ch;
+  grid-template-columns: 3ch var(--name, 18ch) var(--team, 12ch) 4.5ch 4.5ch minmax(0, 1fr) 6ch;
 }
 .ledger-row > span {
   overflow: hidden;
@@ -720,9 +731,48 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 .ledger-row .change.down {
   color: var(--neg);
 }
+/* the bar fills what is left of the row: blue to the rating, the form stacked on it in orange, and a vertical line at the average */
 .ledger-row .bar {
-  color: var(--frame);
-  letter-spacing: -0.02em;
+  --track: rgb(10 26 156 / 0.5);
+  --line: var(--ink);
+  --halo: rgb(255 255 255 / 0.85);
+  --fill: var(--frame);
+  position: relative;
+  align-self: stretch;
+  overflow: visible;
+}
+.bar i {
+  position: absolute;
+  top: 22%;
+  bottom: 22%;
+}
+.bar-track {
+  left: 0;
+  right: 0;
+  background: conic-gradient(var(--track) 25%, transparent 0 50%, var(--track) 0 75%, transparent 0) 0 0 / 2px 2px;
+}
+.bar-base {
+  left: 0;
+  background: var(--fill);
+}
+.bar-form {
+  min-width: 2px; /* a shift of a point or two still shows */
+  background: var(--form);
+  box-shadow: inset 0 0 0 1px var(--form-edge);
+}
+.bar-form.loss {
+  background: transparent;
+}
+.ledger-row .bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--mean, 50%);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--line);
+  box-shadow: 0 0 0 1px var(--halo);
 }
 .ledger-row.selected {
   background: var(--accent-wash);
@@ -740,6 +790,13 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 .ledger .ledger-row:hover .change,
 .ledger .ledger-row:focus-visible .change {
   color: var(--surface);
+}
+.ledger .ledger-row:hover .bar,
+.ledger .ledger-row:focus-visible .bar {
+  --track: rgb(238 240 243 / 0.45);
+  --fill: var(--surface);
+  --line: var(--surface);
+  --halo: rgb(10 11 15 / 0.85);
 }
 /* what is selected for comparison, on one line */
 .ledger .selection-bar {
