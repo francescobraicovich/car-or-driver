@@ -136,8 +136,30 @@ const press = async (key, code, keyCode, text) => {
 };
 const stageState = () => evaluate("(() => { const s = document.getElementById('stage'); return [s.dataset.state, s.dataset.subject]; })()");
 const isState = async (state, subject) => JSON.stringify(await stageState()) === JSON.stringify([state, subject]);
-const ledgerRows = () => evaluate("[...document.querySelectorAll('#stageLedgerList .ledger-row')].map((row) => row.textContent)");
+const chartRows = () => evaluate("document.querySelectorAll('#ratingsChart .rankrow').length");
+const panelTitle = () => evaluate("document.getElementById('ratingsTitle').textContent");
 const centreOf = (r) => [r.x + r.width / 2, r.y + r.height / 2];
+// A short window, where the ratings are a sheet that can reach the pictures: pointing at the car must stay open (the sheet used to cover the spot,
+// so the pointer left the car, the sheet closed, and it opened again).
+const shortCar = await rectangleOf('hotspotCar');
+check('a narrow window lays the ratings out as a sheet', (await evaluate("document.getElementById('stage').dataset.layout")) === 'sheet');
+await mouse('mouseMoved', ...centreOf(shortCar));
+const sampled = [];
+for (let i = 0; i < 8; i++) {
+  await sleep(150);
+  sampled.push(JSON.stringify(await stageState()));
+}
+check(
+  'pointing at the car in a short window is stable: it does not open and close by itself',
+  sampled.every((state) => state === JSON.stringify(['peek', 'car'])),
+  sampled.join(' '),
+);
+await mouse('mouseMoved', 8, 20);
+await sleep(300);
+// The rest at the size of a laptop screen, where the ratings are a column beside the pictures.
+await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+await sleep(700);
+check('a wide window lays the ratings out as a column', (await evaluate("document.getElementById('stage').dataset.layout")) === 'wide');
 const car = await rectangleOf('hotspotCar');
 const hands = await rectangleOf('hotspotDriver');
 check(
@@ -176,16 +198,16 @@ check(
     Math.abs(box.height - car.height) < 20,
   JSON.stringify({ box, car }),
 );
-const hoverRows = await ledgerRows();
+const hoverRows = await chartRows();
 check(
-  'pointing at the car, without a click, shows the list of cars with their error bars',
-  !(await evaluate("document.getElementById('stageLedger').hidden")) && hoverRows.length >= 8 && hoverRows.every((row) => /±\d+/.test(row)),
-  `${hoverRows.length} rows`,
+  'pointing at the car, without a click, shows the ratings panel with the cars ranked',
+  !(await evaluate("document.getElementById('stageLedger').hidden")) && hoverRows >= 8 && /^Car ratings/.test(await panelTitle()),
+  `${hoverRows} rows`,
 );
 check(
-  'the ratings say they are not yet kept open, and do not offer keys that only work once they are',
-  /click the picture to keep this open/.test(await evaluate("document.getElementById('stageLedgerPin').textContent")) &&
-    !/j and k/.test(await evaluate("document.getElementById('stageLedgerDetail').textContent")),
+  'the panel says it is not yet kept open',
+  /click to keep this open/i.test(await evaluate("document.getElementById('stageLedgerPin').textContent")) &&
+    (await evaluate("document.getElementById('stageLedgerClose').hidden")),
 );
 check(
   'only the word CAR stays lit: the other words are dimmed',
@@ -209,22 +231,23 @@ await sleep(500);
 check('moving away closes it again when nothing was clicked', await isState('idle', ''));
 await mouse('mouseMoved', ...centreOf(wordDriver));
 await sleep(700);
-const wordRows = await ledgerRows();
+const wordRows = await chartRows();
 check(
   'pointing at the word DRIVER does the same for the drivers',
   (await isState('peek', 'driver')) &&
-    wordRows.length > 15 &&
+    wordRows > 15 &&
+    /^Driver ratings/.test(await panelTitle()) &&
     (await opacityOf('#stageTitle .title-core .word-driver')) === '1' &&
     (await opacityOf('#stageTitle .title-core .word-car')) !== '1',
-  `${wordRows.length} rows`,
+  `${wordRows} rows`,
 );
 await click(...centreOf(hands));
 await sleep(500);
 check(
   'clicking the hands keeps the list of drivers open',
   (await isState('open', 'driver')) &&
-    /kept open/.test(await evaluate("document.getElementById('stageLedgerPin').textContent")) &&
-    /j and k/.test(await evaluate("document.getElementById('stageLedgerDetail').textContent")) &&
+    /kept open/i.test(await evaluate("document.getElementById('stageLedgerPin').textContent")) &&
+    !(await evaluate("document.getElementById('stageLedgerClose').hidden")) &&
     (await evaluate("document.getElementById('hotspotDriver').getAttribute('aria-pressed')")) === 'true',
 );
 const ledgerBox = await rectangleOf('stageLedger');
@@ -252,11 +275,46 @@ check('clicking the hands again lets go of them', await isState('peek', 'driver'
 await click(8, 300);
 await sleep(400);
 check('pressing on the picture, away from the car and the hands, lets go of the ratings', await isState('idle', ''));
+// From the picture to the panel: the pointer travels to it, the panel stays, and using its slider keeps it open even when the button is let go outside.
+await mouse('mouseMoved', ...centreOf(car));
+await sleep(500);
+const panelBox = await rectangleOf('stageLedger');
+check(
+  'the panel is a column clear of the car and the hands',
+  panelBox.x + panelBox.width + 16 <= car.x && panelBox.x + panelBox.width + 16 <= hands.x,
+  JSON.stringify({ panelBox, car, hands }),
+);
+const scrub = await rectangleOf('ratingsScrub');
+await mouse('mouseMoved', scrub.x + scrub.width * 0.2, scrub.y - 40);
+await sleep(900);
+check(
+  'moving from the car to the panel keeps the ratings of the cars open',
+  (await isState('peek', 'car')) && /^Car ratings/.test(await panelTitle()),
+);
+const weekendBefore = await evaluate("document.getElementById('ratingsNow').textContent");
+await mouse('mouseMoved', scrub.x + scrub.width * 0.3, scrub.y + scrub.height / 2);
+await mouse('mousePressed', scrub.x + scrub.width * 0.3, scrub.y + scrub.height / 2);
+await mouse('mouseMoved', scrub.x + scrub.width * 0.7, scrub.y + scrub.height / 2);
+await mouse('mouseMoved', scrub.x + scrub.width * 0.7, 30); // above the panel: the weekend stays where the thumb was
+await mouse('mouseReleased', scrub.x + scrub.width * 0.7, 30);
+await sleep(900);
+check(
+  'dragging the weekend slider changes the weekend and keeps the panel open when the button is let go outside it',
+  (await isState('open', 'car')) && (await evaluate("document.getElementById('ratingsNow').textContent")) !== weekendBefore,
+  `${weekendBefore} -> ${await evaluate("document.getElementById('ratingsNow').textContent")}`,
+);
+check('the address is the Ratings page while the panel is kept open', (await evaluate('location.hash')).startsWith('#/ratings?'));
+await evaluate(
+  "(() => { const slider = document.getElementById('ratingsScrub'); slider.value = slider.max; slider.dispatchEvent(new Event('input')); })()",
+); // back to the latest weekend, which the checks below assume
+await click(8, 300);
+await sleep(400);
+check('letting go of the panel puts the address back to the front page', (await evaluate('location.hash')) === '#/');
 await click(...centreOf(car));
 await sleep(400);
 await mouse('mouseMoved', 8, 300);
 await press('Escape', 'Escape', 27);
-await sleep(500);
+await sleep(1000); // the grace period before what was pointed at closes, and then the picture fades back to red
 check(
   'Escape closes the ratings and the picture goes back to red',
   (await isState('idle', '')) && (await opacityOf('.layer-mono')) === '0',
@@ -267,23 +325,21 @@ check('with the focus on the hands the list of drivers shows and the box is open
 await press('Enter', 'Enter', 13, '\r');
 await sleep(500);
 check(
-  'Enter on the hands keeps the list of drivers open and moves into it',
+  'Enter on the hands keeps the ratings of the drivers open and moves into the panel',
   (await isState('open', 'driver')) &&
-    (await evaluate("document.activeElement?.classList.contains('ledger-row')")) &&
-    (await evaluate("document.querySelectorAll('#stageLedgerList .ledger-row').length")) > 15,
+    (await evaluate("document.getElementById('stageLedger').contains(document.activeElement)")) &&
+    (await chartRows()) > 15,
 );
-await press('j', 'KeyJ', 74, 'j');
-check('j moves down the list', (await evaluate('document.activeElement?.dataset.index')) === '1');
 check(
-  'a list row is read as a sentence, not as bars and arrows',
+  'the rows of the chart are reached with the keyboard and each reads as a sentence',
   await evaluate(
-    "[...document.querySelectorAll('#stageLedgerList .ledger-row')].every((row) => /^\\d+, .+, rating \\d+/.test(row.getAttribute('aria-label')) && !/[█░▲▼±]/.test(row.getAttribute('aria-label')))",
+    "[...document.querySelectorAll('#ratingsChart .rankrow')].every((row) => row.getAttribute('tabindex') === '0' && /Rank \\d+/.test(row.getAttribute('aria-label')))",
   ),
 );
 await press('Escape', 'Escape', 27);
 await sleep(300);
 check(
-  'Escape from the list closes it and puts the focus back on the hands',
+  'Escape from the panel closes it and puts the focus back on the hands',
   (await stageState())[0] !== 'open' && (await evaluate('document.activeElement?.id')) === 'hotspotDriver',
 );
 await evaluate('document.activeElement.blur()');
@@ -300,7 +356,7 @@ check(
 );
 await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
 await mouse('mouseMoved', 8, 300);
-await sleep(300);
+await sleep(900);
 
 // Ratings: ranked chart, Cars switch, timeline play
 await evaluate("location.hash = '#/ratings'");
@@ -605,6 +661,25 @@ for (const page of ['home', 'ratings', 'history', 'head-to-head', 'insights', 'm
   const [scroll, inner] = await evaluate('[document.documentElement.scrollWidth, window.innerWidth]');
   check(`on a phone ${page} does not scroll sideways`, scroll <= inner, `${scroll} wide in ${inner}`);
 }
+// On a phone the ratings are a sheet: a tap on the car keeps it open, it stays clear of both pictures and above the text at the bottom
+await evaluate("location.hash = '#/'");
+await sleep(900);
+check('on a phone the ratings are laid out as a sheet', (await evaluate("document.getElementById('stage').dataset.layout")) === 'sheet');
+const phoneCar = await rectangleOf('hotspotCar');
+const [tapX, tapY] = centreOf(phoneCar);
+await send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: tapX, y: tapY }] });
+await send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+await sleep(900);
+const sheet = await rectangleOf('stageLedger');
+const phoneBottomRow = await rectangleOfSelector('.stage-bottom');
+check(
+  'tapping the car keeps its ratings open in a sheet that is tall enough to use and above the text at the bottom',
+  (await isState('open', 'car')) && sheet.height >= 300 && sheet.y >= 60 && sheet.y + sheet.height <= phoneBottomRow.y + 1,
+  JSON.stringify({ sheet, phoneBottomRow }),
+);
+await evaluate("document.getElementById('stageLedgerClose').click()");
+await sleep(300);
+check('the Close button lets go of the ratings', await isState('idle', ''));
 await send('Emulation.clearDeviceMetricsOverride');
 
 for (const c of checks) console.log(`${c.pass ? 'ok  ' : 'FAIL'} ${c.name}${c.detail ? ` (${c.detail})` : ''}`);

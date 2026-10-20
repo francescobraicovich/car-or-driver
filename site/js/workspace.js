@@ -7,7 +7,7 @@ import { createThemeButton } from './theme.js';
 // route -> the section that is the page.
 const PAGES = {
   '/': 'home',
-  '/ratings': 'ratings',
+  '/ratings': 'home', // the ratings are the panel on the front page, kept open
   '/history': 'charts',
   '/head-to-head': 'headToHead',
   '/insights': 'insights',
@@ -47,9 +47,8 @@ export function initWorkspace() {
   $('shareView').before(createThemeButton());
 
   const pages = new Map(Object.entries(PAGES).map(([path, id]) => [path, $(id)]));
-  for (const [path, node] of pages) {
+  for (const node of new Set(pages.values())) {
     node.classList.add('workspace-page');
-    node.dataset.route = path;
     node.tabIndex = -1;
     visible(node, false);
   }
@@ -66,13 +65,15 @@ export function initWorkspace() {
   });
   root.hidden = false;
 
+  const pageName = () => (route === '/' ? 'home' : route.slice(1));
+
   function display() {
-    document.body.dataset.page = route === '/' ? 'home' : route.slice(1);
+    document.body.dataset.page = pageName();
     for (const link of document.querySelectorAll('#workspaceLinks a')) {
       if (link.getAttribute('href') === `#${route}`) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     }
-    for (const [path, node] of pages) visible(node, path === route);
+    for (const node of new Set(pages.values())) visible(node, node === pages.get(route));
     $('chartValueTooltip')?.setAttribute('hidden', '');
     window.dispatchEvent(new CustomEvent('f1:workspace-changed', { detail: { page: route } }));
   }
@@ -155,25 +156,43 @@ export function initWorkspace() {
   window.addEventListener('f1:compare-head-to-head', () => {
     location.hash = '/head-to-head';
   });
+  // keeping the ratings open on the front page is the Ratings page, and letting go of them is the front page: the address follows
+  window.addEventListener('f1:ratings-pinned', (event) => {
+    const next = event.detail.pinned ? '/ratings' : '/';
+    if (route === next || !['/', '/ratings'].includes(route)) return;
+    route = next;
+    document.body.dataset.page = pageName();
+    saveURL();
+  });
   window.addEventListener('hashchange', navigate);
   window.addEventListener('f1:race-changed', () => {
     rememberRace();
     saveURL();
   });
-  $('shareView').addEventListener('click', async () => {
+  // the Share button of the navigation, and the Copy link button in the ratings panel (the navigation is not shown on the front page)
+  async function share() {
     saveURL();
+    const say = (text) => {
+      $('shareStatus').textContent = text;
+      const panelStatus = $('ratingsShareStatus');
+      if (panelStatus) panelStatus.textContent = text;
+    };
     try {
       await navigator.clipboard.writeText(location.href);
-      $('shareStatus').textContent = 'Link copied';
       $('shareURL').hidden = true;
+      say('Link copied');
     } catch {
       $('shareURL').hidden = false;
       $('shareURL').value = location.href;
-      $('shareURL').focus();
-      $('shareURL').select();
-      $('shareStatus').textContent = 'Copy link';
+      if ($('shareView').offsetParent) {
+        $('shareURL').focus();
+        $('shareURL').select();
+      }
+      say('Copy the address from the address bar');
     }
-  });
+  }
+  $('shareView').addEventListener('click', share);
+  window.addEventListener('f1:share-requested', share);
   window.addEventListener('f1:model-ready', () => {
     restoreRace();
     history.refresh();

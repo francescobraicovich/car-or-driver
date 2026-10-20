@@ -49,7 +49,6 @@
     <link rel="modulepreload" href="js/stage-view.js" />
     <link rel="modulepreload" href="js/stage-geometry.js" />
     <link rel="modulepreload" href="js/stage-noise.js" />
-    <link rel="modulepreload" href="js/stage-ledger.js" />
     <link rel="modulepreload" href="js/theme.js" />
     <link rel="modulepreload" href="js/history-view.js" />
     <link rel="modulepreload" href="../packages/core/src/lineage.js" />
@@ -125,7 +124,7 @@
 
     <main id="workspace" class="workspace" hidden>
       <section id="home" aria-label="Driver or Car">
-        <div class="stage" id="stage" data-state="idle" data-subject="" data-hover="" data-pointer="" data-fit="false">
+        <div class="stage" id="stage" data-state="idle" data-subject="" data-hover="" data-pointer="" data-layout="sheet">
           <svg class="stage-filters" width="0" height="0" aria-hidden="true" focusable="false">
             <!-- the title's smoky edges and the two horizontal smears behind it; stage-view.js sets their strengths from the size of the title -->
             <filter id="titleSmoke" x="-8%" y="-20%" width="116%" height="140%">
@@ -203,9 +202,11 @@
           <div class="stage-cursor" id="stageCursor" aria-hidden="true"></div>
 
           <section class="ledger" id="stageLedger" aria-label="Ratings" hidden>
-            <p class="ledger-title"><span id="stageLedgerTitle"></span><span class="ledger-pin" id="stageLedgerPin"></span></p>
-            <ol class="ledger-list" id="stageLedgerList"></ol>
-            <p class="ledger-detail" id="stageLedgerDetail" aria-live="polite"></p>
+            <div class="ledger-bar">
+              <span class="ledger-pin" id="stageLedgerPin"></span>
+              <button type="button" class="ledger-close" id="stageLedgerClose">Close</button>
+            </div>
+            <div id="ratingsHost" hidden></div>
           </section>
 
           <footer class="stage-bar stage-bottom">
@@ -220,22 +221,6 @@
             </nav>
           </footer>
         </div>
-      </section>
-
-      <section id="ratings" aria-label="Ratings">
-        <div class="hero">
-          <p class="hero-kicker">Formula 1, every weekend since 2000</p>
-          <h1 class="hero-title">Driver <em>or</em> Car?</h1>
-          <p class="hero-text">
-            Every result is part driver and part machine. These ratings pull the two apart, with error bars, so you can see who is really
-            fast and whose car did the work.
-          </p>
-          <div class="hero-split" aria-hidden="true"><span class="hero-driver">Driver</span><span class="hero-car">Car</span></div>
-          <p class="hero-links">
-            <a href="#/insights">Twenty findings</a><a href="#/head-to-head">Settle an argument</a><a href="#/methodology">How it works</a>
-          </p>
-        </div>
-        <div id="ratingsHost" hidden></div>
       </section>
 
       <section id="headToHead" aria-label="Head to head">

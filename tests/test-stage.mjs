@@ -1,24 +1,40 @@
-// The front page, tested without a browser: where the drawing and the two selectable areas fall on every kind of screen, the noise that moves the
-// cursor and the box, the text and the ratings list that are built from data, and (the part a reader would notice first) whether the text can be read
-// against the drawing. The contrast is measured, not judged: the drawing's darkest and lightest pixels under every piece of text, at four screen
-// sizes, blended with the translucent plate behind the text, against the text colours read from site/css/stage.css.
+// The front page, tested without a browser: where the drawing and the two selectable areas fall on every kind of screen, where the ratings panel is
+// and that it keeps clear of them, the noise that moves the cursor and the box, and (the part a reader would notice first) whether the text can be
+// read against the drawing. The contrast is measured, not judged: the drawing's darkest and lightest pixels under every piece of text, at every
+// screen size below, blended with the translucent plate behind the text, against the text colours read from site/css/stage.css.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { ART, SUBJECTS, connectorPoints, sceneGeometry, subjectRectangle, titleLayout } from '../site/js/stage-geometry.js';
+import {
+  ART,
+  SUBJECTS,
+  connectorPoints,
+  edgeMargin,
+  panelColumn,
+  sceneFades,
+  sceneGeometry,
+  subjectRectangle,
+  titleLayout,
+} from '../site/js/stage-geometry.js';
 import { shake, smoothNoise, sway } from '../site/js/stage-noise.js';
-import { BAR_WIDTH, bar, ledgerRows, spokenRow } from '../site/js/stage-ledger.js';
 
 const VIEWPORTS = [
   [375, 812],
   [390, 844],
   [768, 1024],
+  [820, 1180],
   [1024, 768],
+  [1100, 700],
   [1280, 800],
   [1366, 600],
+  [1440, 900],
   [1920, 1080],
   [2560, 1080],
 ];
+// What the page measures in the browser (see stage-view.js): the bottom row of text is 98 high on a narrow screen and 70 on a wide one, the top
+// row 55 or 78, and the panel's top is 68. The panel keeps 8 below it clear of the bottom row.
+const BOTTOM_ROW = 98;
+const PANEL_TOP = 68;
 
 // ── geometry ───────────────────────────────────────────
 // The dark pixels of the car and of the hands, measured on the three versions of the drawing (the red one blurs a little wider).
@@ -26,12 +42,15 @@ const DARK_PIXELS = { car: { x: 611, y: 473, right: 968, bottom: 557 }, driver: 
 for (const [width, height] of VIEWPORTS) {
   const geometry = sceneGeometry(width, height);
   const label = `${width}x${height}`;
-  assert.ok(geometry.width >= width - 0.5, `${label}: the drawing is at least as wide as the screen`);
-  if (!geometry.fits)
-    assert.ok(
-      geometry.height >= height - 0.5 && geometry.y <= 0.5 && geometry.y + geometry.height >= height - 0.5,
-      `${label}: the drawing covers the screen`,
-    );
+  const column = panelColumn(width);
+  assert.equal(geometry.wide, Boolean(column), `${label}: the picture knows whether the panel is a column`);
+  assert.ok(geometry.x + geometry.width >= width - 0.5, `${label}: the picture reaches the right edge of the screen`);
+  const fades = sceneFades(geometry, width, height);
+  assert.ok(
+    Object.values(fades).every((length) => length >= 0),
+    `${label}: no fade is negative`,
+  );
+  assert.equal(fades.right, 0, `${label}: nothing fades at the right edge`);
   const rectangles = Object.fromEntries(Object.keys(SUBJECTS).map((name) => [name, subjectRectangle(geometry, name)]));
   for (const [name, rectangle] of Object.entries(rectangles)) {
     assert.ok(
@@ -53,10 +72,34 @@ for (const [width, height] of VIEWPORTS) {
       `${label}: the ${name} area contains the ${name}`,
     );
     assert.ok(rectangle.width * rectangle.height >= 44 * 44, `${label}: the ${name} area is a big enough target`);
+    if (column) {
+      // any overlap with the panel would bring back the pointer leaving the picture it is on
+      assert.ok(rectangle.x >= column.right + 16, `${label}: the ${name} area is clear of the panel`);
+      assert.ok(rectangle.x + rectangle.width <= width - 8, `${label}: the ${name} area is inside the right edge`);
+    }
+  }
+  if (column) {
+    assert.ok(column.width >= 440 && column.width <= 620, `${label}: the panel is a sensible width (${column.width.toFixed(0)}px)`);
+    assert.ok(height - BOTTOM_ROW - 8 - PANEL_TOP >= 300, `${label}: the panel is tall enough to be used`);
+    assert.ok(
+      geometry.scale <= Math.max(width / ART.width, height / ART.height) + 1e-9,
+      `${label}: the picture is not larger than one that covers the screen`,
+    );
+  } else {
+    // the panel is a sheet under the pictures: shown only because something is pointed at, it stays clear of them in at least 220 pixels
+    const lowest = Math.max(...Object.values(rectangles).map((rectangle) => rectangle.y + rectangle.height));
+    assert.ok(height - BOTTOM_ROW - 8 - lowest - 12 >= 220, `${label}: the sheet has room under the car and the hands`);
   }
   assert.ok(rectangles.car.x + rectangles.car.width < rectangles.driver.x, `${label}: the two areas do not overlap`);
   assert.ok(geometry.y + 0 === geometry.y && Number.isFinite(geometry.scale) && geometry.scale > 0);
 }
+// on a wide screen the picture is smaller than it would be if it covered the screen, whenever the panel would otherwise be in its way
+assert.ok(
+  sceneGeometry(1280, 800).scale < Math.max(1280 / ART.width, 800 / ART.height),
+  'at 1280x800 the picture is smaller than the covering one',
+);
+assert.equal(panelColumn(999), null, 'below 1000 the panel is a sheet');
+assert.ok(panelColumn(1000) && panelColumn(1000).left === edgeMargin(1000), 'from 1000 it is a column');
 // the three layers share one transform, so the subjects' areas are the same box in every colouring by construction; and the areas are inside the picture
 for (const subject of Object.values(SUBJECTS))
   assert.ok(subject.x >= 0 && subject.y >= 0 && subject.x + subject.width <= ART.width && subject.y + subject.height <= ART.height);
@@ -106,6 +149,9 @@ for (const [width, height] of VIEWPORTS) {
   assert.ok(layout.size >= 26 && layout.size <= 118, `${label}: the title size is sensible (${layout.size.toFixed(0)}px)`);
   assert.ok(boxes.block.y + boxes.block.height <= subjectTop - 30, `${label}: the title stays clear of the car and the hands`);
   assert.ok(boxes.block.x >= -1 && boxes.block.x + boxes.block.width <= width + 1, `${label}: the title is on the screen`);
+  const column = panelColumn(width);
+  if (column)
+    assert.ok(boxes.block.x - 24 >= column.right, `${label}: the title, and the lines that run beside it, are clear of the panel`);
   for (const [name, word] of [
     ['car', boxes.car],
     ['driver', boxes.driver],
@@ -113,6 +159,11 @@ for (const [width, height] of VIEWPORTS) {
     const subject = subjectRectangle(geometry, name);
     const points = connectorPoints(word, subject, boxes.block);
     assert.ok(points.length >= 2 && points.length <= 4, `${label}: the ${name} line has two to four points`);
+    if (column)
+      assert.ok(
+        points.every((point) => point.x >= column.right + 8),
+        `${label}: the ${name} line stays out of the panel`,
+      );
     const last = points.at(-1);
     assert.ok(
       Math.abs(last.y - subject.y) < 0.01 && last.x >= subject.x && last.x <= subject.x + subject.width,
@@ -130,32 +181,6 @@ for (const [width, height] of VIEWPORTS) {
   }
 }
 
-// ── the ratings list ───────────────────────────────────
-const rows = [
-  { id: 'a', name: 'Alpha', car: 'Red', value: 1070.4, combinedSd: 12.2, change: 1.04 },
-  { id: 'b', name: 'Beta', car: 'Blue', value: 1000, combinedSd: NaN, change: -0.02 },
-  { id: 'c', name: 'Gamma', car: '', value: NaN, combinedSd: 14, change: 0 },
-  { id: 'd', name: 'Delta', car: 'Grey', value: 940, combinedSd: 15, change: -3.26 },
-];
-const printed = ledgerRows(rows);
-assert.equal(printed.length, 3, 'an entry without a rating is left out');
-assert.deepEqual(
-  printed.map((row) => row.rank),
-  ['1', '2', '3'],
-);
-assert.equal(printed[0].rating, '1070');
-assert.equal(printed[0].deviation, '±12');
-assert.equal(printed[1].deviation, '', 'no error bar is printed when there is none');
-assert.equal(printed[0].change, '▲1.0');
-assert.equal(printed[1].change, '', 'a change below a tenth of a point is not printed');
-assert.equal(printed[2].change, '▼3.3');
-for (const row of printed) assert.equal([...row.bar].length, BAR_WIDTH, 'every bar has the same width');
-assert.ok(printed[0].bar.split('█').length > printed[2].bar.split('█').length, 'a higher rating has a longer bar');
-assert.equal([...bar(5, 5, 5)].length, BAR_WIDTH);
-assert.equal(spokenRow(printed[0], 'driver'), '1, Alpha, Red, rating 1070, plus or minus 12, up 1.0 since the previous weekend');
-assert.equal(spokenRow(printed[1], 'car'), '2, Beta, rating 1000');
-assert.doesNotMatch(spokenRow(printed[2], 'driver'), /[█░▲▼±]/, 'what is spoken has no drawing characters');
-
 // ── can it be read? ────────────────────────────────────
 const css = await readFile(new URL('../site/css/stage.css', import.meta.url), 'utf8');
 const block = (selector) => {
@@ -163,9 +188,11 @@ const block = (selector) => {
   assert.ok(start >= 0, `${selector} in stage.css`);
   return css.slice(css.indexOf('{', start) + 1, css.indexOf('\n}', start));
 };
-const tokensOf = (text) => Object.fromEntries([...text.matchAll(/--([a-z-]+):\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
+const tokensOf = (text) => Object.fromEntries([...text.matchAll(/--([a-z0-9-]+):\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
 const red = tokensOf(block('.stage {'));
 const grey = { ...red, ...tokensOf(block(".stage[data-state='peek'],")) };
+const panelTokens = tokensOf(block('.ledger {'));
+const sheetTokens = tokensOf(block(".stage[data-layout='sheet'] .ledger {"));
 const resolve = (tokens, name, depth = 0) => {
   const value = tokens[name];
   const reference = value?.match(/^var\(--([a-z-]+)\)/);
@@ -292,29 +319,35 @@ for (const [width, height] of VIEWPORTS) {
       'scrim',
     );
   }
-  // the ratings list only exists on the black and white drawing, in the lower part of the screen
-  // the list sits 8 pixels above the bottom row, so its lowest edge is 78 above the bottom of the screen and its highest 106
-  const listTop = Math.max(0, height - 106 - height * (phone ? 0.42 : 0.34));
-  const listBottom = height - 78;
+  // the panel (a column beside the picture on a wide screen, a sheet under it on a narrow one) only exists on the black and white drawing; the region
+  // is the largest it can cover: down to 78 above the bottom of the screen, and up to the top of the column, or to the top of a sheet kept open (78% of
+  // the height, covering the pictures, which is why its fill is denser)
+  const column = panelColumn(width);
+  const panelBottom = height - 78;
+  const sheetTop = Math.max(0, height - BOTTOM_ROW - 8 - 0.78 * height);
+  const panelRegion = column
+    ? { x: column.left, y: PANEL_TOP, width: column.width, height: panelBottom - PANEL_TOP }
+    : { x: margin, y: sheetTop, width: width - 2 * margin, height: panelBottom - sheetTop };
   check(
-    `${width}x${height} list`,
+    `${width}x${height} ratings panel`,
     'mono',
-    grey,
+    column ? { ...grey, ...panelTokens } : { ...grey, ...panelTokens, ...sheetTokens },
     geometry,
-    { x: margin, y: listTop, width: Math.min(940, width - 2 * margin), height: listBottom - listTop },
+    panelRegion,
     [
       ['text', 4.5, 'ink'],
-      ['secondary text', 4.5, 'ink-soft'],
+      ['secondary text', 4.5, 'ink-2'],
+      ['tertiary text', 4.5, 'ink-3'],
+      ['gain', 4.5, 'pos'],
+      ['loss', 4.5, 'neg'],
+      ['link and selection', 4.5, 'accent-text'],
+      ['rating mark', 3, 's1'], // marks are not text: 3 to 1 is what they need
+      ['recent-form mark', 3, 's2'],
     ],
-    'plate',
+    'panel-plate',
   );
 }
 const lowest = worst.sort((a, b) => a[0] - b[0])[0];
-for (const [name, tokens] of [
-  ['red', red],
-  ['black and white', grey],
-])
-  assert.ok(contrast(hex(resolve(tokens, 'chip-ink')), hex(resolve(tokens, 'chip'))) >= 7, `${name}: the label chips are readable`);
 console.log(
-  `PASS front page: both areas on screen and around the subjects at ${VIEWPORTS.length} sizes, the title clear of them and its line to each picture, smooth noise, the list built from data, and every text colour reads on the drawing (lowest contrast ${lowest[0].toFixed(2)}: ${lowest[1]})`,
+  `PASS front page: both areas on screen and around the subjects at ${VIEWPORTS.length} sizes, the title clear of them and its line to each picture, smooth noise, the panel's colours, and every text colour reads on the drawing (lowest contrast ${lowest[0].toFixed(2)}: ${lowest[1]})`,
 );

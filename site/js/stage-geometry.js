@@ -17,23 +17,69 @@ export const SUBJECTS = {
 
 const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
 
+/** The car and the hands together, in picture units, with some air each side: what has to fit in the space the panel leaves. */
+const SPAN = {
+  left: Math.min(...Object.values(SUBJECTS).map((box) => box.x)),
+  right: Math.max(...Object.values(SUBJECTS).map((box) => box.x + box.width)),
+  air: 40,
+};
+
 /**
- * The picture's rectangle on a viewport, in pixels. On a landscape screen the picture covers it. On a screen too narrow to show the car and the hands
- * at that size (a phone held upright) the picture is shrunk until both fit, and sits lower than the middle with room above it for the text: it then
- * does not reach the top and bottom edges (`fits` is true), and the page fades those edges into its background colour.
+ * From this width the ratings panel is a column on the left and the picture takes the space to its right; below it the panel is a sheet across the
+ * bottom of the screen, under the car and the hands. The column is a share of the width within limits, and as far from the edge as the text is.
+ */
+export const WIDE_MINIMUM = 1000;
+const PANEL = { share: 0.36, minimum: 440, maximum: 620, gap: 28 };
+export const edgeMargin = (viewportWidth) => Math.min(72, Math.max(18, viewportWidth * 0.05));
+
+/** The panel's column on a wide screen as { left, width, right }, or null on a narrow one (the page sets its top and bottom from the rows of text). */
+export function panelColumn(viewportWidth) {
+  if (viewportWidth < WIDE_MINIMUM) return null;
+  const left = edgeMargin(viewportWidth);
+  const width = clamp(viewportWidth * PANEL.share, PANEL.minimum, PANEL.maximum);
+  return { left, width, right: left + width };
+}
+
+/**
+ * The picture's rectangle on a viewport, in pixels, and the part of the screen where it is meant to be seen (`region`). On a wide screen the region is
+ * what the panel leaves, and the picture is shrunk until the car and the hands fit in it (it never gets larger than the size that covers the screen).
+ * On a narrow screen the region is the whole width, and the picture sits high, clear of the sheet below. A picture that does not reach an edge of
+ * the screen fades into the page's colour there (see sceneFades).
  */
 export function sceneGeometry(viewportWidth, viewportHeight) {
   const cover = Math.max(viewportWidth / ART.width, viewportHeight / ART.height);
-  const widest = viewportWidth / (REQUIRED.right - REQUIRED.left);
-  const scale = Math.min(cover, widest);
+  const column = panelColumn(viewportWidth);
+  const region = column
+    ? { left: column.right + PANEL.gap, width: viewportWidth - edgeMargin(viewportWidth) - column.right - PANEL.gap }
+    : { left: 0, width: viewportWidth };
+  const fitted = column ? region.width / (SPAN.right - SPAN.left + 2 * SPAN.air) : viewportWidth / (REQUIRED.right - REQUIRED.left);
+  const scale = Math.min(cover, fitted);
   const width = ART.width * scale;
   const height = ART.height * scale;
-  const x = viewportWidth / 2 - clamp(FOCUS_X, viewportWidth / (2 * scale), ART.width - viewportWidth / (2 * scale)) * scale;
-  const fits = height < viewportHeight - 1;
-  const y = fits
-    ? viewportHeight * 0.4 - FOCUS_Y * scale
-    : viewportHeight / 2 - clamp(FOCUS_Y, viewportHeight / (2 * scale), ART.height - viewportHeight / (2 * scale)) * scale;
-  return { scale, x, y, width, height, fits };
+  let x;
+  let y;
+  if (column) {
+    x = region.left + region.width / 2 - FOCUS_X * scale;
+    x = width >= viewportWidth ? clamp(x, viewportWidth - width, 0) : Math.max(x, viewportWidth - width); // no gap on the right
+    y = viewportHeight / 2 - FOCUS_Y * scale;
+    if (height >= viewportHeight) y = clamp(y, viewportHeight - height, 0);
+  } else {
+    x = viewportWidth / 2 - clamp(FOCUS_X, viewportWidth / (2 * scale), ART.width - viewportWidth / (2 * scale)) * scale;
+    y = viewportHeight * 0.4 - FOCUS_Y * scale;
+    if (height >= viewportHeight) y = Math.min(0, y);
+  }
+  return { scale, x, y, width, height, region, wide: Boolean(column) };
+}
+
+/** How far the picture fades into the page's colour at each edge: nothing where the picture reaches the edge of the screen. */
+export function sceneFades(geometry, viewportWidth, viewportHeight) {
+  const { x, y, width, height } = geometry;
+  return {
+    left: x > 0.5 ? 0.12 * width : 0,
+    right: x + width < viewportWidth - 0.5 ? 0.12 * width : 0,
+    top: y > 0.5 ? 0.14 * height : 0,
+    bottom: y + height < viewportHeight - 0.5 ? 0.14 * height : 0,
+  };
 }
 
 /** A box in picture units, as pixels on the viewport. */
@@ -63,7 +109,10 @@ export function titleLayout(geometry, viewportWidth, viewportHeight) {
   const driver = subjectRectangle(geometry, 'driver');
   const subjectTop = Math.min(car.y, driver.y);
   const top = viewportWidth <= 720 ? 74 : Math.min(112, Math.max(58, viewportHeight * 0.09));
-  const preferred = Math.min(TITLE_MAXIMUM, viewportWidth * (viewportWidth <= 720 ? 0.112 : 0.072));
+  const preferred = Math.min(
+    TITLE_MAXIMUM,
+    geometry.wide ? geometry.region.width * 0.105 : viewportWidth * (viewportWidth <= 720 ? 0.112 : 0.072),
+  );
   const room = subjectTop - top - TITLE_GAP;
   const size = Math.max(TITLE_MINIMUM, Math.min(preferred, room / (2 * TITLE_LINE_HEIGHT)));
   const centre = (Math.min(car.x, driver.x) + Math.max(car.x + car.width, driver.x + driver.width)) / 2;

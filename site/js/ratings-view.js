@@ -76,6 +76,14 @@ export function setRace(i, { announce = true } = {}) {
   window.dispatchEvent(new CustomEvent('f1:race-changed', { detail: { index: state.raceIndex, raceId: snap.raceId, date: snap.date } }));
 }
 
+/** Show the drivers or the cars. */
+export function setEntity(next) {
+  if (next === entity || !['driver', 'car'].includes(next)) return;
+  stop();
+  entity = next;
+  renderRatings();
+}
+
 /** After a build: reveal the ratings and history panels and show the latest weekend. */
 export function populate() {
   el.ratingsHost.hidden = false;
@@ -130,22 +138,23 @@ function ensurePanel() {
         <button type="button" id="ratingsChartView" aria-pressed="true">Chart</button>
         <button type="button" id="ratingsTableView" aria-pressed="false">Table</button>
       </div>
+      <div class="timeline-pickers">
+        <label class="field">Season<select id="ratingsSeason"></select></label>
+        <label class="field">Grand Prix<select id="ratingsGp"></select></label>
+      </div>
     </div>
     <div class="frame-body">
       <p class="layer-key" id="ratingsKey" hidden><span><i style="background:var(--s1)"></i>Rating</span><span><i style="background:var(--s2)"></i>With recent form</span></p>
       <svg id="ratingsChart" role="group"></svg>
       <div id="ratingsTable" class="table-wrap" hidden></div>
     </div>
+    <div class="frame-dock">
     <div class="timeline">
       <button type="button" class="play" id="ratingsPlay" aria-label="Play through the weekends"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="${PLAY_PATH}"/></svg></button>
       <div class="scrub">
         <span class="scrub-now" id="ratingsNow"></span>
         <input type="range" id="ratingsScrub" min="0" max="0" value="0" step="1" aria-label="Race weekend" />
         <div class="scrub-ticks" id="ratingsTicks" aria-hidden="true"></div>
-      </div>
-      <div class="timeline-pickers">
-        <label class="field">Season<select id="ratingsSeason"></select></label>
-        <label class="field">Grand Prix<select id="ratingsGp"></select></label>
       </div>
     </div>
     <div class="selection-bar" id="ratingsSelection" role="region" aria-label="Selected for comparison" hidden>
@@ -156,10 +165,13 @@ function ensurePanel() {
         <button type="button" id="ratingsClearSelection" class="btn-quiet">Clear</button>
       </div>
     </div>
+    </div>
     <footer class="frame-foot">
-      <p class="notes" id="ratingsNote"></p>
+      <details class="notes-more"><summary>About these numbers</summary><p class="notes" id="ratingsNote"></p></details>
       <div class="frame-actions">
         <button type="button" id="ratingsExport" class="btn-quiet">Download CSV</button>
+        <button type="button" id="ratingsShare" class="btn-quiet">Copy link</button>
+        <span class="notes" id="ratingsShareStatus" role="status"></span>
         <span class="notes">Shared under CC BY-NC-SA 4.0 · <a href="#/about">credits and terms</a></span>
       </div>
     </footer>`;
@@ -171,9 +183,8 @@ function ensurePanel() {
     ['ratingsCars', 'car'],
   ]) {
     controls[id].addEventListener('click', () => {
-      stop();
-      entity = which;
-      renderRatings();
+      setEntity(which);
+      window.dispatchEvent(new CustomEvent('f1:entity-chosen', { detail: { entity: which } })); // the picture follows what the panel shows
     });
   }
   controls.ratingsMetric.addEventListener('change', () => {
@@ -217,6 +228,7 @@ function ensurePanel() {
     setRace(+controls.ratingsGp.value);
   });
   controls.ratingsExport.addEventListener('click', exportCSV);
+  controls.ratingsShare.addEventListener('click', () => window.dispatchEvent(new CustomEvent('f1:share-requested')));
   controls.ratingsCompareHistory.addEventListener('click', () => {
     const ids = [...preferences[entity].selected];
     if (ids.length)

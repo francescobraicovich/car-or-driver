@@ -1,28 +1,21 @@
 // The front page: one drawing (a car and a driver's hands) in three colourings, a white two-line title, a square cursor that jitters, and a box that
 // opens around the car or the hands. Pointing at either turns the picture black and white, shows the blue version only inside the box, lights the
-// matching word (lightly boxed, joined to the picture by a line) and shows the ratings; clicking keeps them open.
+// matching word (lightly boxed, joined to the picture by a line) and shows the ratings panel; clicking keeps it open, and the panel's own controls
+// (the weekend slider, the filters, the selection) are those of the ratings view (ratings-view.js), which draws into it.
 //
 // Everything that has to line up (the layers, the selectable areas, the box, the title) is placed with the transform and the layout in
 // stage-geometry.js. The jitter and the oscillation are only drawn: what is under the pointer is decided with the real pointer position by the two
 // buttons (and by the two words), which are also what the keyboard and touch use. Under reduced motion nothing wobbles. No storage, no requests.
-import { state } from './state.js';
-import { ratingRows } from './ratings-view.js';
-import { connectorPoints, sceneGeometry, subjectRectangle, titleLayout } from './stage-geometry.js';
+import { setEntity } from './ratings-view.js';
+import { connectorPoints, panelColumn, sceneFades, sceneGeometry, subjectRectangle, titleLayout } from './stage-geometry.js';
 import { shake, sway } from './stage-noise.js';
-import { ledgerRows, spokenRow } from './stage-ledger.js';
 
 const SUBJECTS = ['car', 'driver'];
 const CURSOR_SIZE = 22;
-const METRIC = 'combined';
 const WORD_PADDING = { x: 14, y: 6 };
+const GRACE_MS = 350; // how long what is pointed at stays open after the pointer leaves it, so that the pointer can travel to the panel
 
 const $ = (id) => document.getElementById(id);
-const element = (tag, className, text) => {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text != null) node.textContent = text;
-  return node;
-};
 
 export function initStage() {
   const stage = $('stage');
@@ -35,10 +28,8 @@ export function initStage() {
     wordFrame: $('stageWordFrame'),
     connector: { line: $('stageConnectorLine'), start: $('stageConnectorStart'), end: $('stageConnectorEnd') },
     ledger: $('stageLedger'),
-    ledgerTitle: $('stageLedgerTitle'),
     ledgerPin: $('stageLedgerPin'),
-    ledgerList: $('stageLedgerList'),
-    ledgerDetail: $('stageLedgerDetail'),
+    ledgerClose: $('stageLedgerClose'),
     tagline: stage.querySelector('.stage-tagline'),
     bottomBar: stage.querySelector('.stage-bottom'),
     hotspots: { car: $('hotspotCar'), driver: $('hotspotDriver') },
@@ -71,27 +62,16 @@ export function initStage() {
     origin: { x: 0, y: 0 },
     running: false,
     last: 0,
-    ledgerKey: '',
-    detailHint: '', // what the line under the list says until a row is pointed at
+    release: null, // the timer that lets go of what is pointed at
+    overPanel: false, // the pointer is on the ratings panel
+    announced: false, // whether the address has been told that the ratings are kept open
     opened: false,
     wordOpened: false,
     error: null, // why the ratings could not be loaded, if they could not
     lastMove: 0,
   };
   const active = () => view.hover ?? view.focus ?? view.selected;
-
-  // ── what the ratings say ────────────────────────────────────────────────
-  function readRatings() {
-    const model = state.model;
-    if (!model?.snaps?.length) return { weekend: null, rows: { car: [], driver: [] } };
-    const index = model.snaps.length - 1;
-    const snap = model.snaps[index];
-    return {
-      weekend: `${snap.year} ${snap.name}`,
-      rows: Object.fromEntries(SUBJECTS.map((subject) => [subject, ratingRows(model, index, subject, METRIC)])),
-    };
-  }
-  let ratings = readRatings();
+  const onStage = () => ['home', 'ratings'].includes(document.body.dataset.page);
 
   // ── layout ──────────────────────────────────────────────────────────────
   const relative = (rectangle) => ({
@@ -114,12 +94,19 @@ export function initStage() {
     if (box.width < 1 || box.height < 1) return;
     view.origin = { x: box.left, y: box.top };
     view.geometry = sceneGeometry(box.width, box.height);
-    const { x, y, width, height, fits } = view.geometry;
+    const { x, y, width, height, wide } = view.geometry;
     stage.style.setProperty('--scene-x', `${x}px`);
     stage.style.setProperty('--scene-y', `${y}px`);
     stage.style.setProperty('--scene-w', `${width}px`);
     stage.style.setProperty('--scene-h', `${height}px`);
-    stage.dataset.fit = String(fits);
+    const fades = sceneFades(view.geometry, box.width, box.height);
+    for (const side of Object.keys(fades)) stage.style.setProperty(`--fade-${side}`, `${fades[side]}px`);
+    stage.dataset.layout = wide ? 'wide' : 'sheet';
+    const column = panelColumn(box.width);
+    if (column) {
+      stage.style.setProperty('--panel-left', `${column.left}px`);
+      stage.style.setProperty('--panel-width', `${column.width}px`);
+    }
     for (const subject of SUBJECTS) {
       const rectangle = subjectRectangle(view.geometry, subject);
       Object.assign(parts.hotspots[subject].style, {
@@ -147,69 +134,18 @@ export function initStage() {
     wake();
   }
 
-  // ── the ratings list ────────────────────────────────────────────────────
-  function renderLedger() {
+  // ── the ratings panel ───────────────────────────────────────────────────
+  function renderPanel() {
     const subject = active();
     parts.ledger.hidden = !subject;
-    if (!subject) {
-      view.ledgerKey = '';
-      return;
-    }
-    const rows = ledgerRows(ratings.rows[subject]);
-    const key = `${subject}:${ratings.weekend}:${rows.length}:${view.error ?? ''}`;
-    // what the reader can do depends on whether the list is kept open (only then can a row be reached) and on the kind of pointer
-    const pinned = view.selected === subject;
-    const touch = stage.dataset.coarse === 'true';
-    parts.ledgerPin.textContent = pinned
-      ? touch
-        ? 'kept open · tap the picture again to close'
-        : 'kept open · Esc closes'
-      : 'click the picture to keep this open';
-    const hint = !pinned || !rows.length ? '' : touch ? 'Tap a row for the details.' : 'Move over a row, or use j and k, for the details.';
-    if (hint !== view.detailHint) {
-      view.detailHint = hint;
-      parts.ledgerDetail.textContent = hint;
-    }
-    if (key === view.ledgerKey) return;
-    view.ledgerKey = key;
-    parts.ledger.setAttribute('aria-label', `${subject === 'car' ? 'Car' : 'Driver'} ratings`);
-    parts.ledgerTitle.textContent = view.error
+    parts.ledgerClose.hidden = !view.selected;
+    if (!subject) return;
+    setEntity(subject);
+    parts.ledgerPin.textContent = view.error
       ? `Could not load the ratings: ${view.error}. Reload the page to try again.`
-      : rows.length
-        ? `${subject}s after the ${ratings.weekend} · combined pace · 1000 is the average of the field · ± is one standard deviation`
-        : 'Loading the ratings…';
-    const items = rows.map((row, index) => {
-      const item = element('li');
-      const button = element('button', 'ledger-row');
-      button.type = 'button';
-      button.dataset.index = String(index);
-      button.setAttribute('aria-label', spokenRow(row, subject));
-      button.append(element('span', 'rank', row.rank), element('span', 'name', row.name));
-      if (subject === 'driver') button.append(element('span', 'team', row.team));
-      button.append(
-        element('span', 'rating', row.rating),
-        element('span', 'deviation', row.deviation),
-        element('span', 'bar', row.bar),
-        element('span', 'change', row.change),
-      );
-      for (const decoration of button.querySelectorAll('.bar, .change')) decoration.setAttribute('aria-hidden', 'true');
-      const describe = () => {
-        const source = ratings.rows[subject].find((candidate) => String(candidate.id) === String(row.id));
-        const pieces = [row.name];
-        if (subject === 'driver' && row.team) pieces.push(row.team);
-        pieces.push(`rating ${row.rating} ${row.deviation}`);
-        if (Number.isFinite(source?.race)) pieces.push(`race ${Math.round(source.race)}`);
-        if (Number.isFinite(source?.qual)) pieces.push(`qualifying ${Math.round(source.qual)}`);
-        parts.ledgerDetail.textContent = pieces.join(' · ');
-      };
-      button.addEventListener('pointerenter', describe);
-      button.addEventListener('focus', describe);
-      item.append(button);
-      return item;
-    });
-    parts.ledgerList.classList.toggle('with-team', subject === 'driver');
-    parts.ledgerList.replaceChildren(...items);
-    parts.ledgerDetail.textContent = hint;
+      : view.selected
+        ? 'Kept open'
+        : 'Click to keep this open';
   }
 
   // ── state ───────────────────────────────────────────────────────────────
@@ -219,7 +155,11 @@ export function initStage() {
     stage.dataset.subject = subject ?? '';
     stage.dataset.hover = view.hover ?? '';
     for (const name of SUBJECTS) parts.hotspots[name].setAttribute('aria-pressed', String(view.selected === name));
-    renderLedger();
+    renderPanel();
+    if (Boolean(view.selected) !== view.announced) {
+      view.announced = Boolean(view.selected);
+      window.dispatchEvent(new CustomEvent('f1:ratings-pinned', { detail: { pinned: view.announced } }));
+    }
     wake();
   }
 
@@ -356,23 +296,57 @@ export function initStage() {
     }
   });
 
+  /** What was pointed at closes after a moment, unless the pointer has gone to the panel or back (on a narrow screen the panel cannot be reached from here). */
+  function letGoOfHover(subject) {
+    clearTimeout(view.release);
+    const close = () => {
+      if (view.hover !== subject || view.overPanel) return;
+      view.hover = null;
+      update();
+    };
+    if (stage.dataset.layout === 'wide') view.release = setTimeout(close, GRACE_MS);
+    else close();
+  }
+  parts.ledger.addEventListener('pointerenter', (event) => {
+    if (!isMouse(event)) return;
+    view.overPanel = true;
+    stage.dataset.overPanel = 'true';
+    clearTimeout(view.release);
+  });
+  parts.ledger.addEventListener('pointerleave', (event) => {
+    if (!isMouse(event)) return;
+    view.overPanel = false;
+    stage.dataset.overPanel = '';
+    if (view.hover) letGoOfHover(view.hover);
+  });
+  /** Using the panel (a press, or the keyboard moving into it) keeps it open, so that letting go of a slider outside it does not close it. */
+  const keepOpen = () => {
+    const subject = active();
+    if (subject && !view.selected) {
+      view.selected = subject;
+      update();
+    }
+  };
+  parts.ledger.addEventListener('pointerdown', keepOpen);
+  parts.ledger.addEventListener('focusin', keepOpen);
+
   // the picture's area and the word are two ways to the same subject
   for (const subject of SUBJECTS) {
     const targets = [parts.hotspots[subject], parts.words[subject]];
     for (const target of targets) {
       target.addEventListener('pointerenter', (event) => {
         if (!isMouse(event)) return;
+        clearTimeout(view.release);
         view.hover = subject;
         update();
       });
       target.addEventListener('pointerleave', (event) => {
         if (!isMouse(event) || view.hover !== subject) return;
-        view.hover = null;
-        update();
+        letGoOfHover(subject);
       });
       target.addEventListener('click', (event) => {
         pin(subject);
-        if (event.detail === 0 && view.selected) parts.ledgerList.querySelector('button')?.focus(); // opened with the keyboard: carry on into the list
+        if (event.detail === 0 && view.selected) parts.ledger.querySelector('#ratingsPanel button')?.focus(); // opened with the keyboard: carry on into the panel
       });
     }
     const button = parts.hotspots[subject];
@@ -381,36 +355,27 @@ export function initStage() {
       view.focus = subject;
       update();
     });
-    button.addEventListener('blur', () => {
+    button.addEventListener('blur', (event) => {
+      if (parts.ledger.contains(event.relatedTarget) && !view.selected) view.selected = subject; // Tab into the panel keeps it open
       view.focus = null;
       update();
     });
   }
 
+  /** Lets go of the ratings. A keyboard user inside the panel is put back on the picture they came from. */
+  function close() {
+    if (!view.selected) return;
+    const was = parts.hotspots[view.selected];
+    const inPanel = parts.ledger.contains(document.activeElement);
+    view.selected = null;
+    update();
+    if (inPanel) was.focus({ preventScroll: true });
+  }
+  parts.ledgerClose.addEventListener('click', close);
   document.addEventListener('keydown', (event) => {
-    if (document.body.dataset.page !== 'home' || event.ctrlKey || event.metaKey || event.altKey) return;
-    if (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement) return;
-    const rows = [...parts.ledgerList.querySelectorAll('button')];
-    const at = rows.indexOf(document.activeElement);
-    const move = (to) => {
-      event.preventDefault();
-      rows[Math.max(0, Math.min(rows.length - 1, to))]?.focus();
-    };
-    if (event.key === 'Escape') {
-      if (view.selected) {
-        const was = parts.hotspots[view.selected];
-        const inList = parts.ledger.contains(document.activeElement); // the keyboard user is put back where they came from
-        view.selected = null;
-        update();
-        if (inList) was.focus({ preventScroll: true });
-      }
-    } else if (at >= 0) {
-      // single-letter keys only act while the focus is inside the list (WCAG 2.1.4), so they cannot be triggered by accident elsewhere
-      if (['j', 'ArrowDown'].includes(event.key)) move(at + 1);
-      else if (['k', 'ArrowUp'].includes(event.key)) move(at - 1);
-      else if (event.key === 'Home') move(0);
-      else if (event.key === 'End') move(rows.length - 1);
-    }
+    if (event.key !== 'Escape' || !onStage() || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.target instanceof HTMLSelectElement) return; // Escape closes the open list of a menu, not the panel
+    close();
   });
 
   const resizeObserver = new ResizeObserver(layout);
@@ -419,23 +384,26 @@ export function initStage() {
   document.fonts?.ready.then(layout); // the words are measured once the title font is in
   reducedMotion.addEventListener('change', wake);
   window.addEventListener('f1:workspace-changed', () => {
-    if (document.body.dataset.page === 'home') layout();
-  });
-  const refreshRatings = () => {
-    ratings = readRatings();
-    view.ledgerKey = '';
+    if (!onStage()) return;
+    // the front page is the picture alone, and the ratings page is the same page with the panel kept open
+    if (document.body.dataset.page === 'ratings') view.selected ??= 'driver';
+    else view.selected = null;
+    layout();
     update();
-  };
+  });
+  // the panel's Drivers and Cars buttons choose what is kept open
+  window.addEventListener('f1:entity-chosen', (event) => {
+    view.selected = event.detail.entity;
+    update();
+  });
   window.addEventListener('f1:ratings-failed', (event) => {
     view.error = event.detail?.message || 'unknown error';
     parts.tagline.textContent = `Could not load the ratings: ${view.error}. Reload the page to try again.`; // the front page has no loading screen to say so
-    refreshRatings();
+    update();
   });
-  window.addEventListener('f1:ratings-ready', refreshRatings);
-  window.addEventListener('f1:model-ready', refreshRatings);
 
   stage.dataset.coarse = String(!finePointer.matches);
+  if (document.body.dataset.page === 'ratings') view.selected = 'driver';
   layout();
   update();
-  if (state.model) refreshRatings();
 }

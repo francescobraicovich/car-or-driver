@@ -76,7 +76,7 @@ Tried, with settings chosen on data through 2011 and checked on 2012–2015:
 - **A deeper permanent start** helped the first five races and hurt races six to ten.
 - **A fading debut dip** (temporary penalty that decays) fixed qualifying and is shipped for qualifying only (`dipR` 45, `sdR` 6.5536, `rhoR` 0.85, fitted on 2002–2011). For race pace a fitted dip did not hold up on 2012–2015, so it is off.
 
-Drivers within their first five races are tagged "new" on the Ratings page.
+Drivers within their first five races are tagged "new" in the ratings panel.
 
 ```bash
 node packages/research/node/state-space-rookies.mjs scan        # also scan2..scan4: start and anchor variants
