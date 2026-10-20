@@ -72,6 +72,7 @@ export function initStage() {
     running: false,
     last: 0,
     ledgerKey: '',
+    detailHint: '', // what the line under the list says until a row is pointed at
     opened: false,
     wordOpened: false,
     error: null, // why the ratings could not be loaded, if they could not
@@ -154,9 +155,21 @@ export function initStage() {
       view.ledgerKey = '';
       return;
     }
-    parts.ledgerPin.textContent = view.selected === subject ? 'kept open · Esc closes' : 'click the picture to keep this open';
     const rows = ledgerRows(ratings.rows[subject]);
     const key = `${subject}:${ratings.weekend}:${rows.length}:${view.error ?? ''}`;
+    // what the reader can do depends on whether the list is kept open (only then can a row be reached) and on the kind of pointer
+    const pinned = view.selected === subject;
+    const touch = stage.dataset.coarse === 'true';
+    parts.ledgerPin.textContent = pinned
+      ? touch
+        ? 'kept open · tap the picture again to close'
+        : 'kept open · Esc closes'
+      : 'click the picture to keep this open';
+    const hint = !pinned || !rows.length ? '' : touch ? 'Tap a row for the details.' : 'Move over a row, or use j and k, for the details.';
+    if (hint !== view.detailHint) {
+      view.detailHint = hint;
+      parts.ledgerDetail.textContent = hint;
+    }
     if (key === view.ledgerKey) return;
     view.ledgerKey = key;
     parts.ledger.setAttribute('aria-label', `${subject === 'car' ? 'Car' : 'Driver'} ratings`);
@@ -196,7 +209,7 @@ export function initStage() {
     });
     parts.ledgerList.classList.toggle('with-team', subject === 'driver');
     parts.ledgerList.replaceChildren(...items);
-    parts.ledgerDetail.textContent = rows.length ? 'Move over a row, or use j and k, for the details.' : '';
+    parts.ledgerDetail.textContent = hint;
   }
 
   // ── state ───────────────────────────────────────────────────────────────

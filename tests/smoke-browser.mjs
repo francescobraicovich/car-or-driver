@@ -183,8 +183,9 @@ check(
   `${hoverRows.length} rows`,
 );
 check(
-  'the ratings say they are not yet kept open',
-  /click the picture to keep this open/.test(await evaluate("document.getElementById('stageLedgerPin').textContent")),
+  'the ratings say they are not yet kept open, and do not offer keys that only work once they are',
+  /click the picture to keep this open/.test(await evaluate("document.getElementById('stageLedgerPin').textContent")) &&
+    !/j and k/.test(await evaluate("document.getElementById('stageLedgerDetail').textContent")),
 );
 check(
   'only the word CAR stays lit: the other words are dimmed',
@@ -223,6 +224,7 @@ check(
   'clicking the hands keeps the list of drivers open',
   (await isState('open', 'driver')) &&
     /kept open/.test(await evaluate("document.getElementById('stageLedgerPin').textContent")) &&
+    /j and k/.test(await evaluate("document.getElementById('stageLedgerDetail').textContent")) &&
     (await evaluate("document.getElementById('hotspotDriver').getAttribute('aria-pressed')")) === 'true',
 );
 const ledgerBox = await rectangleOf('stageLedger');
