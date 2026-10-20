@@ -3,11 +3,12 @@
 // against the drawing. The contrast is measured, not judged: the drawing's darkest and lightest pixels under every piece of text, at four screen
 // sizes, blended with the translucent plate behind the text, against the text colours read from site/css/stage.css.
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { ART, SUBJECTS, sceneGeometry, subjectRectangle } from '../site/js/stage-geometry.js';
 import { shake, smoothNoise, sway } from '../site/js/stage-noise.js';
 import { codeLines, linesAsText } from '../site/js/stage-code.js';
-import { BAR_WIDTH, bar, ledgerRows } from '../site/js/stage-ledger.js';
+import { BAR_WIDTH, bar, ledgerRows, spokenRow } from '../site/js/stage-ledger.js';
 
 const VIEWPORTS = [
   [375, 812],
@@ -126,6 +127,13 @@ assert.equal(printed[2].change, '▼3.3');
 for (const row of printed) assert.equal([...row.bar].length, BAR_WIDTH, 'every bar has the same width');
 assert.ok(printed[0].bar.split('█').length > printed[2].bar.split('█').length, 'a higher rating has a longer bar');
 assert.equal([...bar(5, 5, 5)].length, BAR_WIDTH);
+assert.equal(spokenRow(printed[0], 'driver'), '1, Alpha, Red, rating 1070, plus or minus 12, up 1.0 since the previous weekend');
+assert.equal(spokenRow(printed[1], 'car'), '2, Beta, rating 1000');
+assert.doesNotMatch(spokenRow(printed[2], 'driver'), /[█░▲▼±]/, 'what is spoken has no drawing characters');
+assert.match(
+  linesAsText(codeLines({ subject: null, open: false, weekend: null, leader: null, count: 0, error: 'HTTP 404' })),
+  /could not load the ratings: HTTP 404/,
+);
 
 // ── can it be read? ────────────────────────────────────
 const css = await readFile(new URL('../site/css/stage.css', import.meta.url), 'utf8');
@@ -160,6 +168,16 @@ const contrast = (a, b) => {
 const mix = (top, bottom, alpha) => top.map((v, i) => alpha * v + (1 - alpha) * bottom[i]);
 
 const samples = JSON.parse(await readFile(new URL('./fixtures/stage-backgrounds.json', import.meta.url), 'utf8'));
+for (const version of ['red', 'mono']) {
+  const actual = createHash('sha256')
+    .update(await readFile(new URL(`../site/assets/art/${version}.webp`, import.meta.url)))
+    .digest('hex');
+  assert.equal(
+    actual,
+    samples[version].sha256,
+    `the ${version} drawing changed since its pixels were sampled: run python3 tools/sample-stage-backgrounds.py`,
+  );
+}
 /** The darkest and the lightest pixel of the picture under a rectangle of the screen. */
 function extremes(version, geometry, region) {
   const picture = {

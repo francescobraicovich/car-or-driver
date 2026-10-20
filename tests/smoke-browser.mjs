@@ -199,6 +199,12 @@ await press('j', 'KeyJ', 74, 'j');
 check('j moves down the list', (await evaluate('document.activeElement?.dataset.index')) === '1');
 await press('Escape', 'Escape', 27);
 await sleep(300);
+check(
+  'a list row is read as a sentence, not as bars and arrows',
+  await evaluate(
+    "[...document.querySelectorAll('#stageLedgerList .ledger-row')].every((row) => /^\\d+, .+, rating \\d+/.test(row.getAttribute('aria-label')) && !/[█░▲▼±]/.test(row.getAttribute('aria-label')))",
+  ),
+);
 check('Escape closes it again', (await stageState())[0] !== 'open');
 await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
 await mouse('mouseMoved', 8, 300);
@@ -444,8 +450,8 @@ for (const [from, to] of [
   ['#/simple/ratings', 'ratings'],
   ['#/simple/history?v=1&mode=simple', 'history'],
   ['#/geek/explore', 'history'],
-  ['#/geek/weekend', 'home'],
-  ['#/geek/data', 'home'],
+  ['#/geek/weekend', 'ratings'],
+  ['#/geek/data', 'ratings'],
   ['#/geek/models', 'methodology'],
   ['#/how-it-works', 'methodology'],
   ['#/predictor', 'head-to-head'],

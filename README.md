@@ -10,6 +10,7 @@ It is an independent personal project. It is not affiliated with Formula 1, the 
 
 | Page | What it shows |
 | --- | --- |
+| **Front page** | A drawing of a car and a driver's hands. Point at either and a box opens, the picture turns black and white and the blue version shows inside the box; click to see the ratings of the cars or of the drivers. |
 | **Ratings** | A ranking of drivers or cars after any weekend since 2000, with error bars, a timeline to play through the seasons, and a way to select entries and compare them. |
 | **History** | Rating lines for the drivers or cars you choose, over any range of seasons. |
 | **Head to head** | The chance that one driver finishes ahead of another, from their ratings and recent form, with what-if options (another season, another car, wet weather). |

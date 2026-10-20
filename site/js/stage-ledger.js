@@ -38,3 +38,13 @@ export function ledgerRows(rows) {
       value: row.value,
     }));
 }
+
+/** What a screen reader says for a row, instead of the bars and arrows: "1, Mercedes, rating 1101, plus or minus 16, up 3.0 since the previous weekend". */
+export function spokenRow(row, subject) {
+  const parts = [row.rank, row.name];
+  if (subject === 'driver' && row.team) parts.push(row.team);
+  parts.push(`rating ${row.rating}`);
+  if (row.deviation) parts.push(`plus or minus ${row.deviation.replace('±', '')}`);
+  if (row.change) parts.push(`${row.change.startsWith('▲') ? 'up' : 'down'} ${row.change.slice(1)} since the previous weekend`);
+  return parts.join(', ');
+}

@@ -7,6 +7,7 @@ the result is committed:
 
     python3 tools/sample-stage-backgrounds.py        (needs Pillow and numpy; rerun if the artwork changes)
 """
+import hashlib
 import json
 from pathlib import Path
 
@@ -39,6 +40,8 @@ def sample(path):
 
 result = {"cell": CELL, "columns": 1536 // CELL, "rows": 1024 // CELL}
 for name in ("red", "mono"):
-    result[name] = sample(ROOT / "site" / "assets" / "art" / f"{name}.webp")
+    path = ROOT / "site" / "assets" / "art" / f"{name}.webp"
+    result[name] = sample(path)
+    result[name]["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()  # the test refuses samples taken from other artwork
 (ROOT / "tests" / "fixtures" / "stage-backgrounds.json").write_text(json.dumps(result, separators=(",", ":")) + "\n")
 print("wrote tests/fixtures/stage-backgrounds.json")

@@ -29,6 +29,8 @@ function showLoadError(error) {
   const box = document.getElementById('veilError');
   box.hidden = false;
   box.textContent = error?.message || String(error);
+  // the front page hides the loading screen, so it shows the failure itself
+  window.dispatchEvent(new CustomEvent('f1:ratings-failed', { detail: { message: box.textContent } }));
 }
 
 window.addEventListener('DOMContentLoaded', () => {

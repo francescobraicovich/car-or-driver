@@ -12,10 +12,17 @@ const comment = (text) => ['c', text];
 const whole = (value) => String(Math.round(value));
 
 /**
- * @param {{ subject: 'car'|'driver'|null, open: boolean, weekend: string|null, leader: {name:string, team?:string, rating:number, deviation:number}|null, count: number }} context
+ * @param {{ error?: string|null, subject: 'car'|'driver'|null, open: boolean, weekend: string|null, leader: {name:string, team?:string, rating:number, deviation:number}|null, count: number }} context
  *   subject: what the box is on; open: whether it has been clicked open (the list is showing); leader: the top entry of that subject; weekend: for example "2026 Singapore Grand Prix"
  */
-export function codeLines({ subject, open, weekend, leader, count }) {
+export function codeLines({ subject, open, weekend, leader, count, error = null }) {
+  if (error) {
+    return [
+      [comment('// driver_or_car.ts')],
+      [comment(`// could not load the ratings: ${error}`)],
+      [comment('// reload the page to try again')],
+    ];
+  }
   if (!subject) {
     return [
       [comment(weekend ? `// driver_or_car.ts · ratings after the ${weekend}` : '// driver_or_car.ts')],

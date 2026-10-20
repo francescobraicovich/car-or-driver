@@ -19,6 +19,8 @@ const DEFAULT_ROUTE = '/';
 // Hashes from earlier versions of the site (and of the shared links in the wild).
 const ALIASES = {
   '/home': '/',
+  '/geek/weekend': '/ratings',
+  '/geek/data': '/ratings',
   ratings: '/ratings',
   '/simple/ratings': '/ratings',
   '/simple/rankings': '/ratings',

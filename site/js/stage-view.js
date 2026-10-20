@@ -9,7 +9,7 @@ import { ratingRows } from './ratings-view.js';
 import { sceneGeometry, subjectRectangle } from './stage-geometry.js';
 import { shake, sway } from './stage-noise.js';
 import { codeLines } from './stage-code.js';
-import { ledgerRows } from './stage-ledger.js';
+import { ledgerRows, spokenRow } from './stage-ledger.js';
 
 const SUBJECTS = ['car', 'driver'];
 const CURSOR_SIZE = 22;
@@ -59,6 +59,8 @@ export function initStage() {
     ledgerKey: '',
     rows: { car: [], driver: [] },
     opened: false,
+    error: null, // why the ratings could not be loaded, if they could not
+    lastMove: 0,
   };
   const active = () => view.hover ?? view.focus ?? view.selected;
 
@@ -114,6 +116,7 @@ export function initStage() {
       weekend: ratings.weekend,
       leader: subject ? leaderOf(subject) : null,
       count: subject ? ratings.rows[subject].length : 0,
+      error: view.error,
     });
     const key = JSON.stringify(lines);
     if (key === view.codeKey) return;
@@ -122,7 +125,9 @@ export function initStage() {
     lines.forEach((tokens, index) => {
       const line = element('span', 'line');
       line.style.setProperty('--i', String(index));
-      line.append(element('span', 'ln', String(index + 1)));
+      const number = element('span', 'ln', String(index + 1));
+      number.setAttribute('aria-hidden', 'true');
+      line.append(number);
       for (const [kind, text] of tokens) line.append(element('span', kind, text));
       fragment.append(line);
     });
@@ -155,14 +160,17 @@ export function initStage() {
     view.ledgerKey = key;
     const noun = subject === 'car' ? 'Car' : 'Driver';
     parts.ledger.setAttribute('aria-label', `${noun} ratings`);
-    parts.ledgerTitle.textContent = rows.length
-      ? `// ${subject}s after the ${ratings.weekend} · combined pace · 1000 is the average of the field · ± is one standard deviation`
-      : '// loading the ratings…';
+    parts.ledgerTitle.textContent = view.error
+      ? `// could not load the ratings: ${view.error} · reload the page to try again`
+      : rows.length
+        ? `// ${subject}s after the ${ratings.weekend} · combined pace · 1000 is the average of the field · ± is one standard deviation`
+        : '// loading the ratings…';
     const items = rows.map((row, index) => {
       const item = element('li');
       const button = element('button', 'ledger-row');
       button.type = 'button';
       button.dataset.index = String(index);
+      button.setAttribute('aria-label', spokenRow(row, subject));
       button.append(element('span', 'rank', row.rank), element('span', 'name', row.name));
       if (subject === 'driver') button.append(element('span', 'team', row.team));
       button.append(
@@ -171,6 +179,7 @@ export function initStage() {
         element('span', 'bar', row.bar),
         element('span', 'change', row.change),
       );
+      for (const decoration of button.querySelectorAll('.bar, .change')) decoration.setAttribute('aria-hidden', 'true');
       const describe = () => {
         const source = ratings.rows[subject].find((candidate) => String(candidate.id) === String(row.id));
         const pieces = [row.name];
@@ -236,11 +245,12 @@ export function initStage() {
       view.cursor.x += dx * follow;
       view.cursor.y += dy * follow;
       const speed = Math.hypot(dx, dy) / dt;
-      const shakiness = amount * (1 + Math.min(speed / 260, 4.5));
+      const resting = now - view.lastMove > 2500; // a pointer that has stopped for a while stops shaking, and the loop can rest
+      const shakiness = resting ? 0 : amount * (1 + Math.min(speed / 260, 4.5));
       const x = view.cursor.x + shake(seconds, 11) * shakiness;
       const y = view.cursor.y + shake(seconds, 12) * shakiness;
       parts.cursor.style.transform = `translate(${x}px, ${y}px)`;
-      busy = true;
+      busy = !resting;
     }
 
     // the box follows its target (the subject, or the small square when there is none) and its four edges wobble on their own
@@ -295,6 +305,7 @@ export function initStage() {
     const point = { x: event.clientX - view.origin.x, y: event.clientY - view.origin.y };
     if (!view.pointer) view.cursor = { ...point };
     view.pointer = point;
+    view.lastMove = performance.now();
     stage.dataset.pointer = 'in';
     wake();
   });
@@ -350,12 +361,13 @@ export function initStage() {
         select(null);
         was.focus({ preventScroll: true });
       }
-    } else if (event.key === 'c' && !event.shiftKey) select('car');
-    else if (event.key === 'd' && !event.shiftKey) select('driver');
-    else if (view.selected && rows.length && ['j', 'ArrowDown'].includes(event.key)) move(at < 0 ? 0 : at + 1);
-    else if (view.selected && rows.length && ['k', 'ArrowUp'].includes(event.key)) move(at < 0 ? 0 : at - 1);
-    else if (view.selected && rows.length && event.key === 'Home') move(0);
-    else if (view.selected && rows.length && event.key === 'End') move(rows.length - 1);
+    } else if (at >= 0) {
+      // single-letter keys only act while the focus is inside the list (WCAG 2.1.4), so they cannot be triggered by accident elsewhere
+      if (['j', 'ArrowDown'].includes(event.key)) move(at + 1);
+      else if (['k', 'ArrowUp'].includes(event.key)) move(at - 1);
+      else if (event.key === 'Home') move(0);
+      else if (event.key === 'End') move(rows.length - 1);
+    }
   });
 
   new ResizeObserver(layout).observe(stage);
@@ -369,6 +381,10 @@ export function initStage() {
     view.ledgerKey = '';
     update();
   };
+  window.addEventListener('f1:ratings-failed', (event) => {
+    view.error = event.detail?.message || 'unknown error';
+    refreshRatings();
+  });
   window.addEventListener('f1:ratings-ready', refreshRatings);
   window.addEventListener('f1:model-ready', refreshRatings);
 
