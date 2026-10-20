@@ -22,6 +22,7 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 }
 
 .stage {
+  color-scheme: light;
   --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Menlo, Consolas, 'Liberation Mono', monospace;
   --display: 'Lexend Giga', 'Space Grotesk', system-ui, sans-serif;
   --text: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -656,7 +657,15 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   padding: 0;
 }
 .ledger .selection-bar {
-  margin: 6px 12px 8px;
+  position: static; /* the dock holds it at the bottom; the sticky bar of the old Ratings page sat above the phone tab bar */
+  gap: 6px 10px;
+  margin: 4px 10px 6px;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+.ledger .selection-bar button {
+  min-height: 26px;
+  padding: 2px 10px;
 }
 .ledger .table-wrap {
   padding: 6px 8px 0;
