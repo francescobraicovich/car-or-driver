@@ -5,8 +5,9 @@
 //   node tools/build-tracks.mjs
 import { readFile, writeFile } from 'node:fs/promises';
 import { csv } from '../packages/core/src/csv.js';
+import { speedProfile } from '../site/js/speed-profile.js';
 
-export const TRACK_FORMAT = 1;
+export const TRACK_FORMAT = 2;
 const SOURCE = 'data/source/f1-circuits/circuits';
 const SIZE = 1000; // the longer side of the plan, in units
 const PADDING = 24; // room for the stroke and the dots at the edge
@@ -73,10 +74,12 @@ export function pathLength(points) {
 }
 
 /**
- * The outline for one circuit: `coordinates` are the source's [longitude, latitude] points of a closed loop (the last equals the first). Returns the
- * plan { width, height, points: [x0, y0, x1, y1, ...] } with y pointing down (north is up) and the loop open (the first point is not repeated).
+ * The outline for one circuit: `coordinates` are the source's [longitude, latitude] points of a closed loop (the last equals the first), and `length` is
+ * the length of a lap in metres. Returns the plan { width, height, points: [x0, y0, x1, y1, ...], speeds } with y pointing down (north is up) and the loop
+ * open (the first point is not repeated); `speeds` is how fast a car goes at 200 equal steps round the lap, in km/h (speed-profile.js), worked out from
+ * the points before they are rounded to whole units, which would put noise into the curvature.
  */
-export function outline(coordinates, { reverse = false } = {}) {
+export function outline(coordinates, { reverse = false, length } = {}) {
   let loop = coordinates.slice(0, -1);
   if (reverse) loop = [loop[0], ...loop.slice(1).reverse()];
   const middle = loop.reduce((sum, [, lat]) => sum + lat, 0) / loop.length;
@@ -86,10 +89,12 @@ export function outline(coordinates, { reverse = false } = {}) {
   const [left, top] = [Math.min(...xs), Math.min(...ys)];
   const [wide, tall] = [Math.max(...xs) - left, Math.max(...ys) - top];
   const scale = (SIZE - 2 * PADDING) / Math.max(wide, tall);
+  const plan = flat.flatMap(([x, y]) => [(x - left) * scale + PADDING, (y - top) * scale + PADDING]);
   return {
     width: Math.round(wide * scale + 2 * PADDING),
     height: Math.round(tall * scale + 2 * PADDING),
-    points: flat.flatMap(([x, y]) => [Math.round((x - left) * scale + PADDING), Math.round((y - top) * scale + PADDING)]),
+    points: plan.map((value) => Math.round(value)),
+    speeds: speedProfile(plan, length),
   };
 }
 
@@ -103,7 +108,7 @@ if (import.meta.url === new URL(process.argv[1], 'file://').href) {
     tracks[circuit.circuitId] = {
       name: circuit.name,
       length: feature.properties.length,
-      ...outline(feature.geometry.coordinates, { reverse: REVERSED.includes(circuit.circuitRef) }),
+      ...outline(feature.geometry.coordinates, { reverse: REVERSED.includes(circuit.circuitRef), length: feature.properties.length }),
     };
   }
   const missing = Object.keys(SOURCE_FILES).filter((ref) => !circuits.some((circuit) => circuit.circuitRef === ref));

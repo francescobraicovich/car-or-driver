@@ -13,7 +13,7 @@ import { shake, sway } from './stage-noise.js';
 const SUBJECTS = ['car', 'driver'];
 const CURSOR_SIZE = 22;
 const WORD_PADDING = { x: 14, y: 6 };
-const GRACE_MS = 350; // how long what is pointed at stays open after the pointer leaves it, so that the pointer can travel to the panel
+const GRACE_MS = 600; // how long what is pointed at stays open after the pointer leaves it, so that the pointer can travel to the panel or to the timing table
 const DWELL_MS = 120; // how long the pointer has to stay on a picture, and be slowing down on it, before the ratings switch to it from another one:
 const SLOW = 0.45; // the car is on the way from the hands to the panel, and the pointer crosses it quickly (pixels per millisecond)
 
@@ -31,6 +31,8 @@ export function initStage() {
     connector: { line: $('stageConnectorLine'), start: $('stageConnectorStart'), end: $('stageConnectorEnd') },
     ledger: $('stageLedger'),
     ledgerClose: $('stageLedgerClose'),
+    trackTable: $('stageTrackTable'),
+    trackPause: $('stageTrackPause'),
     tagline: stage.querySelector('.stage-tagline'),
     bottomBar: stage.querySelector('.stage-bottom'),
     hotspots: { car: $('hotspotCar'), driver: $('hotspotDriver') },
@@ -65,7 +67,7 @@ export function initStage() {
     last: 0,
     release: null, // the timer that lets go of what is pointed at
     switching: null, // the timer that switches to the picture the pointer has just come onto, from another one
-    overPanel: false, // the pointer is on the ratings panel
+    overPanel: false, // the pointer is on the ratings panel or on the timing table of the race
     announced: false, // whether the address has been told that the ratings are kept open
     opened: false,
     wordOpened: false,
@@ -302,7 +304,7 @@ export function initStage() {
     stage.dataset.pointer = '';
   });
   stage.addEventListener('pointerdown', (event) => {
-    if (event.target.closest('button, a, .ledger, .word')) return;
+    if (event.target.closest('button, a, .ledger, .word, .track-table')) return;
     if (view.selected) {
       view.selected = null; // pressing on the picture, away from the car and the hands, lets go of the ratings
       update();
@@ -345,29 +347,38 @@ export function initStage() {
     };
     view.switching = setTimeout(switchIfSlow, DWELL_MS);
   }
-  parts.ledger.addEventListener('pointerenter', (event) => {
-    if (!isMouse(event)) return;
-    view.overPanel = true;
-    stage.dataset.overPanel = 'true';
-    clearTimeout(view.release);
-    if (view.hover && view.selected && view.hover !== view.selected) letGoOfHover(view.hover);
-  });
-  parts.ledger.addEventListener('pointerleave', (event) => {
-    if (!isMouse(event)) return;
-    view.overPanel = false;
-    stage.dataset.overPanel = '';
-    if (view.hover) letGoOfHover(view.hover);
-  });
-  /** Using the panel (a press, or the keyboard moving into it) keeps it open, so that letting go of a slider outside it does not close it. */
-  const keepOpen = () => {
-    const subject = active();
-    if (subject && view.selected !== subject) {
-      view.selected = subject;
-      update();
-    }
+  // the panel and the timing table of the race are parts of what is open: the pointer going to either holds the preview, and using either keeps it open
+  const held = new Set();
+  const hold = (element) => {
+    element.addEventListener('pointerenter', (event) => {
+      if (!isMouse(event)) return;
+      held.add(element);
+      view.overPanel = true;
+      stage.dataset.overPanel = 'true';
+      clearTimeout(view.release);
+      if (view.hover && view.selected && view.hover !== view.selected) letGoOfHover(view.hover);
+    });
+    element.addEventListener('pointerleave', (event) => {
+      if (!isMouse(event)) return;
+      held.delete(element);
+      view.overPanel = held.size > 0;
+      stage.dataset.overPanel = view.overPanel ? 'true' : '';
+      if (view.hover && !view.overPanel) letGoOfHover(view.hover);
+    });
+    /** Using it (a press, or the keyboard moving into it) keeps it open, so that letting go of a slider outside it does not close it. */
+    const keepOpen = () => {
+      const subject = active();
+      if (subject && view.selected !== subject) {
+        view.selected = subject;
+        update();
+      }
+    };
+    element.addEventListener('pointerdown', keepOpen);
+    element.addEventListener('focusin', keepOpen);
   };
-  parts.ledger.addEventListener('pointerdown', keepOpen);
-  parts.ledger.addEventListener('focusin', keepOpen);
+  hold(parts.ledger);
+  hold(parts.trackTable);
+  hold(parts.trackPause);
 
   // the picture's area and the word are two ways to the same subject
   for (const subject of SUBJECTS) {

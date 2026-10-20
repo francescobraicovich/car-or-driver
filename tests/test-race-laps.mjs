@@ -1,73 +1,231 @@
-// The data behind the racing dots on the front page: data/race-laps/<year>.json (each driver's typical lap in every race since 2000, built by
-// tools/build-race-laps.mjs from the CSV tables) and site/assets/tracks.json (the circuit outlines, built by tools/build-tracks.mjs from the files in
-// data/source/f1-circuits). Both must be current, cover every race, and be plausible.
-//   1. The files equal a fresh build (otherwise: node tools/build-race-laps.mjs, node tools/build-tracks.mjs).
-//   2. Every race with results since 2000 has its laps, and the typical lap of its winner times the laps is no more than the real race time.
-//   3. Every circuit raced since 2000 has an outline, except the four the source does not have; each outline is a closed loop in the right direction.
+// The data behind the replay of a race on the front page: data/race-laps/<year>.json (every driver's lap times in every race since 2000, and the red flags,
+// built by tools/build-race-laps.mjs from the CSV tables) and site/assets/tracks.json (the circuit outlines and their speed profiles, built by
+// tools/build-tracks.mjs from the files in data/source/f1-circuits). Both must be current, cover every race, and be plausible; and the replay built
+// from them (site/js/race-replay.js) must do what a replay of a real race has to:
+//   1. The files equal a fresh build (otherwise: npm run build:data).
+//   2. Every race with results since 2000 is there, and a winner's laps add up to the real race time.
+//   3. The red flags found are the known ones.
+//   4. In every race, for every car: its progress never goes backwards; it crosses the line at the moments its lap times say, and in the order the lap
+//      times record (the `position` of lap_times.csv); and no stretch of driving is faster than a car going 1.43 times its normal pace.
+//   5. The clock of the screen is a monotone map that takes a stoppage down to a few seconds.
+//   6. Every circuit raced since 2000 has an outline, except the four the source does not have; each outline is a closed loop in the right direction, and
+//      each has a speed profile of a plausible shape.
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { csv } from '../packages/core/src/csv.js';
 import { LICENCE_NOTICE } from '../tools/build-model.mjs';
-import { RACE_LAPS_FORMAT, buildRaceLaps, parseLapTimes, typicalLap } from '../tools/build-race-laps.mjs';
+import { RACE_LAPS_FORMAT, buildRaceLaps, detectStops, driverCode, parseLapTimes } from '../tools/build-race-laps.mjs';
 import { REVERSED, SOURCE_FILES, TRACK_FORMAT, outline, pathLength } from '../tools/build-tracks.mjs';
+import { LEAST_DRIVING, STOP_PAUSE, buildReplay, progress, screenClock, timeAtProgress } from '../site/js/race-replay.js';
+import { uniformClock } from '../site/js/speed-profile.js';
 
 const read = (path) => readFile(path, 'utf8');
 const races = csv(await read('data/races.csv'));
 const results = csv(await read('data/results.csv'));
 const circuits = csv(await read('data/circuits.csv'));
-
-// the typical lap leaves out the slow laps
-assert.equal(typicalLap([90000, 91000, 92000, 150000]), 91000, 'a pit lap is left out of the typical lap');
-assert.equal(typicalLap([90000]), 90000);
+const drivers = csv(await read('data/drivers.csv'));
+const statuses = csv(await read('data/status.csv'));
+const lapText = await read('data/lap_times.csv');
 
 // 1. the lap files
-const fresh = buildRaceLaps({ races, results, lapTimes: parseLapTimes(await read('data/lap_times.csv')) });
+const fresh = buildRaceLaps({ races, results, lapTimes: parseLapTimes(lapText), statuses });
 const manifest = JSON.parse(await read('data/manifest.json'));
 const files = (await readdir('data/race-laps')).filter((name) => name.endsWith('.json')).sort();
 assert.deepEqual(
   files,
   Object.keys(fresh).map((year) => `${year}.json`),
-  'one file for each season with results: run node tools/build-race-laps.mjs',
+  'one file for each season with results: run npm run build:data',
 );
+const seasons = new Map();
 for (const file of files) {
   const season = JSON.parse(await read(`data/race-laps/${file}`));
   assert.equal(season.format, RACE_LAPS_FORMAT);
-  assert.equal(season.dataVersion, manifest.version, `${file} was built from other data: run node tools/build-race-laps.mjs`);
+  assert.equal(season.dataVersion, manifest.version, `${file} was built from other data: run npm run build:data`);
   assert.deepEqual(season.licence, LICENCE_NOTICE, `${file} carries the licence`);
   assert.deepEqual(season.races, fresh[season.year], `${file} equals a fresh build`);
+  const used = new Set(Object.values(season.races).flatMap((race) => race.entries.map((entry) => String(entry[0]))));
+  assert.deepEqual(Object.keys(season.codes).sort(), [...used].sort(), `${file} has a code for every driver in it, and no other`);
+  for (const driver of drivers.filter((candidate) => used.has(String(candidate.driverId))))
+    assert.equal(season.codes[driver.driverId], driverCode(driver), `${file}: the code of ${driver.surname}`);
+  assert.ok(
+    Object.values(season.codes).every((code) => /^[A-Z]{3}$/.test(code)),
+    `${file}: every code is three capital letters`,
+  );
+  seasons.set(season.year, season);
 }
+assert.equal(
+  driverCode({ code: '\\N', surname: 'de la Rosa', driverRef: 'de_la_rosa' }),
+  'DEL',
+  'a driver with no code of his own is called by his surname',
+);
+assert.equal(driverCode({ code: 'HAM', surname: 'Hamilton' }), 'HAM');
 
 // 2. every race, and plausible
 const winners = new Map(results.filter((row) => row.positionOrder === '1').map((row) => [row.raceId, row]));
-const ratios = [];
 let covered = 0;
+const exact = [];
+const cause = new Map(statuses.map((status) => [String(status.statusId), status.status]));
 for (const race of races.filter((row) => Number(row.year) >= 2000)) {
   const entry = fresh[race.year]?.[race.raceId];
   if (!winners.has(race.raceId)) continue; // not raced yet
   assert.ok(entry && entry.laps >= 1 && entry.entries.length >= 6, `${race.year} ${race.name} has laps and at least six entries`);
   covered++;
-  for (const [, , grid, laps, seconds, retired] of entry.entries) {
-    // (a driver who retired within a few laps can have a very slow one: the start, a red flag or whatever ended their race is most of what they ran)
+  for (const [, , grid, out, statusId, centiseconds] of entry.entries) {
     assert.ok(
-      seconds > 20 && seconds < (retired && laps <= 3 ? 1500 : 400),
-      `${race.year} ${race.name}: a typical lap of ${seconds} seconds is plausible`,
+      centiseconds.length >= 1 && centiseconds.length <= entry.laps && centiseconds.every((lap) => Number.isInteger(lap) && lap > 2000),
     );
-    assert.ok(Number.isInteger(laps) && laps >= 1 && laps <= entry.laps && grid >= 0 && (retired === 0 || retired === 1));
+    assert.ok(
+      grid >= 0 && (out === 0 || out === 1) && cause.has(String(statusId)),
+      `${race.year} ${race.name}: grid, out and status are what they should be`,
+    );
+    if (out) assert.ok(centiseconds.length < entry.laps, 'a car that retired did not finish the distance');
   }
   const winner = entry.entries[0];
   const real = Number(winners.get(race.raceId).milliseconds) / 1000;
-  if (real > 0 && winner[3] === entry.laps) ratios.push((winner[4] * entry.laps) / real);
+  if (real > 0 && winner[5].length === entry.laps) {
+    const total = winner[5].reduce((sum, lap) => sum + lap, 0) / 100;
+    assert.ok(
+      Math.abs(total / real - 1) < 0.05,
+      `${race.year} ${race.name}: the laps of the winner add up to the race time (${total} against ${real})`,
+    );
+    exact.push(Math.abs(total - real) < 1.5);
+  }
 }
 assert.ok(covered >= 500, `${covered} races covered`);
-ratios.sort((a, b) => a - b);
-// (it is 1.000 in most races, where no lap is slow; the source's lap times for the 2014 Chinese Grand Prix add up to 3.6% more than its race time)
-assert.ok(
-  ratios.at(-1) <= 1.05,
-  `the typical lap of a winner times the laps does not exceed the race time (highest ${ratios.at(-1).toFixed(3)})`,
-);
-assert.ok(ratios[Math.floor(ratios.length / 2)] > 0.9, 'and is most of it');
+assert.ok(exact.filter(Boolean).length > 0.95 * exact.length, 'and to within a second and a half in nearly every race');
 
-// 3. the outlines
+// 3. the red flags
+assert.deepEqual(detectStops([[90000, 91000, 90500, 90800, 91200, 90700]]), [], 'a race with no long lap has no stoppage');
+const found = [];
+for (const season of seasons.values())
+  for (const [raceId, race] of Object.entries(season.races)) {
+    for (const [from, to] of race.stops)
+      assert.ok(from >= 0 && to - from >= 90, `${season.year} ${raceId}: a stoppage lasts at least 90 seconds`);
+    if (race.stops.length) found.push(`${season.year} ${races.find((row) => row.raceId === raceId).name}`);
+  }
+assert.ok(found.length >= 28 && found.length <= 40, `${found.length} races with a red flag`);
+for (const known of [
+  '2011 Canadian',
+  '2012 Malaysian',
+  '2014 British',
+  '2016 Brazilian',
+  '2021 Hungarian',
+  '2022 British',
+  '2024 Monaco',
+  '2007 European',
+  '2020 Tuscan',
+  '2021 Saudi',
+])
+  assert.ok(
+    found.some((name) => name.startsWith(known)),
+    `${known} Grand Prix has its red flag`,
+  );
+assert.ok(!found.some((name) => /^2024 Singapore|^2025 Italian|^2019 German/.test(name)), 'and an ordinary race does not');
+
+// 4. the replay of every race
+const recorded = new Map(); // "raceId/driverId" -> [position at the end of each lap]
+for (const line of lapText.split('\n').slice(1)) {
+  if (!line) continue;
+  const [raceId, driverId, lap, position] = line.split(',');
+  const key = `${raceId}/${driverId}`;
+  if (!recorded.has(key)) recorded.set(key, []);
+  recorded.get(key)[Number(lap) - 1] = Number(position);
+}
+let crossings = 0;
+const disagreements = [];
+let fastest = 0;
+let replays = 0;
+for (const season of seasons.values())
+  for (const [raceId, race] of Object.entries(season.races)) {
+    const replay = buildReplay(race, uniformClock);
+    replays++;
+    // progress never goes backwards, sampled every 5 seconds
+    for (const car of replay.cars) {
+      let before = -Infinity;
+      for (let time = 0; time <= replay.end + 400; time += 5) {
+        const now = progress(car, time, uniformClock);
+        assert.ok(now >= before - 1e-9, `${season.year} ${raceId} car ${car.id}: progress went backwards at ${time}`);
+        before = now;
+      }
+      for (let i = 1; i < car.t.length; i++) {
+        assert.ok(
+          car.t[i] >= car.t[i - 1] && car.u[i] >= car.u[i - 1],
+          `${season.year} ${raceId} car ${car.id}: the timeline is not monotone`,
+        );
+        const seconds = car.t[i] - car.t[i - 1];
+        if (seconds > 0.5 && car.u[i] > car.u[i - 1])
+          fastest = Math.max(fastest, ((car.u[i] - car.u[i - 1]) / seconds) * replay.cars[0].typical);
+      }
+      // it crosses the line at the moments its lap times say
+      let time = 0;
+      race.entries
+        .find((entry) => String(entry[0]) === car.id)[5]
+        .forEach((centiseconds, lap) => {
+          time += centiseconds / 100;
+          if ((lap + 1) % 9 === 0 || lap + 1 === car.laps)
+            assert.ok(
+              Math.abs(timeAtProgress(car, lap + 1, uniformClock) - time) < 0.02,
+              `${season.year} ${raceId}: lap ${lap + 1} is crossed on time`,
+            );
+        });
+    }
+    // and in the order the lap times record
+    for (let lap = 1; lap <= race.laps; lap++) {
+      const present = replay.cars.filter((car) => car.laps >= lap && recorded.get(`${raceId}/${car.id}`)?.[lap - 1]);
+      const byTime = present.map((car) => ({ id: car.id, time: timeAtProgress(car, lap, uniformClock) })).sort((a, b) => a.time - b.time);
+      const byRecord = [...present].sort((a, b) => recorded.get(`${raceId}/${a.id}`)[lap - 1] - recorded.get(`${raceId}/${b.id}`)[lap - 1]);
+      byTime.forEach((entry, place) => {
+        crossings++;
+        if (byRecord[place].id !== entry.id) {
+          const other = byTime.find((candidate) => candidate.id === byRecord[place].id);
+          if (Math.abs(other.time - entry.time) > 0.15) disagreements.push(`${season.year} ${raceId} lap ${lap}`); // more than the centiseconds can explain
+        }
+      });
+    }
+  }
+assert.equal(replays, covered + 0, 'every race was replayed');
+assert.ok(crossings > 500000, `${crossings} crossings of the line compared`);
+assert.ok(
+  disagreements.length <= 60,
+  `the replay crosses the line in the order the lap times record, but for ${disagreements.length} crossings: ${disagreements.slice(0, 5).join(', ')}`,
+);
+assert.ok(
+  disagreements.every((where) => !/2025|2024|2023|2022|2021|2020|2019/.test(where.slice(0, 4))) || disagreements.length < 10,
+  'and not in recent seasons',
+);
+assert.ok(
+  fastest <= 1 / LEAST_DRIVING + 0.01,
+  `no car drives faster than ${(1 / LEAST_DRIVING).toFixed(2)} times its normal pace (${fastest.toFixed(3)})`,
+);
+
+// 5. the clock of the screen
+const flat = screenClock([]);
+assert.equal(flat.realAt(123.4), 123.4);
+assert.equal(flat.shownAt(123.4), 123.4);
+const two = screenClock([
+  [100, 1100],
+  [3000, 3600],
+]);
+for (const [shown, real] of [
+  [50, 50],
+  [100, 100],
+  [100 + STOP_PAUSE, 1100],
+  [500, 1470], // the first stoppage of 1000 seconds takes 30 on the screen, so 970 are gone
+  [3000 - 970, 3000],
+  [3000 - 970 + STOP_PAUSE, 3600],
+]) {
+  assert.ok(Math.abs(two.realAt(shown) - real) < 1e-6, `at ${shown} on the screen it is ${real} in the race (${two.realAt(shown)})`);
+  assert.ok(Math.abs(two.shownAt(real) - shown) < 1e-6, `and the other way`);
+}
+let last = -1;
+for (let shown = 0; shown < 4000; shown += 7) {
+  const real = two.realAt(shown);
+  assert.ok(real >= last, 'the race clock only goes forward');
+  last = real;
+}
+assert.ok(Math.abs(two.shownAt(1100) - two.shownAt(100) - STOP_PAUSE) < 1e-9, 'a stoppage takes STOP_PAUSE seconds on the screen');
+
+// 6. the outlines
 const ref = new Map(circuits.map((circuit) => [circuit.circuitId, circuit.circuitRef]));
 const tracks = JSON.parse(await read('site/assets/tracks.json'));
 assert.equal(tracks.format, TRACK_FORMAT);
@@ -112,8 +270,13 @@ for (const [id, track] of Object.entries(tracks.tracks)) {
   const name = ref.get(id);
   assert.ok(SOURCE_FILES[name], `circuit ${id} (${name}) has a source file`);
   const source = JSON.parse(await read(`data/source/f1-circuits/circuits/${SOURCE_FILES[name]}.geojson`)).features[0];
-  const rebuilt = outline(source.geometry.coordinates, { reverse: REVERSED.includes(name) });
-  assert.deepEqual({ width: track.width, height: track.height, points: track.points }, rebuilt, `${name} equals a fresh build`);
+  const rebuilt = outline(source.geometry.coordinates, { reverse: REVERSED.includes(name), length: source.properties.length });
+  assert.deepEqual(
+    { width: track.width, height: track.height, points: track.points },
+    { width: rebuilt.width, height: rebuilt.height, points: rebuilt.points },
+    `${name} equals a fresh build`,
+  );
+  assert.deepEqual(track.speeds, rebuilt.speeds, `${name}: its speed profile equals a fresh build`);
   assert.ok(Math.max(track.width, track.height) === 1000 && track.points.length >= 120, `${name} fills a 1000-unit plan`);
   assert.ok(
     track.points.every((value) => value >= 0 && value <= 1000),
@@ -122,6 +285,14 @@ for (const [id, track] of Object.entries(tracks.tracks)) {
   const ratio = pathLength(source.geometry.coordinates) / source.properties.length;
   assert.ok(ratio > 0.95 && ratio < 1.03, `${name}: the outline is as long as the circuit (${ratio.toFixed(3)})`);
   assert.equal(track.length, source.properties.length);
+  const [slowest, quickest] = [Math.min(...track.speeds), Math.max(...track.speeds)];
+  assert.ok(
+    track.speeds.length === 200 && slowest >= 40 && slowest < 190 && quickest > 180 && quickest <= 306,
+    `${name}: speeds from ${slowest} to ${quickest} km/h`,
+  );
+  assert.ok(slowest < 0.8 * quickest, `${name}: it has slow parts and fast ones`);
+  const mean = track.speeds.length / track.speeds.reduce((sum, speed) => sum + 1 / speed, 0);
+  assert.ok(mean > 150 && mean < 270, `${name}: a mean speed of ${mean.toFixed(0)} km/h`);
   if (name in clockwise) {
     let area = 0; // the plan has y pointing down: a positive sum is clockwise
     const n = track.points.length / 2;
@@ -137,5 +308,5 @@ const raced = new Set(races.filter((race) => Number(race.year) >= 2000 && winner
 const without = [...raced].filter((id) => !tracks.tracks[id]).map((id) => ref.get(id));
 assert.deepEqual(without.sort(), ['buddh', 'fuji', 'valencia', 'yeongam'], 'only the four circuits that the source lacks have no outline');
 console.log(
-  `PASS race laps and tracks: ${files.length} seasons and ${covered} races of lap data equal a fresh build, ${Object.keys(tracks.tracks).length} outlines (none for ${without.join(', ')}) closed, the right length and direction`,
+  `PASS race laps and tracks: ${files.length} seasons and ${covered} races of lap times equal a fresh build; ${found.length} red flags; ${replays} replays monotone, on time, in the recorded order at ${crossings} crossings of the line, at most ${fastest.toFixed(2)} times normal pace; ${Object.keys(tracks.tracks).length} outlines with speed profiles (none for ${without.join(', ')})`,
 );

@@ -70,7 +70,8 @@ const send = (method, params = {}) =>
     waiting.set(n, resolve);
     ws.send(JSON.stringify({ id: n, method, params }));
   });
-const evaluate = async (expression) => (await send('Runtime.evaluate', { expression, returnByValue: true })).result?.result?.value;
+const evaluate = async (expression) =>
+  (await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result?.result?.value;
 
 await send('Runtime.enable');
 await send('Log.enable');
@@ -263,7 +264,7 @@ check(
 const connector = await evaluate("document.getElementById('stageConnectorLine').getAttribute('points').trim().split(/\\s+/).length");
 check('a line joins the word to the car', connector >= 2 && (await opacityOf('#stageConnectorEnd')) === '1', `${connector} points`);
 await mouse('mouseMoved', 8, 300);
-await sleep(500);
+await sleep(1000); // the grace period (0.6 s) in which the pointer could be on its way to the panel
 check('moving away closes it again when nothing was clicked', await isState('idle', ''));
 await mouse('mouseMoved', ...centreOf(wordDriver));
 await sleep(700);
@@ -309,7 +310,7 @@ await click(...centreOf(hands));
 await sleep(400);
 check('clicking the hands again lets go of them', await isState('peek', 'driver'));
 await click(8, 300);
-await sleep(400);
+await sleep(1000);
 check('pressing on the picture, away from the car and the hands, lets go of the ratings', await isState('idle', ''));
 // From the picture to the panel: the pointer travels to it, the panel stays, and using its slider keeps it open even when the button is let go outside.
 await mouse('mouseMoved', ...centreOf(car));
@@ -392,6 +393,23 @@ for (const kept of [false, true]) {
   await click(8, 300);
   await sleep(500);
 }
+// From the car to the timing table of the race: the table holds the preview as the panel does, and pressing on it keeps it open
+await mouse('mouseMoved', ...centreOf(car));
+await sleep(1200); // the lap times of the season are fetched the first time
+const tableBox = await rectangleOfSelector('#stageTrackTable li:nth-child(3)');
+await glide(centreOf(car), centreOf(tableBox), 24);
+await sleep(1000);
+check(
+  'going from the car to the timing table of the race keeps the ratings of the cars open (the table is part of what is open)',
+  (await isState('peek', 'car')) && !(await evaluate("document.getElementById('stageTrack').hidden")),
+  JSON.stringify(await stageState()),
+);
+await mouse('mousePressed', ...centreOf(tableBox));
+await mouse('mouseReleased', ...centreOf(tableBox));
+await sleep(300);
+check('and pressing on it keeps them open', await isState('open', 'car'));
+await click(8, 300);
+await sleep(1000);
 await mouse('mouseMoved', ...centreOf(car));
 await sleep(500);
 const scrubAgain = await rectangleOf('ratingsScrub');
@@ -526,64 +544,159 @@ check(
     !card.tooltip,
   JSON.stringify(card),
 );
-// the track at the bottom right: the circuit of the weekend, a dot for each driver racing round it at ten times the pace, and the lap counter
+// the race at the bottom right: the circuit of the weekend, the real race replayed on it at ten times the pace (a dot for each driver), the lap counter and
+// the live timing table
 const trackState = () =>
   evaluate(
     `(() => { const dots = [...document.querySelectorAll('#stageTrackDots circle')]; const box = document.getElementById('stageTrack');
+      const table = [...document.querySelectorAll('#stageTrackTable li')];
+      const place = (li) => { const m = /translate\\(([-\\d.]+)px, ([-\\d.]+)px\\)/.exec(li.style.transform); return m ? [Number(m[1]), Number(m[2])] : [0, 0]; };
       return { hidden: box.hidden, name: document.getElementById('stageTrackName').textContent, lap: document.getElementById('stageTrackLap').textContent, ids: dots.map((d) => d.dataset.id).sort(),
         first: dots.length ? [Number(dots[0].getAttribute('cx')), Number(dots[0].getAttribute('cy'))] : null, pause: document.getElementById('stageTrackPause').textContent,
         rows: [...document.querySelectorAll('#ratingsList .ledger-row')].map((row) => row.dataset.id).sort(), path: document.getElementById('stageTrackLine').getAttribute('d').length,
-        box: (() => { const r = box.getBoundingClientRect(); return [r.x, r.y, r.width, r.height]; })() }; })()`,
+        box: (() => { const r = box.getBoundingClientRect(); return [r.x, r.y, r.width, r.height]; })(),
+        order: table.map((li) => [li.dataset.id, ...place(li)]).sort((a, b) => a[1] - b[1] || a[2] - b[2]).map(([id]) => id),
+        codes: table.map((li) => li.querySelector('.code').textContent), gaps: Object.fromEntries(table.map((li) => [li.dataset.id, li.querySelector('.gap').textContent])),
+        tableShown: !document.getElementById('stageTrackTable').hidden, raceTime: Number(box.dataset.raceTime), raceId: box.dataset.raceId,
+        hotDots: dots.filter((d) => d.classList.contains('hot')).length, hotRows: table.filter((li) => li.classList.contains('hot')).map((li) => li.dataset.id),
+        linked: [...document.querySelectorAll('#ratingsList .ledger-row.linked')].map((row) => row.dataset.id) }; })()`,
   );
 await mouse('mouseMoved', 8, 300);
 await sleep(600);
 const raceOne = await trackState();
 check(
-  'the track of the weekend is at the bottom right, with its name and the lap counter, and a dot for each driver in the ratings',
+  'the race of the weekend is at the bottom right, with its name and the lap counter, a dot for each driver and a row of the timing table for each',
   !raceOne.hidden &&
     raceOne.name === 'Singapore GP · 2026' &&
     /^lap \d+ \/ 62$/.test(raceOne.lap) &&
     raceOne.path > 500 &&
     JSON.stringify(raceOne.ids) === JSON.stringify(raceOne.rows) &&
+    raceOne.order.length === raceOne.ids.length &&
+    raceOne.tableShown &&
+    raceOne.codes.every((code) => /^[A-Z]{3}$/.test(code)) &&
     raceOne.box[0] > 700 &&
     raceOne.box[1] > 450,
-  JSON.stringify(raceOne),
+  JSON.stringify({ ...raceOne, order: raceOne.order.length, gaps: 0 }),
 );
+const gridOrder = raceOne.order;
+check(
+  'the cars wait on the grid for the lights',
+  Math.abs(raceOne.raceTime) < 0.01 || raceOne.raceTime < 30,
+  `race time ${raceOne.raceTime}`,
+);
+await sleep(2800); // the cars are on the grid for two seconds
+const underway = await trackState();
 await sleep(700);
 const raceTwo = await trackState();
 check(
   'the dots race: they have moved round the track',
-  Math.hypot(raceTwo.first[0] - raceOne.first[0], raceTwo.first[1] - raceOne.first[1]) > 20,
-  JSON.stringify([raceOne.first, raceTwo.first]),
+  Math.hypot(raceTwo.first[0] - underway.first[0], raceTwo.first[1] - underway.first[1]) > 20 && raceTwo.raceTime > underway.raceTime + 3,
+  JSON.stringify([underway.first, raceTwo.first, underway.raceTime, raceTwo.raceTime]),
 );
 let lapNow = 1;
-for (let waited = 0; waited < 16000 && lapNow < 2; waited += 500) {
+for (let waited = 0; waited < 20000 && lapNow < 3; waited += 500) {
   await sleep(500);
   lapNow = Number(/^lap (\d+)/.exec((await trackState()).lap)[1]);
 }
-check('and the lap counter advances (a lap takes about nine seconds at ten times the pace)', lapNow >= 2, `lap ${lapNow}`);
-// the dot of the row under the pointer turns red and larger
+check('and the lap counter advances (a lap takes about nine seconds at ten times the pace)', lapNow >= 3, `lap ${lapNow}`);
+// the places in the table are the places of the real race: pause it where it is, and work out the order from the lap times of the season file
+await evaluate("document.getElementById('stageTrackPause').click()");
+await sleep(300);
+const paused = await trackState();
+const expected = await evaluate(
+  `(async () => {
+    const season = await (await fetch('../data/race-laps/2026.json')).json();
+    const race = season.races['${paused.raceId}'];
+    const time = ${paused.raceTime};
+    const cars = race.entries.map(([id, , grid, out, , centiseconds]) => {
+      const lap = centiseconds.map((value) => value / 100);
+      let start = 0;
+      let u = null;
+      for (let k = 0; k < lap.length; k++) {
+        if (time < start + lap[k]) {
+          const from = k === 0 ? -(grid > 0 ? grid : race.entries.length + 1) * 0.002 : k;
+          u = from + ((k + 1 - from) * (time - start)) / lap[k];
+          break;
+        }
+        start += lap[k];
+      }
+      return { id: String(id), u: u ?? lap.length, lap, retired: Boolean(out) && u === null };
+    });
+    const racing = cars.filter((car) => !car.retired).sort((a, b) => b.u - a.u);
+    const [leader, second] = racing; // the gap of the car in second place: the time since the leader was where it is now
+    let reached = 0;
+    let at = 0;
+    for (let k = 0; k < leader.lap.length; k++) {
+      if (second.u <= k + 1) {
+        at = reached + (k === 0 ? ((second.u + 0.002) / 1.002) : second.u - k) * leader.lap[k];
+        break;
+      }
+      reached += leader.lap[k];
+    }
+    return { order: racing.map((car) => car.id), gap: time - at };
+  })()`,
+);
+check(
+  'the table has the places of the real race at that moment, from the lap times of the season file (the first ten)',
+  JSON.stringify(paused.order.slice(0, 10)) === JSON.stringify(expected.order.slice(0, 10)),
+  JSON.stringify([paused.order.slice(0, 10), expected.order.slice(0, 10), paused.raceTime]),
+);
+const secondGap = Number(/^\+(\d+\.\d)$/.exec(paused.gaps[paused.order[1]])?.[1]);
+check(
+  'and the gap of the car in second place is the time since the leader was where it is (the table says +' +
+    secondGap +
+    ', the lap times say ' +
+    expected.gap.toFixed(1) +
+    ')',
+  Math.abs(secondGap - expected.gap) < 0.25 && paused.gaps[paused.order[0]] === '—',
+);
+check('the order has changed since the start: the cars have passed each other', JSON.stringify(paused.order) !== JSON.stringify(gridOrder));
+await evaluate("document.getElementById('stageTrackPause').click()");
+await sleep(300);
+// the dot, and the row of the table, of the row of the ratings under the pointer turn red; the dot larger
 const thirdRow = await rectangleOfSelector('#ratingsList li:nth-child(3) .ledger-row');
 await mouse('mouseMoved', ...centreOf(thirdRow));
 await sleep(300);
 const dots = await evaluate(
-  `(() => { const id = document.querySelector('#ratingsList li:nth-child(3) .ledger-row').dataset.id; const dot = (d) => ({ hot: d.classList.contains('hot'), r: d.getAttribute('r'), fill: getComputedStyle(d).fill });
-    return { mine: dot(document.querySelector('#stageTrackDots circle[data-id="' + id + '"]')), others: [...document.querySelectorAll('#stageTrackDots circle')].filter((d) => d.dataset.id !== id).map(dot) }; })()`,
+  `(() => { const id = document.querySelector('#ratingsList li:nth-child(3) .ledger-row').dataset.id; const dot = (d) => ({ hot: d.classList.contains('hot'), r: Number(d.getAttribute('r')), fill: getComputedStyle(d).fill });
+    const others = [...document.querySelectorAll('#stageTrackDots circle')].filter((d) => d.dataset.id !== id).map(dot);
+    const row = document.querySelector('#stageTrackTable li[data-id="' + id + '"]');
+    return { mine: dot(document.querySelector('#stageTrackDots circle[data-id="' + id + '"]')), others, row: row.classList.contains('hot'), rowBackground: getComputedStyle(row).backgroundColor, otherRows: [...document.querySelectorAll('#stageTrackTable li.hot')].length }; })()`,
 );
 check(
-  'pointing at a row turns its dot FA1802 and larger; the other dots stay as they were',
+  'pointing at a row of the ratings turns its dot FA1802 and larger, and lights its row of the timing table; nothing else changes',
   dots.mine.hot &&
     dots.mine.fill === 'rgb(250, 24, 2)' &&
-    Number(dots.mine.r) > 12 &&
-    dots.others.every((d) => !d.hot && Number(d.r) < 12 && d.fill !== 'rgb(250, 24, 2)'),
-  JSON.stringify(dots.mine),
+    dots.mine.r > 1.4 * Math.max(...dots.others.map((d) => d.r)) &&
+    dots.others.every((d) => !d.hot && d.fill !== 'rgb(250, 24, 2)') &&
+    dots.row &&
+    dots.otherRows === 1 &&
+    /250, 24, 2/.test(dots.rowBackground),
+  JSON.stringify(dots),
 );
 await mouse('mouseMoved', 8, 300);
 await sleep(300);
 check(
-  'and it goes back when the pointer leaves the row',
-  (await evaluate("document.querySelectorAll('#stageTrackDots circle.hot').length")) === 0,
+  'and they go back when the pointer leaves the row',
+  (await evaluate("document.querySelectorAll('#stageTrackDots circle.hot').length")) === 0 &&
+    (await evaluate("document.querySelectorAll('#stageTrackTable li.hot').length")) === 0,
 );
+// the other way: a row of the timing table lights its dot and the row of the ratings
+const tableRow = await rectangleOfSelector('#stageTrackTable li:nth-child(4)');
+await mouse('mouseMoved', ...centreOf(tableRow));
+await sleep(300);
+const fromTable = await trackState();
+check(
+  'pointing at a row of the timing table turns its dot red and lights the row of the ratings of that driver',
+  fromTable.hotDots === 1 &&
+    fromTable.hotRows.length === 1 &&
+    fromTable.linked.length === 1 &&
+    fromTable.linked[0] === fromTable.hotRows[0],
+  JSON.stringify([fromTable.hotDots, fromTable.hotRows, fromTable.linked]),
+);
+await mouse('mouseMoved', 8, 300);
+await sleep(300);
+check('and the row of the ratings goes back', (await trackState()).linked.length === 0);
 // pause and play
 await evaluate("document.getElementById('stageTrackPause').click()");
 const frozen = await trackState();
@@ -595,15 +708,26 @@ check(
 await evaluate("document.getElementById('stageTrackPause').click()");
 await sleep(500);
 check('and play starts it again', JSON.stringify((await trackState()).first) !== JSON.stringify(frozen.first));
-// the cars: a dot for each team
+// the cars: still a dot for each driver; the row of a team lights both of its drivers
 await evaluate("document.getElementById('ratingsCars').click()");
 await sleep(600);
 const cars = await trackState();
 check(
-  'the cars have a dot for each team',
-  cars.ids.length === cars.rows.length && cars.ids.length <= 14 && !cars.hidden,
+  'with the cars shown there is still a dot for each driver, and a row of the ratings for each team',
+  cars.ids.length === raceOne.ids.length && cars.rows.length >= 9 && cars.rows.length <= 14 && !cars.hidden,
   `${cars.ids.length} dots, ${cars.rows.length} rows`,
 );
+const teamRow = await rectangleOfSelector('#ratingsList li:nth-child(2) .ledger-row');
+await mouse('mouseMoved', ...centreOf(teamRow));
+await sleep(300);
+const team = await trackState();
+check(
+  'pointing at a team lights both of its drivers: two dots, two rows of the table',
+  team.hotDots === 2 && team.hotRows.length === 2,
+  JSON.stringify([team.hotDots, team.hotRows]),
+);
+await mouse('mouseMoved', 8, 300);
+await sleep(300);
 // (and the card of a team has its name and its paces, and no age: a team's id can be the id of a driver)
 const teamCard = await evaluate(
   `(() => { const row = document.querySelector('#ratingsList .ledger-row'); row.dispatchEvent(new Event('pointerenter')); const card = document.getElementById('ratingCard');
@@ -620,9 +744,9 @@ check(
 await evaluate("document.querySelector('#ratingsList .ledger-row').dispatchEvent(new Event('pointerleave'))");
 await evaluate("document.getElementById('ratingsDrivers').click()");
 await sleep(300);
-// a circuit with no outline (Korea) shows no track; the ratings are as usual
+// a circuit with no outline (Korea) shows no race; the ratings are as usual
 await evaluate(
-  "import('/site/js/state.js').then(({ state }) => { window.__korea = state.model.snaps.findIndex((snap) => snap.year === 2012 && /Korean/.test(snap.name)); })",
+  "import('/site/js/state.js').then(({ state }) => { window.__korea = state.model.snaps.findIndex((snap) => snap.year === 2012 && /Korean/.test(snap.name)); window.__monaco = state.model.snaps.findIndex((snap) => snap.year === 2024 && /Monaco/.test(snap.name)); })",
 );
 await sleep(300);
 const korea = await evaluate('window.__korea');
@@ -631,7 +755,7 @@ await evaluate(
 );
 await sleep(700);
 check(
-  'a weekend at a circuit with no outline (Korea 2012) shows no track, and the ratings are there',
+  'a weekend at a circuit with no outline (Korea 2012) shows no race, and the ratings are there',
   (await trackState()).hidden && (await chartRows()) > 10,
 );
 await evaluate(
@@ -640,10 +764,43 @@ await evaluate(
 await sleep(900);
 const earlier = await trackState();
 check(
-  'another weekend, another track (the 2012 Japanese Grand Prix, at Suzuka)',
-  !earlier.hidden && /^Japanese GP · 2012$/.test(earlier.name),
+  'another weekend, another race (the 2012 Japanese Grand Prix, at Suzuka)',
+  !earlier.hidden && /^Japanese GP · 2012$/.test(earlier.name) && earlier.order.length >= 20,
   JSON.stringify(earlier.name),
 );
+// a red flag: the Monaco Grand Prix of 2024 was stopped on the first lap; the cars stand on the grid for the stoppage, which takes a few seconds
+await evaluate(
+  `(() => { const slider = document.getElementById('ratingsScrub'); slider.value = window.__monaco; slider.dispatchEvent(new Event('input', { bubbles: true })); })()`,
+);
+let sawRedFlag = false;
+let before = null;
+for (let waited = 0; waited < 9000 && !sawRedFlag; waited += 150) {
+  await sleep(150);
+  const now = await trackState();
+  if (/red flag/.test(now.lap)) {
+    sawRedFlag = true;
+    before = now;
+  }
+}
+check(
+  'the red flag of the 2024 Monaco Grand Prix is shown as such, and the cars stand still',
+  sawRedFlag && before.name === 'Monaco GP · 2024',
+  JSON.stringify(before?.lap),
+);
+if (sawRedFlag) {
+  await sleep(500);
+  const during = await trackState();
+  check(
+    'while it lasts the cars stay where they are',
+    /red flag/.test(during.lap) ? JSON.stringify(during.first) === JSON.stringify(before.first) : true,
+  );
+}
+let afterFlag = false;
+for (let waited = 0; waited < 8000 && !afterFlag; waited += 250) {
+  await sleep(250);
+  afterFlag = !/red flag/.test((await trackState()).lap);
+}
+check('and the race goes on after it', afterFlag);
 await evaluate(
   "(() => { const slider = document.getElementById('ratingsScrub'); slider.value = slider.max; slider.dispatchEvent(new Event('input', { bubbles: true })); })()",
 );

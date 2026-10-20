@@ -207,6 +207,10 @@ function ensurePanel() {
       }
     }).observe(panel);
   }
+  window.addEventListener('f1:track-hover', (event) => {
+    linked = { driver: event.detail.driver, team: event.detail.team };
+    for (const line of controls.ratingsList.querySelectorAll('.ledger-row')) line.classList.toggle('linked', isLinked(line.dataset.id));
+  });
   window.addEventListener('f1:workspace-changed', () => {
     stop();
     // The panel has no width while its page is hidden, so a first draw made then is the wrong size.
@@ -326,6 +330,7 @@ function drawList(rows, snap, metric, probability, st) {
       const line = element('div', 'ledger-row');
       line.dataset.id = row.id;
       line.classList.toggle('selected', selected.has(row.id));
+      line.classList.toggle('linked', isLinked(row.id));
       line.setAttribute('aria-pressed', String(selected.has(row.id)));
       const last = lastColumn(row, probability, st.showForm);
       const deviation = Number.isFinite(sdOf(row, metric)) ? `±${sdOf(row, metric).toFixed(0)}` : '';
@@ -374,6 +379,10 @@ function drawList(rows, snap, metric, probability, st) {
 }
 
 let card;
+let linked = { driver: null, team: null }; // the driver (and the team) under the pointer in the timing table of the race
+
+/** Whether a row of the ratings is the driver, or the team, that is being pointed at in the timing table. */
+const isLinked = (id) => (entity === 'driver' ? id === linked.driver : id === linked.team);
 
 /** The card beside the panel for the row under the pointer: who, how old, which team, the rank and the paces. It is drawn in the panel's own style. */
 function showCard(row, target, snap) {

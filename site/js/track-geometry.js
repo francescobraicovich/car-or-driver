@@ -1,25 +1,31 @@
-// The racing dots on the track map of the front page: how a track outline becomes a smooth path, who the runners of a race are, and where each of them
-// is, and which lap the race is on, a given number of seconds after the start. Pure functions with no DOM, so that they are tested in Node
-// (tests/test-stage.mjs); the drawing and the clock are in track-view.js.
+// The shape of a circuit on the front page: how an outline becomes a smooth path, where the start line is, and where a point a given share of the way round
+// the lap is (the dots are placed from one table, so that the drawing and the speeds share one way of measuring distance). Pure functions with no DOM, so
+// that they are tested in Node (tests/test-stage.mjs); the drawing and the clock are in track-view.js.
 
-/** The race runs this many times faster than the real one: a second on the screen is ten seconds of race. */
-export const TIME_SCALE = 10;
-/** The cars start in grid order, behind the line: this many laps (about 8 metres on a 4 kilometre lap) for each place on the grid. */
-export const GRID_SPACING = 0.002;
-
-/** A closed smooth path (a Catmull-Rom curve written as cubic Béziers) through the points [x0, y0, x1, y1, ...] of an outline. */
-export function smoothPath(points) {
+/** The four control points of the cubic Bézier (a Catmull-Rom curve) of each stretch of a closed outline [x0, y0, x1, y1, ...]: [[p0, c1, c2, p1], ...]. */
+function stretches(points) {
   const n = points.length / 2;
   const at = (i) => [points[2 * ((i + n) % n)], points[2 * ((i + n) % n) + 1]];
-  const round = (value) => Math.round(value * 10) / 10;
-  let path = `M${points[0]},${points[1]}`;
-  for (let i = 0; i < n; i++) {
+  return Array.from({ length: n }, (_, i) => {
     const [x0, y0] = at(i - 1);
     const [x1, y1] = at(i);
     const [x2, y2] = at(i + 1);
     const [x3, y3] = at(i + 2);
-    path += `C${round(x1 + (x2 - x0) / 6)},${round(y1 + (y2 - y0) / 6)} ${round(x2 - (x3 - x1) / 6)},${round(y2 - (y3 - y1) / 6)} ${x2},${y2}`;
-  }
+    return [
+      [x1, y1],
+      [x1 + (x2 - x0) / 6, y1 + (y2 - y0) / 6],
+      [x2 - (x3 - x1) / 6, y2 - (y3 - y1) / 6],
+      [x2, y2],
+    ];
+  });
+}
+
+/** A closed smooth path (a Catmull-Rom curve written as cubic Béziers) through the points [x0, y0, x1, y1, ...] of an outline. */
+export function smoothPath(points) {
+  const round = (value) => Math.round(value * 10) / 10;
+  let path = `M${points[0]},${points[1]}`;
+  for (const [, [cx1, cy1], [cx2, cy2], [x, y]] of stretches(points))
+    path += `C${round(cx1)},${round(cy1)} ${round(cx2)},${round(cy2)} ${x},${y}`;
   return `${path}Z`;
 }
 
@@ -32,53 +38,43 @@ export function startLine(points, half = 14) {
 }
 
 /**
- * The runners of a race, from its entries [driverId, constructorId, grid, laps, averageSeconds, retired]: one for each driver, or, for the cars, one
- * for each team, at the mean pace of its drivers, with the best grid place and the most laps, and out of the race only when both of them are.
- * Returns [{ id, average, laps, slot, retired }] with `slot` the place on the grid (the pit lane, grid 0, is behind the last).
+ * The smooth outline sampled at equal steps of distance: { x, y, length } with `count` + 1 points from the start line round to the start line again
+ * (the last is the first), and `length` the length of the curve in the units of the outline.
  */
-export function runners(entries, entity) {
-  const slotOf = (grid) => (grid > 0 ? grid : entries.length + 1);
-  if (entity === 'driver')
-    return entries.map(([driverId, , grid, laps, average, retired]) => ({
-      id: String(driverId),
-      average,
-      laps,
-      slot: slotOf(grid),
-      retired: Boolean(retired),
-    }));
-  const teams = new Map();
-  for (const [, constructorId, grid, laps, average, retired] of entries) {
-    const key = String(constructorId);
-    if (!teams.has(key)) teams.set(key, []);
-    teams.get(key).push({ grid, laps, average, retired });
+export function outlineTable(points, count) {
+  const fine = [];
+  for (const [[x0, y0], [x1, y1], [x2, y2], [x3, y3]] of stretches(points))
+    for (let step = 0; step < 16; step++) {
+      const t = step / 16;
+      const a = (1 - t) ** 3;
+      const b = 3 * (1 - t) ** 2 * t;
+      const c = 3 * (1 - t) * t ** 2;
+      const d = t ** 3;
+      fine.push([a * x0 + b * x1 + c * x2 + d * x3, a * y0 + b * y1 + c * y2 + d * y3]);
+    }
+  fine.push(fine[0]);
+  const along = [0];
+  for (let i = 1; i < fine.length; i++) along.push(along[i - 1] + Math.hypot(fine[i][0] - fine[i - 1][0], fine[i][1] - fine[i - 1][1]));
+  const length = along.at(-1);
+  const x = new Float64Array(count + 1);
+  const y = new Float64Array(count + 1);
+  let at = 0;
+  for (let k = 0; k <= count; k++) {
+    const target = (k / count) * length;
+    while (at < along.length - 2 && along[at + 1] < target) at++;
+    const span = along[at + 1] - along[at] || 1;
+    const share = (target - along[at]) / span;
+    x[k] = fine[at][0] + share * (fine[at + 1][0] - fine[at][0]);
+    y[k] = fine[at][1] + share * (fine[at + 1][1] - fine[at][1]);
   }
-  return [...teams].map(([id, members]) => ({
-    id,
-    average: members.reduce((sum, member) => sum + member.average, 0) / members.length,
-    laps: Math.max(...members.map((member) => member.laps)),
-    slot: Math.min(...members.map((member) => slotOf(member.grid))),
-    retired: members.every((member) => member.retired),
-  }));
+  return { x, y, length };
 }
 
-/**
- * The race `seconds` of real time after the start: how many laps each runner has covered (negative before the line, and held at the laps it
- * completed once it has finished or retired), which lap the leader is on out of `totalLaps`, and whether the race is over. It is over when the first
- * runner completes all the laps; everyone is held where they are then.
- */
-export function raceState(list, totalLaps, seconds) {
-  const covered = (runner, at) => Math.min(at / runner.average - runner.slot * GRID_SPACING, runner.laps);
-  const finishers = list.filter((runner) => runner.laps >= totalLaps);
-  const end = finishers.length
-    ? Math.min(...finishers.map((runner) => (totalLaps + runner.slot * GRID_SPACING) * runner.average))
-    : Infinity;
-  const at = Math.min(seconds * TIME_SCALE, end);
-  const progress = list.map((runner) => covered(runner, at));
-  const leader = Math.max(...progress);
-  return {
-    progress,
-    lap: Math.min(totalLaps, Math.max(1, Math.floor(leader) + 1)),
-    finished: seconds * TIME_SCALE >= end,
-    end: end / TIME_SCALE,
-  };
+/** The point a share `s` (0 to 1, the start line at 0 and 1) of the way round the lap, from an outlineTable: [x, y]. */
+export function pointAt(table, s) {
+  const count = table.x.length - 1;
+  const at = (((s % 1) + 1) % 1) * count;
+  const k = Math.min(count - 1, Math.floor(at));
+  const share = at - k;
+  return [table.x[k] + share * (table.x[k + 1] - table.x[k]), table.y[k] + share * (table.y[k + 1] - table.y[k])];
 }

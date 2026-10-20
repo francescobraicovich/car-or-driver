@@ -863,19 +863,23 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   font-weight: 700;
 }
 .ledger .ledger-row:hover,
-.ledger .ledger-row:focus-visible {
+.ledger .ledger-row:focus-visible,
+.ledger .ledger-row.linked {
   background: var(--ink);
   color: var(--surface);
   outline: none;
 }
 .ledger .ledger-row:hover > span,
 .ledger .ledger-row:focus-visible > span,
+.ledger .ledger-row.linked > span,
 .ledger .ledger-row:hover .change,
-.ledger .ledger-row:focus-visible .change {
+.ledger .ledger-row:focus-visible .change,
+.ledger .ledger-row.linked .change {
   color: var(--surface);
 }
 .ledger .ledger-row:hover .bar,
-.ledger .ledger-row:focus-visible .bar {
+.ledger .ledger-row:focus-visible .bar,
+.ledger .ledger-row.linked .bar {
   --track: rgb(238 240 243 / 0.45);
   --fill: var(--surface);
   --line: var(--surface);
@@ -999,10 +1003,12 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 }
 
 /* ── the track ───────────────────────────────────────── */
-/* At the bottom right, while the ratings are shown, on a wide screen: the circuit of the weekend, a dot for each driver (or team) racing round it, and
-   the lap. Where the car and the hands leave too little height for it, the page does not show it (track-view.js reads --track-room). */
+/* At the bottom right, while the ratings are shown, on a wide screen: the circuit of the weekend with the race on it (a dot for each driver, from the
+   lap times of the real race), the lap, and beside it the live timing table (track-view.js). Where the car and the hands leave too little height for
+   it, the page does not show it (track-view.js reads --track-room). */
 .track {
   --hot: #fa1802; /* the dot of the row under the pointer */
+  --hot-row: rgb(250 24 2 / 0.22); /* the row of the timing table that is pointed at */
   position: absolute;
   z-index: 3;
   right: clamp(18px, 5vw, 72px);
@@ -1010,7 +1016,8 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  width: min(400px, calc(100% - var(--panel-left, 0px) - var(--panel-width, 0px) - 2 * clamp(18px, 5vw, 72px) - 28px));
+  --map-height: min(340px, calc(var(--track-room, 300px) - 64px));
+  width: min(560px, calc(100% - var(--panel-left, 0px) - var(--panel-width, 0px) - 2 * clamp(18px, 5vw, 72px) - 28px));
   color: var(--ink);
   font-family: var(--display);
   pointer-events: none;
@@ -1033,11 +1040,73 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 .track-foot {
   font-weight: 500;
 }
+.track-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
 .track-map {
   display: block;
-  width: 100%;
-  height: min(340px, calc(var(--track-room, 300px) - 64px));
+  flex: 1 1 0;
+  min-width: 0;
+  height: var(--map-height);
   overflow: visible;
+}
+/* the live timing table: place, the three letters, and the gap to the leader; the rows move to their new places when the order changes */
+.track-table {
+  position: relative;
+  flex: none;
+  width: var(--table-width, 96px);
+  height: var(--map-height);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: var(--table-font, 10px);
+  pointer-events: auto;
+}
+.track-table[hidden] {
+  display: none;
+}
+.track-table li {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: 2ch 3.4ch 1fr;
+  gap: 0 0.6ch;
+  align-items: center;
+  box-sizing: border-box;
+  width: var(--column-width, 96px);
+  height: var(--row-height, 13px);
+  padding: 0 4px;
+  border-radius: 2px;
+  line-height: var(--row-height, 13px);
+  white-space: nowrap;
+  transition:
+    transform 0.55s cubic-bezier(0.3, 0.1, 0.2, 1),
+    background-color 0.12s;
+}
+.track-table .place {
+  text-align: right;
+  opacity: 0.8;
+}
+.track-table .code {
+  font-weight: 700;
+}
+.track-table .gap {
+  overflow: hidden;
+  text-align: right;
+  text-overflow: clip;
+}
+.track-table li.out {
+  opacity: 0.55;
+}
+/* the driver, or the team, that is being pointed at in the ratings (or in this table): the same red as the dot */
+.track-table li.hot {
+  background: var(--hot-row);
+  box-shadow: inset 3px 0 0 var(--hot);
+  font-weight: 800;
 }
 .track-halo,
 .track-line {
@@ -1066,8 +1135,11 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   stroke-width: 1.5px;
   vector-effect: non-scaling-stroke;
 }
+.track-dot {
+  transition: opacity 0.3s;
+}
 .track-dot.out {
-  opacity: 0.35;
+  opacity: 0;
 }
 .track-dot.hot {
   fill: var(--hot);
@@ -1098,6 +1170,9 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .track-table li {
+    transition: none;
+  }
   .title-core,
   .title-smear-near,
   .title-smear-far,
