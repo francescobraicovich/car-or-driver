@@ -24,6 +24,7 @@ const TESTS = [
   'test-data-manifest.mjs',
   'test-model-file.mjs',
   'test-compliance.mjs',
+  'test-stage.mjs',
   'test-insights.mjs',
   'test-layering.mjs',
   'test-site-imports.mjs',

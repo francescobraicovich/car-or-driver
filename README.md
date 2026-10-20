@@ -83,6 +83,7 @@ tests/                 Golden-master, regression, structure, compliance and brow
 - **Race data:** the tables in `data/` come from [TracingInsights/RaceData](https://github.com/TracingInsights/RaceData), which labels them CC0 but also credits [Jolpica-F1](https://github.com/jolpica/jolpica-f1) (CC BY-NC-SA 4.0) and Kaggle datasets that are reported to derive from the Ergast database. It does not say which table comes from which source, so this project follows the strictest licence involved.
 - **Ratings, findings, charts, text and the published data files:** [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/): credit, **non-commercial**, share-alike. The credit line and the full reasoning are in [data/NOTICE.md](data/NOTICE.md).
 - **Third-party files** in `site/vendor/` (Inter, Space Grotesk, KaTeX) keep their own licences, which are included.
+- **The drawing** in `site/assets/art/` is not covered by any of the licences above: all rights reserved unless its owner says otherwise (see the notice in that folder).
 
 Because the data is non-commercial, so is this project: **no advertising, no affiliate links, no paid access.** [docs/compliance.md](docs/compliance.md), section 8, explains why and what would change it. Please do not use the ratings commercially.
 

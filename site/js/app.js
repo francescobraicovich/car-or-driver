@@ -3,6 +3,7 @@ import { el, initDom } from './dom.js';
 import { loadModel } from './model-loader.js';
 import { initWorkspace } from './workspace.js';
 import { initHeadToHead } from './head-to-head-view.js';
+import { initStage } from './stage-view.js';
 
 // Insights, Methodology, Privacy and About are fetched the first time they are opened, not on every visit.
 const lazyPages = {
@@ -35,6 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
   window.__appBooted = true;
   initHeadToHead();
   initWorkspace();
+  initStage();
   // First successful build dismisses the loading veil and marks status ready.
   const dismissVeil = () => {
     document.getElementById('veil')?.classList.add('gone');

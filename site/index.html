@@ -28,6 +28,8 @@
     />
     <link rel="stylesheet" href="./vendor/fonts/fonts.css" />
     <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/stage.css" />
+    <link rel="preload" href="./assets/art/red.webp" as="image" type="image/webp" />
     <link rel="preload" href="../data/model-latest.json" as="fetch" crossorigin />
     <link rel="modulepreload" href="js/app.js" />
     <link rel="modulepreload" href="js/dom.js" />
@@ -44,6 +46,11 @@
     <link rel="modulepreload" href="../packages/core/src/weekend-histories.js" />
     <link rel="modulepreload" href="../packages/core/src/json-serialization.js" />
     <link rel="modulepreload" href="js/workspace.js" />
+    <link rel="modulepreload" href="js/stage-view.js" />
+    <link rel="modulepreload" href="js/stage-geometry.js" />
+    <link rel="modulepreload" href="js/stage-noise.js" />
+    <link rel="modulepreload" href="js/stage-code.js" />
+    <link rel="modulepreload" href="js/stage-ledger.js" />
     <link rel="modulepreload" href="js/theme.js" />
     <link rel="modulepreload" href="js/history-view.js" />
     <link rel="modulepreload" href="../packages/core/src/lineage.js" />
@@ -70,7 +77,7 @@
     <a class="skip-link" href="#/ratings">Skip to ratings</a>
 
     <nav class="site-nav workspace-nav" aria-label="Main navigation">
-      <a class="brand" href="#/ratings" aria-label="Driver or Car home"
+      <a class="brand" href="#/" aria-label="Driver or Car home"
         ><img src="./assets/favicon.svg" alt="" width="26" height="26" /><span class="brand-name"
           >Driver <span class="brand-join">or</span> Car</span
         ></a
@@ -118,6 +125,70 @@
     </header>
 
     <main id="workspace" class="workspace" hidden>
+      <section id="home" aria-label="Driver or Car">
+        <div class="stage" id="stage" data-state="idle" data-subject="" data-hover="" data-pointer="" data-fit="false">
+          <div class="scene" id="stageScene" aria-hidden="true">
+            <img
+              class="layer layer-red"
+              src="./assets/art/red.webp"
+              alt=""
+              width="1536"
+              height="1024"
+              decoding="async"
+              fetchpriority="high"
+            />
+            <img class="layer layer-mono" src="./assets/art/mono.webp" alt="" width="1536" height="1024" decoding="async" />
+            <img class="layer layer-blue" src="./assets/art/blue.webp" alt="" width="1536" height="1024" decoding="async" />
+          </div>
+
+          <header class="stage-bar stage-top">
+            <a class="stage-brand" href="#/"><img src="./assets/favicon.svg" alt="" width="20" height="20" />driver_or_car</a>
+            <nav class="stage-links" aria-label="Main navigation">
+              <a href="#/ratings">ratings</a><a href="#/history">history</a><a href="#/head-to-head">versus</a
+              ><a href="#/insights">insights</a><a href="#/methodology">method</a>
+            </nav>
+          </header>
+
+          <div class="stage-code" id="stageCode"></div>
+
+          <button
+            type="button"
+            class="hotspot hotspot-car"
+            id="hotspotCar"
+            aria-label="Car: show the ratings of the cars"
+            aria-controls="stageLedger"
+            aria-pressed="false"
+          ></button>
+          <button
+            type="button"
+            class="hotspot hotspot-driver"
+            id="hotspotDriver"
+            aria-label="Driver: show the ratings of the drivers"
+            aria-controls="stageLedger"
+            aria-pressed="false"
+          ></button>
+
+          <div class="stage-frame" id="stageFrame" aria-hidden="true"><span class="stage-frame-label" id="stageFrameLabel"></span></div>
+          <div class="stage-cursor" id="stageCursor" aria-hidden="true"></div>
+
+          <section class="ledger" id="stageLedger" aria-label="Ratings" hidden>
+            <p class="ledger-title" id="stageLedgerTitle"></p>
+            <ol class="ledger-list" id="stageLedgerList"></ol>
+            <p class="ledger-detail" id="stageLedgerDetail" aria-live="polite"></p>
+          </section>
+
+          <footer class="stage-bar stage-bottom">
+            <p class="stage-status">
+              <span class="stage-mode" id="stageMode">NORMAL</span><span id="stagePath">~/driver-or-car/front-page.ts</span>
+            </p>
+            <nav class="stage-links" aria-label="About this site">
+              <a href="#/privacy">privacy</a><a href="#/about">about</a
+              ><a href="https://github.com/francescobraicovich/driver-or-car" rel="noopener noreferrer">source</a>
+            </nav>
+          </footer>
+        </div>
+      </section>
+
       <section id="ratings" aria-label="Ratings">
         <div class="hero">
           <p class="hero-kicker">Formula 1, every weekend since 2000</p>

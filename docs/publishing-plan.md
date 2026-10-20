@@ -19,7 +19,7 @@ Status on 20 October 2026. The costs, the one-time setup in detail and the measu
 | --- | --- | --- | --- |
 | 1 | Give the contact email for the privacy notice (`contactEmail` in `site/js/site-identity.js`); the deploy refuses to run without it | you | waiting |
 | 2 | Say where the drawing (red, blue and black-and-white versions) comes from and on what terms it may be published. Until then it is marked all rights reserved and kept out of both open licences | you | waiting |
-| 3 | Approve the redesign (it replaces the front page; the other pages are restyled afterwards) | you | in progress |
+| 3 | Approve the redesign (it replaces the front page; the other pages are restyled afterwards). The front page with the red, black-and-white and blue drawing, the box cursor and the ratings of the car and of the drivers is built on the `redesign` branch | you | first version ready for review |
 | 4 | Sign in to Cloudflare (a free account). I never handle your credentials | you | waiting |
 | 5 | Create the Pages project `driver-or-car` and connect the repository (route A in [deployment.md](deployment.md)). GitHub asks you to authorise Cloudflare; I will ask you before that click | me, with you | waiting for 1 and 4 |
 | 6 | Check that the Cloudflare features that set cookies stay off (list in [compliance.md](compliance.md), section 6) | you | waiting for 5 |

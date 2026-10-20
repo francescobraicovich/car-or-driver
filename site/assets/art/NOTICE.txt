@@ -1,0 +1,5 @@
+The drawing in this folder (red.webp, blue.webp and mono.webp: three colourings of one picture of a car and a driver's hands) was supplied by the project owner.
+
+It is NOT covered by the MIT licence of the program code or by the CC BY-NC-SA 4.0 licence of the ratings, findings and text. All rights are reserved unless the owner states otherwise here. Where it came from and on what terms it may be published is to be confirmed before the site goes live (see docs/publishing-plan.md).
+
+The files were converted from PNG to WebP (quality 92) at the same size; nothing else was changed.

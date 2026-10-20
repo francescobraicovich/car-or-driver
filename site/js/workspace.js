@@ -6,6 +6,7 @@ import { createThemeButton } from './theme.js';
 
 // route -> the section that is the page.
 const PAGES = {
+  '/': 'home',
   '/ratings': 'ratings',
   '/history': 'charts',
   '/head-to-head': 'headToHead',
@@ -14,9 +15,10 @@ const PAGES = {
   '/privacy': 'privacy',
   '/about': 'about',
 };
-const DEFAULT_ROUTE = '/ratings';
+const DEFAULT_ROUTE = '/';
 // Hashes from earlier versions of the site (and of the shared links in the wild).
 const ALIASES = {
+  '/home': '/',
   ratings: '/ratings',
   '/simple/ratings': '/ratings',
   '/simple/rankings': '/ratings',
@@ -63,7 +65,7 @@ export function initWorkspace() {
   root.hidden = false;
 
   function display() {
-    document.body.dataset.page = route.slice(1);
+    document.body.dataset.page = route === '/' ? 'home' : route.slice(1);
     for (const link of document.querySelectorAll('#workspaceLinks a')) {
       if (link.getAttribute('href') === `#${route}`) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
@@ -90,6 +92,10 @@ export function initWorkspace() {
 
   function saveURL() {
     if (restoring) return;
+    if (route === '/') {
+      window.history.replaceState(null, '', '#/'); // the front page has no options to remember
+      return;
+    }
     const params = new URLSearchParams({ v: '1' });
     history.writeURL(params);
     if (raceId) params.set('race', raceId);

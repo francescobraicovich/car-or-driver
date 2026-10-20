@@ -1,0 +1,469 @@
+/* The front page: a full-screen drawing in three colourings, a code-like text layer, a square cursor and a box that opens around the car or the hands.
+   Colours here belong to the drawing and to text measured against it (tests/test-stage.mjs samples the pixels where the text sits); they are tokens on
+   .stage so that the two states are defined in one place. */
+
+body[data-page='home'] {
+  padding-bottom: 0;
+  background: #d90a04;
+}
+body[data-page='home'] .site-nav,
+body[data-page='home'] .workspace-footer,
+body[data-page='home'] .workspace-status,
+body[data-page='home'] #veil {
+  display: none;
+}
+body[data-page='home'] main.workspace {
+  max-width: none;
+  padding: 0;
+}
+#home {
+  margin: 0;
+}
+
+.stage {
+  --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  /* red drawing: cream text on a dark translucent plate (the drawing's brightness varies too much for text straight on it) */
+  --stage-bg: #d90a04;
+  --plate: rgb(19 2 0 / 0.66);
+  --ink: #fff1e8;
+  --ink-soft: #ebd2c7;
+  --chip: #fff1e8;
+  --chip-ink: #130200;
+  --syntax-key: var(--ink); /* on the red drawing the syntax is shown by weight and shape; colour would not pass */
+  --syntax-type: var(--ink);
+  --syntax-string: var(--ink);
+  --frame: #0a1a9c;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 420px;
+  overflow: hidden;
+  background: var(--stage-bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  transition: background-color 0.3s;
+}
+/* black and white drawing: dark text on a light plate (the text changes with the picture); the blue ink of the syntax only where it passes */
+.stage[data-state='peek'],
+.stage[data-state='open'] {
+  --stage-bg: #bcbcbc;
+  --plate: rgb(246 246 246 / 0.86);
+  --ink: #050505;
+  --ink-soft: #2b2b2b;
+  --chip: #050505;
+  --chip-ink: #f2f2f2;
+  --syntax-key: #0b1f9a;
+  --syntax-type: #004f73;
+  --syntax-string: #6a1b00;
+}
+.stage[data-pointer='in'][data-coarse='false'],
+.stage[data-pointer='in'][data-coarse='false'] * {
+  cursor: none;
+}
+
+/* ── the drawing ─────────────────────────────────────── */
+.scene {
+  position: absolute;
+  left: var(--scene-x, 0);
+  top: var(--scene-y, 0);
+  width: var(--scene-w, 100%);
+  height: var(--scene-h, 100%);
+  pointer-events: none;
+}
+.stage[data-fit='true'] .scene {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+}
+.layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+.layer-mono {
+  opacity: 0;
+  transition: opacity 0.28s;
+}
+.layer-blue {
+  opacity: 0;
+  clip-path: inset(50% 50% 50% 50%);
+  transition: opacity 0.12s;
+}
+.stage[data-state='peek'] .layer-mono,
+.stage[data-state='open'] .layer-mono {
+  opacity: 1;
+}
+.stage[data-subject='car'] .layer-blue,
+.stage[data-subject='driver'] .layer-blue {
+  opacity: 1;
+}
+
+/* ── bars ────────────────────────────────────────────── */
+.stage-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 24px;
+  padding: 10px clamp(18px, 5vw, 72px);
+  background: var(--plate);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  transition: background-color 0.3s;
+}
+.stage-top {
+  top: 0;
+}
+.stage-bottom {
+  bottom: 0;
+}
+.stage a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.stage-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+.stage-brand img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+}
+.stage-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
+.stage-links a {
+  padding: 2px 0;
+  border-bottom: 1px solid transparent;
+}
+.stage-links a:hover,
+.stage-links a:focus-visible {
+  border-bottom-color: var(--ink);
+}
+.stage a:focus-visible,
+.stage button:focus-visible {
+  outline: 2px dashed var(--ink);
+  outline-offset: 3px;
+}
+.stage-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 12px;
+}
+.stage-mode {
+  padding: 1px 8px;
+  background: var(--chip);
+  color: var(--chip-ink);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* ── the text ────────────────────────────────────────── */
+.stage-code {
+  position: absolute;
+  z-index: 4;
+  left: clamp(18px, 5vw, 72px);
+  top: clamp(60px, 11vh, 120px);
+  max-width: calc(100% - 2 * clamp(18px, 5vw, 72px));
+  font-size: var(--code-size, clamp(12px, 0.55vw + 8.5px, 16px));
+  line-height: 1.7;
+  white-space: pre;
+  overflow: hidden;
+  width: max-content;
+  padding: 12px 18px 10px 6px;
+  background: var(--plate);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  pointer-events: none;
+  transition: background-color 0.3s;
+}
+.stage-code .line {
+  display: block;
+  min-height: 1.7em;
+  animation: line-in 0.32s steps(6, end) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+@keyframes line-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+.stage-code .ln {
+  display: inline-block;
+  width: 3ch;
+  margin-right: 1.5ch;
+  color: var(--ink-soft);
+  text-align: right;
+  opacity: 0.7;
+}
+/* on the red drawing the syntax is shown by weight and shape, because colour would not pass; on the grey drawing it gets colour */
+.stage-code .c {
+  color: var(--ink-soft);
+}
+.stage-code .k,
+.stage-code .f {
+  font-weight: 800;
+}
+.stage-code .t {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.stage-code .s {
+  font-style: italic;
+}
+.stage-code .n {
+  padding: 0 4px;
+  background: var(--chip);
+  color: var(--chip-ink);
+  font-weight: 700;
+}
+.stage-code .k {
+  color: var(--syntax-key);
+}
+.stage-code .t {
+  color: var(--syntax-type);
+}
+.stage-code .s {
+  color: var(--syntax-string);
+}
+
+/* ── what can be selected, the box and the cursor ────── */
+/* the site's general button hover (a tinted background and border) must not show on these */
+.stage .hotspot:hover:not(:disabled) {
+  background: none;
+  border-color: transparent;
+}
+.hotspot {
+  all: unset;
+  position: absolute;
+  z-index: 3;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.stage[data-coarse='true'][data-state='idle'] .hotspot {
+  outline: 1px dashed var(--ink);
+  outline-offset: -6px;
+  animation: hint 2.2s ease-in-out infinite;
+}
+@keyframes hint {
+  50% {
+    outline-color: transparent;
+  }
+}
+.stage-frame {
+  position: absolute;
+  z-index: 6;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  border: 2px solid var(--frame);
+  box-shadow:
+    0 0 0 1px #fff,
+    inset 0 0 0 1px #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s;
+  will-change: transform, width, height;
+}
+.stage[data-subject='car'] .stage-frame,
+.stage[data-subject='driver'] .stage-frame {
+  opacity: 1;
+}
+.stage-frame-label {
+  position: absolute;
+  left: -2px;
+  bottom: calc(100% + 7px);
+  padding: 1px 8px;
+  background: var(--chip);
+  color: var(--chip-ink);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.stage-cursor {
+  position: absolute;
+  z-index: 7;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border: 2px solid #fff;
+  box-shadow:
+    0 0 0 1px #000,
+    inset 0 0 0 1px #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s;
+  will-change: transform;
+}
+.stage-cursor::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  background: #fff;
+  box-shadow: 0 0 0 1px #000;
+}
+.stage[data-pointer='in'][data-coarse='false'] .stage-cursor {
+  opacity: 1;
+}
+.stage[data-hover='car'] .stage-cursor,
+.stage[data-hover='driver'] .stage-cursor {
+  opacity: 0;
+}
+
+/* ── the ratings ─────────────────────────────────────── */
+.ledger {
+  position: absolute;
+  z-index: 5;
+  left: clamp(18px, 5vw, 72px);
+  right: clamp(18px, 5vw, 72px);
+  bottom: 58px;
+  display: flex;
+  flex-direction: column;
+  max-width: 940px;
+  max-height: 34vh;
+  padding: 10px 14px 8px;
+  border: 1px solid var(--ink);
+  background: rgb(246 246 246 / 0.82);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: var(--ink);
+  font-size: clamp(11.5px, 0.4vw + 9px, 14px);
+  animation: ledger-in 0.22s ease-out both;
+}
+@keyframes ledger-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.ledger-title,
+.ledger-detail {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.92em;
+  line-height: 1.5;
+}
+.ledger-detail {
+  min-height: 1.5em;
+  padding-top: 6px;
+  border-top: 1px solid rgb(5 5 5 / 0.25);
+}
+.ledger-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 6px 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.ledger-row {
+  all: unset;
+  display: grid;
+  grid-template-columns: 3ch minmax(0, 1fr) 5ch 5ch 15ch 8ch;
+  align-items: baseline;
+  gap: 0 1.5ch;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1px 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ledger-list.with-team .ledger-row {
+  grid-template-columns: 3ch minmax(0, 1.3fr) minmax(0, 1fr) 5ch 5ch 15ch 8ch;
+}
+.ledger-row > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ledger-row .rank,
+.ledger-row .rating,
+.ledger-row .deviation {
+  text-align: right;
+}
+.ledger-row .rank,
+.ledger-row .team,
+.ledger-row .deviation,
+.ledger-row .change {
+  color: var(--ink-soft);
+}
+.ledger-row .rating {
+  font-weight: 800;
+}
+.ledger-row .bar {
+  color: var(--frame);
+  letter-spacing: -0.02em;
+}
+.stage .ledger-row:hover:not(:disabled),
+.stage .ledger-row:focus-visible {
+  background: var(--chip);
+  border-color: transparent;
+  color: var(--chip-ink);
+  outline: none;
+}
+.ledger-row:hover > span,
+.ledger-row:focus-visible > span {
+  color: var(--chip-ink);
+}
+
+@media (max-width: 720px) {
+  .stage-code .ln {
+    display: none;
+  }
+  .stage-code {
+    top: 92px;
+    width: auto;
+    white-space: pre-wrap; /* a long comment wraps instead of running off the screen */
+    overflow-wrap: anywhere;
+  }
+  .ledger {
+    bottom: 76px;
+    max-height: 44vh;
+  }
+  .ledger-row,
+  .ledger-list.with-team .ledger-row {
+    grid-template-columns: 3ch minmax(0, 1fr) 5ch 5ch;
+  }
+  .ledger-row .bar,
+  .ledger-row .change,
+  .ledger-row .team {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-code .line,
+  .ledger,
+  .stage[data-coarse='true'][data-state='idle'] .hotspot {
+    animation: none;
+  }
+  .layer-mono,
+  .layer-blue,
+  .stage-frame {
+    transition: none;
+  }
+}

@@ -109,8 +109,115 @@ check(
   await evaluate("[...document.querySelectorAll('.workspace-footer a')].some((a) => a.getAttribute('href') === '#/methodology')"),
 );
 
+// The front page: a red drawing with a square cursor; pointing at the car or the hands opens a box, turns the rest black and white and shows the blue
+// version inside the box; clicking opens the ratings; the keyboard does the same; nothing wobbles under reduced motion
+check('the front page is the default page', (await evaluate('document.body.dataset.page')) === 'home');
+check(
+  'the front page is not hidden behind the loading screen',
+  (await evaluate("getComputedStyle(document.getElementById('veil')).display")) === 'none',
+);
+const rectangleOf = (id) =>
+  evaluate(
+    `(() => { const r = document.getElementById('${id}').getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height }; })()`,
+  );
+const mouse = (type, x, y, extra = {}) => send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1, ...extra });
+const press = async (key, code, keyCode, text) => {
+  await send('Input.dispatchKeyEvent', { type: 'keyDown', key, code, windowsVirtualKeyCode: keyCode, text });
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key, code, windowsVirtualKeyCode: keyCode });
+};
+const stageState = () => evaluate("(() => { const s = document.getElementById('stage'); return [s.dataset.state, s.dataset.subject]; })()");
+const centreOf = (r) => [r.x + r.width / 2, r.y + r.height / 2];
+const car = await rectangleOf('hotspotCar');
+const hands = await rectangleOf('hotspotDriver');
+check(
+  'the car and the hands have areas on the screen',
+  car.width > 44 && car.height > 44 && hands.width > 44 && hands.height > 44 && car.x + car.width < hands.x,
+);
+check(
+  'the red drawing is all that shows to begin with',
+  (await evaluate("getComputedStyle(document.querySelector('.layer-mono')).opacity")) === '0',
+);
+await mouse('mouseMoved', ...centreOf(car));
+await sleep(900);
+check(
+  'pointing at the car turns the picture black and white and shows the box on the car',
+  JSON.stringify(await stageState()) === JSON.stringify(['peek', 'car']) &&
+    (await evaluate("getComputedStyle(document.querySelector('.layer-mono')).opacity")) === '1' &&
+    (await evaluate("getComputedStyle(document.querySelector('.layer-blue')).opacity")) === '1',
+);
+const box = await rectangleOf('stageFrame');
+check(
+  'the box has opened around the car (it wobbles a few pixels, not more)',
+  Math.abs(box.x - car.x) < 14 &&
+    Math.abs(box.y - car.y) < 14 &&
+    Math.abs(box.width - car.width) < 20 &&
+    Math.abs(box.height - car.height) < 20,
+  JSON.stringify({ box, car }),
+);
+check(
+  'the text says what the car is',
+  /car\.rating = \d+/.test((await evaluate("document.getElementById('stageCode').textContent")).replace(/\s+/g, ' ')),
+);
+await mouse('mousePressed', ...centreOf(car));
+await mouse('mouseReleased', ...centreOf(car));
+await sleep(500);
+const ledgerRows = await evaluate("[...document.querySelectorAll('#stageLedgerList .ledger-row')].map((row) => row.textContent)");
+check(
+  'clicking the car opens the list of cars, each with its error bar',
+  JSON.stringify(await stageState()) === JSON.stringify(['open', 'car']) &&
+    ledgerRows.length >= 8 &&
+    ledgerRows.every((row) => /±\d+/.test(row)),
+  `${ledgerRows.length} rows`,
+);
+await mouse('mouseMoved', ...centreOf(hands));
+await sleep(500);
+check(
+  'pointing at the hands while the cars are open moves the box but keeps the list',
+  JSON.stringify(await stageState()) === JSON.stringify(['open', 'driver']),
+);
+await mouse('mouseMoved', 8, 300);
+await sleep(500);
+check('moving away leaves the box on the selected car', JSON.stringify(await stageState()) === JSON.stringify(['open', 'car']));
+await press('Escape', 'Escape', 27);
+await sleep(500);
+check(
+  'Escape closes the ratings and the picture goes back to red',
+  JSON.stringify(await stageState()) === JSON.stringify(['idle', '']) &&
+    (await evaluate("getComputedStyle(document.querySelector('.layer-mono')).opacity")) === '0',
+);
+for (let i = 0; i < 12 && (await evaluate('document.activeElement?.id')) !== 'hotspotDriver'; i++) await press('Tab', 'Tab', 9);
+check('Tab reaches the hands', (await evaluate('document.activeElement?.id')) === 'hotspotDriver');
+await press('Enter', 'Enter', 13, '\r');
+await sleep(500);
+check(
+  'Enter on the hands opens the list of drivers and moves into it',
+  JSON.stringify(await stageState()) === JSON.stringify(['open', 'driver']) &&
+    (await evaluate("document.activeElement?.classList.contains('ledger-row')")) &&
+    (await evaluate("document.querySelectorAll('#stageLedgerList .ledger-row').length")) > 15,
+);
+await press('j', 'KeyJ', 74, 'j');
+check('j moves down the list', (await evaluate('document.activeElement?.dataset.index')) === '1');
+await press('Escape', 'Escape', 27);
+await sleep(300);
+check('Escape closes it again', (await stageState())[0] !== 'open');
+await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+await mouse('mouseMoved', 8, 300);
+await sleep(300);
+await mouse('mouseMoved', ...centreOf(car));
+await sleep(600);
+const still = await rectangleOf('stageFrame');
+check(
+  'under reduced motion the box does not wobble: it is exactly on the car',
+  Math.abs(still.x - car.x) < 1.5 && Math.abs(still.y - car.y) < 1.5 && Math.abs(still.width - car.width) < 1.5,
+  JSON.stringify({ still, car }),
+);
+await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
+await mouse('mouseMoved', 8, 300);
+await sleep(300);
+
 // Ratings: ranked chart, Cars switch, timeline play
-check('ratings is the default page', (await evaluate('document.body.dataset.page')) === 'ratings');
+await evaluate("location.hash = '#/ratings'");
+await sleep(1000);
 check('ratings chart draws a row per driver', (await evaluate("document.querySelectorAll('#ratingsChart .rankrow').length")) > 10);
 // uncertainty bars: a whisker (three lines) behind every dot, and the control can switch them off
 const barLines = () => evaluate("document.querySelectorAll('#ratingsChart .rankrow line[stroke-linecap=round]').length");
@@ -337,8 +444,8 @@ for (const [from, to] of [
   ['#/simple/ratings', 'ratings'],
   ['#/simple/history?v=1&mode=simple', 'history'],
   ['#/geek/explore', 'history'],
-  ['#/geek/weekend', 'ratings'],
-  ['#/geek/data', 'ratings'],
+  ['#/geek/weekend', 'home'],
+  ['#/geek/data', 'home'],
   ['#/geek/models', 'methodology'],
   ['#/how-it-works', 'methodology'],
   ['#/predictor', 'head-to-head'],
@@ -405,7 +512,7 @@ check(
   'on a phone the navigation is fixed to the bottom of the screen',
   (await evaluate("getComputedStyle(document.getElementById('workspaceLinks')).position")) === 'fixed',
 );
-for (const page of ['ratings', 'history', 'head-to-head', 'insights', 'methodology', 'privacy', 'about']) {
+for (const page of ['home', 'ratings', 'history', 'head-to-head', 'insights', 'methodology', 'privacy', 'about']) {
   await evaluate(`location.hash = '#/${page}'`);
   await sleep(1200);
   const [scroll, inner] = await evaluate('[document.documentElement.scrollWidth, window.innerWidth]');
