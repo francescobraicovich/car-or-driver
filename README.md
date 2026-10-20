@@ -10,7 +10,7 @@ It is an independent personal project. It is not affiliated with Formula 1, the 
 
 | Page | What it shows |
 | --- | --- |
-| **Front page** | A drawing of a car and a driver's hands. Point at either and a box opens, the picture turns black and white and the blue version shows inside the box; click to see the ratings of the cars or of the drivers. |
+| **Front page** | A drawing of a car and a driver's hands under the title. Point at either (or at its word in the title) and a box opens, the picture turns black and white, the blue version shows inside the box and the ratings of the cars or of the drivers appear; click to keep them open. |
 | **Ratings** | A ranking of drivers or cars after any weekend since 2000, with error bars, a timeline to play through the seasons, and a way to select entries and compare them. |
 | **History** | Rating lines for the drivers or cars you choose, over any range of seasons. |
 | **Head to head** | The chance that one driver finishes ahead of another, from their ratings and recent form, with what-if options (another season, another car, wet weather). |
@@ -83,7 +83,7 @@ tests/                 Golden-master, regression, structure, compliance and brow
 - **Code:** [MIT](LICENSE).
 - **Race data:** the tables in `data/` come from [TracingInsights/RaceData](https://github.com/TracingInsights/RaceData), which labels them CC0 but also credits [Jolpica-F1](https://github.com/jolpica/jolpica-f1) (CC BY-NC-SA 4.0) and Kaggle datasets that are reported to derive from the Ergast database. It does not say which table comes from which source, so this project follows the strictest licence involved.
 - **Ratings, findings, charts, text and the published data files:** [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/): credit, **non-commercial**, share-alike. The credit line and the full reasoning are in [data/NOTICE.md](data/NOTICE.md).
-- **Third-party files** in `site/vendor/` (Inter, Space Grotesk, KaTeX) keep their own licences, which are included.
+- **Third-party files** in `site/vendor/` (Inter, Space Grotesk, Lexend Giga, KaTeX) keep their own licences, which are included.
 - **The drawing** in `site/assets/art/` is not covered by any of the licences above: all rights reserved unless its owner says otherwise (see the notice in that folder).
 
 Because the data is non-commercial, so is this project: **no advertising, no affiliate links, no paid access.** [docs/compliance.md](docs/compliance.md), section 8, explains why and what would change it. Please do not use the ratings commercially.

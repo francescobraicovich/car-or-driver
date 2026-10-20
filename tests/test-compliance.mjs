@@ -82,10 +82,10 @@ assert.equal(headers['Referrer-Policy'], 'no-referrer');
 assert.equal(headers['X-Content-Type-Options'], 'nosniff');
 
 // 4. third-party files and their licences
-for (const file of ['inter-OFL-1.1.txt', 'space-grotesk-OFL-1.1.txt', 'katex-MIT.txt'])
+for (const file of ['inter-OFL-1.1.txt', 'space-grotesk-OFL-1.1.txt', 'lexend-giga-OFL-1.1.txt', 'katex-MIT.txt'])
   assert.ok(existsSync(`site/vendor/licenses/${file}`), `licence ${file}`);
 const notice = await read('site/vendor/NOTICE.txt');
-for (const word of ['Inter', 'Space Grotesk', 'KaTeX', 'SIL Open Font License', 'MIT'])
+for (const word of ['Inter', 'Space Grotesk', 'Lexend Giga', 'KaTeX', 'SIL Open Font License', 'MIT'])
   assert.ok(notice.includes(word), `NOTICE.txt names ${word}`);
 for (const file of await walk('site/vendor')) {
   if (/\.(woff2|js|css|txt)$/.test(file)) continue;

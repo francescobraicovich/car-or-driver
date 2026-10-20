@@ -14,6 +14,12 @@ Space Grotesk (variable, Latin subset), fonts/space-grotesk-latin-wght-normal.wo
   Copyright 2020 The Space Grotesk Project Authors
   Licence: SIL Open Font License 1.1 (licenses/space-grotesk-OFL-1.1.txt)
 
+Lexend Giga (variable, Latin subset), fonts/lexend-giga-latin-wght-normal.woff2
+  Package: @fontsource-variable/lexend-giga 5.3.0 (https://www.npmjs.com/package/@fontsource-variable/lexend-giga)
+  Upstream: https://github.com/googlefonts/lexend
+  Copyright 2019 The Lexend Project Authors
+  Licence: SIL Open Font License 1.1 (licenses/lexend-giga-OFL-1.1.txt)
+
 KaTeX 0.16.9, katex/
   Package: katex 0.16.9 (https://www.npmjs.com/package/katex)
   Upstream: https://github.com/KaTeX/KaTeX

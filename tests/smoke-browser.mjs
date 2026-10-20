@@ -109,23 +109,34 @@ check(
   await evaluate("[...document.querySelectorAll('.workspace-footer a')].some((a) => a.getAttribute('href') === '#/methodology')"),
 );
 
-// The front page: a red drawing with a square cursor; pointing at the car or the hands opens a box, turns the rest black and white and shows the blue
-// version inside the box; clicking opens the ratings; the keyboard does the same; nothing wobbles under reduced motion
+// The front page: a red drawing with a white two-line title and a square cursor. Pointing at the car or the hands (or at the matching word) opens a
+// box, turns the rest black and white, shows the blue version inside the box, lights the word and shows the ratings; clicking the picture keeps them
+// open; the keyboard does the same; nothing wobbles under reduced motion
 check('the front page is the default page', (await evaluate('document.body.dataset.page')) === 'home');
 check(
   'the front page is not hidden behind the loading screen',
   (await evaluate("getComputedStyle(document.getElementById('veil')).display")) === 'none',
 );
-const rectangleOf = (id) =>
+const rectangleOfSelector = (selector) =>
   evaluate(
-    `(() => { const r = document.getElementById('${id}').getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height }; })()`,
+    `(() => { const r = document.querySelector('${selector}').getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height }; })()`,
   );
+const rectangleOf = (id) => rectangleOfSelector(`#${id}`);
+const wordOf = (subject) => rectangleOfSelector(`#stageTitle .title-core .word-${subject}`); // the copies behind the title carry the same classes
+const opacityOf = (selector) => evaluate(`getComputedStyle(document.querySelector('${selector}')).opacity`);
 const mouse = (type, x, y, extra = {}) => send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1, ...extra });
+const click = async (x, y) => {
+  await mouse('mouseMoved', x, y);
+  await mouse('mousePressed', x, y);
+  await mouse('mouseReleased', x, y);
+};
 const press = async (key, code, keyCode, text) => {
   await send('Input.dispatchKeyEvent', { type: 'keyDown', key, code, windowsVirtualKeyCode: keyCode, text });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key, code, windowsVirtualKeyCode: keyCode });
 };
 const stageState = () => evaluate("(() => { const s = document.getElementById('stage'); return [s.dataset.state, s.dataset.subject]; })()");
+const isState = async (state, subject) => JSON.stringify(await stageState()) === JSON.stringify([state, subject]);
+const ledgerRows = () => evaluate("[...document.querySelectorAll('#stageLedgerList .ledger-row')].map((row) => row.textContent)");
 const centreOf = (r) => [r.x + r.width / 2, r.y + r.height / 2];
 const car = await rectangleOf('hotspotCar');
 const hands = await rectangleOf('hotspotDriver');
@@ -135,15 +146,26 @@ check(
 );
 check(
   'the red drawing is all that shows to begin with',
-  (await evaluate("getComputedStyle(document.querySelector('.layer-mono')).opacity")) === '0',
+  (await evaluate("getComputedStyle(document.querySelector('.layer-mono')).opacity")) === '0' && (await isState('idle', '')),
+);
+const wordDriver = await wordOf('driver');
+const wordCar = await wordOf('car');
+check(
+  'the title reads Driver or Car, in white, on two lines',
+  (await evaluate("document.getElementById('stageTitle').getAttribute('aria-label')")) === 'Driver or Car' &&
+    (await evaluate("getComputedStyle(document.getElementById('stageTitle')).color")) === 'rgb(255, 255, 255)' &&
+    wordDriver.y + wordDriver.height <= wordCar.y + 2,
+  JSON.stringify({ wordDriver, wordCar }),
+);
+check(
+  'nothing of the ratings or of the lines to the words shows before something is pointed at',
+  (await evaluate("document.getElementById('stageLedger').hidden")) && (await opacityOf('#stageWordFrame')) === '0',
 );
 await mouse('mouseMoved', ...centreOf(car));
 await sleep(900);
 check(
   'pointing at the car turns the picture black and white and shows the box on the car',
-  JSON.stringify(await stageState()) === JSON.stringify(['peek', 'car']) &&
-    (await evaluate("getComputedStyle(document.querySelector('.layer-mono')).opacity")) === '1' &&
-    (await evaluate("getComputedStyle(document.querySelector('.layer-blue')).opacity")) === '1',
+  (await isState('peek', 'car')) && (await opacityOf('.layer-mono')) === '1' && (await opacityOf('.layer-blue')) === '1',
 );
 const box = await rectangleOf('stageFrame');
 check(
@@ -154,58 +176,115 @@ check(
     Math.abs(box.height - car.height) < 20,
   JSON.stringify({ box, car }),
 );
+const hoverRows = await ledgerRows();
 check(
-  'the text says what the car is',
-  /car\.rating = \d+/.test((await evaluate("document.getElementById('stageCode').textContent")).replace(/\s+/g, ' ')),
+  'pointing at the car, without a click, shows the list of cars with their error bars',
+  !(await evaluate("document.getElementById('stageLedger').hidden")) && hoverRows.length >= 8 && hoverRows.every((row) => /±\d+/.test(row)),
+  `${hoverRows.length} rows`,
 );
-await mouse('mousePressed', ...centreOf(car));
-await mouse('mouseReleased', ...centreOf(car));
-await sleep(500);
-const ledgerRows = await evaluate("[...document.querySelectorAll('#stageLedgerList .ledger-row')].map((row) => row.textContent)");
 check(
-  'clicking the car opens the list of cars, each with its error bar',
-  JSON.stringify(await stageState()) === JSON.stringify(['open', 'car']) &&
-    ledgerRows.length >= 8 &&
-    ledgerRows.every((row) => /±\d+/.test(row)),
-  `${ledgerRows.length} rows`,
+  'the ratings say they are not yet kept open',
+  /click the picture to keep this open/.test(await evaluate("document.getElementById('stageLedgerPin').textContent")),
 );
-await mouse('mouseMoved', ...centreOf(hands));
+check(
+  'only the word CAR stays lit: the other words are dimmed',
+  (await opacityOf('#stageTitle .title-core .word-car')) === '1' &&
+    (await opacityOf('#stageTitle .title-core .word-driver')) !== '1' &&
+    (await opacityOf('#stageTitle .title-core .word-or')) !== '1',
+);
+const wordFrame = await rectangleOf('stageWordFrame');
+check(
+  'the word CAR is boxed',
+  (await opacityOf('#stageWordFrame')) === '1' &&
+    Math.abs(wordFrame.x - (wordCar.x - 14)) < 10 &&
+    Math.abs(wordFrame.y - (wordCar.y - 6)) < 10 &&
+    Math.abs(wordFrame.width - (wordCar.width + 28)) < 14,
+  JSON.stringify({ wordFrame, wordCar }),
+);
+const connector = await evaluate("document.getElementById('stageConnectorLine').getAttribute('points').trim().split(/\\s+/).length");
+check('a line joins the word to the car', connector >= 2 && (await opacityOf('#stageConnectorEnd')) === '1', `${connector} points`);
+await mouse('mouseMoved', 8, 300);
+await sleep(500);
+check('moving away closes it again when nothing was clicked', await isState('idle', ''));
+await mouse('mouseMoved', ...centreOf(wordDriver));
+await sleep(700);
+const wordRows = await ledgerRows();
+check(
+  'pointing at the word DRIVER does the same for the drivers',
+  (await isState('peek', 'driver')) &&
+    wordRows.length > 15 &&
+    (await opacityOf('#stageTitle .title-core .word-driver')) === '1' &&
+    (await opacityOf('#stageTitle .title-core .word-car')) !== '1',
+  `${wordRows.length} rows`,
+);
+await click(...centreOf(hands));
 await sleep(500);
 check(
-  'pointing at the hands while the cars are open moves the box but keeps the list',
-  JSON.stringify(await stageState()) === JSON.stringify(['open', 'driver']),
+  'clicking the hands keeps the list of drivers open',
+  (await isState('open', 'driver')) &&
+    /kept open/.test(await evaluate("document.getElementById('stageLedgerPin').textContent")) &&
+    (await evaluate("document.getElementById('hotspotDriver').getAttribute('aria-pressed')")) === 'true',
+);
+const ledgerBox = await rectangleOf('stageLedger');
+const bottomRow = await rectangleOfSelector('.stage-bottom');
+check(
+  'the list stops above the line of text at the bottom of the screen',
+  ledgerBox.y + ledgerBox.height <= bottomRow.y + 1,
+  JSON.stringify({ ledgerBox, bottomRow }),
 );
 await mouse('mouseMoved', 8, 300);
 await sleep(500);
-check('moving away leaves the box on the selected car', JSON.stringify(await stageState()) === JSON.stringify(['open', 'car']));
+check('moving away leaves the list open', await isState('open', 'driver'));
+await mouse('mouseMoved', ...centreOf(car));
+await sleep(500);
+check(
+  'pointing at the car while the drivers are kept open shows the cars for as long as the pointer is there',
+  await isState('open', 'car'),
+);
+await mouse('mouseMoved', 8, 300);
+await sleep(500);
+check('and then goes back to the drivers', await isState('open', 'driver'));
+await click(...centreOf(hands));
+await sleep(400);
+check('clicking the hands again lets go of them', await isState('peek', 'driver'));
+await click(8, 300);
+await sleep(400);
+check('pressing on the picture, away from the car and the hands, lets go of the ratings', await isState('idle', ''));
+await click(...centreOf(car));
+await sleep(400);
+await mouse('mouseMoved', 8, 300);
 await press('Escape', 'Escape', 27);
 await sleep(500);
 check(
   'Escape closes the ratings and the picture goes back to red',
-  JSON.stringify(await stageState()) === JSON.stringify(['idle', '']) &&
-    (await evaluate("getComputedStyle(document.querySelector('.layer-mono')).opacity")) === '0',
+  (await isState('idle', '')) && (await opacityOf('.layer-mono')) === '0',
 );
 for (let i = 0; i < 12 && (await evaluate('document.activeElement?.id')) !== 'hotspotDriver'; i++) await press('Tab', 'Tab', 9);
 check('Tab reaches the hands', (await evaluate('document.activeElement?.id')) === 'hotspotDriver');
+check('with the focus on the hands the list of drivers shows and the box is open', await isState('peek', 'driver'));
 await press('Enter', 'Enter', 13, '\r');
 await sleep(500);
 check(
-  'Enter on the hands opens the list of drivers and moves into it',
-  JSON.stringify(await stageState()) === JSON.stringify(['open', 'driver']) &&
+  'Enter on the hands keeps the list of drivers open and moves into it',
+  (await isState('open', 'driver')) &&
     (await evaluate("document.activeElement?.classList.contains('ledger-row')")) &&
     (await evaluate("document.querySelectorAll('#stageLedgerList .ledger-row').length")) > 15,
 );
 await press('j', 'KeyJ', 74, 'j');
 check('j moves down the list', (await evaluate('document.activeElement?.dataset.index')) === '1');
-await press('Escape', 'Escape', 27);
-await sleep(300);
 check(
   'a list row is read as a sentence, not as bars and arrows',
   await evaluate(
     "[...document.querySelectorAll('#stageLedgerList .ledger-row')].every((row) => /^\\d+, .+, rating \\d+/.test(row.getAttribute('aria-label')) && !/[█░▲▼±]/.test(row.getAttribute('aria-label')))",
   ),
 );
-check('Escape closes it again', (await stageState())[0] !== 'open');
+await press('Escape', 'Escape', 27);
+await sleep(300);
+check(
+  'Escape from the list closes it and puts the focus back on the hands',
+  (await stageState())[0] !== 'open' && (await evaluate('document.activeElement?.id')) === 'hotspotDriver',
+);
+await evaluate('document.activeElement.blur()');
 await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
 await mouse('mouseMoved', 8, 300);
 await sleep(300);

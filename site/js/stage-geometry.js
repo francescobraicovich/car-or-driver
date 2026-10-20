@@ -47,3 +47,55 @@ export function toViewport(geometry, box) {
 }
 
 export const subjectRectangle = (geometry, subject) => toViewport(geometry, SUBJECTS[subject]);
+
+/** The title's lines are this many times the font size tall, and the title needs this much clear space above the car and the hands. */
+const TITLE_LINE_HEIGHT = 1.08;
+const TITLE_GAP = 54;
+const TITLE_MINIMUM = 26;
+const TITLE_MAXIMUM = 118;
+
+/**
+ * Where the two-line title goes and how large it is: centred over the car and the hands, near the top, as large as the screen allows without
+ * coming closer than TITLE_GAP pixels to them. Returns the font size, the top of the first line, and the horizontal centre.
+ */
+export function titleLayout(geometry, viewportWidth, viewportHeight) {
+  const car = subjectRectangle(geometry, 'car');
+  const driver = subjectRectangle(geometry, 'driver');
+  const subjectTop = Math.min(car.y, driver.y);
+  const top = viewportWidth <= 720 ? 74 : Math.min(112, Math.max(58, viewportHeight * 0.09));
+  const preferred = Math.min(TITLE_MAXIMUM, viewportWidth * (viewportWidth <= 720 ? 0.112 : 0.072));
+  const room = subjectTop - top - TITLE_GAP;
+  const size = Math.max(TITLE_MINIMUM, Math.min(preferred, room / (2 * TITLE_LINE_HEIGHT)));
+  const centre = (Math.min(car.x, driver.x) + Math.max(car.x + car.width, driver.x + driver.width)) / 2;
+  return { size, top, centre, lineHeight: TITLE_LINE_HEIGHT };
+}
+
+/**
+ * The line from a highlighted word to its picture, made of horizontal and vertical segments, as a list of points. A word on the lowest line of the
+ * title leaves from its bottom edge; a word on a higher line leaves from its side that faces the picture, and comes down beside the title (never
+ * through it) to the picture's top edge. Rectangles are { x, y, width, height }; `title` is the block of both lines.
+ */
+export function connectorPoints(word, subject, title) {
+  const right = (box) => box.x + box.width;
+  const bottom = (box) => box.y + box.height;
+  const lowest = bottom(word) >= bottom(title) - 2;
+  const start = 10; // clear space between the word's box and the line
+  const margin = Math.min(24, subject.width / 4);
+  if (lowest) {
+    const from = { x: word.x + word.width / 2, y: bottom(word) + start };
+    const entry = clamp(from.x, subject.x + margin, right(subject) - margin);
+    const level = clamp((from.y + subject.y) / 2, from.y, subject.y - start);
+    return entry === from.x
+      ? [from, { x: entry, y: subject.y }]
+      : [from, { x: from.x, y: level }, { x: entry, y: level }, { x: entry, y: subject.y }];
+  }
+  const towardsRight = subject.x + subject.width / 2 > word.x + word.width / 2;
+  const from = { x: towardsRight ? right(word) + start : word.x - start, y: word.y + word.height / 2 };
+  const beside = towardsRight ? right(title) + 24 : title.x - 24;
+  const entry = clamp(
+    towardsRight ? Math.max(beside, subject.x + margin) : Math.min(beside, right(subject) - margin),
+    subject.x + margin,
+    right(subject) - margin,
+  );
+  return [from, { x: entry, y: from.y }, { x: entry, y: subject.y }];
+}

@@ -1,6 +1,7 @@
-/* The front page: a full-screen drawing in three colourings, a code-like text layer, a square cursor and a box that opens around the car or the hands.
-   Colours here belong to the drawing and to text measured against it (tests/test-stage.mjs samples the pixels where the text sits); they are tokens on
-   .stage so that the two states are defined in one place. */
+/* The front page: a full-screen drawing in three colourings, a two-line white title with a streak, smoky edges and an ice-blue aura, a square cursor,
+   a box that opens around the car or the hands, a lightly boxed word joined to it by a line, and the ratings. Colours here belong to the drawing and to
+   text measured against it (tests/test-stage.mjs samples the pixels where the text sits); they are tokens on .stage so that the two states are
+   defined in one place. */
 
 body[data-page='home'] {
   padding-bottom: 0;
@@ -22,17 +23,22 @@ body[data-page='home'] main.workspace {
 
 .stage {
   --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Menlo, Consolas, 'Liberation Mono', monospace;
-  /* red drawing: cream text on a dark translucent plate (the drawing's brightness varies too much for text straight on it) */
+  --display: 'Lexend Giga', 'Space Grotesk', system-ui, sans-serif;
+  --text: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* red drawing: white title over a soft dark-red haze, cream small text on the drawing's darker top and bottom bands */
   --stage-bg: #d90a04;
-  --plate: rgb(19 2 0 / 0.66);
   --ink: #fff1e8;
   --ink-soft: #ebd2c7;
+  --title-ink: #fff;
+  --scrim: rgb(90 0 0 / 0.42);
+  --bar-shade: rgb(70 0 0 / 0.5);
+  --word-dim: 0.5;
+  --glow: 0 0 0.03em #fff, 0 0 0.12em #bff4ff, 0 0 0.3em #35d3ff, 0 0 0.7em #0a8cff, 0 0 1.3em rgb(10 100 255 / 0.7);
+  --word-fill: rgb(255 255 255 / 0.14);
   --chip: #fff1e8;
   --chip-ink: #130200;
-  --syntax-key: var(--ink); /* on the red drawing the syntax is shown by weight and shape; colour would not pass */
-  --syntax-type: var(--ink);
-  --syntax-string: var(--ink);
   --frame: #0a1a9c;
+  --plate: rgb(246 246 246 / 0.86);
   position: relative;
   width: 100%;
   height: 100vh;
@@ -41,27 +47,31 @@ body[data-page='home'] main.workspace {
   overflow: hidden;
   background: var(--stage-bg);
   color: var(--ink);
-  font-family: var(--mono);
+  font-family: var(--text);
   font-size: 13px;
   line-height: 1.5;
   transition: background-color 0.3s;
 }
-/* black and white drawing: dark text on a light plate (the text changes with the picture); the blue ink of the syntax only where it passes */
+/* black and white drawing: the title and the text turn dark, because white on the light picture would not be readable */
 .stage[data-state='peek'],
 .stage[data-state='open'] {
   --stage-bg: #bcbcbc;
-  --plate: rgb(246 246 246 / 0.86);
   --ink: #050505;
   --ink-soft: #2b2b2b;
+  --title-ink: #050505;
+  --scrim: rgb(255 255 255 / 0);
+  --bar-shade: rgb(255 255 255 / 0);
+  --glow: 0 0 0.2em rgb(120 170 255 / 0.6), 0 0 0.7em rgb(40 110 255 / 0.4);
+  --word-fill: rgb(255 255 255 / 0.5);
   --chip: #050505;
   --chip-ink: #f2f2f2;
-  --syntax-key: #0b1f9a;
-  --syntax-type: #004f73;
-  --syntax-string: #6a1b00;
 }
 .stage[data-pointer='in'][data-coarse='false'],
 .stage[data-pointer='in'][data-coarse='false'] * {
   cursor: none;
+}
+.stage-filters {
+  position: absolute;
 }
 
 /* ── the drawing ─────────────────────────────────────── */
@@ -104,7 +114,7 @@ body[data-page='home'] main.workspace {
   opacity: 1;
 }
 
-/* ── bars ────────────────────────────────────────────── */
+/* ── the two lines of links ──────────────────────────── */
 .stage-bar {
   position: absolute;
   left: 0;
@@ -115,41 +125,50 @@ body[data-page='home'] main.workspace {
   align-items: center;
   justify-content: space-between;
   gap: 6px 24px;
-  padding: 10px clamp(18px, 5vw, 72px);
-  background: var(--plate);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
-  transition: background-color 0.3s;
+  padding: 16px clamp(18px, 5vw, 72px);
 }
 .stage-top {
   top: 0;
+  justify-content: flex-end;
 }
 .stage-bottom {
   bottom: 0;
+}
+/* a dark-red shade behind each row, feathered beyond its edge: cream text needs it where the drawing glows orange */
+.stage-bar::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.stage-top::before {
+  top: 0;
+  bottom: -28px;
+  background: linear-gradient(to bottom, var(--bar-shade) calc(100% - 28px), transparent);
+}
+.stage-bottom::before {
+  top: -28px;
+  bottom: 0;
+  background: linear-gradient(to top, var(--bar-shade) calc(100% - 28px), transparent);
 }
 .stage a {
   color: var(--ink);
   text-decoration: none;
 }
-.stage-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-}
-.stage-brand img {
-  display: block;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-}
 .stage-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 20px;
+  gap: 4px 22px;
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 .stage-links a {
-  padding: 2px 0;
+  padding: 3px 0;
   border-bottom: 1px solid transparent;
 }
 .stage-links a:hover,
@@ -161,89 +180,163 @@ body[data-page='home'] main.workspace {
   outline: 2px dashed var(--ink);
   outline-offset: 3px;
 }
-.stage-status {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.stage-tagline {
+  max-width: 60ch;
   margin: 0;
-  font-size: 12px;
+  font-size: 12.5px;
 }
-.stage-mode {
-  padding: 1px 8px;
-  background: var(--chip);
-  color: var(--chip-ink);
-  font-weight: 700;
-  letter-spacing: 0.04em;
+.stage-hint-touch {
+  display: none;
 }
 
-/* ── the text ────────────────────────────────────────── */
-.stage-code {
+/* ── the title ───────────────────────────────────────── */
+.stage-title {
   position: absolute;
   z-index: 4;
-  left: clamp(18px, 5vw, 72px);
-  top: clamp(60px, 11vh, 120px);
-  max-width: calc(100% - 2 * clamp(18px, 5vw, 72px));
-  font-size: var(--code-size, clamp(12px, 0.55vw + 8.5px, 16px));
-  line-height: 1.7;
-  white-space: pre;
-  overflow: hidden;
-  width: max-content;
-  padding: 12px 18px 10px 6px;
-  background: var(--plate);
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
+  left: var(--title-x, 50%);
+  top: var(--title-top, 80px);
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--display);
+  font-size: var(--title-size, 56px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  color: var(--title-ink);
+  text-align: center;
+  white-space: nowrap;
   pointer-events: none;
-  transition: background-color 0.3s;
+  transition: color 0.3s;
 }
-.stage-code .line {
+/* a haze, dark red over the red drawing, behind the lines: it keeps white readable where the drawing glows orange, and reads as smoke */
+.title-scrim {
+  position: absolute;
+  inset: -34% -22%;
+  background: radial-gradient(closest-side, var(--scrim) 58%, transparent);
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.title-core,
+.title-layer {
   display: block;
-  min-height: 1.7em;
-  animation: line-in 0.32s steps(6, end) both;
-  animation-delay: calc(var(--i, 0) * 45ms);
+  position: relative;
 }
-@keyframes line-in {
-  from {
-    opacity: 0;
-    transform: translateX(-6px);
+.title-line {
+  display: block;
+}
+.title-core {
+  filter: url(#titleSmoke);
+  text-shadow: var(--glow);
+  animation: aura 3.4s ease-in-out infinite alternate;
+}
+@keyframes aura {
+  50% {
+    text-shadow: var(--glow);
+    opacity: 0.93;
   }
 }
-.stage-code .ln {
-  display: inline-block;
-  width: 3ch;
-  margin-right: 1.5ch;
-  color: var(--ink-soft);
-  text-align: right;
+/* two streaks behind the letters, as the speed in the drawing trails behind the car: they drift, slowly */
+.title-layer {
+  position: absolute;
+  inset: 0;
+  text-shadow: none;
+  pointer-events: none;
+}
+.title-smear-near {
+  filter: url(#titleSmearNear);
   opacity: 0.7;
+  transform: translateX(-0.06em);
+  animation: smear 4s ease-in-out infinite alternate;
 }
-/* on the red drawing the syntax is shown by weight and shape, because colour would not pass; on the grey drawing it gets colour */
-.stage-code .c {
-  color: var(--ink-soft);
+.title-smear-far {
+  filter: url(#titleSmearFar);
+  opacity: 0.45;
+  transform: translateX(-0.2em);
+  animation: smear 5.5s ease-in-out infinite alternate-reverse;
 }
-.stage-code .k,
-.stage-code .f {
+@keyframes smear {
+  to {
+    transform: translateX(-0.36em);
+  }
+}
+/* the copies of the title behind it are for looking at only: they are listed after .word below */
+.word {
+  display: inline-block;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.title-layer .word {
+  pointer-events: none;
+}
+.word-driver {
+  font-weight: 600;
+}
+.word-car {
   font-weight: 800;
 }
-.stage-code .t {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.stage-code .s {
+.word-or {
+  font-size: 0.9em;
   font-style: italic;
+  font-weight: 200;
+  margin-right: 0.12em;
+  transition: opacity 0.2s;
 }
-.stage-code .n {
-  padding: 0 4px;
-  background: var(--chip);
-  color: var(--chip-ink);
-  font-weight: 700;
+/* pointing at the car or the hands: only the matching word stays lit */
+.stage[data-subject='car'] .word-driver,
+.stage[data-subject='driver'] .word-car,
+.stage[data-subject='car'] .word-or,
+.stage[data-subject='driver'] .word-or {
+  opacity: var(--word-dim);
 }
-.stage-code .k {
-  color: var(--syntax-key);
+
+/* the lightly drawn box around the word, and the line to the picture */
+.stage-word-frame {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  border: 1.5px solid var(--ink);
+  background: var(--word-fill);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  will-change: transform, width, height;
 }
-.stage-code .t {
-  color: var(--syntax-type);
+.stage[data-subject='car'] .stage-word-frame,
+.stage[data-subject='driver'] .stage-word-frame {
+  opacity: 1;
 }
-.stage-code .s {
-  color: var(--syntax-string);
+.stage-connector {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.stage-connector polyline {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.4s ease-out;
+}
+.stage-connector rect {
+  fill: var(--ink);
+  opacity: 0;
+  transition: opacity 0.2s 0.15s;
+}
+.stage[data-subject='car'] .stage-connector polyline,
+.stage[data-subject='driver'] .stage-connector polyline {
+  stroke-dashoffset: 0;
+}
+.stage[data-subject='car'] .stage-connector rect,
+.stage[data-subject='driver'] .stage-connector rect {
+  opacity: 1;
 }
 
 /* ── what can be selected, the box and the cursor ────── */
@@ -288,17 +381,6 @@ body[data-page='home'] main.workspace {
 .stage[data-subject='driver'] .stage-frame {
   opacity: 1;
 }
-.stage-frame-label {
-  position: absolute;
-  left: -2px;
-  bottom: calc(100% + 7px);
-  padding: 1px 8px;
-  background: var(--chip);
-  color: var(--chip-ink);
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-}
 .stage-cursor {
   position: absolute;
   z-index: 7;
@@ -337,30 +419,28 @@ body[data-page='home'] main.workspace {
 }
 
 /* ── the ratings ─────────────────────────────────────── */
+/* while the list only shows because something is pointed at it must not catch the pointer: if it covered the spot, the pointer would leave the car, the list would close, and it would open again */
+.stage[data-state='peek'] .ledger {
+  pointer-events: none;
+}
 .ledger {
   position: absolute;
   z-index: 5;
   left: clamp(18px, 5vw, 72px);
   right: clamp(18px, 5vw, 72px);
-  bottom: 58px;
+  bottom: calc(var(--bottom-space, 58px) + 8px);
   display: flex;
   flex-direction: column;
   max-width: 940px;
-  max-height: 34vh;
+  max-height: min(34vh, max(var(--ledger-room, 34vh), 132px));
   padding: 10px 14px 8px;
   border: 1px solid var(--ink);
-  background: rgb(246 246 246 / 0.82);
+  background: var(--plate);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   color: var(--ink);
+  font-family: var(--mono);
   font-size: clamp(11.5px, 0.4vw + 9px, 14px);
-  animation: ledger-in 0.22s ease-out both;
-}
-@keyframes ledger-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
 }
 .ledger-title,
 .ledger-detail {
@@ -368,6 +448,16 @@ body[data-page='home'] main.workspace {
   color: var(--ink-soft);
   font-size: 0.92em;
   line-height: 1.5;
+}
+.ledger-title {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+}
+.ledger-pin {
+  color: var(--ink);
+  font-weight: 700;
 }
 .ledger-detail {
   min-height: 1.5em;
@@ -431,19 +521,20 @@ body[data-page='home'] main.workspace {
   color: var(--chip-ink);
 }
 
-@media (max-width: 720px) {
-  .stage-code .ln {
+@media (hover: none) {
+  .stage-hint-pointer {
     display: none;
   }
-  .stage-code {
-    top: 92px;
-    width: auto;
-    white-space: pre-wrap; /* a long comment wraps instead of running off the screen */
-    overflow-wrap: anywhere;
+  .stage-hint-touch {
+    display: inline;
+  }
+}
+@media (max-width: 720px) {
+  .stage-top {
+    padding-top: 12px;
   }
   .ledger {
-    bottom: 76px;
-    max-height: 44vh;
+    max-height: min(42vh, max(var(--ledger-room, 42vh), 132px));
   }
   .ledger-row,
   .ledger-list.with-team .ledger-row {
@@ -456,14 +547,19 @@ body[data-page='home'] main.workspace {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .stage-code .line,
+  .title-core,
+  .title-smear-near,
+  .title-smear-far,
   .ledger,
   .stage[data-coarse='true'][data-state='idle'] .hotspot {
     animation: none;
   }
   .layer-mono,
   .layer-blue,
-  .stage-frame {
+  .stage-frame,
+  .stage-word-frame,
+  .stage-connector polyline,
+  .stage-connector rect {
     transition: none;
   }
 }

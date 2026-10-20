@@ -5,9 +5,8 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { ART, SUBJECTS, sceneGeometry, subjectRectangle } from '../site/js/stage-geometry.js';
+import { ART, SUBJECTS, connectorPoints, sceneGeometry, subjectRectangle, titleLayout } from '../site/js/stage-geometry.js';
 import { shake, smoothNoise, sway } from '../site/js/stage-noise.js';
-import { codeLines, linesAsText } from '../site/js/stage-code.js';
 import { BAR_WIDTH, bar, ledgerRows, spokenRow } from '../site/js/stage-ledger.js';
 
 const VIEWPORTS = [
@@ -81,29 +80,55 @@ for (const seed of [0, 11, 12, 21, 100]) {
 assert.notEqual(smoothNoise(2.5, 1), smoothNoise(2.5, 2), 'different seeds move differently');
 assert.ok(Math.abs(shake(0.5, 3)) <= 1 && Math.abs(sway(0.5, 3)) <= 1);
 
-// ── text ───────────────────────────────────────────────
-const KINDS = new Set(['', 'k', 't', 'f', 's', 'n', 'c']);
-const leader = { name: 'Max <b>Verstappen</b>', team: 'Red Bull', rating: 1069.6, deviation: 12.4 };
-for (const subject of [null, 'car', 'driver']) {
-  for (const open of [false, true]) {
-    for (const entry of [null, leader]) {
-      const lines = codeLines({ subject, open, weekend: '2026 Singapore Grand Prix', leader: entry, count: 22 });
-      assert.ok(lines.length >= 3);
-      for (const line of lines)
-        for (const token of line)
-          assert.ok(KINDS.has(token[0]) && typeof token[1] === 'string', 'every token has a known kind and a string');
+// ── the title and the line from a word to its picture ──
+// A stand-in for the real title (the page measures it in the browser): two lines, the first about 5.4 letters wide, the second about 4.4, centred.
+function titleBoxes(layout) {
+  const em = layout.size;
+  const block = { x: layout.centre - 2.7 * em, y: layout.top, width: 5.4 * em, height: 2 * layout.lineHeight * em };
+  const lineHeight = layout.lineHeight * em;
+  const driver = { x: layout.centre - 2.5 * em, y: layout.top, width: 5 * em, height: lineHeight };
+  const car = { x: layout.centre + 0.2 * em, y: layout.top + lineHeight, width: 2.3 * em, height: lineHeight };
+  return { block, driver, car };
+}
+const overlaps = (a, b) => a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
+const segmentBox = (from, to) => ({
+  x: Math.min(from.x, to.x) - 0.5,
+  y: Math.min(from.y, to.y) - 0.5,
+  width: Math.abs(from.x - to.x) + 1,
+  height: Math.abs(from.y - to.y) + 1,
+});
+for (const [width, height] of VIEWPORTS) {
+  const geometry = sceneGeometry(width, height);
+  const layout = titleLayout(geometry, width, height);
+  const label = `${width}x${height}`;
+  const boxes = titleBoxes(layout);
+  const subjectTop = Math.min(...Object.keys(SUBJECTS).map((name) => subjectRectangle(geometry, name).y));
+  assert.ok(layout.size >= 26 && layout.size <= 118, `${label}: the title size is sensible (${layout.size.toFixed(0)}px)`);
+  assert.ok(boxes.block.y + boxes.block.height <= subjectTop - 30, `${label}: the title stays clear of the car and the hands`);
+  assert.ok(boxes.block.x >= -1 && boxes.block.x + boxes.block.width <= width + 1, `${label}: the title is on the screen`);
+  for (const [name, word] of [
+    ['car', boxes.car],
+    ['driver', boxes.driver],
+  ]) {
+    const subject = subjectRectangle(geometry, name);
+    const points = connectorPoints(word, subject, boxes.block);
+    assert.ok(points.length >= 2 && points.length <= 4, `${label}: the ${name} line has two to four points`);
+    const last = points.at(-1);
+    assert.ok(
+      Math.abs(last.y - subject.y) < 0.01 && last.x >= subject.x && last.x <= subject.x + subject.width,
+      `${label}: the ${name} line ends on the top edge of its picture`,
+    );
+    for (let i = 1; i < points.length; i++)
+      assert.ok(
+        points[i].x === points[i - 1].x || points[i].y === points[i - 1].y,
+        `${label}: the ${name} line turns only at right angles`,
+      );
+    for (let i = 1; i < points.length; i++) {
+      const piece = segmentBox(points[i - 1], points[i]);
+      for (const other of [boxes.car, boxes.driver]) assert.ok(!overlaps(piece, other), `${label}: the ${name} line does not cross a word`);
     }
   }
 }
-const idle = linesAsText(codeLines({ subject: null, open: false, weekend: '2026 Singapore Grand Prix', leader: null, count: 0 }));
-assert.match(idle, /Singapore Grand Prix/);
-assert.match(idle, /select\(Car \| Driver\)/);
-const driverText = linesAsText(codeLines({ subject: 'driver', open: false, weekend: '2026 Singapore Grand Prix', leader, count: 22 }));
-assert.match(driverText, /1070/, 'the rating is rounded to a whole number');
-assert.match(driverText, /± 12/);
-assert.match(driverText, /all 22 ratings/);
-assert.match(linesAsText(codeLines({ subject: 'car', open: true, weekend: null, leader, count: 11 })), /11 cars, best first/);
-assert.match(linesAsText(codeLines({ subject: 'car', open: false, weekend: null, leader: null, count: 0 })), /loading/);
 
 // ── the ratings list ───────────────────────────────────
 const rows = [
@@ -130,10 +155,6 @@ assert.equal([...bar(5, 5, 5)].length, BAR_WIDTH);
 assert.equal(spokenRow(printed[0], 'driver'), '1, Alpha, Red, rating 1070, plus or minus 12, up 1.0 since the previous weekend');
 assert.equal(spokenRow(printed[1], 'car'), '2, Beta, rating 1000');
 assert.doesNotMatch(spokenRow(printed[2], 'driver'), /[█░▲▼±]/, 'what is spoken has no drawing characters');
-assert.match(
-  linesAsText(codeLines({ subject: null, open: false, weekend: null, leader: null, count: 0, error: 'HTTP 404' })),
-  /could not load the ratings: HTTP 404/,
-);
 
 // ── can it be read? ────────────────────────────────────
 const css = await readFile(new URL('../site/css/stage.css', import.meta.url), 'utf8');
@@ -150,7 +171,11 @@ const resolve = (tokens, name, depth = 0) => {
   const reference = value?.match(/^var\(--([a-z-]+)\)/);
   return reference && depth < 5 ? resolve(tokens, reference[1], depth + 1) : value;
 };
-const hex = (text) => [1, 3, 5].map((i) => parseInt(text.slice(i, i + 2), 16));
+const hex = (text) => {
+  const digits = text.slice(1);
+  const full = digits.length === 3 ? [...digits].map((digit) => digit + digit).join('') : digits; // #fff is #ffffff
+  return [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16));
+};
 const plateOf = (text) => {
   const m = text.match(/rgb\((\d+) (\d+) (\d+) \/ ([\d.]+)\)/);
   assert.ok(m, `a plate colour: ${text}`);
@@ -186,8 +211,9 @@ function extremes(version, geometry, region) {
     top: (region.y - geometry.y) / geometry.scale,
     bottom: (region.y + region.height - geometry.y) / geometry.scale,
   };
-  const cell = (value, count) => Math.min(count - 1, Math.max(0, Math.floor(value / samples.cell)));
   const found = { darkest: null, lightest: null };
+  if (picture.bottom < 0 || picture.top > ART.height || picture.right < 0 || picture.left > ART.width) return found; // wholly outside the drawing: only the page's colour is there
+  const cell = (value, count) => Math.min(count - 1, Math.max(0, Math.floor(value / samples.cell)));
   for (let row = cell(picture.top, samples.rows); row <= cell(picture.bottom, samples.rows); row++)
     for (let column = cell(picture.left, samples.columns); column <= cell(picture.right, samples.columns); column++) {
       const index = row * samples.columns + column;
@@ -201,53 +227,86 @@ function extremes(version, geometry, region) {
 }
 
 const worst = [];
-function check(label, version, tokens, geometry, region, texts) {
-  const plate = plateOf(resolve(tokens, 'plate'));
+/**
+ * Every text colour against the darkest and the lightest pixel of the drawing under the region, with whatever translucent layer sits between (the
+ * haze behind the title, the plate behind the list), and against the page's own colour, which shows where the drawing does not reach the edge.
+ */
+function check(label, version, tokens, geometry, region, texts, overlay = null) {
   const { darkest, lightest } = extremes(version, geometry, region);
-  for (const [name, minimum, colour] of texts) {
+  const backgrounds = [darkest, lightest, hex(resolve(tokens, 'stage-bg'))].filter(Boolean);
+  const layer = overlay ? plateOf(resolve(tokens, overlay)) : { color: [0, 0, 0], alpha: 0 };
+  for (const [name, minimum, colour, dim = 1] of texts) {
     const text = hex(resolve(tokens, colour));
-    for (const background of [darkest, lightest]) {
-      const ratio = contrast(text, mix(plate.color, background, plate.alpha));
+    for (const picture of backgrounds) {
+      const background = mix(layer.color, picture, layer.alpha);
+      const ratio = contrast(mix(text, background, dim), background); // a dimmed word is the text colour mixed into what is behind it
       worst.push([ratio, `${label}, ${name}`]);
       assert.ok(ratio >= minimum, `${label}: ${name} (${resolve(tokens, colour)}) has contrast ${ratio.toFixed(2)}, needs ${minimum}`);
     }
   }
 }
-const BODY = [
-  ['text', 4.5, 'ink'],
-  ['comments', 4.5, 'ink-soft'],
-];
 for (const [width, height] of VIEWPORTS) {
   const geometry = sceneGeometry(width, height);
   const phone = width <= 720;
   const margin = Math.min(72, Math.max(18, width * 0.05));
-  const subjectTop = Math.min(...Object.keys(SUBJECTS).map((name) => subjectRectangle(geometry, name).y));
-  const codeTop = phone ? 92 : Math.min(120, Math.max(60, height * 0.11));
-  const codeRegion = { x: margin, y: codeTop, width: Math.min(width - 2 * margin, 700), height: Math.max(60, subjectTop - 30 - codeTop) };
-  const barHeight = phone ? 92 : 50;
+  const layout = titleLayout(geometry, width, height);
+  const { block } = titleBoxes(layout);
+  const titleRegion = { x: block.x - 0.1 * layout.size, y: block.y, width: block.width + 0.2 * layout.size, height: block.height };
   for (const [version, tokens] of [
     ['red', red],
     ['mono', grey],
   ]) {
     const label = `${width}x${height} ${version === 'red' ? 'red' : 'black and white'}`;
-    check(`${label}, top bar`, version, tokens, geometry, { x: 0, y: 0, width, height: barHeight }, BODY);
-    check(`${label}, bottom bar`, version, tokens, geometry, { x: 0, y: height - barHeight, width, height: barHeight }, BODY);
-    check(`${label}, code`, version, tokens, geometry, codeRegion, [
-      ...BODY,
-      ['keywords', 4.5, 'syntax-key'],
-      ['types', 4.5, 'syntax-type'],
-      ['strings', 4.5, 'syntax-string'],
-    ]);
+    const dim = Number(resolve(tokens, 'word-dim'));
+    assert.ok(dim > 0 && dim < 1, `${label}: the dimmed words have an opacity`);
+    check(
+      `${label}, links at the top`,
+      version,
+      tokens,
+      geometry,
+      { x: 0, y: 0, width, height: phone ? 80 : 56 },
+      [['small text', 4.5, 'ink']],
+      'bar-shade',
+    );
+    const bottom = 100; // the bottom row as measured in the browser: 98 high on a phone and a tablet, 70 on a wide screen
+    check(
+      `${label}, tagline and links at the bottom`,
+      version,
+      tokens,
+      geometry,
+      { x: 0, y: height - bottom, width, height: bottom },
+      [['small text', 4.5, 'ink']],
+      'bar-shade',
+    );
+    // the title is large text (3 to 1); the word that is not pointed at is dimmed, and still has to reach it
+    check(
+      `${label}, title`,
+      version,
+      tokens,
+      geometry,
+      titleRegion,
+      [
+        ['title', 3, 'title-ink'],
+        ...(version === 'mono' ? [['dimmed word', 3, 'title-ink', dim]] : []), // a word is only dimmed while something is pointed at, and then the drawing is black and white
+      ],
+      'scrim',
+    );
   }
   // the ratings list only exists on the black and white drawing, in the lower part of the screen
-  const listTop = Math.max(0, height - (phone ? 76 : 58) - height * (phone ? 0.44 : 0.34));
+  // the list sits 8 pixels above the bottom row, so its lowest edge is 78 above the bottom of the screen and its highest 106
+  const listTop = Math.max(0, height - 106 - height * (phone ? 0.42 : 0.34));
+  const listBottom = height - 78;
   check(
-    `${width}x${height} ledger`,
+    `${width}x${height} list`,
     'mono',
     grey,
     geometry,
-    { x: margin, y: listTop, width: Math.min(940, width - 2 * margin), height: height - (phone ? 76 : 58) - listTop },
-    BODY,
+    { x: margin, y: listTop, width: Math.min(940, width - 2 * margin), height: listBottom - listTop },
+    [
+      ['text', 4.5, 'ink'],
+      ['secondary text', 4.5, 'ink-soft'],
+    ],
+    'plate',
   );
 }
 const lowest = worst.sort((a, b) => a[0] - b[0])[0];
@@ -257,5 +316,5 @@ for (const [name, tokens] of [
 ])
   assert.ok(contrast(hex(resolve(tokens, 'chip-ink')), hex(resolve(tokens, 'chip'))) >= 7, `${name}: the label chips are readable`);
 console.log(
-  `PASS front page: both areas on screen and around the subjects at ${VIEWPORTS.length} sizes, smooth noise, text built from data, and every text colour reads on the drawing (lowest contrast ${lowest[0].toFixed(2)}: ${lowest[1]})`,
+  `PASS front page: both areas on screen and around the subjects at ${VIEWPORTS.length} sizes, the title clear of them and its line to each picture, smooth noise, the list built from data, and every text colour reads on the drawing (lowest contrast ${lowest[0].toFixed(2)}: ${lowest[1]})`,
 );

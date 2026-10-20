@@ -130,7 +130,7 @@ export const ABOUT_HTML = String.raw`
 <h3>Software and fonts that come with the site</h3>
 <p>These are served from this site's own address, so your browser contacts no one else. Each keeps its own licence, and the licence texts are published with the files.</p>
 <ul>
-  <li><b>Inter</b> and <b>Space Grotesk</b> (typefaces): SIL Open Font License 1.1. <a href="./vendor/licenses/inter-OFL-1.1.txt">Inter licence</a>, <a href="./vendor/licenses/space-grotesk-OFL-1.1.txt">Space Grotesk licence</a>.</li>
+  <li><b>Inter</b>, <b>Space Grotesk</b> and <b>Lexend Giga</b> (typefaces): SIL Open Font License 1.1. <a href="./vendor/licenses/inter-OFL-1.1.txt">Inter licence</a>, <a href="./vendor/licenses/space-grotesk-OFL-1.1.txt">Space Grotesk licence</a>, <a href="./vendor/licenses/lexend-giga-OFL-1.1.txt">Lexend Giga licence</a>.</li>
   <li><b>KaTeX</b> 0.16.9 (formulas): MIT licence. <a href="./vendor/licenses/katex-MIT.txt">Licence</a>.</li>
   <li><a href="./vendor/NOTICE.txt">Where each file came from</a>.</li>
 </ul>
