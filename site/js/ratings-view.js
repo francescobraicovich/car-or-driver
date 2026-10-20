@@ -239,11 +239,10 @@ function changeParts(row, probability) {
 function lastColumn(row, probability, showForm) {
   if (showForm) {
     const v = Number((row.shift ?? 0).toFixed(1));
-    return v === 0
-      ? { text: '', tone: '' }
-      : { text: `${v > 0 ? '▲' : '▼'}${Math.abs(v).toFixed(1)}`, tone: v > 0 ? 'var(--pos)' : 'var(--neg)' };
+    return v === 0 ? { text: '', tone: '' } : { text: `${v > 0 ? '▲' : '▼'}${Math.abs(v).toFixed(1)}`, tone: v > 0 ? 'up' : 'down' };
   }
-  const { text, tone } = changeParts(row, probability);
+  const { text } = changeParts(row, probability);
+  const tone = text.startsWith('▲') ? 'up' : text.startsWith('▼') ? 'down' : ''; // a class, not an inline colour: an inline colour would stay on the inverted row
   return { text: text === '0.0' ? '' : text === 'New' ? 'new' : text.replace(/([▲▼]) /, '$1').replace(' pp', 'pp'), tone };
 }
 
@@ -326,8 +325,7 @@ function drawList(rows, snap, metric, probability, st) {
       line.classList.toggle('selected', selected.has(row.id));
       line.setAttribute('aria-pressed', String(selected.has(row.id)));
       const last = lastColumn(row, probability, st.showForm);
-      const change = cell('change', last.text);
-      if (last.tone) change.style.color = last.tone;
+      const change = cell(`change ${last.tone}`.trim(), last.text);
       const deviation = Number.isFinite(sdOf(row, metric)) ? `±${sdOf(row, metric).toFixed(0)}` : '';
       line.append(
         cell('rank', row.rank),
@@ -346,6 +344,10 @@ function drawList(rows, snap, metric, probability, st) {
         (key) => {
           if (key === 'Enter' || key === ' ') toggleSelected(row);
         },
+        // beside the panel, level with the row, where there is room for that (a column on a wide screen); otherwise by the pointer
+        panel.closest('.stage')?.dataset.layout === 'wide'
+          ? (target) => ({ x: panel.getBoundingClientRect().right, y: target.getBoundingClientRect().top - 14 })
+          : undefined,
       );
       item.append(line);
       return item;
@@ -413,6 +415,7 @@ export function renderRatings() {
   st.sd = showSd && hasSd;
   controls.ratingsSd.setAttribute('aria-pressed', String(st.sd));
   controls.ratingsSd.toggleAttribute('disabled', !hasSd);
+  controls.ratingsSd.hidden = panel.getBoundingClientRect().width < 400; // a phone has no room for the error beside every rating
   controls.ratingsSd.title = hasSd ? 'Show one standard deviation of each rating' : 'This rating has no uncertainty estimate';
   const rows = withForm(baseRows, st);
   const probability = isProbability(pref.metric);

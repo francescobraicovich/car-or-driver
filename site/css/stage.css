@@ -656,17 +656,18 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   display: flex;
   flex: 0 1 auto;
   flex-direction: column;
-  min-height: calc(var(--rows, 20) * 15px);
+  min-height: calc(var(--rows, 20) * 13px);
   margin: 0;
   padding: 0 6px;
   font-family: var(--mono);
   font-size: 12px;
+  line-height: 1.1; /* the most that has been rated at one weekend is 24, which still has to fit on a laptop 600 high without scrolling */
   list-style: none;
 }
 .ratings-list li {
   display: flex;
   flex: 0 1 26px;
-  min-height: 15px;
+  min-height: 13px;
 }
 .ledger-row {
   display: grid;
@@ -712,6 +713,12 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 }
 .ledger-row .rating {
   font-weight: 800;
+}
+.ledger-row .change.up {
+  color: var(--pos);
+}
+.ledger-row .change.down {
+  color: var(--neg);
 }
 .ledger-row .bar {
   color: var(--frame);

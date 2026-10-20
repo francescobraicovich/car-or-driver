@@ -383,6 +383,32 @@ check(
   listFits.every(Boolean),
   JSON.stringify(listFits),
 );
+// the most that has been rated at one weekend (24) on a laptop 600 high: still every row, still no scrolling
+await evaluate(
+  "import('/site/js/state.js').then(({ state }) => { const sizes = state.model.snaps.map((snap) => snap.drivers.length); window.__crowded = sizes.indexOf(Math.max(...sizes)); })",
+);
+await sleep(300);
+const crowded = await evaluate('window.__crowded');
+await send('Emulation.setDeviceMetricsOverride', { width: 1366, height: 600, deviceScaleFactor: 1, mobile: false });
+await sleep(700);
+await evaluate(
+  `(() => { const slider = document.getElementById('ratingsScrub'); slider.value = ${crowded}; slider.dispatchEvent(new Event('input', { bubbles: true })); })()`,
+);
+await sleep(500);
+const crowdedFits = await evaluate(
+  "(() => { const list = document.getElementById('ratingsList'); const panel = document.getElementById('stageLedger'); return [list.querySelectorAll('.ledger-row').length, list.scrollHeight <= list.clientHeight + 1, panel.scrollHeight <= panel.clientHeight + 1]; })()",
+);
+check(
+  'even the fullest weekend (24 drivers) shows every row without scrolling on a laptop 600 high',
+  crowdedFits[0] >= 24 && crowdedFits[1] && crowdedFits[2],
+  JSON.stringify(crowdedFits),
+);
+await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+await sleep(700);
+await evaluate(
+  "(() => { const slider = document.getElementById('ratingsScrub'); slider.value = slider.max; slider.dispatchEvent(new Event('input', { bubbles: true })); })()",
+);
+await sleep(400);
 const firstRow = await rectangleOfSelector('#ratingsList .ledger-row');
 await mouse('mouseMoved', ...centreOf(firstRow));
 await sleep(300);
@@ -390,6 +416,7 @@ check(
   'the row under the pointer inverts: light text on dark',
   (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row')).backgroundColor")) === 'rgb(10, 11, 15)' &&
     (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .name')).color")) === 'rgb(238, 240, 243)',
+  (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .change')).color")) === 'rgb(238, 240, 243)',
 );
 await mouse('mouseMoved', 8, 300);
 // the error is printed beside each rating, and the control can switch it off

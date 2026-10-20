@@ -87,8 +87,11 @@ function placeTip(tip, x, y) {
   tip.style.top = `${Math.max(8, Math.min(window.innerHeight - tip.offsetHeight - 8, y + 14))}px`;
 }
 
-/** Plain-text tooltip on a focusable mark (rows, scatter points). */
-export function inspectTarget(target, getText, onKey) {
+/**
+ * Plain-text tooltip on a focusable mark (rows, scatter points). By default it follows the pointer; `anchor(target)` can name a fixed point,
+ * { x, y }, for it to sit at instead (the ratings panel puts it beside the panel, so that it never covers the ratings).
+ */
+export function inspectTarget(target, getText, onKey, anchor) {
   target.setAttribute('tabindex', '0');
   target.setAttribute('role', 'button');
   target.setAttribute('data-chart-target', 'true');
@@ -101,7 +104,8 @@ export function inspectTarget(target, getText, onKey) {
     target.setAttribute('aria-describedby', tip.id);
     tip.hidden = false;
     const rect = target.getBoundingClientRect();
-    placeTip(tip, event?.clientX ?? rect.left + rect.width / 2, event?.clientY ?? rect.top);
+    const at = anchor?.(target);
+    placeTip(tip, at?.x ?? event?.clientX ?? rect.left + rect.width / 2, at?.y ?? event?.clientY ?? rect.top);
   };
   target.addEventListener('pointerenter', show);
   target.addEventListener('pointermove', show);
