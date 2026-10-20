@@ -32,7 +32,8 @@
     "research:heads-metrics": "node packages/research/node/heads-metrics.mjs",
     "research:findings": "node packages/research/node/export-ratings-table.mjs tmp/findings && python3 packages/research/python/compute-findings.py tmp/findings",
     "check:publication": "node tools/check-publication.mjs",
-    "build:model": "node tools/build-model.mjs"
+    "build:model": "node tools/build-model.mjs",
+    "build:data": "node tools/build-model.mjs && node tools/build-race-laps.mjs && node tools/build-tracks.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

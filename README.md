@@ -49,7 +49,7 @@ The server serves the repository root, so the page can import `packages/core/` a
 
 ## How the site gets its numbers
 
-The ratings are **computed once, when the site is published**, not in every visitor's browser. `node tools/build-model.mjs` builds the model from the CSV tables in `data/` and writes `data/model-latest.json` (the first screen), `data/model.json` (every weekend) and `data/export-rows.json` (the rows of every weekend, for anyone who wants them as a table; the site itself does not load it). The site downloads the other two. Each records a fingerprint of the data and of `packages/core/src`; `tests/test-model-file.mjs` fails if they are out of date, and it also checks that what a visitor sees equals a fresh build. After changing the data or the model, run `node tools/build-model.mjs` and commit the result.
+The ratings are **computed once, when the site is published**, not in every visitor's browser. `node tools/build-model.mjs` builds the model from the CSV tables in `data/` and writes `data/model-latest.json` (the first screen), `data/model.json` (every weekend) and `data/export-rows.json` (the rows of every weekend, for anyone who wants them as a table; the site itself does not load it). The site downloads the other two. Each records a fingerprint of the data and of `packages/core/src`; `tests/test-model-file.mjs` fails if they are out of date, and it also checks that what a visitor sees equals a fresh build. After changing the data or the model, run `npm run build:data` and commit the result: it runs `tools/build-model.mjs` and also `tools/build-race-laps.mjs` (the laps of each season, `data/race-laps/`, behind the racing dots) and `tools/build-tracks.mjs` (the circuit outlines, `site/assets/tracks.json`). A circuit that has not raced before needs an outline: add its file from `data/source/f1-circuits/` and a line in `SOURCE_FILES` in `tools/build-tracks.mjs` (the test fails until you do, or until you add the circuit to the few it lists as having none).
 
 The first screen needs about 0.06 MB; see [docs/deployment.md](docs/deployment.md) for the measurements.
 
@@ -101,7 +101,7 @@ The site is published on Cloudflare Pages. [docs/deployment.md](docs/deployment.
 Issues and pull requests are welcome, within the non-commercial licence above.
 
 - Read [CLAUDE.md](CLAUDE.md): the working guidelines, including how names are chosen (precise, professional, spelled out: `state-space`, not `ss`).
-- Run `npm run lint` and `npm test` before opening a pull request. If you change `packages/core/src` or the data, run `node tools/build-model.mjs` too.
+- Run `npm run lint` and `npm test` before opening a pull request. If you change `packages/core/src` or the data, run `npm run build:data` too.
 - A change to the model's outputs changes the golden-master hashes in `tests/golden.json`; update them deliberately (`node tests/golden.mjs --update`) and say why.
 - If a change adds anything that loads, stores or collects data (a script, a font, an analytics call, a form), it needs to update the privacy notice and `docs/compliance.md` first.
 

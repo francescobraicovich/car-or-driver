@@ -182,6 +182,11 @@ export function initTrack() {
     view.hot = event.detail.id;
     paintHot();
   });
+  // the race runs only on the front page (and its ratings): on another page it stops, and starts again when the visitor comes back
+  window.addEventListener('f1:workspace-changed', () => {
+    if (['home', 'ratings'].includes(document.body.dataset.page)) show();
+    else hide();
+  });
   parts.pause.addEventListener('click', () => setPaused(!view.paused));
   reducedMotion.addEventListener('change', () => setPaused(reducedMotion.matches)); // it follows the setting, in both directions
   setPaused(view.paused);

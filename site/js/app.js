@@ -39,8 +39,8 @@ window.addEventListener('DOMContentLoaded', () => {
   window.__appBooted = true;
   initHeadToHead();
   initWorkspace();
+  initTrack(); // before the stage, which says at once if the ratings are shown (a link to #/ratings)
   initStage();
-  initTrack();
   // First successful build dismisses the loading veil and marks status ready.
   const dismissVeil = () => {
     document.getElementById('veil')?.classList.add('gone');

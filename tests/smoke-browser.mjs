@@ -722,6 +722,16 @@ check('play advances the timeline', moved > 0, `index ${moved}`);
 // History: lines, chips, table twin
 await evaluate("location.hash = '#/history'");
 await sleep(1200);
+{
+  // the race runs only on the front page: on another page it is hidden and still
+  const cx = () => evaluate("document.querySelector('#stageTrackDots circle')?.getAttribute('cx')");
+  const before = await cx();
+  await sleep(500);
+  check(
+    'on another page the track is hidden and the race is not running',
+    (await evaluate("document.getElementById('stageTrack').hidden")) && before === (await cx()),
+  );
+}
 check(
   'history draws one line per chip',
   (await evaluate("document.querySelectorAll('#driverChart polyline').length")) >=
@@ -984,6 +994,27 @@ check(
 await evaluate("document.getElementById('stageLedgerClose').click()");
 await sleep(300);
 check('the Close button lets go of the ratings', await isState('idle', ''));
+await send('Emulation.clearDeviceMetricsOverride');
+
+// A link straight to the ratings (a shared link): the panel is kept open from the start and the race is running
+await send('Emulation.clearDeviceMetricsOverride');
+await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/?link=1#/ratings` });
+await sleep(5000);
+const linkedDot = () => evaluate("document.querySelector('#stageTrackDots circle')?.getAttribute('cx')");
+const linkedBefore = await linkedDot();
+await sleep(600);
+const linkedAfter = await linkedDot();
+const linked = {
+  hidden: await evaluate("document.getElementById('stageTrack').hidden"),
+  lap: await evaluate("document.getElementById('stageTrackLap').textContent"),
+  moved: linkedBefore !== null && linkedBefore !== linkedAfter,
+};
+check(
+  'a link straight to #/ratings shows the track and the race is running',
+  linked.hidden === false && linked.moved && /^lap /.test(linked.lap),
+  JSON.stringify(linked),
+);
 await send('Emulation.clearDeviceMetricsOverride');
 
 for (const c of checks) console.log(`${c.pass ? 'ok  ' : 'FAIL'} ${c.name}${c.detail ? ` (${c.detail})` : ''}`);

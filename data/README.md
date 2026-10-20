@@ -2,7 +2,7 @@
 
 **Licence and credits: see [NOTICE.md](NOTICE.md). The data is non-commercial.**
 
-Race data (the RaceData CSVs) read by the Node scripts and by `tools/build-model.mjs`, which computes the ratings the site downloads (`model.json` and `export-rows.json`, generated, committed). The CSVs are committed so the research is repeatable; the site does not read them.
+Race data (the RaceData CSVs) read by the Node scripts and by `tools/build-model.mjs`, which computes the ratings the site downloads (`model.json` and `export-rows.json`, generated, committed), and by `tools/build-race-laps.mjs`, which writes the laps of each season (`race-laps/`, generated, committed). `source/f1-circuits/` holds the circuit outlines (not ours: bacinger/f1-circuits, MIT) that `tools/build-tracks.mjs` turns into `site/assets/tracks.json`. The CSVs are committed so the research is repeatable; the site does not read them.
 
 - `results.csv`, `qualifying.csv`, `races.csv`, `drivers.csv`, `constructors.csv`, `status.csv` (required)
 - `lap_times.csv` (required; enables lap pace and last-lap retirement snapshots)

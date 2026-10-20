@@ -89,7 +89,7 @@ First-visit download down 98% (2.53 MB to 0.06 MB). The measured 0.4 s of proces
 
 This costs no money, but it is the real ongoing price: about 24 race weekends a year, and each one changes the ratings.
 
-Per race, in order (from `data/README.md`): fetch the new data; rebuild the ratings file (`node tools/build-model.mjs`, about 20 seconds); regenerate the findings (`npm run research:findings`, needs Python); run `npm test`; update the golden hashes on purpose; commit and deploy. Estimate: 15 to 30 minutes each, so 6 to 12 hours a year.
+Per race, in order (from `data/README.md`): fetch the new data; rebuild the data files (`npm run build:data`, about 20 seconds: the ratings, the laps of each season for the racing dots, and the circuit outlines; a circuit that has never raced before also needs its outline, see the README); regenerate the findings (`npm run research:findings`, needs Python); run `npm test`; update the golden hashes on purpose; commit and deploy. Estimate: 15 to 30 minutes each, so 6 to 12 hours a year.
 
 It cannot be fully automated today, for two reasons I can see in the repository: the golden hashes are updated by a person deliberately, and the findings step needs Python with pinned packages. The pieces that can be automated are fetching the data and rebuilding the model; Those two could be automated first (a scheduled workflow that opens a pull request), leaving the golden update as the human step.
 
