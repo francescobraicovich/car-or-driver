@@ -14,6 +14,8 @@ const SUBJECTS = ['car', 'driver'];
 const CURSOR_SIZE = 22;
 const WORD_PADDING = { x: 14, y: 6 };
 const GRACE_MS = 350; // how long what is pointed at stays open after the pointer leaves it, so that the pointer can travel to the panel
+const DWELL_MS = 120; // how long the pointer has to stay on a picture, and be slowing down on it, before the ratings switch to it from another one:
+const SLOW = 0.45; // the car is on the way from the hands to the panel, and the pointer crosses it quickly (pixels per millisecond)
 
 const $ = (id) => document.getElementById(id);
 
@@ -62,12 +64,14 @@ export function initStage() {
     running: false,
     last: 0,
     release: null, // the timer that lets go of what is pointed at
+    switching: null, // the timer that switches to the picture the pointer has just come onto, from another one
     overPanel: false, // the pointer is on the ratings panel
     announced: false, // whether the address has been told that the ratings are kept open
     opened: false,
     wordOpened: false,
     error: null, // why the ratings could not be loaded, if they could not
     lastMove: 0,
+    speed: 0, // how fast the pointer is moving, in pixels per millisecond (smoothed)
   };
   const active = () => view.hover ?? view.focus ?? view.selected;
   const onStage = () => ['home', 'ratings'].includes(document.body.dataset.page);
@@ -271,8 +275,11 @@ export function initStage() {
     if (!isMouse(event)) return;
     const point = { x: event.clientX - view.origin.x, y: event.clientY - view.origin.y };
     if (!view.pointer) view.cursor = { ...point };
+    const now = performance.now();
+    if (view.pointer && now > view.lastMove)
+      view.speed = 0.5 * view.speed + 0.5 * (Math.hypot(point.x - view.pointer.x, point.y - view.pointer.y) / (now - view.lastMove));
     view.pointer = point;
-    view.lastMove = performance.now();
+    view.lastMove = now;
     stage.dataset.pointer = 'in';
     wake();
   });
@@ -289,22 +296,48 @@ export function initStage() {
     }
   });
 
-  /** What was pointed at closes after a moment, unless the pointer has gone to the panel or back (on a narrow screen the panel cannot be reached from here). */
+  /**
+   * What was pointed at closes after a moment, so that the pointer can travel to the panel and the ratings stay while it does. A preview of the
+   * picture other than the one kept open closes at once, and is not held by the panel: the panel shows what was kept open. (On a narrow screen the
+   * panel cannot be reached from the pictures, so nothing is held.)
+   */
   function letGoOfHover(subject) {
     clearTimeout(view.release);
+    const otherThanKept = view.selected && view.selected !== subject;
     const close = () => {
-      if (view.hover !== subject || view.overPanel) return;
+      if (view.hover !== subject || (view.overPanel && !otherThanKept)) return;
       view.hover = null;
       update();
     };
-    if (stage.dataset.layout === 'wide') view.release = setTimeout(close, GRACE_MS);
+    if (stage.dataset.layout === 'wide' && !otherThanKept) view.release = setTimeout(close, GRACE_MS);
     else close();
+  }
+  /** The pointer is on a picture (or its word): if the ratings show another picture, they switch only once the pointer stays a moment. */
+  function pointAt(subject) {
+    clearTimeout(view.release);
+    clearTimeout(view.switching);
+    const showing = active();
+    if (!showing || showing === subject) {
+      view.hover = subject;
+      update();
+      return;
+    }
+    const switchIfSlow = () => {
+      if (performance.now() - view.lastMove < 100 && view.speed > SLOW)
+        view.switching = setTimeout(switchIfSlow, 60); // still crossing
+      else {
+        view.hover = subject;
+        update();
+      }
+    };
+    view.switching = setTimeout(switchIfSlow, DWELL_MS);
   }
   parts.ledger.addEventListener('pointerenter', (event) => {
     if (!isMouse(event)) return;
     view.overPanel = true;
     stage.dataset.overPanel = 'true';
     clearTimeout(view.release);
+    if (view.hover && view.selected && view.hover !== view.selected) letGoOfHover(view.hover);
   });
   parts.ledger.addEventListener('pointerleave', (event) => {
     if (!isMouse(event)) return;
@@ -328,14 +361,12 @@ export function initStage() {
     const targets = [parts.hotspots[subject], parts.words[subject]];
     for (const target of targets) {
       target.addEventListener('pointerenter', (event) => {
-        if (!isMouse(event)) return;
-        clearTimeout(view.release);
-        view.hover = subject;
-        update();
+        if (isMouse(event)) pointAt(subject);
       });
       target.addEventListener('pointerleave', (event) => {
-        if (!isMouse(event) || view.hover !== subject) return;
-        letGoOfHover(subject);
+        if (!isMouse(event)) return;
+        clearTimeout(view.switching); // a switch that has not happened by now (the pointer only crossed) does not happen
+        if (view.hover) letGoOfHover(view.hover);
       });
       target.addEventListener('click', (event) => {
         pin(subject);

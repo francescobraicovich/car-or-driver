@@ -313,7 +313,7 @@ function drawList(rows, snap, metric, probability, st) {
   const showTeam = entity === 'driver' && width >= 560;
   // the name column is as wide as the longest name (up to a limit), so that the ratings are close to the names and the bars take the rest
   list.style.setProperty('--rows', String(rows.length));
-  list.style.setProperty('--name', `${Math.min(Math.max(...names.map((name) => name.length), 4), width >= 500 ? 22 : 18)}ch`);
+  list.style.setProperty('--name', `${Math.min(Math.max(...names.map((name) => name.length), 4), width >= 560 ? 22 : 18)}ch`);
   list.style.setProperty('--team', `${Math.min(Math.max(...teams.map((team) => team.length), 4), 16)}ch`);
   list.style.setProperty('--mean', share(mean));
   list.classList.toggle('with-team', showTeam);

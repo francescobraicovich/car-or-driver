@@ -331,6 +331,44 @@ const pressInPanel = async (id) => {
   await mouse('mouseReleased', ...centreOf(box));
   await sleep(600);
 };
+// From the hands to the panel the pointer passes over the car (it is in between): crossing it must not switch the ratings to the cars
+const glide = async (from, to, steps = 20) => {
+  for (let step = 1; step <= steps; step++) {
+    await mouse('mouseMoved', from[0] + ((to[0] - from[0]) * step) / steps, from[1] + ((to[1] - from[1]) * step) / steps);
+    await sleep(20);
+  }
+};
+const handsCentre = centreOf(hands);
+for (const kept of [false, true]) {
+  await mouse('mouseMoved', ...handsCentre);
+  await sleep(500);
+  if (kept) {
+    await click(...handsCentre);
+    await sleep(400);
+  }
+  const panelAt = await rectangleOf('stageLedger');
+  await glide(handsCentre, [panelAt.x + panelAt.width / 2, handsCentre[1]]);
+  await sleep(800);
+  check(
+    `going from the hands to the panel, across the car, keeps the drivers (${kept ? 'drivers kept open' : 'nothing kept open'})`,
+    (await isState(kept ? 'open' : 'peek', 'driver')) &&
+      /^Driver ratings/.test(await panelTitle()) &&
+      !(await evaluate("document.getElementById('ratingsLayerForm').disabled")),
+    JSON.stringify([await stageState(), await panelTitle()]),
+  );
+  if (!kept) {
+    // the first press in the panel keeps the drivers open, and the form toggle works from there
+    await pressInPanel('ratingsLayerForm');
+    check(
+      'pressing the form toggle with the mouse shows recent form in orange on the drivers',
+      (await isState('open', 'driver')) && (await evaluate("document.querySelectorAll('#ratingsList .bar-form').length")) >= 5,
+      JSON.stringify([await stageState(), await evaluate("document.querySelectorAll('#ratingsList .bar-form').length")]),
+    );
+    await pressInPanel('ratingsLayerForm');
+  }
+  await click(8, 300);
+  await sleep(500);
+}
 await mouse('mouseMoved', ...centreOf(car));
 await sleep(500);
 const scrubAgain = await rectangleOf('ratingsScrub');
@@ -465,12 +503,13 @@ check(
 await evaluate("document.getElementById('ratingsSd').click()");
 await sleep(200);
 const barBox = await rectangleOfSelector('#ratingsList .ledger-row .bar');
-const nameBox = await rectangleOfSelector('#ratingsList .ledger-row .name');
-const ratingBox = await rectangleOfSelector('#ratingsList .ledger-row .rating');
+const nameGap = await evaluate(
+  "(() => { const row = document.querySelector('#ratingsList .ledger-row'); const range = document.createRange(); range.selectNodeContents(row.querySelector('.name')); return row.querySelector('.rating').getBoundingClientRect().left - range.getBoundingClientRect().right; })()",
+);
 check(
-  'the bars are wide and the ratings are close to the names',
-  barBox.width >= 150 && ratingBox.x - (nameBox.x + nameBox.width) < 30,
-  JSON.stringify({ barBox, nameBox, ratingBox }),
+  'the bars are wide, and the rating is close to the end of the name (measured from the text, not the column)',
+  barBox.width >= 150 && nameGap < 45,
+  JSON.stringify({ barWidth: barBox.width, nameGap }),
 );
 const mean = await evaluate(
   "(() => { const list = document.getElementById('ratingsList'); const bar = list.querySelector('.bar'); const line = getComputedStyle(bar, '::after'); return [parseFloat(list.style.getPropertyValue('--mean')), line.width, line.content]; })()",
