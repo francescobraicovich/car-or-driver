@@ -1,5 +1,5 @@
 // The track on the front page: while the ratings are shown, the circuit of the weekend appears at the bottom right and a dot for each driver (or each team,
-// when the cars are shown) races round it at its average pace, thirty times faster than the real race, with a lap counter. The dot of the row under the
+// when the cars are shown) races round it at its average pace, ten times faster than the real race, with a lap counter. The dot of the row under the
 // pointer in the ratings turns red and larger. Where the paces and the laps come from, and how the race is worked out, is in track-geometry.js; the
 // circuit outlines (site/assets/tracks.json) and the laps of each season (data/race-laps/<year>.json) are fetched when they are first needed.
 // No storage; only the site's own files are requested. The race can be paused, and it starts paused under reduced motion.

@@ -2,8 +2,8 @@
 // is, and which lap the race is on, a given number of seconds after the start. Pure functions with no DOM, so that they are tested in Node
 // (tests/test-stage.mjs); the drawing and the clock are in track-view.js.
 
-/** The race runs this many times faster than the real one: a second on the screen is thirty seconds of race. */
-export const TIME_SCALE = 30;
+/** The race runs this many times faster than the real one: a second on the screen is ten seconds of race. */
+export const TIME_SCALE = 10;
 /** The cars start in grid order, behind the line: this many laps (about 8 metres on a 4 kilometre lap) for each place on the grid. */
 export const GRID_SPACING = 0.002;
 

@@ -189,8 +189,8 @@ assert.deepEqual(barScale([]), { low: 0, high: 0 });
     true,
   );
 
-  // the clock: thirty times the real one
-  assert.equal(TIME_SCALE, 30);
+  // the clock: ten times the real one
+  assert.equal(TIME_SCALE, 10);
   const field = [
     { id: 'a', average: 90, laps: 6, slot: 1, retired: false },
     { id: 'b', average: 100, laps: 6, slot: 2, retired: false },
@@ -203,18 +203,18 @@ assert.deepEqual(barScale([]), { low: 0, high: 0 });
     'at the start the cars are behind the line in grid order',
   );
   assert.equal(start.lap, 1);
-  const ten = raceState(field, 6, 10);
+  const thirty = raceState(field, 6, 30);
   assert.ok(
-    Math.abs(ten.progress[0] - ((10 * TIME_SCALE) / 90 - GRID_SPACING)) < 1e-9,
-    'ten seconds are three and a third laps at a 90 second lap',
+    Math.abs(thirty.progress[0] - ((30 * TIME_SCALE) / 90 - GRID_SPACING)) < 1e-9,
+    'thirty seconds on the screen are three and a third laps at a 90 second lap',
   );
-  assert.equal(ten.lap, 4, 'the leader is on his fourth lap');
+  assert.equal(thirty.lap, 4, 'the leader is on his fourth lap');
   assert.equal(raceState(field, 6, 100).progress[2], 2, 'a car that has retired stays where it stopped, after its laps');
   const over = raceState(field, 6, 1000);
   assert.ok(over.finished && over.lap === 6, 'the race is over when the first car completes the laps');
   assert.ok(
     Math.abs(over.end - ((6 + GRID_SPACING) * 90) / TIME_SCALE) < 1e-9,
-    'which is at 6 laps of 90 seconds (the grid place included), a thirtieth of that on the screen',
+    'which is at 6 laps of 90 seconds (the grid place included), a tenth of that on the screen',
   );
   assert.deepEqual(raceState(field, 6, 2000).progress, over.progress, 'and everyone is held there');
   assert.ok(

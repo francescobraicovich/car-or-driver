@@ -526,7 +526,7 @@ check(
     !card.tooltip,
   JSON.stringify(card),
 );
-// the track at the bottom right: the circuit of the weekend, a dot for each driver racing round it at thirty times the pace, and the lap counter
+// the track at the bottom right: the circuit of the weekend, a dot for each driver racing round it at ten times the pace, and the lap counter
 const trackState = () =>
   evaluate(
     `(() => { const dots = [...document.querySelectorAll('#stageTrackDots circle')]; const box = document.getElementById('stageTrack');
@@ -556,11 +556,12 @@ check(
   Math.hypot(raceTwo.first[0] - raceOne.first[0], raceTwo.first[1] - raceOne.first[1]) > 20,
   JSON.stringify([raceOne.first, raceTwo.first]),
 );
-await sleep(3500);
-check(
-  'and the lap counter advances (a lap is under three seconds at thirty times the pace)',
-  Number(/^lap (\d+)/.exec((await trackState()).lap)[1]) >= 2,
-);
+let lapNow = 1;
+for (let waited = 0; waited < 16000 && lapNow < 2; waited += 500) {
+  await sleep(500);
+  lapNow = Number(/^lap (\d+)/.exec((await trackState()).lap)[1]);
+}
+check('and the lap counter advances (a lap takes about nine seconds at ten times the pace)', lapNow >= 2, `lap ${lapNow}`);
 // the dot of the row under the pointer turns red and larger
 const thirdRow = await rectangleOfSelector('#ratingsList li:nth-child(3) .ledger-row');
 await mouse('mouseMoved', ...centreOf(thirdRow));
