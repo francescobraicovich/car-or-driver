@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { csv } from '../packages/core/src/csv.js';
 import { LICENCE_NOTICE } from '../tools/build-model.mjs';
-import { RACE_LAPS_FORMAT, buildRaceLaps, detectStops, driverCode, parseLapTimes } from '../tools/build-race-laps.mjs';
+import { RACE_LAPS_FORMAT, assignCodes, buildRaceLaps, detectStops, parseLapTimes } from '../tools/build-race-laps.mjs';
 import { REVERSED, SOURCE_FILES, TRACK_FORMAT, outline, pathLength } from '../tools/build-tracks.mjs';
 import { LEAST_DRIVING, STOP_PAUSE, buildReplay, progress, screenClock, timeAtProgress } from '../site/js/race-replay.js';
 import { uniformClock } from '../site/js/speed-profile.js';
@@ -45,20 +45,32 @@ for (const file of files) {
   assert.deepEqual(season.races, fresh[season.year], `${file} equals a fresh build`);
   const used = new Set(Object.values(season.races).flatMap((race) => race.entries.map((entry) => String(entry[0]))));
   assert.deepEqual(Object.keys(season.codes).sort(), [...used].sort(), `${file} has a code for every driver in it, and no other`);
-  for (const driver of drivers.filter((candidate) => used.has(String(candidate.driverId))))
-    assert.equal(season.codes[driver.driverId], driverCode(driver), `${file}: the code of ${driver.surname}`);
+  assert.deepEqual(
+    season.codes,
+    assignCodes(drivers.filter((candidate) => used.has(String(candidate.driverId)))),
+    `${file}: the codes are the ones the rule gives`,
+  );
+  assert.equal(
+    new Set(Object.values(season.codes)).size,
+    Object.keys(season.codes).length,
+    `${file}: no two drivers of a season have the same letters`,
+  );
   assert.ok(
     Object.values(season.codes).every((code) => /^[A-Z]{3}$/.test(code)),
     `${file}: every code is three capital letters`,
   );
   seasons.set(season.year, season);
 }
-assert.equal(
-  driverCode({ code: '\\N', surname: 'de la Rosa', driverRef: 'de_la_rosa' }),
-  'DEL',
-  'a driver with no code of his own is called by his surname',
+assert.deepEqual(
+  assignCodes([
+    { driverId: 1, code: 'PAN', surname: 'Panis', forename: 'Olivier' },
+    { driverId: 2, code: '\\N', surname: 'Pantano', forename: 'Giorgio' },
+    { driverId: 3, code: '\\N', surname: 'de la Rosa', forename: 'Pedro' },
+    { driverId: 4, code: 'HAM', surname: 'Hamilton', forename: 'Lewis' },
+  ]),
+  { 1: 'PAN', 2: 'GPA', 3: 'DEL', 4: 'HAM' },
+  'a driver with no code of his own is called by his surname, or, if that is taken, by his first initial and two letters of his surname',
 );
-assert.equal(driverCode({ code: 'HAM', surname: 'Hamilton' }), 'HAM');
 
 // 2. every race, and plausible
 const winners = new Map(results.filter((row) => row.positionOrder === '1').map((row) => [row.raceId, row]));
@@ -293,6 +305,12 @@ for (const [id, track] of Object.entries(tracks.tracks)) {
   assert.ok(slowest < 0.8 * quickest, `${name}: it has slow parts and fast ones`);
   const mean = track.speeds.length / track.speeds.reduce((sum, speed) => sum + 1 / speed, 0);
   assert.ok(mean > 150 && mean < 270, `${name}: a mean speed of ${mean.toFixed(0)} km/h`);
+  // the first point of an outline is the start line, which is on a straight: the speed near it is above the speed of the lap (three circuits have it by a slow corner)
+  const near = [...track.speeds.slice(0, 8), ...track.speeds.slice(-8)].reduce((sum, speed) => sum + speed, 0) / 16;
+  assert.ok(
+    near > (['monaco', 'vegas', 'spa'].includes(name) ? 0.9 : 1.1) * mean,
+    `${name}: the start line is on a fast part of the lap (${near.toFixed(0)} against ${mean.toFixed(0)} km/h)`,
+  );
   if (name in clockwise) {
     let area = 0; // the plan has y pointing down: a positive sum is clockwise
     const n = track.points.length / 2;

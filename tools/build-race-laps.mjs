@@ -136,14 +136,40 @@ export function buildRaceLaps({ races, results, lapTimes, statuses }) {
   return seasons;
 }
 
-/** What a driver is called on the timing table: the three letters of the source, or the first three letters of the surname. */
-export function driverCode(driver) {
-  return /^[A-Z]{3}$/.test(driver.code)
-    ? driver.code
-    : String(driver.surname || driver.driverRef || driver.driverId)
-        .replace(/[^A-Za-z]/g, '')
-        .slice(0, 3)
-        .toUpperCase();
+const letters = (text) =>
+  String(text ?? '')
+    .normalize('NFD')
+    .replace(/[^A-Za-z]/g, '')
+    .toUpperCase();
+
+/**
+ * What each driver of a list is called on the timing table, { driverId: 'HAM' }: the three letters of the source where it has them, and otherwise the first three
+ * letters of the surname, or, where that is already taken by another driver of the list (Panis is PAN, and so would Pantano be), the first letter of the first
+ * name and the first two of the surname, and so on. No two drivers of the list have the same letters.
+ */
+export function assignCodes(drivers) {
+  const real = (driver) => /^[A-Z]{3}$/.test(driver.code);
+  const taken = new Set(drivers.filter(real).map((driver) => driver.code));
+  const codes = {};
+  for (const driver of [...drivers].sort((a, b) => Number(a.driverId) - Number(b.driverId))) {
+    if (real(driver)) {
+      codes[driver.driverId] = driver.code;
+      continue;
+    }
+    const surname = letters(driver.surname || driver.driverRef || driver.driverId);
+    const forename = letters(driver.forename);
+    const options = [
+      surname.slice(0, 3),
+      forename.slice(0, 1) + surname.slice(0, 2),
+      surname.slice(0, 2) + forename.slice(0, 1),
+      surname.slice(0, 1) + surname.slice(-2),
+      ...[...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map((letter) => surname.slice(0, 2) + letter),
+    ].filter((code) => code.length === 3);
+    const code = options.find((option) => !taken.has(option));
+    taken.add(code);
+    codes[driver.driverId] = code;
+  }
+  return codes;
 }
 
 if (import.meta.url === new URL(process.argv[1], 'file://').href) {
@@ -164,9 +190,7 @@ if (import.meta.url === new URL(process.argv[1], 'file://').href) {
     const usedStatuses = new Set(
       Object.values(races).flatMap((race) => race.entries.filter((entry) => entry[3]).map((entry) => String(entry[4]))),
     );
-    const codes = Object.fromEntries(
-      drivers.filter((driver) => used.has(String(driver.driverId))).map((driver) => [driver.driverId, driverCode(driver)]),
-    );
+    const codes = assignCodes(drivers.filter((driver) => used.has(String(driver.driverId))));
     const causes = Object.fromEntries(
       statuses.filter((status) => usedStatuses.has(String(status.statusId))).map((status) => [status.statusId, status.status]),
     );
