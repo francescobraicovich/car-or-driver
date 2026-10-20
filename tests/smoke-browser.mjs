@@ -136,7 +136,7 @@ const press = async (key, code, keyCode, text) => {
 };
 const stageState = () => evaluate("(() => { const s = document.getElementById('stage'); return [s.dataset.state, s.dataset.subject]; })()");
 const isState = async (state, subject) => JSON.stringify(await stageState()) === JSON.stringify([state, subject]);
-const chartRows = () => evaluate("document.querySelectorAll('#ratingsChart .rankrow').length");
+const chartRows = () => evaluate("document.querySelectorAll('#ratingsList .ledger-row').length");
 const panelTitle = () => evaluate("document.getElementById('ratingsTitle').textContent");
 const centreOf = (r) => [r.x + r.width / 2, r.y + r.height / 2];
 // A short window, where the ratings are a sheet that can reach the pictures: pointing at the car must stay open (the sheet used to cover the spot,
@@ -204,10 +204,23 @@ check(
   !(await evaluate("document.getElementById('stageLedger').hidden")) && hoverRows >= 8 && /^Car ratings/.test(await panelTitle()),
   `${hoverRows} rows`,
 );
+const hint = await rectangleOfSelector('#stageFrame .stage-frame-hint');
+const boxNow = await rectangleOf('stageFrame');
 check(
-  'the panel says it is not yet kept open',
-  /click to keep this open/i.test(await evaluate("document.getElementById('stageLedgerPin').textContent")) &&
+  'under the blue box it says "click to open", and it moves with the box; the panel has no Close button yet',
+  (await opacityOf('.stage-frame-hint')) === '1' &&
+    /^click to open$/i.test(await evaluate("document.querySelector('.stage-frame-hint').textContent")) &&
+    hint.y >= boxNow.y + boxNow.height - 1 &&
+    Math.abs(hint.x - boxNow.x) < 6 &&
     (await evaluate("document.getElementById('stageLedgerClose').hidden")),
+  JSON.stringify({ hint, boxNow }),
+);
+check(
+  'the box on the word and the line to the picture are blue like the box on the picture',
+  (await evaluate("getComputedStyle(document.getElementById('stageWordFrame')).borderTopColor")) ===
+    (await evaluate("getComputedStyle(document.getElementById('stageFrame')).borderTopColor")) &&
+    (await evaluate("getComputedStyle(document.getElementById('stageConnectorLine')).stroke")) ===
+      (await evaluate("getComputedStyle(document.getElementById('stageFrame')).borderTopColor")),
 );
 check(
   'only the word CAR stays lit: the other words are dimmed',
@@ -246,7 +259,7 @@ await sleep(500);
 check(
   'clicking the hands keeps the list of drivers open',
   (await isState('open', 'driver')) &&
-    /kept open/i.test(await evaluate("document.getElementById('stageLedgerPin').textContent")) &&
+    (await opacityOf('.stage-frame-hint')) === '0' &&
     !(await evaluate("document.getElementById('stageLedgerClose').hidden")) &&
     (await evaluate("document.getElementById('hotspotDriver').getAttribute('aria-pressed')")) === 'true',
 );
@@ -333,7 +346,7 @@ check(
 check(
   'the rows of the chart are reached with the keyboard and each reads as a sentence',
   await evaluate(
-    "[...document.querySelectorAll('#ratingsChart .rankrow')].every((row) => row.getAttribute('tabindex') === '0' && /Rank \\d+/.test(row.getAttribute('aria-label')))",
+    "[...document.querySelectorAll('#ratingsList .ledger-row')].every((row) => row.getAttribute('tabindex') === '0' && /Rank \\d+/.test(row.getAttribute('aria-label')))",
   ),
 );
 await press('Escape', 'Escape', 27);
@@ -358,35 +371,55 @@ await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-m
 await mouse('mouseMoved', 8, 300);
 await sleep(900);
 
-// Ratings: ranked chart, Cars switch, timeline play
+// Ratings: the ranked list, error, recent form, Cars switch, timeline play
 await evaluate("location.hash = '#/ratings'");
 await sleep(1000);
-check('ratings chart draws a row per driver', (await evaluate("document.querySelectorAll('#ratingsChart .rankrow').length")) > 10);
-// uncertainty bars: a whisker (three lines) behind every dot, and the control can switch them off
-const barLines = () => evaluate("document.querySelectorAll('#ratingsChart .rankrow line[stroke-linecap=round]').length");
-check('uncertainty bars are drawn for the ratings', (await barLines()) >= 3 * 10);
-await evaluate("document.getElementById('ratingsSd').click()");
-await sleep(200);
-check(
-  'uncertainty bars can be switched off',
-  (await evaluate("document.getElementById('ratingsSd').getAttribute('aria-pressed')")) === 'false',
+check('ratings list has a row per driver', (await evaluate("document.querySelectorAll('#ratingsList .ledger-row').length")) > 10);
+const listFits = await evaluate(
+  "(() => { const list = document.getElementById('ratingsList'); const panel = document.getElementById('stageLedger'); return [list.scrollHeight <= list.clientHeight + 1, panel.scrollHeight <= panel.clientHeight + 1]; })()",
 );
-await evaluate("document.getElementById('ratingsSd').click()");
-await sleep(200);
-await evaluate("document.getElementById('ratingsLayerForm').click()");
+check(
+  'every row of the ratings is visible at once, without scrolling the list or the panel',
+  listFits.every(Boolean),
+  JSON.stringify(listFits),
+);
+const firstRow = await rectangleOfSelector('#ratingsList .ledger-row');
+await mouse('mouseMoved', ...centreOf(firstRow));
 await sleep(300);
 check(
-  'recent-form toggle adds a second dot per driver',
-  (await evaluate("document.querySelectorAll('#ratingsChart .rankrow circle').length")) >=
-    2 * (await evaluate("document.querySelectorAll('#ratingsChart .rankrow').length")),
+  'the row under the pointer inverts: light text on dark',
+  (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row')).backgroundColor")) === 'rgb(10, 11, 15)' &&
+    (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .name')).color")) === 'rgb(238, 240, 243)',
 );
-await evaluate("document.getElementById('ratingsLayerRating').click()");
+await mouse('mouseMoved', 8, 300);
+// the error is printed beside each rating, and the control can switch it off
+const deviations = () =>
+  evaluate(
+    "[...document.querySelectorAll('#ratingsList .ledger-row .deviation')].filter((cell) => /^±\\d+$/.test(cell.textContent)).length",
+  );
+check(
+  'the error is printed beside the ratings',
+  (await deviations()) >= 10 && (await evaluate("document.getElementById('ratingsList').classList.contains('with-sd')")),
+);
+await evaluate("document.getElementById('ratingsSd').click()");
 await sleep(200);
 check(
-  'rating can be hidden, form stays',
-  (await evaluate("document.getElementById('ratingsLayerForm').getAttribute('aria-pressed')")) === 'true',
+  'the error can be switched off',
+  (await evaluate("document.getElementById('ratingsSd').getAttribute('aria-pressed')")) === 'false' &&
+    !(await evaluate("document.getElementById('ratingsList').classList.contains('with-sd')")),
 );
-await evaluate("document.getElementById('ratingsLayerRating').click()");
+await evaluate("document.getElementById('ratingsSd').click()");
+await sleep(200);
+const ratingsOff = await evaluate("[...document.querySelectorAll('#ratingsList .ledger-row .rating')].map((cell) => cell.textContent)");
+await evaluate("document.getElementById('ratingsLayerForm').click()");
+await sleep(300);
+const ratingsOn = await evaluate("[...document.querySelectorAll('#ratingsList .ledger-row .rating')].map((cell) => cell.textContent)");
+check(
+  'the recent-form toggle shows the ratings with recent form',
+  (await evaluate("document.getElementById('ratingsLayerForm').getAttribute('aria-pressed')")) === 'true' &&
+    ratingsOn.length === ratingsOff.length &&
+    JSON.stringify(ratingsOn) !== JSON.stringify(ratingsOff),
+);
 await evaluate("document.getElementById('ratingsLayerForm').click()");
 await sleep(200);
 await evaluate("document.getElementById('ratingsCars').click()");
@@ -451,9 +484,9 @@ await evaluate("document.getElementById('historyDrivers').click()");
 await evaluate("location.hash = '#/ratings'");
 await sleep(800);
 const pickRow = (position) =>
-  evaluate(`document.querySelectorAll('#ratingsChart .rankrow')[${position}].dispatchEvent(new MouseEvent('click', { bubbles: true }))`);
+  evaluate(`document.querySelectorAll('#ratingsList .ledger-row')[${position}].dispatchEvent(new MouseEvent('click', { bubbles: true }))`);
 const pickedNames = await evaluate(
-  "[...document.querySelectorAll('#ratingsChart .rankrow')].slice(0, 2).map((row) => row.querySelector('text:nth-of-type(2)').textContent)",
+  "[...document.querySelectorAll('#ratingsList .ledger-row')].slice(0, 2).map((row) => row.querySelector('.name').textContent)",
 );
 await pickRow(0);
 await pickRow(1);

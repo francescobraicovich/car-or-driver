@@ -28,7 +28,6 @@ export function initStage() {
     wordFrame: $('stageWordFrame'),
     connector: { line: $('stageConnectorLine'), start: $('stageConnectorStart'), end: $('stageConnectorEnd') },
     ledger: $('stageLedger'),
-    ledgerPin: $('stageLedgerPin'),
     ledgerClose: $('stageLedgerClose'),
     tagline: stage.querySelector('.stage-tagline'),
     bottomBar: stage.querySelector('.stage-bottom'),
@@ -139,13 +138,7 @@ export function initStage() {
     const subject = active();
     parts.ledger.hidden = !subject;
     parts.ledgerClose.hidden = !view.selected;
-    if (!subject) return;
-    setEntity(subject);
-    parts.ledgerPin.textContent = view.error
-      ? `Could not load the ratings: ${view.error}. Reload the page to try again.`
-      : view.selected
-        ? 'Kept open'
-        : 'Click to keep this open';
+    if (subject) setEntity(subject);
   }
 
   // ── state ───────────────────────────────────────────────────────────────

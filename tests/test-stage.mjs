@@ -17,6 +17,7 @@ import {
   titleLayout,
 } from '../site/js/stage-geometry.js';
 import { shake, smoothNoise, sway } from '../site/js/stage-noise.js';
+import { bar, barScale } from '../site/js/ratings-bars.js';
 
 const VIEWPORTS = [
   [375, 812],
@@ -122,6 +123,19 @@ for (const seed of [0, 11, 12, 21, 100]) {
 }
 assert.notEqual(smoothNoise(2.5, 1), smoothNoise(2.5, 2), 'different seeds move differently');
 assert.ok(Math.abs(shake(0.5, 3)) <= 1 && Math.abs(sway(0.5, 3)) <= 1);
+
+// ── the bars beside the ratings ────────────────────────
+for (const width of [9, 14]) {
+  assert.equal([...bar(1100, 1000, 1100, width)].length, width, 'a bar is as wide as it is asked to be');
+  assert.equal(bar(1100, 1000, 1100, width), '█'.repeat(width), 'the highest rating fills the bar');
+  assert.equal(bar(1000, 1000, 1100, width), '█' + '░'.repeat(width - 1), 'the lowest end of the scale still gets one block');
+  assert.equal(bar(NaN, 1000, 1100, width), '░'.repeat(width), 'no rating, no block');
+}
+assert.ok(bar(1050, 1000, 1100, 14).split('█').length < bar(1090, 1000, 1100, 14).split('█').length, 'a higher rating has a longer bar');
+const scale = barScale([1101, 1081, NaN, 879]);
+assert.equal(scale.high, 1101);
+assert.ok(scale.low < 879 && bar(879, scale.low, scale.high, 14).includes('█'), 'the lowest rating shown still has a bar');
+assert.deepEqual(barScale([]), { low: 0, high: 0 });
 
 // ── the title and the line from a word to its picture ──
 // A stand-in for the real title (the page measures it in the browser): two lines, the first about 5.4 letters wide, the second about 4.4, centred.
@@ -319,6 +333,18 @@ for (const [width, height] of VIEWPORTS) {
       'scrim',
     );
   }
+  // "click to open" under each box, in the blue of the box, on the black and white drawing
+  for (const name of Object.keys(SUBJECTS)) {
+    const box = subjectRectangle(geometry, name);
+    check(
+      `${width}x${height} label under the ${name} box`,
+      'mono',
+      grey,
+      geometry,
+      { x: box.x, y: box.y + box.height + 4, width: 150, height: 22 },
+      [['click to open', 4.5, 'frame']],
+    );
+  }
   // the panel (a column beside the picture on a wide screen, a sheet under it on a narrow one) only exists on the black and white drawing; the region
   // is the largest it can cover: down to 78 above the bottom of the screen, and up to the top of the column, or to the top of a sheet kept open (78% of
   // the height, covering the pictures, which is why its fill is denser)
@@ -341,8 +367,7 @@ for (const [width, height] of VIEWPORTS) {
       ['gain', 4.5, 'pos'],
       ['loss', 4.5, 'neg'],
       ['link and selection', 4.5, 'accent-text'],
-      ['rating mark', 3, 's1'], // marks are not text: 3 to 1 is what they need
-      ['recent-form mark', 3, 's2'],
+      ['bars', 4.5, 'frame'], // the bars are block characters in the blue of the box
     ],
     'panel-plate',
   );

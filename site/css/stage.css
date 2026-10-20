@@ -317,8 +317,11 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   left: 0;
   top: 0;
   box-sizing: border-box;
-  border: 1.5px solid var(--ink);
+  border: 2px solid var(--frame);
   background: var(--word-fill);
+  box-shadow:
+    0 0 0 1px #fff,
+    inset 0 0 0 1px #fff;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s;
@@ -339,14 +342,14 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 }
 .stage-connector polyline {
   fill: none;
-  stroke: var(--ink);
-  stroke-width: 1.5;
+  stroke: var(--frame);
+  stroke-width: 2;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   transition: stroke-dashoffset 0.4s ease-out;
 }
 .stage-connector rect {
-  fill: var(--ink);
+  fill: var(--frame);
   opacity: 0;
   transition: opacity 0.2s 0.15s;
 }
@@ -399,6 +402,25 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 }
 .stage[data-subject='car'] .stage-frame,
 .stage[data-subject='driver'] .stage-frame {
+  opacity: 1;
+}
+/* what to do, under the box, moving with it; once the ratings are kept open there is nothing left to say */
+.stage-frame-hint {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  color: var(--frame);
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-shadow: 0 0 6px #fff;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.stage[data-state='peek'] .stage-frame-hint {
   opacity: 1;
 }
 .stage-cursor {
@@ -458,8 +480,6 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   --on-accent: #fff;
   --pos: #04431f;
   --neg: #7d0c11;
-  --s1: #1450b0;
-  --s2: #8f3206;
   --panel-plate: rgb(236 238 242 / 0.26);
   position: absolute;
   z-index: 5;
@@ -495,7 +515,7 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   left: var(--panel-left);
   width: var(--panel-width);
   top: 68px;
-  bottom: calc(var(--bottom-space, 58px) + 8px);
+  max-height: calc(100% - 68px - var(--bottom-space, 58px) - 8px);
 }
 .stage[data-layout='sheet'] .ledger {
   --panel-plate: rgb(238 240 244 / 0.84); /* denser than the column: kept open, the sheet can cover the pictures */
@@ -510,107 +530,240 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   max-height: min(60vh, max(var(--ledger-room, 60vh), 220px));
   pointer-events: none;
 }
-.ledger-bar {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 16px 6px;
-  background-color: rgb(238 240 244 / 0.98);
-  font-family: var(--display);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
+/* the Close button sits in the corner of the header, and is there only while the ratings are kept open */
 .ledger-close {
-  min-height: 24px;
-  padding: 1px 10px;
-  border-color: var(--border);
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  z-index: 3;
+  width: 22px;
+  min-height: 22px;
+  padding: 0;
+  border-color: transparent;
   border-radius: 3px;
-  background: rgb(255 255 255 / 0.4);
-  font-size: 11px;
+  background: transparent;
+  font-size: 16px;
+  line-height: 1;
 }
-/* the whole panel scrolls; the bar with the Close button stays at the top, and the weekend slider and the selection stay at the bottom */
 #ratingsHost {
-  flex: none;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: 0;
 }
 .ledger .frame {
   display: flex;
+  flex: 0 1 auto;
   flex-direction: column;
+  min-height: 0;
   border: 0;
   border-radius: 0;
   background: none;
   box-shadow: none;
 }
+/* Drivers and Cars, the season and the Grand Prix on one line (the title is for screen readers: the buttons say it) */
 .ledger .frame-head {
-  padding: 8px 16px 2px;
-}
-.ledger .frame-title {
-  font-family: var(--display);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1.3;
-}
-.ledger .frame-sub {
-  margin-top: 4px;
-  font-size: 11.5px;
-  line-height: 1.45;
-}
-.ledger .frame-tools {
-  gap: 6px 10px;
-  padding: 8px 16px 0;
-}
-.ledger .frame-tools .spacer {
-  margin-left: 0;
-}
-.ledger .frame-tools > .field {
-  flex: 1 1 140px;
-  font-size: 11px;
-}
-.ledger .frame-tools .timeline-pickers {
-  flex: 1 1 100%;
+  display: flex;
+  flex: none;
   flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 34px 2px 12px;
+}
+.ledger .timeline-pickers {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: nowrap;
+  min-width: 0;
+  margin-left: auto;
+  gap: 4px;
 }
 .ledger .timeline-pickers .field {
-  flex: 1 1 0;
-  font-size: 11px;
+  min-width: 0;
 }
 .ledger .timeline-pickers .field:first-child {
-  flex: 0 0 96px;
+  flex: none; /* the season always shows its year; the Grand Prix gives way */
 }
-.ledger select {
-  min-height: 28px;
-  padding: 2px 22px 2px 8px;
+.ledger .timeline-pickers select {
+  max-width: 150px;
+  text-overflow: ellipsis;
 }
-.ledger .frame-body {
-  padding: 6px 8px 0;
+/* the controls: plain, small, and quiet until they are on */
+.ledger .frame-tools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2px 6px;
+  padding: 2px 12px 4px;
+}
+.ledger .frame-tools .field {
+  min-width: 0;
 }
 .ledger input,
 .ledger select,
 .ledger button {
-  border-color: var(--border);
-  border-radius: 4px;
-  background: rgb(255 255 255 / 0.4);
-  font-size: 12px;
+  border-color: transparent;
+  border-radius: 3px;
+  background: transparent;
+  font-size: 11px;
 }
 .ledger button:hover:not(:disabled),
 .ledger select:hover:not(:disabled) {
-  border-color: var(--ink-2);
-  background: rgb(255 255 255 / 0.62);
+  border-color: var(--ink-3);
+  background: rgb(255 255 255 / 0.5);
 }
-.ledger .play {
-  border-color: var(--ink);
+.ledger .field {
+  gap: 0;
+  font-size: 11px;
+}
+.ledger select {
+  min-height: 22px;
+  padding: 0 18px 0 6px;
+  background: rgb(255 255 255 / 0.3);
+}
+.ledger .segmented {
+  gap: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.ledger .segmented button,
+.ledger .toggle {
+  min-height: 22px;
+  padding: 0 7px;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+.ledger .segmented button[aria-pressed='true'],
+.ledger .toggle[aria-pressed='true'] {
   background: var(--ink);
   color: var(--surface);
 }
-.ledger .play:hover:not(:disabled) {
-  border-color: var(--ink-2);
+.ledger .segmented button[aria-pressed='true']:hover:not(:disabled),
+.ledger .toggle[aria-pressed='true']:hover:not(:disabled) {
+  border-color: var(--ink);
   background: var(--ink-2);
+}
+.ledger .toggle:disabled {
+  opacity: 0.4;
+}
+#ratingsLayerForm {
+  margin-left: auto;
+}
+
+/* the ratings: rank, name, rating, error, a bar of blocks, and the change; every row visible, and the one under the pointer inverted */
+.ratings-list {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: calc(var(--rows, 20) * 15px);
+  margin: 0;
+  padding: 0 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  list-style: none;
+}
+.ratings-list li {
+  display: flex;
+  flex: 0 1 26px;
+  min-height: 15px;
+}
+.ledger-row {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 3ch minmax(0, 1fr) 4.5ch calc(var(--bar, 14) * 1ch) 6ch;
+  align-items: center;
+  gap: 0 1.2ch;
+  padding: 0 6px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ratings-list.with-sd .ledger-row {
+  grid-template-columns: 3ch minmax(0, 1fr) 4.5ch 4.5ch calc(var(--bar, 14) * 1ch) 6ch;
+}
+.ratings-list.with-team .ledger-row {
+  grid-template-columns: 3ch minmax(0, 1.4fr) minmax(0, 1fr) 4.5ch calc(var(--bar, 14) * 1ch) 6ch;
+}
+.ratings-list.with-team.with-sd .ledger-row {
+  grid-template-columns: 3ch minmax(0, 1.4fr) minmax(0, 1fr) 4.5ch 4.5ch calc(var(--bar, 14) * 1ch) 6ch;
+}
+.ledger-row > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ledger-row .team,
+.ledger-row .deviation {
+  display: none;
+}
+.ratings-list.with-team .ledger-row .team,
+.ratings-list.with-sd .ledger-row .deviation {
+  display: block;
+}
+.ledger-row .rank,
+.ledger-row .rating,
+.ledger-row .deviation {
+  text-align: right;
+}
+.ledger-row .rank,
+.ledger-row .team,
+.ledger-row .deviation {
+  color: var(--ink-3);
+}
+.ledger-row .rating {
+  font-weight: 800;
+}
+.ledger-row .bar {
+  color: var(--frame);
+  letter-spacing: -0.02em;
+}
+.ledger-row.selected {
+  background: var(--accent-wash);
+  box-shadow: inset 2px 0 0 var(--accent);
+  font-weight: 700;
+}
+.ledger .ledger-row:hover,
+.ledger .ledger-row:focus-visible {
+  background: var(--ink);
+  color: var(--surface);
+  outline: none;
+}
+.ledger .ledger-row:hover > span,
+.ledger .ledger-row:focus-visible > span,
+.ledger .ledger-row:hover .change,
+.ledger .ledger-row:focus-visible .change {
+  color: var(--surface);
+}
+/* what is selected for comparison, on one line */
+.ledger .selection-bar {
+  position: static; /* the sticky bar of the old Ratings page sat above the phone tab bar */
+  display: flex;
+  flex: none;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 8px 0;
+  padding: 3px 4px 3px 10px;
+  border-radius: 4px;
+  background: rgb(238 240 244 / 0.9);
+  box-shadow: none;
+  font-size: 11px;
+}
+.ledger .selection-names {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ledger .selection-actions {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+.ledger .selection-bar button {
+  min-height: 22px;
+  padding: 0 8px;
 }
 .ledger .btn-primary {
   border-color: var(--accent);
@@ -621,81 +774,81 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   border-color: var(--ink);
   background: var(--ink);
 }
-.ledger .btn-quiet {
-  border-color: transparent;
-  background: transparent;
+/* the weekend: play, a thin slider and the date, on one line (if the screen is too short for every row, the panel scrolls) */
+.ledger .frame-dock {
+  flex: none;
+  margin-top: 4px;
+  padding: 3px 12px 4px;
 }
-.ledger .segmented {
-  border-radius: 4px;
-  background: rgb(255 255 255 / 0.28);
+.ledger .timeline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
 }
-.ledger .segmented button {
-  min-height: 26px;
-  padding: 2px 8px;
-  border-radius: 3px;
-  background: transparent;
-  font-size: 11.5px;
-}
-.ledger .segmented button[aria-pressed='true'] {
+.ledger .play {
+  width: 22px;
+  height: 22px;
+  min-height: 22px;
+  border-color: var(--ink);
   background: var(--ink);
   color: var(--surface);
 }
-.ledger .frame-dock {
-  position: sticky;
-  bottom: 0;
-  z-index: 2;
-  margin-top: 6px;
-  border-top: 1px solid var(--border);
-  background-color: rgb(238 240 244 / 0.98);
+.ledger .play:hover:not(:disabled) {
+  border-color: var(--ink-2);
+  background: var(--ink-2);
 }
-.ledger .timeline {
-  padding: 6px 16px 0;
+.ledger .play svg {
+  width: 9px;
+  height: 9px;
 }
-.ledger .frame-tools .timeline-pickers {
-  display: flex;
-  gap: 8px 10px;
+.ledger .scrub {
+  flex: 1 1 auto;
+  min-width: 0;
   padding: 0;
 }
-.ledger .selection-bar {
-  position: static; /* the dock holds it at the bottom; the sticky bar of the old Ratings page sat above the phone tab bar */
-  gap: 6px 10px;
-  margin: 4px 10px 6px;
-  padding: 7px 10px;
-  font-size: 12px;
+.ledger .scrub input[type='range']::-webkit-slider-runnable-track {
+  height: 3px;
 }
-.ledger .selection-bar button {
-  min-height: 26px;
-  padding: 2px 10px;
-}
-.ledger .table-wrap {
-  padding: 6px 8px 0;
-}
-.ledger th,
-.ledger td {
-  padding: 6px 5px;
-  font-size: 12px;
-}
-.ledger tbody th {
-  background: transparent;
-  font-size: 12px;
-}
-/* a narrow panel has no room for the team in the table (it is in the chart's description of each row) */
-@container (max-width: 560px) {
-  .ledger .table-wrap td.left,
-  .ledger .table-wrap thead th.left {
-    display: none;
-  }
-}
-.ledger .frame-foot {
+.ledger .scrub-now {
+  position: static;
   flex: none;
-  padding: 8px 16px 12px;
-  margin-top: 6px;
+  padding: 0;
+  background: none;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 650;
+  transform: none;
+}
+/* the foot: the downloads, the licence and the notes on one line */
+.ledger .frame-foot {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 6px;
+  margin: 0;
+  padding: 0 12px 7px;
+  border-top: 0;
+}
+.ledger .frame-foot button {
+  min-height: 20px;
+  padding: 0 2px;
+  font-size: 10.5px;
 }
 .ledger .notes {
-  font-size: 11px;
+  font-size: 10.5px;
 }
-.ledger-pin {
-  font-weight: 700;
+.ledger .notes-more {
+  font-size: 10.5px;
+}
+.ledger .notes-more summary {
+  cursor: pointer;
+  color: var(--ink-3);
+  font-size: 10.5px;
+}
+.ledger .notes-more .notes {
+  margin-top: 4px;
 }
 
 @media (hover: none) {

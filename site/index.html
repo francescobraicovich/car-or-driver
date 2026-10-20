@@ -37,6 +37,7 @@
     <link rel="modulepreload" href="js/state.js" />
     <link rel="modulepreload" href="js/utils.js" />
     <link rel="modulepreload" href="js/ratings-view.js" />
+    <link rel="modulepreload" href="js/ratings-bars.js" />
     <link rel="modulepreload" href="../packages/core/src/math.js" />
     <link rel="modulepreload" href="js/export.js" />
     <link rel="modulepreload" href="js/charts.js" />
@@ -198,14 +199,11 @@
             aria-pressed="false"
           ></button>
 
-          <div class="stage-frame" id="stageFrame" aria-hidden="true"></div>
+          <div class="stage-frame" id="stageFrame" aria-hidden="true"><span class="stage-frame-hint">click to open</span></div>
           <div class="stage-cursor" id="stageCursor" aria-hidden="true"></div>
 
           <section class="ledger" id="stageLedger" aria-label="Ratings" hidden>
-            <div class="ledger-bar">
-              <span class="ledger-pin" id="stageLedgerPin"></span>
-              <button type="button" class="ledger-close" id="stageLedgerClose">Close</button>
-            </div>
+            <button type="button" class="ledger-close" id="stageLedgerClose" aria-label="Close the ratings" hidden>×</button>
             <div id="ratingsHost" hidden></div>
           </section>
 
