@@ -1,8 +1,9 @@
-// Builds the ratings once and writes them as the two files the site downloads:
+// Builds the ratings once and writes them as the files the site publishes:
+//   data/model-latest.json the first screen: the latest weekend's ratings and the small lists around them
 //   data/model.json        every weekend's ratings and the forecast state (what every page reads); the histories are rebuilt from the weekends on load,
 //                          and the names and months of birth of the drivers rated (driverProfiles) for the card on a row of the ratings
-//   data/export-rows.json  the rows of the CSV download, fetched only when a visitor asks for it
-// Both carry a fingerprint of the data and the model source; tests/test-model-file.mjs fails if either changed since. Run after refreshing data/
+//   data/export-rows.json  the rows of every weekend, as a table; the site no longer loads it (nothing links to it), it is published for anyone who wants it
+// All carry a fingerprint of the data and the model source; tests/test-model-file.mjs fails if any changed since. Run after refreshing data/
 // or changing packages/core:
 //   node tools/build-model.mjs
 import { writeFile } from 'node:fs/promises';

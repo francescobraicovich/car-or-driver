@@ -49,7 +49,7 @@ The server serves the repository root, so the page can import `packages/core/` a
 
 ## How the site gets its numbers
 
-The ratings are **computed once, when the site is published**, not in every visitor's browser. `node tools/build-model.mjs` builds the model from the CSV tables in `data/` and writes `data/model-latest.json` (the first screen), `data/model.json` (every weekend) and `data/export-rows.json` (the CSV download). The site downloads those files. Each records a fingerprint of the data and of `packages/core/src`; `tests/test-model-file.mjs` fails if they are out of date, and it also checks that what a visitor sees equals a fresh build. After changing the data or the model, run `node tools/build-model.mjs` and commit the result.
+The ratings are **computed once, when the site is published**, not in every visitor's browser. `node tools/build-model.mjs` builds the model from the CSV tables in `data/` and writes `data/model-latest.json` (the first screen), `data/model.json` (every weekend) and `data/export-rows.json` (the rows of every weekend, for anyone who wants them as a table; the site itself does not load it). The site downloads the other two. Each records a fingerprint of the data and of `packages/core/src`; `tests/test-model-file.mjs` fails if they are out of date, and it also checks that what a visitor sees equals a fresh build. After changing the data or the model, run `node tools/build-model.mjs` and commit the result.
 
 The first screen needs about 0.06 MB; see [docs/deployment.md](docs/deployment.md) for the measurements.
 
