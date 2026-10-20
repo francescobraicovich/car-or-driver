@@ -57,7 +57,15 @@ if (/<script(?![^>]*\bsrc=)(?![^>]*ld\+json)[^>]*>/i.test(html)) problems.push('
 const files = new Set(
   [...html.matchAll(/\b(?:src|href)="([^"#]+)"/g)].map((m) => m[1]).filter((address) => !/^(?:[a-z]+:|\/\/|#)/i.test(address)),
 );
-for (const extra of ['../data/model-latest.json', '../data/model.json', '../data/export-rows.json', './vendor/NOTICE.txt'])
+for (const extra of [
+  '../data/model-latest.json',
+  '../data/model.json',
+  '../data/export-rows.json',
+  '../data/race-laps/2026.json',
+  './assets/tracks.json',
+  './assets/tracks-licence.txt',
+  './vendor/NOTICE.txt',
+])
   files.add(extra);
 for (const address of files) {
   const url = new URL(address, home);

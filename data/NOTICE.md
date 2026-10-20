@@ -4,6 +4,8 @@
 
 **The files derived from them** (`model.json`, `model-latest.json`, `export-rows.json`, and `site/js/insights-data.js`) are shared under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). Each `.json` file carries the notice in its `licence` field.
 
+**The laps of each race** (`race-laps/<year>.json`) are derived from the same tables and are shared under the same licence. **The circuit outlines** (`site/assets/tracks.json`) come from [bacinger/f1-circuits](https://github.com/bacinger/f1-circuits) (MIT licence, Copyright (c) 2019-2025 Tomislav Bacinger; the source files and licence are in `data/source/f1-circuits/`) and keep that licence, not the one above.
+
 Credit to use: "Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData; used under CC BY-NC-SA 4.0. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car)."
 
 **Consequence for the project:** nothing built on these files may be commercial (advertising, affiliate links, paid access, sale) unless the data owners give written permission or the data is replaced by data that allows it. `docs/compliance.md` explains the position.

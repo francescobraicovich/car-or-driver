@@ -122,7 +122,7 @@ export const ABOUT_HTML = String.raw`
 
 <h3>Licence of what this site publishes</h3>
 <p>
-  The ratings, the findings, the charts and the data files the site publishes (<code>model-latest.json</code>, <code>model.json</code>, <code>export-rows.json</code>) are derived from the data above, so they are shared under the same terms: <a href="{{dataLicenceUrl}}" rel="noopener noreferrer">{{dataLicenceName}}</a>. In short, you may copy, share and adapt them if you give credit (the credit above, and a link to this site), say what you changed, do not use them commercially, and share what you make from them under the same licence.
+  The ratings, the findings, the charts and the data files the site publishes (<code>model-latest.json</code>, <code>model.json</code>, <code>export-rows.json</code> and the files of laps in <code>race-laps/</code>) are derived from the data above, so they are shared under the same terms: <a href="{{dataLicenceUrl}}" rel="noopener noreferrer">{{dataLicenceName}}</a>. In short, you may copy, share and adapt them if you give credit (the credit above, and a link to this site), say what you changed, do not use them commercially, and share what you make from them under the same licence.
 </p>
 <p>The text and the charts are shared under the same licence. The program code is open source under the MIT licence: <a href="{{repositoryUrl}}" rel="noopener noreferrer">the source code is on GitHub</a>. The third-party components listed below keep their own licences.</p>
 <p>To cite this site: {{operatorName}} (2026), <i>{{name}}: ratings of Formula 1 drivers and cars since 2000</i>, <span id="citationAddress"></span>.</p>
@@ -132,6 +132,7 @@ export const ABOUT_HTML = String.raw`
 <ul>
   <li><b>Inter</b>, <b>Space Grotesk</b> and <b>Lexend Giga</b> (typefaces): SIL Open Font License 1.1. <a href="./vendor/licenses/inter-OFL-1.1.txt">Inter licence</a>, <a href="./vendor/licenses/space-grotesk-OFL-1.1.txt">Space Grotesk licence</a>, <a href="./vendor/licenses/lexend-giga-OFL-1.1.txt">Lexend Giga licence</a>.</li>
   <li><b>KaTeX</b> 0.16.9 (formulas): MIT licence. <a href="./vendor/licenses/katex-MIT.txt">Licence</a>.</li>
+  <li><b>Circuit outlines</b> (the track drawn on the front page): from <a href="https://github.com/bacinger/f1-circuits" rel="noopener noreferrer">bacinger/f1-circuits</a> by Tomislav Bacinger, MIT licence, Copyright (c) 2019-2025 Tomislav Bacinger. I projected and scaled them, and reversed the direction of two (Paul Ricard and Marina Bay) to match how they are raced. They are not official, and not approved or endorsed by Formula One Licensing B.V. <a href="./assets/tracks-licence.txt">Licence</a>.</li>
   <li><a href="./vendor/NOTICE.txt">Where each file came from</a>.</li>
 </ul>
 

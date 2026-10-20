@@ -105,6 +105,7 @@ export function initStage() {
     const fades = sceneFades(view.geometry, box.width, box.height);
     for (const side of Object.keys(fades)) stage.style.setProperty(`--fade-${side}`, `${fades[side]}px`);
     stage.dataset.layout = wide ? 'wide' : 'sheet';
+    announcePanel();
     const column = panelColumn(box.width);
     if (column) {
       stage.style.setProperty('--panel-left', `${column.left}px`);
@@ -127,6 +128,8 @@ export function initStage() {
       ),
     );
     stage.style.setProperty('--ledger-room', `${Math.max(0, box.height - parts.bottomBar.offsetHeight - 8 - lowest - 12)}px`);
+    // the track is drawn at the bottom right, under the car and the hands (and the label under their box): this much height
+    stage.style.setProperty('--track-room', `${Math.max(0, box.height - parts.bottomBar.offsetHeight - 16 - (lowest + 44))}px`);
     view.layout = titleLayout(view.geometry, box.width, box.height);
     stage.style.setProperty('--title-size', `${view.layout.size}px`);
     stage.style.setProperty('--title-top', `${view.layout.top}px`);
@@ -143,6 +146,16 @@ export function initStage() {
     parts.ledger.hidden = !subject;
     parts.ledgerClose.hidden = !view.selected;
     if (subject) setEntity(subject);
+    announcePanel();
+  }
+
+  /** The track on the page (track-view.js) is shown while the panel is, on a screen with room for it beside the panel. */
+  let announced = '';
+  function announcePanel() {
+    const detail = { open: Boolean(active()), wide: stage.dataset.layout === 'wide' };
+    if (JSON.stringify(detail) === announced) return;
+    announced = JSON.stringify(detail);
+    window.dispatchEvent(new CustomEvent('f1:panel-state', { detail }));
   }
 
   // ── state ───────────────────────────────────────────────────────────────

@@ -125,12 +125,36 @@ for (const file of ['data/model.json', 'data/model-latest.json', 'data/export-ro
   assert.equal(licence?.licence, 'CC BY-NC-SA 4.0', `${file} carries the licence`);
   assert.ok(licence.credit.includes('Jolpica') && licence.credit.includes('TracingInsights'), `${file} carries the credit`);
 }
+// the laps of each season carry the same licence and credit, and the outlines carry theirs: the credit, and the MIT licence text of their source
+for (const file of (await readdir('data/race-laps')).filter((name) => name.endsWith('.json'))) {
+  const { licence } = JSON.parse(await read(`data/race-laps/${file}`));
+  assert.equal(licence?.licence, 'CC BY-NC-SA 4.0', `data/race-laps/${file} carries the licence`);
+  assert.ok(licence.credit.includes('Jolpica') && licence.credit.includes('TracingInsights'), `data/race-laps/${file} carries the credit`);
+}
+const tracksCredit = JSON.parse(await read('site/assets/tracks.json')).credit;
+assert.ok(
+  /MIT/.test(tracksCredit) && /Bacinger/.test(tracksCredit) && /not approved or endorsed/i.test(tracksCredit),
+  'the outlines carry their credit and the disclaimer',
+);
+const tracksLicence = await read('site/assets/tracks-licence.txt');
+assert.ok(
+  /Copyright \(c\) 2019-2025 Tomislav Bacinger/.test(tracksLicence) && /Permission is hereby granted/.test(tracksLicence),
+  'the MIT licence text of the outlines is published with them',
+);
+assert.equal(tracksLicence, await read('data/source/f1-circuits/LICENSE.md'), "and is the source's own");
+assert.ok((await read('site/js/legal-content.js')).includes('bacinger/f1-circuits'), 'the About page credits the source of the outlines');
 try {
   const run = spawnSync(process.execPath, ['tools/build-pages.mjs', 'https://example.test/'], { encoding: 'utf8' });
   assert.equal(run.status, 0, run.stderr);
   const published = (await walk('dist')).map((file) => relative('dist', file));
   assert.ok(!published.some((file) => file.endsWith('.csv')), 'the source tables are not published');
   assert.ok(published.includes('_headers'), 'the headers file is published');
+  for (const file of ['site/assets/tracks.json', 'site/assets/tracks-licence.txt', 'data/race-laps/2026.json'])
+    assert.ok(published.includes(file), `${file} is published`);
+  assert.ok(
+    !published.some((file) => file.startsWith('data/source/')),
+    'the source files of the outlines are not published (their outlines are, in tracks.json)',
+  );
   assert.ok(
     !published.some((file) => file.startsWith('docs/') || file.startsWith('research/') || file.startsWith('tests/')),
     'no internal documents are published',

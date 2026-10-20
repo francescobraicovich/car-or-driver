@@ -49,6 +49,8 @@
     <link rel="modulepreload" href="js/stage-view.js" />
     <link rel="modulepreload" href="js/stage-geometry.js" />
     <link rel="modulepreload" href="js/stage-noise.js" />
+    <link rel="modulepreload" href="js/track-view.js" />
+    <link rel="modulepreload" href="js/track-geometry.js" />
     <link rel="modulepreload" href="js/theme.js" />
     <link rel="modulepreload" href="js/history-view.js" />
     <link rel="modulepreload" href="../packages/core/src/lineage.js" />
@@ -205,6 +207,19 @@
             <button type="button" class="ledger-close" id="stageLedgerClose" aria-label="Close the ratings" hidden>×</button>
             <div id="ratingsHost" hidden></div>
           </section>
+
+          <aside class="track" id="stageTrack" aria-label="The race on the circuit" hidden>
+            <p class="track-title"><span id="stageTrackName"></span><span id="stageTrackLap"></span></p>
+            <svg class="track-map" id="stageTrackMap" viewBox="0 0 1000 1000" aria-hidden="true" focusable="false">
+              <path class="track-halo" id="stageTrackHalo" d="" />
+              <path class="track-line" id="stageTrackLine" d="" />
+              <line class="track-start" id="stageTrackStart" x1="0" y1="0" x2="0" y2="0" />
+              <g id="stageTrackDots"></g>
+            </svg>
+            <p class="track-foot">
+              <span>race speed ×30</span><button type="button" class="track-pause" id="stageTrackPause">pause</button>
+            </p>
+          </aside>
 
           <footer class="stage-bar stage-bottom">
             <p class="sr-only">

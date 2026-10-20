@@ -14,3 +14,4 @@ site/js/insights-data.js
 .claude/launch.json
 tmp
 site/vendor
+site/assets/tracks.json

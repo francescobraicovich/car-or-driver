@@ -21,6 +21,7 @@ await cp(join(ROOT, 'site'), join(DIST, 'site'), { recursive: true });
 await cp(join(ROOT, 'packages/core'), join(DIST, 'packages/core'), { recursive: true });
 await mkdir(join(DIST, 'data'));
 for (const name of ['model-latest.json', 'model.json', 'export-rows.json']) await cp(join(ROOT, 'data', name), join(DIST, 'data', name)); // the CSVs the model was computed from are not published
+await cp(join(ROOT, 'data/race-laps'), join(DIST, 'data/race-laps'), { recursive: true }); // the laps of each season, for the racing dots
 await writeFile(
   join(DIST, 'index.html'),
   '<!doctype html><meta charset="utf-8"><title>Driver or Car</title><meta http-equiv="refresh" content="0; url=./site/"><a href="./site/">Driver or Car</a>\n',

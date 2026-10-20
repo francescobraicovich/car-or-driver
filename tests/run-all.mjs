@@ -23,6 +23,7 @@ const TESTS = [
   'test-synthetic-v2.mjs',
   'test-data-manifest.mjs',
   'test-model-file.mjs',
+  'test-race-laps.mjs',
   'test-compliance.mjs',
   'test-stage.mjs',
   'test-insights.mjs',

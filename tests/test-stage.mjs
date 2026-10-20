@@ -18,6 +18,7 @@ import {
 } from '../site/js/stage-geometry.js';
 import { shake, smoothNoise, sway } from '../site/js/stage-noise.js';
 import { barScale, barShare } from '../site/js/ratings-bars.js';
+import { GRID_SPACING, TIME_SCALE, raceState, runners, smoothPath, startLine } from '../site/js/track-geometry.js';
 
 const VIEWPORTS = [
   [375, 812],
@@ -137,6 +138,90 @@ assert.equal(scale.high, 1101);
 assert.ok(scale.low < 879 && barShare(879, scale.low, scale.high) > 0.1, 'the lowest value shown still has a bar');
 assert.ok(barShare(1000, scale.low, scale.high) > barShare(879, scale.low, scale.high), 'the average is to the right of the lowest');
 assert.deepEqual(barScale([]), { low: 0, high: 0 });
+
+// ── the racing dots ────────────────────────────────────
+{
+  // a smooth closed path through the points of an outline
+  const square = [100, 100, 400, 100, 400, 400, 100, 400];
+  const path = smoothPath(square);
+  assert.ok(path.startsWith('M100,100C') && path.endsWith('Z'), 'the path starts at the first point and is closed');
+  assert.equal(path.split('C').length - 1, 4, 'one curve for each point');
+  const line = startLine(square, 10);
+  assert.ok(
+    Math.abs((line.x2 - line.x1) * 300 + (line.y2 - line.y1) * 0) < 1e-9,
+    'the start line is across the first stretch of the track (here, horizontal)',
+  );
+  assert.ok(Math.abs(Math.hypot(line.x2 - line.x1, line.y2 - line.y1) - 20) < 1e-9, 'and as long as asked');
+
+  // the runners: a dot for each driver; for the cars, one for each team at the mean pace of its drivers
+  const entries = [
+    [1, 10, 2, 5, 90, 0],
+    [2, 10, 5, 4, 92, 1],
+    [3, 20, 0, 5, 91, 0],
+  ];
+  const drivers = runners(entries, 'driver');
+  assert.deepEqual(
+    drivers.map((runner) => [runner.id, runner.average, runner.laps, runner.slot, runner.retired]),
+    [
+      ['1', 90, 5, 2, false],
+      ['2', 92, 4, 5, true],
+      ['3', 91, 5, 4, false],
+    ],
+    'a driver starting from the pit lane (grid 0) is behind the last',
+  );
+  const teams = runners(entries, 'car');
+  assert.deepEqual(
+    teams.map((runner) => [runner.id, runner.average, runner.laps, runner.slot, runner.retired]),
+    [
+      ['10', 91, 5, 2, false],
+      ['20', 91, 5, 4, false],
+    ],
+    "a team runs at its drivers' mean pace, with the best grid place and the most laps, and is out only when both are",
+  );
+  assert.equal(
+    runners(
+      [
+        [1, 10, 1, 3, 90, 1],
+        [2, 10, 2, 2, 90, 1],
+      ],
+      'car',
+    )[0].retired,
+    true,
+  );
+
+  // the clock: thirty times the real one
+  assert.equal(TIME_SCALE, 30);
+  const field = [
+    { id: 'a', average: 90, laps: 6, slot: 1, retired: false },
+    { id: 'b', average: 100, laps: 6, slot: 2, retired: false },
+    { id: 'c', average: 95, laps: 2, slot: 3, retired: true },
+  ];
+  const start = raceState(field, 6, 0);
+  assert.deepEqual(
+    start.progress,
+    [-GRID_SPACING, -2 * GRID_SPACING, -3 * GRID_SPACING],
+    'at the start the cars are behind the line in grid order',
+  );
+  assert.equal(start.lap, 1);
+  const ten = raceState(field, 6, 10);
+  assert.ok(
+    Math.abs(ten.progress[0] - ((10 * TIME_SCALE) / 90 - GRID_SPACING)) < 1e-9,
+    'ten seconds are three and a third laps at a 90 second lap',
+  );
+  assert.equal(ten.lap, 4, 'the leader is on his fourth lap');
+  assert.equal(raceState(field, 6, 100).progress[2], 2, 'a car that has retired stays where it stopped, after its laps');
+  const over = raceState(field, 6, 1000);
+  assert.ok(over.finished && over.lap === 6, 'the race is over when the first car completes the laps');
+  assert.ok(
+    Math.abs(over.end - ((6 + GRID_SPACING) * 90) / TIME_SCALE) < 1e-9,
+    'which is at 6 laps of 90 seconds (the grid place included), a thirtieth of that on the screen',
+  );
+  assert.deepEqual(raceState(field, 6, 2000).progress, over.progress, 'and everyone is held there');
+  assert.ok(
+    raceState(field, 6, 5).progress.every((value, index) => value <= field[index].laps),
+    'no car covers more laps than it completed',
+  );
+}
 
 // ── the title and the line from a word to its picture ──
 // A stand-in for the real title (the page measures it in the browser): two lines, the first about 5.4 letters wide, the second about 4.4, centred.
@@ -326,6 +411,24 @@ for (const [width, height] of VIEWPORTS) {
       geometry,
       { x: box.x, y: box.y + box.height + 4, width: 150, height: 22 },
       [['click to open', 4.5, 'frame']],
+    );
+  }
+  // the name of the weekend, the lap and the notes under the track, at the bottom right (only where there is room: 150 pixels under the car and the hands)
+  const lowestSubject = Math.max(
+    ...Object.keys(SUBJECTS).map((name) => subjectRectangle(geometry, name).y + subjectRectangle(geometry, name).height),
+  );
+  const trackTop = lowestSubject + 44;
+  const trackBottom = height - BOTTOM_ROW - 16;
+  const trackColumn = panelColumn(width);
+  if (trackColumn && trackBottom - trackTop >= 150) {
+    const trackWidth = Math.min(400, width - trackColumn.left - trackColumn.width - 2 * margin - 28);
+    check(
+      `${width}x${height} text of the track`,
+      'mono',
+      grey,
+      geometry,
+      { x: width - margin - trackWidth, y: trackTop, width: trackWidth, height: trackBottom - trackTop },
+      [['name, lap and notes', 4.5, 'ink']],
     );
   }
   // the panel (a column beside the picture on a wide screen, a sheet under it on a narrow one) only exists on the black and white drawing; the region

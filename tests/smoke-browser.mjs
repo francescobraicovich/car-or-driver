@@ -154,6 +154,10 @@ check(
   sampled.every((state) => state === JSON.stringify(['peek', 'car'])),
   sampled.join(' '),
 );
+check(
+  'in a narrow window the track is not shown',
+  (await evaluate("getComputedStyle(document.getElementById('stageTrack')).display")) === 'none',
+);
 await mouse('mouseMoved', 8, 20);
 await sleep(300);
 // The rest at the size of a laptop screen, where the ratings are a column beside the pictures.
@@ -499,8 +503,8 @@ await sleep(300);
 check(
   'the row under the pointer inverts: light text on dark',
   (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row')).backgroundColor")) === 'rgb(7, 8, 11)' &&
-    (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .name')).color")) === 'rgb(238, 240, 243)',
-  (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .change')).color")) === 'rgb(238, 240, 243)',
+    (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .name')).color")) === 'rgb(238, 240, 243)' &&
+    (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .change')).color")) === 'rgb(238, 240, 243)',
 );
 // the card that opens on the row under the pointer: who, age, team, rank and the paces, in the panel's own style
 const card = await evaluate(
@@ -522,6 +526,127 @@ check(
     !card.tooltip,
   JSON.stringify(card),
 );
+// the track at the bottom right: the circuit of the weekend, a dot for each driver racing round it at thirty times the pace, and the lap counter
+const trackState = () =>
+  evaluate(
+    `(() => { const dots = [...document.querySelectorAll('#stageTrackDots circle')]; const box = document.getElementById('stageTrack');
+      return { hidden: box.hidden, name: document.getElementById('stageTrackName').textContent, lap: document.getElementById('stageTrackLap').textContent, ids: dots.map((d) => d.dataset.id).sort(),
+        first: dots.length ? [Number(dots[0].getAttribute('cx')), Number(dots[0].getAttribute('cy'))] : null, pause: document.getElementById('stageTrackPause').textContent,
+        rows: [...document.querySelectorAll('#ratingsList .ledger-row')].map((row) => row.dataset.id).sort(), path: document.getElementById('stageTrackLine').getAttribute('d').length,
+        box: (() => { const r = box.getBoundingClientRect(); return [r.x, r.y, r.width, r.height]; })() }; })()`,
+  );
+await mouse('mouseMoved', 8, 300);
+await sleep(600);
+const raceOne = await trackState();
+check(
+  'the track of the weekend is at the bottom right, with its name and the lap counter, and a dot for each driver in the ratings',
+  !raceOne.hidden &&
+    raceOne.name === 'Singapore GP · 2026' &&
+    /^lap \d+ \/ 62$/.test(raceOne.lap) &&
+    raceOne.path > 500 &&
+    JSON.stringify(raceOne.ids) === JSON.stringify(raceOne.rows) &&
+    raceOne.box[0] > 700 &&
+    raceOne.box[1] > 450,
+  JSON.stringify(raceOne),
+);
+await sleep(700);
+const raceTwo = await trackState();
+check(
+  'the dots race: they have moved round the track',
+  Math.hypot(raceTwo.first[0] - raceOne.first[0], raceTwo.first[1] - raceOne.first[1]) > 20,
+  JSON.stringify([raceOne.first, raceTwo.first]),
+);
+await sleep(3500);
+check(
+  'and the lap counter advances (a lap is under three seconds at thirty times the pace)',
+  Number(/^lap (\d+)/.exec((await trackState()).lap)[1]) >= 2,
+);
+// the dot of the row under the pointer turns red and larger
+const thirdRow = await rectangleOfSelector('#ratingsList li:nth-child(3) .ledger-row');
+await mouse('mouseMoved', ...centreOf(thirdRow));
+await sleep(300);
+const dots = await evaluate(
+  `(() => { const id = document.querySelector('#ratingsList li:nth-child(3) .ledger-row').dataset.id; const dot = (d) => ({ hot: d.classList.contains('hot'), r: d.getAttribute('r'), fill: getComputedStyle(d).fill });
+    return { mine: dot(document.querySelector('#stageTrackDots circle[data-id="' + id + '"]')), others: [...document.querySelectorAll('#stageTrackDots circle')].filter((d) => d.dataset.id !== id).map(dot) }; })()`,
+);
+check(
+  'pointing at a row turns its dot FA1802 and larger; the other dots stay as they were',
+  dots.mine.hot &&
+    dots.mine.fill === 'rgb(250, 24, 2)' &&
+    Number(dots.mine.r) > 12 &&
+    dots.others.every((d) => !d.hot && Number(d.r) < 12 && d.fill !== 'rgb(250, 24, 2)'),
+  JSON.stringify(dots.mine),
+);
+await mouse('mouseMoved', 8, 300);
+await sleep(300);
+check(
+  'and it goes back when the pointer leaves the row',
+  (await evaluate("document.querySelectorAll('#stageTrackDots circle.hot').length")) === 0,
+);
+// pause and play
+await evaluate("document.getElementById('stageTrackPause').click()");
+const frozen = await trackState();
+await sleep(500);
+check(
+  'the pause button stops the race',
+  frozen.pause === 'play' && JSON.stringify((await trackState()).first) === JSON.stringify(frozen.first),
+);
+await evaluate("document.getElementById('stageTrackPause').click()");
+await sleep(500);
+check('and play starts it again', JSON.stringify((await trackState()).first) !== JSON.stringify(frozen.first));
+// the cars: a dot for each team
+await evaluate("document.getElementById('ratingsCars').click()");
+await sleep(600);
+const cars = await trackState();
+check(
+  'the cars have a dot for each team',
+  cars.ids.length === cars.rows.length && cars.ids.length <= 14 && !cars.hidden,
+  `${cars.ids.length} dots, ${cars.rows.length} rows`,
+);
+// (and the card of a team has its name and its paces, and no age: a team's id can be the id of a driver)
+const teamCard = await evaluate(
+  `(() => { const row = document.querySelector('#ratingsList .ledger-row'); row.dispatchEvent(new Event('pointerenter')); const card = document.getElementById('ratingCard');
+    return { hidden: card.hidden, name: card.querySelector('.card-surname')?.textContent, facts: card.querySelector('.card-facts')?.textContent ?? null, labels: [...card.querySelectorAll('dt')].map((dt) => dt.textContent) }; })()`,
+);
+check(
+  'the card of a team has its name and its paces, no age and no pace with form',
+  !teamCard.hidden &&
+    teamCard.name === 'Mercedes' &&
+    teamCard.facts === null &&
+    JSON.stringify(teamCard.labels) === JSON.stringify(['Rank', 'Pace', 'Quali pace']),
+  JSON.stringify(teamCard),
+);
+await evaluate("document.querySelector('#ratingsList .ledger-row').dispatchEvent(new Event('pointerleave'))");
+await evaluate("document.getElementById('ratingsDrivers').click()");
+await sleep(300);
+// a circuit with no outline (Korea) shows no track; the ratings are as usual
+await evaluate(
+  "import('/site/js/state.js').then(({ state }) => { window.__korea = state.model.snaps.findIndex((snap) => snap.year === 2012 && /Korean/.test(snap.name)); })",
+);
+await sleep(300);
+const korea = await evaluate('window.__korea');
+await evaluate(
+  `(() => { const slider = document.getElementById('ratingsScrub'); slider.value = ${korea}; slider.dispatchEvent(new Event('input', { bubbles: true })); })()`,
+);
+await sleep(700);
+check(
+  'a weekend at a circuit with no outline (Korea 2012) shows no track, and the ratings are there',
+  (await trackState()).hidden && (await chartRows()) > 10,
+);
+await evaluate(
+  `(() => { const slider = document.getElementById('ratingsScrub'); slider.value = ${korea - 1}; slider.dispatchEvent(new Event('input', { bubbles: true })); })()`,
+);
+await sleep(900);
+const earlier = await trackState();
+check(
+  'another weekend, another track (the 2012 Japanese Grand Prix, at Suzuka)',
+  !earlier.hidden && /^Japanese GP · 2012$/.test(earlier.name),
+  JSON.stringify(earlier.name),
+);
+await evaluate(
+  "(() => { const slider = document.getElementById('ratingsScrub'); slider.value = slider.max; slider.dispatchEvent(new Event('input', { bubbles: true })); })()",
+);
+await sleep(500);
 await mouse('mouseMoved', 8, 300);
 // the error is printed beside each rating, and the control can switch it off
 const deviations = () =>

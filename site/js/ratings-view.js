@@ -359,6 +359,7 @@ function drawList(rows, snap, metric, probability, st) {
       line.addEventListener('focus', () => showCard(row, line, snap));
       line.addEventListener('pointerleave', hideCard);
       line.addEventListener('blur', hideCard);
+      for (const name of ['pointerenter', 'focus']) line.addEventListener(name, () => announceRow(row.id)); // the dot of this row on the track turns red
       line.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
@@ -392,13 +393,13 @@ function showCard(row, target, snap) {
     return node;
   };
   const isDriver = entity === 'driver';
-  const profile = state.profiles?.[row.id];
+  const profile = isDriver ? state.profiles?.[row.id] : undefined; // a team's id can be the id of some driver
   const [forename, surname] = profile ?? [row.name.split(' ').slice(0, -1).join(' '), row.name.split(' ').at(-1)];
   const heading = element('p', 'card-name');
   if (isDriver && forename) heading.append(element('span', 'card-forename', forename), element('span', 'card-surname', surname));
   else heading.append(element('span', 'card-surname', row.name));
   // the age on the day of the weekend, from the month of birth only: the birthday is taken to fall in the middle of its month
-  const [bornYear, bornMonth] = (profile?.[2] ?? '').split('-').map(Number);
+  const [bornYear, bornMonth] = profile?.[2] ? profile[2].split('-').map(Number) : []; // (an empty month of birth is not the year 0)
   const on = new Date(snap.date);
   const age = Number.isFinite(bornYear)
     ? on.getUTCFullYear() -
@@ -440,6 +441,12 @@ function showCard(row, target, snap) {
 
 function hideCard() {
   if (card) card.hidden = true;
+  announceRow(null);
+}
+
+/** Tells the track on the page (track-view.js) which row is under the pointer or has the focus, or none. */
+function announceRow(id) {
+  window.dispatchEvent(new CustomEvent('f1:row-hover', { detail: { id } }));
 }
 
 function updateSelection() {
@@ -515,4 +522,10 @@ export function renderRatings() {
   drawList(rows, snap, pref.metric, probability, st);
   syncTimeline(snap);
   updateSelection();
+  // the weekend shown, for the track on the page
+  window.dispatchEvent(
+    new CustomEvent('f1:ratings-drawn', {
+      detail: { entity, snap: { raceId: String(snap.raceId), year: snap.year, name: snap.name, circuitId: String(snap.circuitId) } },
+    }),
+  );
 }
