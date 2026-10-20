@@ -4,9 +4,7 @@ import { state } from './state.js';
 import { el } from './dom.js';
 import { esc } from './utils.js';
 import { clamp } from '../../packages/core/src/math.js';
-import { exportCSV } from './export.js';
 import { metricLabel, metricValue } from './charts.js';
-import { hideTooltip, inspectTarget } from './chart-renderer.js';
 import { barScale, barShare } from './ratings-bars.js';
 import { DESCRIPTIONS, NAMES, isProbability } from './metric-text.js';
 
@@ -149,11 +147,7 @@ function ensurePanel() {
       </div>
     </div>
     <footer class="frame-foot">
-      <button type="button" id="ratingsExport" class="btn-quiet">Download CSV</button>
-      <button type="button" id="ratingsShare" class="btn-quiet">Copy link</button>
-      <span class="notes" id="ratingsShareStatus" role="status"></span>
       <span class="notes">CC BY-NC-SA 4.0 · <a href="#/about">credits</a></span>
-      <details class="notes-more"><summary>About these numbers</summary><p class="notes" id="ratingsNote"></p></details>
     </footer>`;
   el.ratingsHost.append(panel);
   controls = Object.fromEntries([...panel.querySelectorAll('[id]')].map((n) => [n.id, n]));
@@ -191,8 +185,6 @@ function ensurePanel() {
     stop();
     setRace(+controls.ratingsGp.value);
   });
-  controls.ratingsExport.addEventListener('click', exportCSV);
-  controls.ratingsShare.addEventListener('click', () => window.dispatchEvent(new CustomEvent('f1:share-requested')));
   controls.ratingsCompareHistory.addEventListener('click', () => {
     const ids = [...preferences[entity].selected];
     if (ids.length)
@@ -359,22 +351,95 @@ function drawList(rows, snap, metric, probability, st) {
         element('span', `change ${last.tone}`.trim(), last.text),
       );
       line.addEventListener('click', () => toggleSelected(row));
-      inspectTarget(
-        line,
-        () => description(row, snap, metric, probability, st),
-        (key) => {
-          if (key === 'Enter' || key === ' ') toggleSelected(row);
-        },
-        // beside the panel, level with the row, where there is room for that (a column on a wide screen); otherwise by the pointer
-        panel.closest('.stage')?.dataset.layout === 'wide'
-          ? (target) => ({ x: panel.getBoundingClientRect().right, y: target.getBoundingClientRect().top - 14 })
-          : undefined,
-      );
+      // the row is a button for the keyboard and for screen readers (which are told the rating as a sentence); the card is for the eye
+      line.tabIndex = 0;
+      line.setAttribute('role', 'button');
+      line.setAttribute('aria-label', description(row, snap, metric, probability, st));
+      line.addEventListener('pointerenter', () => showCard(row, line, snap));
+      line.addEventListener('focus', () => showCard(row, line, snap));
+      line.addEventListener('pointerleave', hideCard);
+      line.addEventListener('blur', hideCard);
+      line.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          toggleSelected(row);
+        }
+      });
       item.append(line);
       return item;
     }),
   );
   if (!rows.length) list.textContent = 'No entries for this weekend.';
+}
+
+let card;
+
+/** The card beside the panel for the row under the pointer: who, how old, which team, the rank and the paces. It is drawn in the panel's own style. */
+function showCard(row, target, snap) {
+  const stage = panel.closest('.stage');
+  if (!card) {
+    card = document.createElement('div');
+    card.id = 'ratingCard';
+    card.className = 'rating-card';
+    card.hidden = true;
+    card.setAttribute('aria-hidden', 'true');
+    stage.append(card);
+  }
+  const element = (tag, className, text) => {
+    const node = document.createElement(tag);
+    node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
+  };
+  const isDriver = entity === 'driver';
+  const profile = state.profiles?.[row.id];
+  const [forename, surname] = profile ?? [row.name.split(' ').slice(0, -1).join(' '), row.name.split(' ').at(-1)];
+  const heading = element('p', 'card-name');
+  if (isDriver && forename) heading.append(element('span', 'card-forename', forename), element('span', 'card-surname', surname));
+  else heading.append(element('span', 'card-surname', row.name));
+  // the age on the day of the weekend, from the month of birth only: the birthday is taken to fall in the middle of its month
+  const [bornYear, bornMonth] = (profile?.[2] ?? '').split('-').map(Number);
+  const on = new Date(snap.date);
+  const age = Number.isFinite(bornYear)
+    ? on.getUTCFullYear() -
+      bornYear -
+      (on.getUTCMonth() + 1 < bornMonth || (on.getUTCMonth() + 1 === bornMonth && on.getUTCDate() < 15) ? 1 : 0)
+    : NaN;
+  const facts = [isDriver ? row.car : '', Number.isFinite(age) ? `age ${age}` : ''].filter(Boolean);
+  const grid = element('dl', 'card-grid');
+  const add = (label, value, note) => {
+    const number = element('dd', 'card-value', value);
+    if (note) number.append(element('small', note.tone ?? '', note.text));
+    grid.append(element('dt', '', label), number);
+  };
+  const sd = (value) => (Number.isFinite(value) ? { text: ` ±${Math.round(value)}` } : null);
+  add('Rank', String(row.rank));
+  add('Pace', fmt(row.combined, false), sd(row.combinedSd));
+  add('Quali pace', fmt(row.qual, false), sd(row.qualSd));
+  const shift = isDriver && currentIndex() === state.model.snaps.length - 1 ? state.model.formShifts?.get(row.id) : undefined;
+  if (Number.isFinite(shift) && Number.isFinite(row.combined))
+    add('Pace with form', fmt(row.combined + shift, false), {
+      text: ` ${shift >= 0 ? '▲' : '▼'}${Math.abs(shift).toFixed(1)}`,
+      tone: shift >= 0 ? 'up' : 'down',
+    });
+  card.replaceChildren(heading, ...(facts.length ? [element('p', 'card-facts', facts.join(' · '))] : []), grid);
+  // beside the panel, level with the row, on a wide screen; under the row (or over it, near the bottom) on a narrow one
+  card.hidden = false;
+  const box = stage.getBoundingClientRect();
+  const at = target.getBoundingClientRect();
+  const side = panel.getBoundingClientRect();
+  const wide = stage.dataset.layout === 'wide';
+  let left = wide ? side.right + 12 : side.left + 8;
+  let top = wide ? at.top - 8 : at.bottom + 6;
+  if (!wide && top + card.offsetHeight > box.bottom - 8) top = at.top - card.offsetHeight - 6;
+  top = Math.max(box.top + 8, Math.min(top, box.bottom - card.offsetHeight - 8));
+  left = Math.max(box.left + 8, Math.min(left, box.right - card.offsetWidth - 8));
+  card.style.left = `${left - box.left}px`;
+  card.style.top = `${top - box.top}px`;
+}
+
+function hideCard() {
+  if (card) card.hidden = true;
 }
 
 function updateSelection() {
@@ -444,20 +509,9 @@ export function renderRatings() {
   controls.ratingsLayerForm.toggleAttribute('disabled', Boolean(st.reason));
   controls.ratingsLayerForm.title = st.reason || 'Add the recent form of each driver to the rating';
   controls.ratingsMetric.title = DESCRIPTIONS[pref.metric];
-  const latest = state.model.snaps[state.model.snaps.length - 1];
-  const isLatest = String(snap.raceId) === String(latest.raceId);
   // the weekend is in the pickers beside the title, so only a screen reader is told it twice
   controls.ratingsTitle.innerHTML = `${entity === 'driver' ? 'Driver' : 'Car'} ratings<span class="sr-only"> after the ${esc(`${snap.year} ${snap.name}`)}</span>`;
-  const formNote = st.showForm
-    ? ' With recent form is the rating plus the forecast model’s adjustment for the last few races, in rating points, relative to the teammate. The orange part of a bar is that shift (solid when it adds to the rating, an outline when it takes away from it), and the last column gives it.'
-    : st.reason && formOn
-      ? ` ${st.reason}`
-      : ' The last column is the change since the previous appearance.';
-  const sdNote = st.sd
-    ? ' ± is one standard deviation; it is approximate. Race driver bars are scaled to match how much ratings actually revise; car bars are somewhat narrow still. Differences smaller than the bars are not reliable.'
-    : '';
-  controls.ratingsNote.textContent = `${DESCRIPTIONS[pref.metric]}${probability ? ' The vertical line is the average of those shown.' : ' 1,000 is the average, marked by the vertical line; higher is faster.'} Each rating uses only results up to this weekend.${sdNote}${formNote} Data through ${dateFormat.format(Date.parse(latest.date))}${isLatest ? '' : ' (you are viewing history)'}. Press a row to select it for comparison.`;
-  hideTooltip();
+  hideCard();
   drawList(rows, snap, pref.metric, probability, st);
   syncTimeline(snap);
   updateSelection();

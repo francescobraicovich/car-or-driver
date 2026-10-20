@@ -169,30 +169,20 @@ export function initWorkspace() {
     rememberRace();
     saveURL();
   });
-  // the Share button of the navigation, and the Copy link button in the ratings panel (the navigation is not shown on the front page)
-  async function share() {
+  $('shareView').addEventListener('click', async () => {
     saveURL();
-    const say = (text) => {
-      $('shareStatus').textContent = text;
-      const panelStatus = $('ratingsShareStatus');
-      if (panelStatus) panelStatus.textContent = text;
-    };
     try {
       await navigator.clipboard.writeText(location.href);
+      $('shareStatus').textContent = 'Link copied';
       $('shareURL').hidden = true;
-      say('Link copied');
     } catch {
       $('shareURL').hidden = false;
       $('shareURL').value = location.href;
-      if ($('shareView').offsetParent) {
-        $('shareURL').focus();
-        $('shareURL').select();
-      }
-      say('Copy the address from the address bar');
+      $('shareURL').focus();
+      $('shareURL').select();
+      $('shareStatus').textContent = 'Copy link';
     }
-  }
-  $('shareView').addEventListener('click', share);
-  window.addEventListener('f1:share-requested', share);
+  });
   window.addEventListener('f1:model-ready', () => {
     restoreRace();
     history.refresh();

@@ -14,7 +14,7 @@ import { forecastH2H, forecastPreWeekend } from '../packages/core/src/forecast/h
 import { ratingsAlone } from '../packages/core/src/state-space/forecast.js';
 import { scenarioForecast } from '../packages/core/src/forecast/scenario.js';
 import { withHistories } from '../packages/core/src/weekend-histories.js';
-import { FILE_FORMAT, trimmedModel } from '../tools/build-model.mjs';
+import { FILE_FORMAT, driverProfiles, trimmedModel } from '../tools/build-model.mjs';
 import { modelSourceHash } from '../tools/model-source-hash.mjs';
 
 // 2. the serializer
@@ -63,6 +63,34 @@ assert.ok(!('dh' in file.model) && !('ch' in file.model), 'the file does not car
 
 // 3. a fresh build, with the benchmark, exactly as the site built it before the file existed
 const data = await loadData();
+// the card on a row of the ratings: names and birth dates of the drivers rated, from drivers.csv (the first screen's file has those on the latest weekend)
+const ratedIn = (snaps) => snaps.flatMap((snap) => snap.drivers.map((row) => row.driverId));
+assert.deepEqual(
+  file.driverProfiles,
+  driverProfiles(data.raw.drivers, ratedIn(file.model.snaps)),
+  "data/model.json carries the drivers' profiles",
+);
+assert.deepEqual(
+  latestFile.driverProfiles,
+  driverProfiles(data.raw.drivers, ratedIn(file.model.snaps.slice(-1))),
+  'and the first screen those on its weekend',
+);
+assert.ok(
+  Object.values(file.driverProfiles).every(([forename, surname]) => forename && surname),
+  'every driver rated has a first name and a surname',
+);
+assert.ok(
+  Object.values(file.driverProfiles).filter(([, , born]) => born).length > 0.9 * Object.keys(file.driverProfiles).length,
+  'nearly every one has a month of birth',
+);
+assert.ok(
+  Object.values(file.driverProfiles).every(([, , born]) => born === '' || /^\d{4}-\d{2}$/.test(born)),
+  'only the year and the month of birth are published, never a full date (the privacy notice says so)',
+);
+assert.ok(
+  !/\d{4}-\d{2}-\d{2}/.test(JSON.stringify([file.driverProfiles, latestFile.driverProfiles])),
+  'no full birth date is in either profile block',
+);
 const fresh = buildStateSpace(data.raw, data.lapSnapshots, data.maps, { modelKind: 'state-space' }, data.lapPace, {
   benchmark: eloBenchmark,
 });

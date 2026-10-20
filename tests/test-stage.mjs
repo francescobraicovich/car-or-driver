@@ -32,9 +32,9 @@ const VIEWPORTS = [
   [1920, 1080],
   [2560, 1080],
 ];
-// What the page measures in the browser (see stage-view.js): the bottom row of text is 98 high on a narrow screen and 70 on a wide one, the top
-// row 55 or 78, and the panel's top is 68. The panel keeps 8 below it clear of the bottom row.
-const BOTTOM_ROW = 98;
+// What the page measures in the browser (see stage-view.js): the bottom row of links is 55 high, and the panel's top is 68. The panel keeps 8
+// between it and the bottom row.
+const BOTTOM_ROW = 55;
 const PANEL_TOP = 68;
 
 // ── geometry ───────────────────────────────────────────
@@ -206,7 +206,8 @@ const block = (selector) => {
 const tokensOf = (text) => Object.fromEntries([...text.matchAll(/--([a-z0-9-]+):\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
 const red = tokensOf(block('.stage {'));
 const grey = { ...red, ...tokensOf(block(".stage[data-state='peek'],")) };
-const panelTokens = tokensOf(block('.ledger {'));
+const panelTokens = tokensOf(block('.rating-card {')); // the tokens are set on the panel and the card together
+const cardTokens = tokensOf(block('.rating-card {\n  --panel-plate'));
 const sheetTokens = tokensOf(block(".stage[data-layout='sheet'] .ledger {"));
 const resolve = (tokens, name, depth = 0) => {
   const value = tokens[name];
@@ -276,11 +277,12 @@ const worst = [];
 function check(label, version, tokens, geometry, region, texts, overlay = null) {
   const { darkest, lightest } = extremes(version, geometry, region);
   const backgrounds = [darkest, lightest, hex(resolve(tokens, 'stage-bg'))].filter(Boolean);
-  const layer = overlay ? plateOf(resolve(tokens, overlay)) : { color: [0, 0, 0], alpha: 0 };
+  const layers = [overlay ?? []].flat().map((name) => plateOf(resolve(tokens, name))); // from the lowest to the highest
+  const stacked = (picture) => layers.reduce((below, layer) => mix(layer.color, below, layer.alpha), picture);
   for (const [name, minimum, colour, dim = 1] of texts) {
     const text = hex(resolve(tokens, colour));
     for (const picture of backgrounds) {
-      const background = mix(layer.color, picture, layer.alpha);
+      const background = stacked(picture);
       const ratio = contrast(mix(text, background, dim), background); // a dimmed word is the text colour mixed into what is behind it
       worst.push([ratio, `${label}, ${name}`]);
       assert.ok(ratio >= minimum, `${label}: ${name} (${resolve(tokens, colour)}) has contrast ${ratio.toFixed(2)}, needs ${minimum}`);
@@ -289,7 +291,6 @@ function check(label, version, tokens, geometry, region, texts, overlay = null) 
 }
 for (const [width, height] of VIEWPORTS) {
   const geometry = sceneGeometry(width, height);
-  const phone = width <= 720;
   const margin = Math.min(72, Math.max(18, width * 0.05));
   const layout = titleLayout(geometry, width, height);
   const { block } = titleBoxes(layout);
@@ -301,25 +302,6 @@ for (const [width, height] of VIEWPORTS) {
     const label = `${width}x${height} ${version === 'red' ? 'red' : 'black and white'}`;
     const dim = Number(resolve(tokens, 'word-dim'));
     assert.ok(dim > 0 && dim < 1, `${label}: the dimmed words have an opacity`);
-    check(
-      `${label}, links at the top`,
-      version,
-      tokens,
-      geometry,
-      { x: 0, y: 0, width, height: phone ? 80 : 56 },
-      [['small text', 4.5, 'ink']],
-      'bar-shade',
-    );
-    const bottom = 100; // the bottom row as measured in the browser: 98 high on a phone and a tablet, 70 on a wide screen
-    check(
-      `${label}, tagline and links at the bottom`,
-      version,
-      tokens,
-      geometry,
-      { x: 0, y: height - bottom, width, height: bottom },
-      [['small text', 4.5, 'ink']],
-      'bar-shade',
-    );
     // the title is large text (3 to 1); the word that is not pointed at is dimmed, and still has to reach it
     check(
       `${label}, title`,
@@ -347,10 +329,10 @@ for (const [width, height] of VIEWPORTS) {
     );
   }
   // the panel (a column beside the picture on a wide screen, a sheet under it on a narrow one) only exists on the black and white drawing; the region
-  // is the largest it can cover: down to 78 above the bottom of the screen, and up to the top of the column, or to the top of a sheet kept open (78% of
+  // is the largest it can cover: down to the bottom row of links, and up to the top of the column, or to the top of a sheet kept open (78% of
   // the height, covering the pictures, which is why its fill is denser)
   const column = panelColumn(width);
-  const panelBottom = height - 78;
+  const panelBottom = height - BOTTOM_ROW - 8;
   const sheetTop = Math.max(0, height - BOTTOM_ROW - 8 - 0.78 * height);
   const panelRegion = column
     ? { x: column.left, y: PANEL_TOP, width: column.width, height: panelBottom - PANEL_TOP }
@@ -371,8 +353,25 @@ for (const [width, height] of VIEWPORTS) {
       ['bars', 3, 'frame'], // the bars are marks, not text: 3 to 1 is what they need
       ['edge of the recent-form part of a bar', 3, 'form-edge'],
     ],
-    'panel-plate',
+    ['panel-plate', 'panel-shade'], // the fill, then the darkest the shading can make it
   );
+  // the card on a row (beside the column on a wide screen), over the picture and the sketches, with its denser fill
+  if (column) {
+    check(
+      `${width}x${height} card on a row`,
+      'mono',
+      { ...grey, ...panelTokens, ...cardTokens },
+      geometry,
+      { x: column.right + 12, y: PANEL_TOP, width: 256, height: panelBottom - PANEL_TOP },
+      [
+        ['text', 4.5, 'ink'],
+        ['labels', 4.5, 'ink-3'],
+        ['gain', 4.5, 'pos'],
+        ['loss', 4.5, 'neg'],
+      ],
+      ['panel-plate', 'panel-shade'],
+    );
+  }
 }
 const lowest = worst.sort((a, b) => a[0] - b[0])[0];
 console.log(

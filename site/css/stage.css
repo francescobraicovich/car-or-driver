@@ -31,7 +31,6 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   --ink: #fff1e8;
   --title-ink: #fff;
   --scrim: rgb(90 0 0 / 0.42);
-  --bar-shade: rgb(70 0 0 / 0.5);
   --word-dim: 0.5;
   --glow: 0 0 0.03em #fff, 0 0 0.12em #bff4ff, 0 0 0.3em #35d3ff, 0 0 0.7em #0a8cff, 0 0 1.3em rgb(10 100 255 / 0.7);
   --word-fill: rgb(255 255 255 / 0.14);
@@ -56,7 +55,6 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   --ink: #050505;
   --title-ink: #050505;
   --scrim: rgb(255 255 255 / 0);
-  --bar-shade: rgb(255 255 255 / 0);
   --glow: 0 0 0.2em rgb(120 170 255 / 0.6), 0 0 0.7em rgb(40 110 255 / 0.4);
   --word-fill: rgb(255 255 255 / 0.5);
 }
@@ -153,25 +151,8 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 }
 .stage-bottom {
   bottom: 0;
-}
-/* a dark-red shade behind each row, feathered beyond its edge: cream text needs it where the drawing glows orange */
-.stage-bar::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-.stage-top::before {
-  top: 0;
-  bottom: -28px;
-  background: linear-gradient(to bottom, var(--bar-shade) calc(100% - 28px), transparent);
-}
-.stage-bottom::before {
-  top: -28px;
-  bottom: 0;
-  background: linear-gradient(to top, var(--bar-shade) calc(100% - 28px), transparent);
+  flex-direction: column;
+  align-items: stretch;
 }
 .stage a {
   color: var(--ink);
@@ -205,8 +186,23 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   margin: 0;
   font-size: 12.5px;
 }
-.stage-hint-touch {
+.stage-tagline:empty {
   display: none;
+}
+/* privacy at the left, about in the middle, source at the right */
+.stage-footer-links {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  width: 100%;
+}
+.stage-footer-links a:first-child {
+  justify-self: start;
+}
+.stage-footer-links a:nth-child(2) {
+  justify-self: center;
+}
+.stage-footer-links a:last-child {
+  justify-self: end;
 }
 
 /* ── the title ───────────────────────────────────────── */
@@ -461,13 +457,15 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 }
 
 /* ── the ratings ─────────────────────────────────────── */
-/* The panel holds the ratings figure of ratings-view.js (the same one the Ratings page used to be), which reads its colours from the site's tokens.
-   Here they are set again for dark ink on brushed metal, so the figure needs no styles of its own. The fill under the text is almost clear (the
-   drawing shows through, blurred) and tests/test-stage.mjs checks that every text colour still reads on the lightest and darkest pixel behind it. */
-.ledger {
-  --ink: #0a0b0f;
-  --ink-2: #1f232b;
-  --ink-3: #343842;
+/* The panel holds the ratings list of ratings-view.js, which reads its colours from the site's tokens. Here they are set again for dark ink on
+   brushed metal, so the list needs no styles of its own; the card that opens on a row has the same surface. The fill under the text is almost clear
+   (the drawing shows through, blurred), and the metal is light and shade on top of it: tests/test-stage.mjs checks that every text colour still
+   reads on the lightest and darkest pixel behind it, with the fill and with the darkest the shading can make. */
+.ledger,
+.rating-card {
+  --ink: #07080b;
+  --ink-2: #14171c;
+  --ink-3: #1b1f26;
   --surface: #eef0f3;
   --surface-raised: #f7f8fa;
   --grid: rgb(10 11 15 / 0.16);
@@ -475,43 +473,128 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   --border: rgb(10 11 15 / 0.26);
   --wash: rgb(255 255 255 / 0.34);
   --accent: #0a1a9c;
-  --accent-text: #0a1a9c;
+  --accent-text: #08147a;
   --accent-wash: rgb(10 26 156 / 0.12);
   --on-accent: #fff;
-  --pos: #04431f;
-  --neg: #7d0c11;
-  --form: #ff6a00; /* the orange of the main page, for recent form */
-  --form-edge: #8a2f00;
-  --panel-plate: rgb(236 238 242 / 0.26);
+  --pos: #023317;
+  --neg: #560709;
+  --form: #fa1802; /* the colour of recent form */
+  --form-edge: #5c0a00;
+  --panel-plate: rgb(236 238 242 / 0.18);
+  --panel-shade: rgb(0 0 0 / 0.11); /* the most the shading below can darken any point: the layers of it together */
+  /* the metal: a lamp's light sweeping across a brushed plate (bright and dark bands), a gloss at the top, the foot of the plate in shade, and the brushing */
+  background-color: var(--panel-plate);
+  background-image:
+    linear-gradient(
+      115deg,
+      rgb(255 255 255 / 0.62) 0%,
+      rgb(255 255 255 / 0.14) 15%,
+      rgb(255 255 255 / 0) 23%,
+      rgb(255 255 255 / 0.44) 35%,
+      rgb(255 255 255 / 0.05) 45%,
+      rgb(0 0 0 / 0.03) 57%,
+      rgb(255 255 255 / 0.5) 69%,
+      rgb(255 255 255 / 0.05) 81%,
+      rgb(0 0 0 / 0.03) 100%
+    ),
+    radial-gradient(120% 70% at 50% 0%, rgb(255 255 255 / 0.34), transparent 62%),
+    linear-gradient(to bottom, transparent 62%, rgb(0 0 0 / 0.05) 100%),
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.08) 0 1px, rgb(0 0 0 / 0.03) 1px 3px);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  border-radius: 6px;
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    inset 1px 0 0 rgb(255 255 255 / 0.55),
+    inset 0 -1px 0 rgb(0 0 0 / 0.22),
+    inset -1px 0 0 rgb(0 0 0 / 0.1),
+    inset 0 0 36px rgb(255 255 255 / 0.2),
+    0 24px 60px rgb(0 0 0 / 0.3);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 13px;
+}
+.ledger {
   position: absolute;
   z-index: 5;
   display: flex;
   flex-direction: column;
   container-type: inline-size;
   overflow-y: auto;
-  border: 1px solid rgb(255 255 255 / 0.65);
-  border-radius: 6px;
-  background-color: var(--panel-plate);
-  background-image:
-    linear-gradient(
-      118deg,
-      rgb(255 255 255 / 0.55) 0%,
-      rgb(255 255 255 / 0.08) 18%,
-      rgb(255 255 255 / 0.34) 34%,
-      rgb(205 210 218 / 0.12) 52%,
-      rgb(255 255 255 / 0.4) 70%,
-      rgb(160 166 178 / 0.16) 100%
-    ),
-    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.07) 0 1px, rgb(0 0 0 / 0.035) 1px 3px);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
-  backdrop-filter: blur(16px) saturate(1.2);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.9),
-    inset 0 -1px 0 rgb(0 0 0 / 0.18),
-    0 24px 60px rgb(0 0 0 / 0.3);
-  color: var(--ink);
-  font-family: var(--text);
+}
+/* the card on a row: it can cover the sketches, so its fill is denser */
+.rating-card {
+  --panel-plate: rgb(238 240 244 / 0.84);
+  position: absolute;
+  z-index: 6;
+  width: 256px;
+  padding: 12px 14px;
+  pointer-events: none;
+}
+.card-name {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 4px;
+  line-height: 1.15;
+}
+.card-forename {
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.card-surname {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+}
+.card-facts {
+  margin: 0 0 8px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.card-grid dt {
+  align-self: center;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.card-grid dd {
+  margin: 0;
+  white-space: nowrap;
+  font-family: var(--mono);
   font-size: 13px;
+  font-weight: 800;
+  text-align: right;
+}
+.card-value small {
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 500;
+}
+.card-value small.up {
+  color: var(--pos);
+}
+.card-value small.down {
+  color: var(--neg);
 }
 .stage[data-layout='wide'] .ledger {
   left: var(--panel-left);
@@ -915,14 +998,6 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   margin-top: 4px;
 }
 
-@media (hover: none) {
-  .stage-hint-pointer {
-    display: none;
-  }
-  .stage-hint-touch {
-    display: inline;
-  }
-}
 @media (max-width: 720px) {
   .stage-top {
     padding-top: 12px;

@@ -19,11 +19,6 @@ async function fetchFile(name) {
   return file;
 }
 
-/** The rows of the CSV download. They are a separate file, fetched when the visitor asks for the download. */
-export async function loadExportRows() {
-  return (await fetchFile('export-rows.json')).rows;
-}
-
 /** The Ratings page at its latest weekend: the address names no other page and no particular weekend. */
 function showsRatingsFirst() {
   const [path, query = ''] = location.hash.slice(1).split('?');
@@ -39,15 +34,18 @@ export async function loadModel() {
   try {
     setStatus(el.status, 'Downloading the ratings…');
     if (showsRatingsFirst()) {
-      state.model = (await fetchFile('model-latest.json')).model;
+      const latest = await fetchFile('model-latest.json');
+      state.model = latest.model;
+      state.profiles = latest.driverProfiles ?? {};
       populate();
       setStatus(el.status, 'Latest ratings loaded; the full history is still downloading…');
       document.body.dataset.ratingsReady = '1';
       window.dispatchEvent(new CustomEvent('f1:ratings-ready'));
     }
-    const { model: shipped, lastRace } = await fetchFile('model.json');
+    const { model: shipped, lastRace, driverProfiles } = await fetchFile('model.json');
     const model = withHistories(shipped);
     state.model = model;
+    state.profiles = driverProfiles ?? {};
     populate();
     const through = lastRace ? ` Latest race: ${lastRace.year} round ${lastRace.round}, ${lastRace.name}.` : '';
     setStatus(el.status, `Ratings loaded: ${model.snaps.length} weekends, ${model.qualWeekends} with qualifying data.${through}`, 'ok');

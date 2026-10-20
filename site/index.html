@@ -39,7 +39,6 @@
     <link rel="modulepreload" href="js/ratings-view.js" />
     <link rel="modulepreload" href="js/ratings-bars.js" />
     <link rel="modulepreload" href="../packages/core/src/math.js" />
-    <link rel="modulepreload" href="js/export.js" />
     <link rel="modulepreload" href="js/charts.js" />
     <link rel="modulepreload" href="js/chart-renderer.js" />
     <link rel="modulepreload" href="js/chart-math.js" />
@@ -208,12 +207,12 @@
           </section>
 
           <footer class="stage-bar stage-bottom">
-            <p class="stage-tagline">
-              How much of a Formula 1 result is the driver, and how much is the car?
-              <span class="stage-hint-pointer">Point at the car, or at the driver's hands.</span>
-              <span class="stage-hint-touch">Tap the car, or the driver's hands.</span>
+            <p class="sr-only">
+              How much of a Formula 1 result is the driver, and how much is the car? Point at the car, or at the driver's hands (tap them on
+              a touch screen).
             </p>
-            <nav class="stage-links" aria-label="About this site">
+            <p class="stage-tagline" role="status"></p>
+            <nav class="stage-links stage-footer-links" aria-label="About this site">
               <a href="#/privacy">privacy</a><a href="#/about">about</a
               ><a href="https://github.com/francescobraicovich/driver-or-car" rel="noopener noreferrer">source</a>
             </nav>

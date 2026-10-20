@@ -179,6 +179,25 @@ check(
     wordDriver.y + wordDriver.height <= wordCar.y + 2,
   JSON.stringify({ wordDriver, wordCar }),
 );
+const bottomLinks = await evaluate(
+  "(() => { const width = document.getElementById('stage').getBoundingClientRect().width; const boxes = [...document.querySelectorAll('.stage-footer-links a')].map((a) => a.getBoundingClientRect()); return { names: [...document.querySelectorAll('.stage-footer-links a')].map((a) => a.textContent.toLowerCase()), width, left: boxes[0].left, middle: (boxes[1].left + boxes[1].right) / 2, right: boxes[2].right }; })()",
+);
+check(
+  'the bottom row is privacy at the left, about in the middle and source at the right, and has no sentence',
+  JSON.stringify(bottomLinks.names) === JSON.stringify(['privacy', 'about', 'source']) &&
+    bottomLinks.left < 90 &&
+    Math.abs(bottomLinks.middle - bottomLinks.width / 2) < 2 &&
+    bottomLinks.right > bottomLinks.width - 90 &&
+    (await evaluate("document.querySelector('.stage-tagline').textContent.trim()")) === '' &&
+    (await evaluate("[...document.querySelectorAll('.stage-bottom p.sr-only')].every((p) => p.getBoundingClientRect().width <= 1)")), // the sentence is for screen readers only
+  JSON.stringify(bottomLinks),
+);
+check(
+  'nothing darkens the top and the bottom of the front page',
+  await evaluate(
+    "['.stage-top', '.stage-bottom'].map((s) => getComputedStyle(document.querySelector(s), '::before').content).every((c) => c === 'none' || c === 'normal')",
+  ),
+);
 check(
   'nothing of the ratings or of the lines to the words shows before something is pointed at',
   (await evaluate("document.getElementById('stageLedger').hidden")) && (await opacityOf('#stageWordFrame')) === '0',
@@ -360,7 +379,7 @@ for (const kept of [false, true]) {
     // the first press in the panel keeps the drivers open, and the form toggle works from there
     await pressInPanel('ratingsLayerForm');
     check(
-      'pressing the form toggle with the mouse shows recent form in orange on the drivers',
+      'pressing the form toggle with the mouse shows recent form in red on the drivers',
       (await isState('open', 'driver')) && (await evaluate("document.querySelectorAll('#ratingsList .bar-form').length")) >= 5,
       JSON.stringify([await stageState(), await evaluate("document.querySelectorAll('#ratingsList .bar-form').length")]),
     );
@@ -479,9 +498,29 @@ await mouse('mouseMoved', ...centreOf(firstRow));
 await sleep(300);
 check(
   'the row under the pointer inverts: light text on dark',
-  (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row')).backgroundColor")) === 'rgb(10, 11, 15)' &&
+  (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row')).backgroundColor")) === 'rgb(7, 8, 11)' &&
     (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .name')).color")) === 'rgb(238, 240, 243)',
   (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .change')).color")) === 'rgb(238, 240, 243)',
+);
+// the card that opens on the row under the pointer: who, age, team, rank and the paces, in the panel's own style
+const card = await evaluate(
+  `(() => { const card = document.getElementById('ratingCard'); const style = getComputedStyle(card); const box = card.getBoundingClientRect(); const panel = document.getElementById('stageLedger').getBoundingClientRect();
+    return { hidden: card.hidden, forename: card.querySelector('.card-forename')?.textContent, surname: card.querySelector('.card-surname')?.textContent, facts: card.querySelector('.card-facts')?.textContent,
+      labels: [...card.querySelectorAll('dt')].map((dt) => dt.textContent), values: [...card.querySelectorAll('dd')].map((dd) => dd.textContent),
+      blur: style.backdropFilter, left: box.left, panelRight: panel.right, tooltip: !!document.getElementById('chartValueTooltip') && !document.getElementById('chartValueTooltip').hidden }; })()`,
+);
+check(
+  'the row under the pointer opens a card with the name, surname, team, age, rank, pace, quali pace and pace with form',
+  card.hidden === false &&
+    card.forename === 'Max' &&
+    card.surname === 'Verstappen' &&
+    /^Red Bull · age \d\d$/.test(card.facts) &&
+    JSON.stringify(card.labels) === JSON.stringify(['Rank', 'Pace', 'Quali pace', 'Pace with form']) &&
+    card.values.every((value) => /\d/.test(value)) &&
+    /blur/.test(card.blur) &&
+    card.left >= card.panelRight &&
+    !card.tooltip,
+  JSON.stringify(card),
 );
 await mouse('mouseMoved', 8, 300);
 // the error is printed beside each rating, and the control can switch it off
@@ -530,8 +569,8 @@ const formBars = await evaluate(
   "(() => { const bars = [...document.querySelectorAll('#ratingsList .bar-form')]; return [bars.length, bars.filter((bar) => bar.classList.contains('loss')).length, bars.every((bar) => parseFloat(bar.style.width) > 0), getComputedStyle(bars.find((bar) => !bar.classList.contains('loss'))).backgroundColor]; })()",
 );
 check(
-  'with recent form the shift is stacked on the bars in orange: solid where it adds, an outline where it takes away',
-  formBars[0] >= 5 && formBars[1] >= 1 && formBars[1] < formBars[0] && formBars[2] && formBars[3] === 'rgb(255, 106, 0)',
+  'with recent form the shift is stacked on the bars in FA1802: solid where it adds, an outline where it takes away',
+  formBars[0] >= 5 && formBars[1] >= 1 && formBars[1] < formBars[0] && formBars[2] && formBars[3] === 'rgb(250, 24, 2)',
   JSON.stringify(formBars),
 );
 await evaluate("document.getElementById('ratingsLayerForm').click()");
@@ -539,17 +578,10 @@ await sleep(200);
 await evaluate("document.getElementById('ratingsCars').click()");
 await sleep(300);
 check('Cars view retitles the chart', /^Car ratings/.test((await evaluate("document.getElementById('ratingsTitle').textContent")) || ''));
-// The CSV download fetches its rows (a separate file) and offers a file of the right name and a plausible size
-await evaluate(
-  'window.__csv = null; const create = URL.createObjectURL; URL.createObjectURL = (blob) => { window.__csv = { size: blob.size }; return create(blob); }; HTMLAnchorElement.prototype.click = function () { if (window.__csv) window.__csv.name = this.download; };',
-);
-await evaluate("document.getElementById('ratingsExport').click()");
-await sleep(2500);
-const csv = await evaluate('window.__csv');
 check(
-  'Download CSV offers driver_or_car_ratings_since_2000_CC-BY-NC-SA-4.0.csv with the rows of every weekend',
-  csv?.name === 'driver_or_car_ratings_since_2000_CC-BY-NC-SA-4.0.csv' && csv.size > 1_000_000,
-  JSON.stringify(csv),
+  'the panel has no Download CSV, Copy link or About these numbers',
+  (await evaluate("['ratingsExport', 'ratingsShare', 'ratingsNote'].every((id) => !document.getElementById(id))")) &&
+    !/Download|Copy link|About these numbers/.test(await evaluate("document.getElementById('stageLedger').textContent")),
 );
 await evaluate("document.getElementById('ratingsDrivers').click()");
 await evaluate(
