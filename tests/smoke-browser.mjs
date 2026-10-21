@@ -922,7 +922,7 @@ await evaluate("document.getElementById('ratingsPlay').click()");
 await sleep(700);
 const moved = await evaluate("+document.getElementById('ratingsScrub').value");
 await evaluate("document.getElementById('ratingsPlay').click()");
-check('play advances the timeline', moved > 0, `index ${moved}`);
+check('play advances the timeline at about the pace of its steps', moved >= 4, `index ${moved}`);
 
 // The bar-chart race: the rows stay from one weekend (or one rating) to the next, glide to their new places, their bars grow, a driver who joins
 // fades in, the average line glides; the order in the document follows when they have settled; nothing glides under reduced motion
@@ -1045,6 +1045,42 @@ check(
   (await evaluate("document.getElementById('stageTrack').hidden")) === false &&
     (await evaluate("document.getElementById('stageTrack').dataset.raceId")) !== raceBefore,
   raceBefore,
+);
+const restingGap = await evaluate(
+  "(() => { const row = document.querySelector('#ratingsList .ledger-row'); const range = document.createRange(); range.selectNodeContents(row.querySelector('.name')); return [row.querySelector('.rating').getBoundingClientRect().left - range.getBoundingClientRect().right, row.querySelector('.bar').getBoundingClientRect().width]; })()",
+);
+check(
+  'when the play stops the columns are as wide as the weekend needs again: the rating is close to the name, and the bars are wide',
+  restingGap[0] < 45 && restingGap[1] >= 150,
+  JSON.stringify(restingGap),
+);
+// holding the slider is the same: while it is held the columns are as wide as the widest name seen, and when it is let go they fit again and the race comes back
+const held = await evaluate(
+  `(async () => {
+    const slider = document.getElementById('ratingsScrub');
+    const list = document.getElementById('ratingsList');
+    const go = (index) => { slider.value = index; slider.dispatchEvent(new Event('input', { bubbles: true })); return parseInt(list.style.getPropertyValue('--name')); };
+    // the width each of the last hundred weekends needs by itself (not more: the page puts every weekend in the address, and the browser ignores changes of the address after about two hundred in ten seconds)
+    const first = Math.max(0, +slider.max - 99);
+    const at = Array.from({ length: +slider.max + 1 - first }, (_, index) => go(first + index));
+    const steps = 7;
+    const found = at.findIndex((_, index) => index + steps < at.length && Math.max(...at.slice(index, index + steps + 1)) > at[index + steps]);
+    const start = found < 0 ? -1 : first + found;
+    go(start);
+    await new Promise((resolve) => setTimeout(resolve, 700));
+    slider.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    let during = 0;
+    for (let index = start; index <= start + steps; index++) during = go(index);
+    window.dispatchEvent(new PointerEvent('pointerup'));
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    const after = parseInt(list.style.getPropertyValue('--name'));
+    return { start, needed: at[found + steps], during, after, track: !document.getElementById('stageTrack').hidden };
+  })()`,
+);
+check(
+  'while the slider is held the columns keep the widest name seen, and when it is let go they fit the weekend again and the race comes back',
+  held.start >= 0 && held.during > held.needed && held.after === held.needed && held.track === true,
+  JSON.stringify(held),
 );
 // nothing glides under reduced motion, and the document is in order at once
 await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });

@@ -92,13 +92,14 @@ export function populate() {
 }
 
 function stop() {
+  const playing = Boolean(timer);
   if (timer) clearInterval(timer);
   timer = null;
-  scheduleSettle();
   if (controls) {
     controls.ratingsPlay.setAttribute('aria-label', 'Play through the weekends');
     controls.ratingsPlay.firstElementChild.firstElementChild.setAttribute('d', PLAY_PATH);
   }
+  if (playing && panel.offsetParent) renderRatings(); // at rest: the columns are as wide as this weekend needs, the card and the race are allowed again, and the rows are put in order
 }
 
 function play() {
@@ -181,12 +182,14 @@ function ensurePanel() {
   controls.ratingsScrub.addEventListener('pointerdown', () => {
     stop();
     scrubbing = true;
+    const release = new AbortController();
     const end = () => {
+      release.abort();
       scrubbing = false;
-      scheduleSettle();
+      renderRatings(); // the slider is let go: as at the end of the play
     };
-    window.addEventListener('pointerup', end, { once: true });
-    window.addEventListener('pointercancel', end, { once: true });
+    window.addEventListener('pointerup', end, { signal: release.signal });
+    window.addEventListener('pointercancel', end, { signal: release.signal });
   });
   controls.ratingsScrub.addEventListener('input', () => setRace(+controls.ratingsScrub.value));
   controls.ratingsSeason.addEventListener('change', () => {
