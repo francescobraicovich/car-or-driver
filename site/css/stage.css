@@ -1266,13 +1266,14 @@ body[data-surface='stage'] main.workspace {
   padding: 6px 8px 2px 0;
 }
 .head-to-head-facts dt {
-  display: flex;
-  align-items: center;
   color: var(--ink-3);
   font-family: var(--display);
   font-size: 9.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+.head-to-head-facts dt .info {
+  vertical-align: middle;
 }
 .head-to-head-facts dd {
   margin: 2px 0 0;
