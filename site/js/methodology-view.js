@@ -1,5 +1,5 @@
-// Methodology page: the text (methodology-content.js) and its diagram (methodology-diagram.js) with the settings filled in,
-// the settings tables, the in-page navigation, and the accuracy figures and charts from the loaded model.
+// The Methodology: a card of slides (slide-deck.js), one for each of the eight parts of the text (methodology-content.js), with its diagram
+// (methodology-diagram.js) and the settings filled in, the settings tables, and the accuracy figures and charts from the loaded model.
 import { state } from './state.js';
 import { renderPlot } from './chart-renderer.js';
 import { hasRatingsDiag, ratingsWindows, seasonLossSeries } from './backtest-figures.js';
@@ -13,6 +13,7 @@ import { STATE_SPACE_FIT } from '../../packages/core/src/presets/state-space-fit
 import { STATE_SPACE_DEFAULTS, STATE_SPACE_WINDOW } from '../../packages/core/src/state-space/filter.js';
 import { CONTENT_HTML } from './methodology-content.js';
 import { DIAGRAM_HTML } from './methodology-diagram.js';
+import { createDeck } from './slide-deck.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -151,17 +152,20 @@ function loadKatex() {
 async function typeset() {
   const katex = await loadKatex();
   if (!katex) return;
-  for (const node of $('methodologyBody').querySelectorAll('.math:not(.typeset)')) {
+  for (const node of $('methodologyCard').querySelectorAll('.math:not(.typeset)')) {
     katex.render(node.textContent, node, { displayMode: node.classList.contains('block'), throwOnError: false });
     node.classList.add('typeset');
   }
 }
 
-function fillNumbers() {
+/** The text with the settings filled in. */
+const filledText = () => {
   const values = { ...P, ...derived };
-  $('methodologyBody').innerHTML = CONTENT_HTML.replace('<!--DIAGRAM-->', DIAGRAM_HTML).replace(/\{\{([\w.]+)\}\}/g, (_, name) =>
-    show(values[name]),
-  );
+  return CONTENT_HTML.replace('<!--DIAGRAM-->', DIAGRAM_HTML).replace(/\{\{([\w.]+)\}\}/g, (_, name) => show(values[name]));
+};
+
+/** The tables of settings, from the model's own settings (so that they cannot go stale). */
+function fillTables() {
   const cell = (row, session) => {
     if (row.where === 'race' && session === 'q') return '—';
     const v =
@@ -278,20 +282,44 @@ function render() {
   });
 }
 
-/** Links in the text and the diagram that name a part ("Part 3") scroll to it; the address bar keeps the page's own route. */
-function enableJumpLinks() {
-  $('methodology').addEventListener('click', (event) => {
-    const link = event.target.closest('[data-jump]');
-    if (!link) return;
-    event.preventDefault();
-    $(link.dataset.jump)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-}
+const LABELS = {
+  'method-overview': 'Overview',
+  'method-data': 'Data',
+  'method-ratings': 'Ratings',
+  'method-forecasts': 'Forecasts',
+  'method-backtesting': 'Backtesting',
+  'method-limits': 'Limits',
+  'method-settings': 'Settings',
+  'method-references': 'References',
+};
 
 export function initMethodology() {
-  fillNumbers();
-  drawOddsCurve($('methodologyOddsChart'), MODEL_SETTINGS.scale);
-  enableJumpLinks();
+  // the eight parts of the text, one slide each (a link in the text that names a part leads to its slide: slide-deck.js)
+  const text = document.createElement('div');
+  text.innerHTML = filledText();
+  const parts = [...text.querySelectorAll(':scope > .method-part')];
+  createDeck({
+    page: 'methodology',
+    title: 'Methodology',
+    before:
+      '<p class="deck-intro">How the ratings and forecasts are computed, from first principles. It assumes university-level mathematics and nothing about Formula 1 or rating systems.</p>',
+    groups: [
+      {
+        slides: parts.map((part) => ({
+          id: part.id,
+          label: LABELS[part.id],
+          title: part.querySelector('h3').textContent.replace(/^\d+\.\s*/, ''),
+          html: `<div class="deck-text">${part.outerHTML}</div>`,
+        })),
+      },
+    ],
+    firstShown: () => {
+      drawOddsCurve($('methodologyOddsChart'), MODEL_SETTINGS.scale);
+      render();
+      typeset();
+    },
+  });
+  fillTables();
   window.addEventListener('f1:model-ready', render);
   window.addEventListener('f1:workspace-changed', () => {
     if (document.body.dataset.page === 'methodology') {

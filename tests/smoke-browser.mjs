@@ -1597,7 +1597,7 @@ const insightsState = () =>
     panelShown: !document.getElementById('stageLedger').hidden,
     position: document.getElementById('insightsPosition').textContent,
     name: document.getElementById('insightsName').textContent,
-    open: [...document.querySelectorAll('.deck-slide')].map((slide) => !slide.inert).map((open, index) => (open ? index : -1)).filter((index) => index >= 0),
+    open: [...document.querySelectorAll('#insightsCard .deck-slide')].map((slide) => !slide.inert).map((open, index) => (open ? index : -1)).filter((index) => index >= 0),
     transform: document.getElementById('insightsTrack').style.transform,
     current: [...document.querySelectorAll('#insightsList button[aria-current="true"], #insightsTicks button[aria-current="true"]')].map((button) => button.dataset.slide),
     hash: location.hash.split('?')[0],
@@ -1622,8 +1622,8 @@ check(
 check(
   'the first slide is the contents: the twenty findings under five topics, and a slide for each after it, all drawn',
   insightsAtStart.position === '1 / 21' &&
-    (await evaluate("document.querySelectorAll('.deck-contents button[data-slide]').length")) === 20 &&
-    (await evaluate("document.querySelectorAll('.deck-contents h3').length")) === 5 &&
+    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents button[data-slide]').length")) === 20 &&
+    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents h3').length")) === 5 &&
     (await evaluate("document.querySelectorAll('article.insight').length")) === 20 &&
     (await evaluate(
       "[...document.querySelectorAll('article.insight')].every((card) => card.querySelector('svg, table') && card.querySelector('.info'))",
@@ -1638,7 +1638,7 @@ check(
   })`),
 );
 // jumping from the contents, and sliding there
-await evaluate('document.querySelector(\'.deck-contents button[data-slide="12"]\').click()');
+await evaluate('document.querySelector(\'#insightsCard .deck-contents button[data-slide="12"]\').click()');
 await sleep(900);
 const jumped = JSON.parse(await insightsState());
 check(
@@ -1728,7 +1728,7 @@ check(
   JSON.stringify(topicHeads),
 );
 await mouse('mouseMoved', 8, 300);
-const insightsInfo = await evaluate("document.querySelector('.deck-slide:not([inert]) .insight-title .info').dataset.info");
+const insightsInfo = await evaluate("document.querySelector('#insightsCard .deck-slide:not([inert]) .insight-title .info').dataset.info");
 check(
   'what a finding rests on is behind the "i" beside its title: how much weight it carries, and how it was computed',
   /^(Direct|Model-based): .* How it is computed: /.test(insightsInfo) && !/</.test(insightsInfo),
@@ -1768,22 +1768,53 @@ check(
 );
 check(
   'the Methodology page does not mention Elo',
-  !(await evaluate("/\\bElo\\b/i.test(document.getElementById('methodology').textContent)")),
+  !(await evaluate("/\\bElo\\b/i.test(document.getElementById('methodologyCard').textContent)")),
 );
 check(
   'methodology has its eight parts, the overview diagram, the settings tables and no unfilled placeholders',
-  (await evaluate("document.querySelectorAll('#methodologyBody .method-part').length")) === 8 &&
-    (await evaluate("document.querySelectorAll('#methodologyBody .flow-stage').length")) >= 6 &&
+  (await evaluate("document.querySelectorAll('#methodologyCard .method-part').length")) === 8 &&
+    (await evaluate("document.querySelectorAll('#methodologyTrack .deck-slide').length")) === 9 &&
+    (await evaluate("document.querySelectorAll('#methodologyCard .flow-stage').length")) >= 6 &&
     (await evaluate("document.querySelectorAll('#methodologyParams tbody tr').length")) >= 24 &&
     (await evaluate("document.querySelectorAll('#methodologyScoring tbody tr:not(.group)').length")) === 21 &&
     (await evaluate("document.querySelectorAll('#methodologyWindows tr').length")) === 4 &&
-    !(await evaluate("/\\{\\{|undefined|NaN/.test(document.getElementById('methodologyBody').textContent)")),
+    !(await evaluate("/\\{\\{|undefined|NaN/.test(document.getElementById('methodologyCard').textContent)")),
+);
+// the Methodology is a card of slides: the contents and a slide for each of the eight parts; a link in the text that names a part (or a reference)
+// leads to its slide, and the slide is in the address
+check(
+  'the Methodology is a card of slides with a list of its parts, and the links in the text lead to the slide of the part or of the reference',
+  await (async () => {
+    const position = () => evaluate("document.getElementById('methodologyPosition').textContent");
+    const first = await position();
+    await evaluate('document.querySelector(\'#methodologyCard .deck-contents button[data-slide="3"]\').click()');
+    await sleep(700);
+    const third = await position();
+    const slide = await evaluate('(location.hash.match(/slide=([a-z0-9-]*)/) || [])[1]');
+    await evaluate('document.querySelector(\'#methodologyCard [data-jump="method-forecasts"]\').click()');
+    await sleep(700);
+    const linked = await position();
+    await evaluate('document.querySelector(\'#methodologyCard [data-jump^="ref-"]\').click()');
+    await sleep(900);
+    const reference = await evaluate(
+      "JSON.stringify({ position: document.getElementById('methodologyPosition').textContent, shown: !document.getElementById('methodologyCard').querySelector('.deck-slide:not([inert]) .references') ? null : true })",
+    );
+    return (
+      first === '1 / 9' &&
+      third === '4 / 9' &&
+      slide === 'method-ratings' &&
+      linked === '5 / 9' &&
+      JSON.parse(reference).position === '9 / 9' &&
+      JSON.parse(reference).shown === true &&
+      (await evaluate("document.querySelectorAll('#methodologyList button').length")) === 9
+    );
+  })(),
 );
 // Formulas are typeset by KaTeX, which the site serves itself.
 await sleep(3000);
-const mathTotal = await evaluate("document.querySelectorAll('#methodologyBody .math').length");
-const mathDone = await evaluate("document.querySelectorAll('#methodologyBody .math.typeset .katex').length");
-const mathBad = await evaluate("document.querySelectorAll('#methodologyBody .katex-error').length");
+const mathTotal = await evaluate("document.querySelectorAll('#methodologyCard .math').length");
+const mathDone = await evaluate("document.querySelectorAll('#methodologyCard .math.typeset .katex').length");
+const mathBad = await evaluate("document.querySelectorAll('#methodologyCard .katex-error').length");
 check(
   'every formula is typeset without errors',
   mathTotal > 50 && mathDone === mathTotal && mathBad === 0,
@@ -1958,7 +1989,7 @@ check(
 await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/?link=slide#/insights?v=1&slide=upsets` });
 await sleep(5000);
 const linkedSlide = await evaluate(
-  "JSON.stringify({ position: document.getElementById('insightsPosition').textContent, name: document.getElementById('insightsName').textContent, drawn: !!document.querySelector('.deck-slide:not([inert]) svg') })",
+  "JSON.stringify({ position: document.getElementById('insightsPosition').textContent, name: document.getElementById('insightsName').textContent, drawn: !!document.querySelector('#insightsCard .deck-slide:not([inert]) svg') })",
 );
 check(
   'a link straight to a finding opens the card on that slide, drawn',

@@ -1640,7 +1640,7 @@ body[data-surface='stage'] main.workspace {
   white-space: nowrap;
 }
 /* the contents: the five topics and the finding of each, as rows like those of the ratings (the one under the pointer inverted) */
-.insights-intro {
+.deck-intro {
   display: flex;
   align-items: center;
   margin: 8px 0 14px;
@@ -1816,6 +1816,315 @@ body[data-surface='stage'] main.workspace {
 .deck-card .insight-table td,
 .deck-card .insight-table th {
   white-space: normal;
+}
+/* ── text on a slide (the Methodology, the Privacy notice, the About page) ───── */
+/* The text is set as it was on the pages these replace (paragraphs, lists, tables, figures, formulas, a diagram), on the card's tokens: headings in the
+   panel's small capitals, numbers and code in mono, figures and formulas on plates of lighter glass like the charts. */
+.deck-text p,
+.deck-text ul,
+.deck-text ol,
+.deck-text .glossary {
+  max-width: 80ch; /* the lines of text stay readable; the tables, figures and formulas have the whole card */
+}
+.deck-text h3 {
+  margin: 0 0 8px;
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.22;
+}
+.deck-text h4 {
+  margin: 20px 0 5px;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.deck-text p,
+.deck-text li,
+.deck-text dd {
+  font-size: 13px;
+  line-height: 1.55;
+}
+.deck-text p {
+  margin: 0 0 10px;
+}
+.deck-text ul,
+.deck-text ol {
+  margin: 0 0 10px;
+  padding-left: 20px;
+}
+.deck-text li + li {
+  margin-top: 5px;
+}
+.deck-text a {
+  color: var(--accent-text);
+  text-underline-offset: 2px;
+}
+.deck-text .cite {
+  font-size: 0.85em;
+  text-decoration: none;
+}
+.deck-text code {
+  font: 12px var(--mono);
+}
+.deck-text .references {
+  padding-left: 28px;
+}
+.deck-text .references li {
+  margin-bottom: 7px;
+  overflow-wrap: anywhere;
+}
+.deck-text .glossary {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px 18px;
+  margin: 0 0 10px;
+}
+.deck-text .glossary dt {
+  font-size: 13px;
+  font-weight: 650;
+}
+.deck-text .glossary dd {
+  margin: 0;
+}
+.deck-text .math {
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+.deck-text .math.block {
+  display: block;
+  margin: 12px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.deck-text .math.typeset {
+  font-family: inherit;
+  font-size: inherit;
+}
+.deck-text .math.block.typeset {
+  font-size: 1.05em;
+}
+.deck-text .formula,
+.deck-text .method-figure,
+.deck-text .method-chart {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.4);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+}
+.deck-text .formula {
+  font: 12px/1.8 var(--mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.deck-text .method-figure {
+  padding: 8px 10px 6px;
+}
+.deck-text .method-figure figcaption {
+  margin-top: 6px;
+  color: var(--ink-2);
+  font-size: 11px;
+}
+.deck-text .method-figure-box,
+.deck-text .method-chart svg {
+  display: block;
+  width: 100%;
+}
+.deck-text .stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 14px 0 6px;
+  border-top: 1px solid var(--border);
+}
+.deck-text .stats > div {
+  padding: 10px 14px 4px 0;
+}
+.deck-text .stats dt {
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.deck-text .stats dd {
+  margin: 3px 0 0;
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.deck-text .stats dd small {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-3);
+  font-family: var(--text);
+  font-size: 10.5px;
+  font-weight: 450;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+.deck-card .table-wrap {
+  padding: 4px 0 0;
+  overflow-x: auto; /* a table of settings has long text: it scrolls sideways on its own */
+}
+.deck-text .params {
+  width: 100%;
+}
+.deck-text .params tbody td.left,
+.deck-text .params tbody th.left {
+  min-width: 14rem;
+  font-family: var(--text);
+  font-size: 11.5px;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+  white-space: normal;
+}
+.deck-text .params tbody th[scope='row'].left {
+  font-family: var(--mono);
+  font-weight: 650;
+}
+.deck-text .params .group th {
+  padding-top: 14px;
+  color: var(--ink-2);
+}
+.deck-text .params td,
+.deck-text .params th {
+  vertical-align: top;
+}
+/* the diagram of the overview: the stages of the pipeline, stacked, with captioned links between them */
+.deck-text .flow {
+  margin: 14px 0 8px;
+}
+.deck-text .flow-caption {
+  margin-bottom: 8px;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.deck-text .flow-stages {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.deck-text .flow-stage {
+  margin: 0;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.4);
+}
+.deck-text .flow-stage p {
+  margin: 0 0 5px;
+  font-size: 12.5px;
+}
+.deck-text .flow-stage p:last-child {
+  margin-bottom: 0;
+}
+.deck-text .flow-step {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--display);
+  font-size: 9.5px !important;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.deck-text .flow-step a {
+  color: var(--ink-3);
+  font-family: var(--text);
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.deck-text .flow-site {
+  border-left: 3px solid var(--s2);
+}
+.deck-text .flow-test {
+  border-style: dashed;
+}
+.deck-text .flow-where {
+  color: var(--ink-3);
+  font-size: 11px !important;
+  font-weight: 650;
+}
+.deck-text .flow-link {
+  position: relative;
+  margin: 0 0 0 22px;
+  padding: 7px 0 7px 20px;
+  border-left: 2px solid var(--rule);
+  color: var(--ink-3);
+  font-size: 11.5px;
+  list-style: none;
+}
+.deck-text .flow-link::after {
+  content: '▼';
+  position: absolute;
+  bottom: -2px;
+  left: -7px;
+  color: var(--rule);
+  font-size: 11px;
+  line-height: 1;
+}
+.deck-text .flow-link-test {
+  border-left-style: dashed;
+}
+.deck-text .flow-pair,
+.deck-text .flow-outputs {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 6px;
+}
+.deck-text .flow-outputs {
+  flex-wrap: wrap;
+}
+.deck-text .flow-box {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 140px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.5);
+  font-size: 12px;
+}
+.deck-text .flow-box span {
+  color: var(--ink-2);
+}
+.deck-text .flow-arrow {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  color: var(--ink-3);
+  font-size: 11px;
+}
+.deck-text .flow-arrow span::after {
+  content: ' →';
+}
+.deck-text .legal-summary {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--ink);
+  background: rgb(255 255 255 / 0.4);
+}
+.deck-text .legal-summary p {
+  margin: 0;
+}
+.deck-text .legal-date {
+  color: var(--ink-3);
+  font-size: 11.5px;
 }
 /* the list of the slides, on the picture itself, beside the card (where there is room for it) */
 .deck-list {

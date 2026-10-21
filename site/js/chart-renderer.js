@@ -499,7 +499,7 @@ export function renderPlot(svg, options) {
     for (const { s, p } of rows)
       node(cross, 'circle', { cx: X(t), cy: Y(p.v), r: 4.5, fill: colorOf(s), stroke: 'var(--surface)', 'stroke-width': 2 });
     const tip = tipElement();
-    tip.className = svg.closest('.ledger') ? 'rich metal' : 'rich'; // on the panel the tooltip is in the panel's metal
+    tip.className = svg.closest('.ledger, .deck-card') ? 'rich metal' : 'rich'; // on the panel, or on a card of slides, the tooltip is in the panel's metal
     tip.replaceChildren();
     const head = document.createElement('div');
     head.className = 'tip-head';

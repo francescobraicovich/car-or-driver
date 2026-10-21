@@ -30,7 +30,7 @@ export function initInsights() {
   createDeck({
     page: 'insights',
     title: 'Insights',
-    before: `<p class="insights-intro">Twenty findings on one question: how much of a Formula 1 result is the driver, and how much is the car?${infoHtml(INTRO_NOTE)}</p>`,
+    before: `<p class="deck-intro">Twenty findings on one question: how much of a Formula 1 result is the driver, and how much is the car?${infoHtml(INTRO_NOTE)}</p>`,
     after: `<p class="insights-kinds"><span class="insight-chip">${KINDS.direct[0]}</span><span class="insight-chip">${KINDS.model[0]}</span>${infoHtml(`${KINDS.direct[0]}: ${KINDS.direct[1]} ${KINDS.model[0]}: ${KINDS.model[1]}`)}</p>`,
     groups: INSIGHT_TOPICS.map((topic) => ({
       title: topic.title,
