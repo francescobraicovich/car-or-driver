@@ -31,6 +31,9 @@ let panel;
 let controls;
 let panelWidth = 0;
 let timer = null;
+let scrubbing = false; // the weekend slider is being dragged
+// the weekends are going by: the row under a still pointer has changed under it, so no card, and the race on the page is not rebuilt for each weekend
+const busy = () => Boolean(timer) || scrubbing;
 
 const PLAY_PATH = 'M3 1.5v13l11-6.5z';
 const PAUSE_PATH = 'M3 1.5h3.5v13H3zM9.5 1.5H13v13H9.5z';
@@ -91,6 +94,7 @@ export function populate() {
 function stop() {
   if (timer) clearInterval(timer);
   timer = null;
+  scheduleSettle();
   if (controls) {
     controls.ratingsPlay.setAttribute('aria-label', 'Play through the weekends');
     controls.ratingsPlay.firstElementChild.firstElementChild.setAttribute('d', PLAY_PATH);
@@ -174,7 +178,16 @@ function ensurePanel() {
     renderRatings();
   });
   controls.ratingsPlay.addEventListener('click', () => (timer ? stop() : play()));
-  controls.ratingsScrub.addEventListener('pointerdown', stop);
+  controls.ratingsScrub.addEventListener('pointerdown', () => {
+    stop();
+    scrubbing = true;
+    const end = () => {
+      scrubbing = false;
+      scheduleSettle();
+    };
+    window.addEventListener('pointerup', end, { once: true });
+    window.addEventListener('pointercancel', end, { once: true });
+  });
   controls.ratingsScrub.addEventListener('input', () => setRace(+controls.ratingsScrub.value));
   controls.ratingsSeason.addEventListener('change', () => {
     stop();
@@ -287,19 +300,103 @@ function toggleSelected(row) {
   if (selected.has(row.id)) selected.delete(row.id);
   else if (selected.size < MAX_SELECTED) selected.add(row.id);
   renderRatings();
-  controls.ratingsList.querySelector(`[data-id="${CSS.escape(row.id)}"]`)?.focus(); // the rows are drawn again: the one pressed keeps the focus
+  const item = rowElements.get(`${entity}:${row.id}`);
+  if (item?._parts.line.matches(':hover, :focus')) item._parts.point(); // the card was put away with the redraw: the row still under the pointer shows it again
+}
+
+const reducedMotion = typeof matchMedia === 'function' ? matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+const rowElements = new Map(); // `${entity}:${id}` -> its <li>, kept from one weekend to the next, so that it can glide to its new place and its bar can grow
+let widest = null; // the widest names seen while the weekends go by, so that the columns (and with them the length of every bar) do not change from one weekend to the next
+let settling = null;
+
+const element = (tag, className, text) => {
+  const node = document.createElement(tag);
+  node.className = className;
+  if (text != null) node.textContent = text;
+  return node;
+};
+
+/** One row of the list, empty: it is made once for a driver (or a team) and filled in again for every weekend (fillRow), so that it can move and its bar can grow. */
+function createRow() {
+  const item = document.createElement('li');
+  const line = element('div', 'ledger-row');
+  const bar = element('span', 'bar');
+  bar.setAttribute('aria-hidden', 'true');
+  const base = element('i', 'bar-base');
+  bar.append(element('i', 'bar-track'), base);
+  const cells = Object.fromEntries(['rank', 'name', 'team', 'rating', 'deviation', 'change'].map((name) => [name, element('span', name)]));
+  line.append(cells.rank, cells.name, cells.team, cells.rating, cells.deviation, bar, cells.change);
+  // the row is a button for the keyboard and for screen readers (which are told the rating as a sentence); the card is for the eye
+  line.tabIndex = 0;
+  line.setAttribute('role', 'button');
+  const point = () => {
+    if (busy()) return;
+    const { row, snap } = item._data;
+    showCard(row, line, snap);
+    announceRow(row.id); // the dot of this row on the track turns red
+  };
+  line.addEventListener('click', () => toggleSelected(item._data.row));
+  line.addEventListener('pointerenter', point);
+  line.addEventListener('focus', point);
+  line.addEventListener('pointerleave', hideCard);
+  line.addEventListener('blur', hideCard);
+  line.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleSelected(item._data.row);
+    }
+  });
+  item.append(line);
+  item._parts = { line, bar, base, cells, form: null, point };
+  return item;
+}
+
+/** What a row says for a weekend: the text, the classes, and the bar (blue to the rating, with the form stacked on it in FA1802). */
+function fillRow(item, row, index, { snap, metric, probability, st, share, low, high, names, teams, selected }) {
+  item._data = { row, snap };
+  const { line, bar, base, cells } = item._parts;
+  item.style.order = String(index); // where the row is on the screen; the order in the document follows once the rows have glided (settle)
+  line.dataset.id = row.id;
+  line.classList.toggle('selected', selected.has(row.id));
+  line.classList.toggle('linked', isLinked(row.id));
+  line.setAttribute('aria-pressed', String(selected.has(row.id)));
+  line.setAttribute('aria-label', description(row, snap, metric, probability, st));
+  const last = lastColumn(row, probability, st.showForm);
+  cells.rank.textContent = row.rank;
+  cells.name.textContent = names[index];
+  cells.team.textContent = teams[index];
+  cells.rating.textContent = fmt(st.showForm ? row.formValue : row.value, probability);
+  cells.deviation.textContent = Number.isFinite(sdOf(row, metric)) ? `±${sdOf(row, metric).toFixed(0)}` : '';
+  cells.change.className = `change ${last.tone}`.trim();
+  cells.change.textContent = last.text;
+  const from = st.showForm ? Math.min(row.value, row.formValue) : row.value;
+  base.style.width = share(from);
+  if (st.showForm && row.shift) {
+    const form = (item._parts.form ??= bar.appendChild(element('i', 'bar-form')));
+    form.classList.toggle('loss', row.shift < 0);
+    form.style.left = share(from);
+    form.style.width = `${(100 * (barShare(Math.max(row.value, row.formValue), low, high) - barShare(from, low, high))).toFixed(2)}%`;
+  } else if (item._parts.form) {
+    item._parts.form.remove();
+    item._parts.form = null;
+  }
 }
 
 /**
  * The ratings, ranked, as rows: rank, name (and team when there is room), rating, error, a bar, and the last column. The bar runs from the left to
- * the rating, in blue; with recent form on, the shift is stacked on it in orange (solid where form adds to the rating, an outline where it takes
+ * the rating, in blue; with recent form on, the shift is stacked on it in FA1802 (solid where form adds to the rating, an outline where it takes
  * away from it). A vertical line marks the average, 1,000 on the rating scale, or the mean of what is shown for the probabilities.
+ *
+ * The rows stay from one weekend to the next (and from one rating to another): when the places change they glide to their new ones, the bars grow or
+ * shrink, the average line moves, a driver who joins fades in and one who leaves is gone. The glide is FLIP: where each row is now is measured, the
+ * rows are put in their new places, and each is moved back to where it was and let go. A row is put in its place on the screen with the CSS `order`;
+ * the order in the document (for the keyboard and for screen readers) follows once the rows have glided, because moving a node in the document cancels
+ * what it is doing. With reduced motion nothing glides.
  */
 function drawList(rows, snap, metric, probability, st) {
   const list = controls.ratingsList;
   const selected = preferences[entity].selected;
   const width = panel.getBoundingClientRect().width;
-  const total = (row) => (st.showForm ? row.formValue : row.value);
   const finite = rows.map((row) => row.value).filter(Number.isFinite);
   const mean = probability ? finite.reduce((sum, value) => sum + value, 0) / (finite.length || 1) : 1000;
   const { low, high } = barScale([...rows.flatMap((row) => (st.showForm ? [row.value, row.formValue] : [row.value])), mean]);
@@ -307,10 +404,14 @@ function drawList(rows, snap, metric, probability, st) {
   const names = rows.map((row) => (row.newDriver ? `${row.name} · new` : row.name));
   const teams = rows.map((row) => (entity === 'driver' ? row.car || '' : ''));
   const showTeam = entity === 'driver' && width >= 560;
-  // the name column is as wide as the longest name (up to a limit), so that the ratings are close to the names and the bars take the rest
+  // the name column is as wide as the longest name (up to a limit), so that the ratings are close to the names and the bars take the rest; while the
+  // weekends go by it is as wide as the longest name seen so far, so that it does not change from one weekend to the next
+  const longest = { name: Math.max(...names.map((name) => name.length), 4), team: Math.max(...teams.map((team) => team.length), 4) };
+  widest = busy() ? { name: Math.max(widest?.name ?? 0, longest.name), team: Math.max(widest?.team ?? 0, longest.team) } : null;
+  const columns = widest ?? longest;
   list.style.setProperty('--rows', String(rows.length));
-  list.style.setProperty('--name', `${Math.min(Math.max(...names.map((name) => name.length), 4), width >= 560 ? 22 : 18)}ch`);
-  list.style.setProperty('--team', `${Math.min(Math.max(...teams.map((team) => team.length), 4), 16)}ch`);
+  list.style.setProperty('--name', `${Math.min(columns.name, width >= 560 ? 22 : 18)}ch`);
+  list.style.setProperty('--team', `${Math.min(columns.team, 16)}ch`);
   list.style.setProperty('--mean', share(mean));
   list.classList.toggle('with-team', showTeam);
   list.classList.toggle('with-sd', st.sd && width >= 400); // a phone has no room for the error beside every rating
@@ -318,64 +419,78 @@ function drawList(rows, snap, metric, probability, st) {
     'aria-label',
     `${entity === 'driver' ? 'Driver' : 'Car'} ratings, ${NAMES[metric] || metric}${st.showForm ? ', with recent form' : ''}, ranked. Press a row to select it for comparison.`,
   );
-  const element = (tag, className, text) => {
-    const node = document.createElement(tag);
-    node.className = className;
-    if (text != null) node.textContent = text;
-    return node;
-  };
-  list.replaceChildren(
-    ...rows.map((row, index) => {
-      const item = document.createElement('li');
-      const line = element('div', 'ledger-row');
-      line.dataset.id = row.id;
-      line.classList.toggle('selected', selected.has(row.id));
-      line.classList.toggle('linked', isLinked(row.id));
-      line.setAttribute('aria-pressed', String(selected.has(row.id)));
-      const last = lastColumn(row, probability, st.showForm);
-      const deviation = Number.isFinite(sdOf(row, metric)) ? `±${sdOf(row, metric).toFixed(0)}` : '';
-      const bar = element('span', 'bar');
-      bar.setAttribute('aria-hidden', 'true');
-      const base = st.showForm ? Math.min(row.value, row.formValue) : row.value;
-      const baseBar = element('i', 'bar-base');
-      baseBar.style.width = share(base);
-      bar.append(element('i', 'bar-track'), baseBar);
-      if (st.showForm && row.shift) {
-        const formBar = element('i', row.shift < 0 ? 'bar-form loss' : 'bar-form');
-        formBar.style.left = share(base);
-        formBar.style.width = `${(100 * (barShare(Math.max(row.value, row.formValue), low, high) - barShare(base, low, high))).toFixed(2)}%`;
-        bar.append(formBar);
+  if (!rows.length) {
+    rowElements.clear();
+    list.replaceChildren(document.createTextNode('No entries for this weekend.'));
+    return;
+  }
+  if (list.firstChild?.nodeType === Node.TEXT_NODE) list.firstChild.remove();
+  const keys = rows.map((row) => `${entity}:${row.id}`);
+  // rows that glide: those that were there already (the other drivers or cars, when the entity has just changed, are not the same rows)
+  const glide = !reducedMotion.matches && keys.some((key) => rowElements.has(key)) && list.offsetParent !== null;
+  const before = new Map(); // where each row is now, with whatever it is still gliding by
+  if (glide)
+    for (const [key, item] of rowElements) {
+      before.set(key, item.getBoundingClientRect().top);
+      item.style.transition = 'none';
+      item.style.transform = 'none';
+    }
+  const context = { snap, metric, probability, st, share, low, high, names, teams, selected };
+  const entering = [];
+  rows.forEach((row, index) => {
+    let item = rowElements.get(keys[index]);
+    if (!item) {
+      item = createRow();
+      rowElements.set(keys[index], item);
+      list.append(item);
+      if (glide) {
+        item.classList.add('entering');
+        entering.push(item);
       }
-      line.append(
-        element('span', 'rank', row.rank),
-        element('span', 'name', names[index]),
-        element('span', 'team', teams[index]),
-        element('span', 'rating', fmt(total(row), probability)),
-        element('span', 'deviation', deviation),
-        bar,
-        element('span', `change ${last.tone}`.trim(), last.text),
-      );
-      line.addEventListener('click', () => toggleSelected(row));
-      // the row is a button for the keyboard and for screen readers (which are told the rating as a sentence); the card is for the eye
-      line.tabIndex = 0;
-      line.setAttribute('role', 'button');
-      line.setAttribute('aria-label', description(row, snap, metric, probability, st));
-      line.addEventListener('pointerenter', () => showCard(row, line, snap));
-      line.addEventListener('focus', () => showCard(row, line, snap));
-      line.addEventListener('pointerleave', hideCard);
-      line.addEventListener('blur', hideCard);
-      for (const name of ['pointerenter', 'focus']) line.addEventListener(name, () => announceRow(row.id)); // the dot of this row on the track turns red
-      line.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' || event.key === ' ') {
-          event.preventDefault();
-          toggleSelected(row);
-        }
-      });
-      item.append(line);
-      return item;
-    }),
-  );
-  if (!rows.length) list.textContent = 'No entries for this weekend.';
+    }
+    fillRow(item, row, index, context);
+  });
+  for (const [key, item] of rowElements)
+    if (!keys.includes(key)) {
+      item.remove();
+      rowElements.delete(key);
+    }
+  if (glide) {
+    const moved = [];
+    for (const [key, top] of before) {
+      const item = rowElements.get(key);
+      if (!item) continue;
+      const delta = top - item.getBoundingClientRect().top;
+      if (Math.abs(delta) > 0.5) item.style.transform = `translateY(${delta}px)`; // back to where it was
+      moved.push(item);
+    }
+    void list.offsetHeight;
+    for (const item of moved) {
+      item.style.transition = '';
+      item.style.transform = ''; // and let go
+    }
+    for (const item of entering) item.classList.remove('entering');
+    scheduleSettle();
+  } else settle(true);
+}
+
+function scheduleSettle() {
+  clearTimeout(settling);
+  settling = setTimeout(settle, 340);
+}
+
+/** Puts the rows in the document in the order they have on the screen (for the keyboard and for screen readers), once nothing is moving. */
+function settle(force = false) {
+  clearTimeout(settling);
+  const list = controls?.ratingsList;
+  if (!list || (busy() && !force)) return;
+  const ordered = [...list.children]
+    .filter((child) => child.tagName === 'LI')
+    .sort((a, b) => Number(a.style.order) - Number(b.style.order));
+  if (ordered.every((item, index) => list.children[index] === item)) return;
+  const focused = list.contains(document.activeElement) ? document.activeElement : null; // moving a node in the document drops the focus
+  list.append(...ordered);
+  focused?.focus({ preventScroll: true });
 }
 
 let card;
@@ -507,6 +622,7 @@ export function renderRatings() {
   const snap = state.model?.snaps[currentIndex()];
   if (!snap) {
     controls.ratingsTitle.textContent = 'Ratings';
+    rowElements.clear();
     controls.ratingsList.replaceChildren();
     return;
   }
@@ -534,7 +650,11 @@ export function renderRatings() {
   // the weekend shown, for the track on the page
   window.dispatchEvent(
     new CustomEvent('f1:ratings-drawn', {
-      detail: { entity, snap: { raceId: String(snap.raceId), year: snap.year, name: snap.name, circuitId: String(snap.circuitId) } },
+      detail: {
+        entity,
+        busy: busy(),
+        snap: { raceId: String(snap.raceId), year: snap.year, name: snap.name, circuitId: String(snap.circuitId) },
+      },
     }),
   );
 }

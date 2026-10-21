@@ -924,6 +924,144 @@ const moved = await evaluate("+document.getElementById('ratingsScrub').value");
 await evaluate("document.getElementById('ratingsPlay').click()");
 check('play advances the timeline', moved > 0, `index ${moved}`);
 
+// The bar-chart race: the rows stay from one weekend (or one rating) to the next, glide to their new places, their bars grow, a driver who joins
+// fades in, the average line glides; the order in the document follows when they have settled; nothing glides under reduced motion
+const slideTo = (index) =>
+  evaluate(
+    `(() => { const slider = document.getElementById('ratingsScrub'); slider.value = ${index}; slider.dispatchEvent(new Event('input', { bubbles: true })); })()`,
+  );
+const changeMetric = (metric) =>
+  evaluate(
+    `(() => { const select = document.getElementById('ratingsMetric'); select.value = '${metric}'; select.dispatchEvent(new Event('change', { bubbles: true })); })()`,
+  );
+const order = () =>
+  evaluate(
+    "(() => { const items = [...document.querySelectorAll('#ratingsList > li')]; return { document: items.map((item) => item.firstElementChild.dataset.id), screen: [...items].sort((a, b) => a.style.order - b.style.order).map((item) => item.firstElementChild.dataset.id) }; })()",
+  );
+await slideTo(300);
+await sleep(700);
+const identity = await evaluate(
+  "(() => { window.rowsBefore = new Map([...document.querySelectorAll('#ratingsList > li')].map((item) => [item.firstElementChild.dataset.id, item])); return window.rowsBefore.size; })()",
+);
+const glided = await evaluate(
+  `(() => {
+    const select = document.getElementById('ratingsMetric');
+    const before = new Map([...document.querySelectorAll('#ratingsList .bar-base')].map((bar) => [bar.closest('.ledger-row').dataset.id, bar.getBoundingClientRect().width]));
+    select.value = 'qual';
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    const items = [...document.querySelectorAll('#ratingsList > li')];
+    const gliding = items.filter((item) => getComputedStyle(item).transform !== 'none').length;
+    const mean = getComputedStyle(document.getElementById('ratingsList')).transitionProperty;
+    const kept = items.filter((item) => window.rowsBefore.get(item.firstElementChild.dataset.id) === item).length;
+    return { gliding, mean, kept, total: items.length, before: [...before.values()].length };
+  })()`,
+);
+check(
+  'changing the rating keeps the rows, and the rows whose place changes glide to it',
+  glided.gliding >= 3 && glided.kept === glided.total && glided.kept >= identity - 2,
+  JSON.stringify({ glided, identity }),
+);
+check('the line at the average glides as well', glided.mean.includes('--mean'), glided.mean);
+await sleep(700);
+const settled = await order();
+check(
+  'once the rows have glided the order in the document is the order on the screen',
+  JSON.stringify(settled.document) === JSON.stringify(settled.screen),
+);
+const barsGrow = await evaluate(
+  `(async () => {
+    const widths = () => [...document.querySelectorAll('#ratingsList .bar-base')].map((bar) => bar.getBoundingClientRect().width);
+    const before = widths();
+    const slider = document.getElementById('ratingsScrub');
+    slider.value = 299;
+    slider.dispatchEvent(new Event('input', { bubbles: true }));
+    const start = widths();
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    const middle = widths();
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    const end = widths();
+    const index = start.map((_, i) => i).filter((i) => Math.abs(end[i] - before[i]) > 8);
+    return { moved: index.length, started: index.every((i) => Math.abs(start[i] - before[i]) < 2), halfway: index.filter((i) => Math.min(before[i], end[i]) + 1 < middle[i] && middle[i] < Math.max(before[i], end[i]) - 1).length };
+  })()`,
+);
+check(
+  'the bars grow to their new lengths rather than jumping',
+  barsGrow.moved === 0 || (barsGrow.started && barsGrow.halfway >= 1),
+  JSON.stringify(barsGrow),
+);
+await slideTo(0);
+await sleep(700);
+const joining = await evaluate(
+  `(() => {
+    const slider = document.getElementById('ratingsScrub');
+    const ids = new Set([...document.querySelectorAll('#ratingsList .ledger-row')].map((row) => row.dataset.id));
+    slider.value = 300;
+    slider.dispatchEvent(new Event('input', { bubbles: true }));
+    const items = [...document.querySelectorAll('#ratingsList > li')];
+    const fresh = items.filter((item) => !ids.has(item.firstElementChild.dataset.id));
+    return { fresh: fresh.length, faint: fresh.filter((item) => getComputedStyle(item).opacity === '0').length, left: [...ids].filter((id) => !document.querySelector('#ratingsList .ledger-row[data-id="' + id + '"]')).length };
+  })()`,
+);
+check(
+  'a driver who joins fades in, and one who leaves is gone',
+  joining.fresh >= 1 && joining.faint === joining.fresh && joining.left >= 1,
+  JSON.stringify(joining),
+);
+await sleep(700);
+check(
+  'and everyone is shown once it has settled',
+  (await evaluate("[...document.querySelectorAll('#ratingsList > li')].every((item) => getComputedStyle(item).opacity === '1')")) &&
+    (await evaluate("document.querySelectorAll('#ratingsList > li').length")) === (await chartRows()),
+);
+// keyboard focus stays on its row when the rows are put in order in the document
+await evaluate(
+  "window.focusedId = document.querySelector('#ratingsList > li:nth-child(5) .ledger-row'); window.focusedId.focus(); window.focusedId = window.focusedId.dataset.id;",
+);
+await changeMetric('race');
+await sleep(800);
+check(
+  'a row with the focus keeps it when the rows settle in a new order',
+  (await evaluate('document.activeElement.dataset.id')) === (await evaluate('window.focusedId')),
+);
+await evaluate('document.activeElement.blur()');
+// while the weekends go by, a still pointer is not met by a card, and the race on the page waits for the weekend they stop at
+await slideTo(100);
+await sleep(1500);
+const raceBefore = await evaluate("document.getElementById('stageTrack').dataset.raceId");
+await evaluate("document.getElementById('ratingsPlay').click()");
+await sleep(400);
+const during = await evaluate(
+  "(() => { document.querySelector('#ratingsList .ledger-row').dispatchEvent(new Event('pointerenter')); return [document.getElementById('ratingCard')?.hidden ?? true, document.getElementById('stageTrack').hidden]; })()",
+);
+await evaluate("document.getElementById('ratingsPlay').click()");
+check(
+  'while the weekends go by no card opens on a row and the race is put away',
+  during[0] === true && during[1] === true,
+  JSON.stringify(during),
+);
+await sleep(900);
+check(
+  'and the race comes back for the weekend they stopped at',
+  (await evaluate("document.getElementById('stageTrack').hidden")) === false &&
+    (await evaluate("document.getElementById('stageTrack').dataset.raceId")) !== raceBefore,
+  raceBefore,
+);
+// nothing glides under reduced motion, and the document is in order at once
+await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+await sleep(100);
+await changeMetric('combined');
+const steady = await evaluate(
+  "(() => { const items = [...document.querySelectorAll('#ratingsList > li')]; return { gliding: items.filter((item) => getComputedStyle(item).transform !== 'none').length, ordered: items.every((item, i) => Number(item.style.order) === i) }; })()",
+);
+check(
+  'under reduced motion the rows do not glide and are in order at once',
+  steady.gliding === 0 && steady.ordered,
+  JSON.stringify(steady),
+);
+await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
+await slideTo(+(await evaluate('document.getElementById("ratingsScrub").max')));
+await sleep(700);
+
 // History: lines, chips, table twin
 await evaluate("location.hash = '#/history'");
 await sleep(1200);

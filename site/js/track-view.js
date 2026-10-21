@@ -87,6 +87,7 @@ export function initTrack() {
     frame: 0,
     hotRatings: null, // the id of the row of the ratings under the pointer (a driver or a team, whichever the ratings show)
     hotTable: null, // the driver id of the row of the table under the pointer
+    waiting: 0, // the timer for the race of the weekend the ratings stop at, while the weekends go by
   };
 
   const loadTracks = () => (view.tracks ??= fetchJson('./assets/tracks.json', 2).then((file) => file.tracks));
@@ -337,8 +338,16 @@ export function initTrack() {
     show();
   });
   window.addEventListener('f1:ratings-drawn', (event) => {
+    const changed = event.detail.snap.raceId !== view.snap?.raceId;
     view.entity = event.detail.entity;
     view.snap = event.detail.snap;
+    clearTimeout(view.waiting);
+    if (event.detail.busy && changed) {
+      // the weekends go by (several in a second): the race, and the season file it is built from, are for the weekend they stop at
+      hide();
+      view.waiting = setTimeout(show, 400);
+      return;
+    }
     show();
   });
   window.addEventListener('f1:row-hover', (event) => {
