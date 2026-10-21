@@ -243,10 +243,12 @@ function renderScenario(sides, wet, L) {
   }
   const { a, b } = r;
   const sameName = a.name === b.name;
-  const tag = (x) => (sameName ? `${surname(x.name)} (${x.driver.label})` : surname(x.name));
+  // under the name: the moment of the driver's career ("2026", "prime, 2022": the name is above), and the car at its moment ("2026 Red Bull")
+  const moment = (label, name) => (label.endsWith(` ${name}`) ? label.slice(0, -name.length - 1) : label);
+  const driverWhen = (x) => `${x.driver.prime ? 'prime, ' : ''}${moment(x.driver.label, x.name)}`;
+  const carWhen = (x) => `${x.car.prime ? 'prime, ' : ''}${x.car.label}`;
+  const tag = (x) => (sameName ? `${surname(x.name)} (${driverWhen(x)})` : surname(x.name));
   const [nameA, nameB] = [tag(a), tag(b)];
-  const driverWhen = (x) => `${x.driver.prime ? 'prime, ' : ''}${x.driver.label}`;
-  const carWhen = (x) => `${x.car.name} · ${x.car.prime ? 'prime, ' : ''}${x.car.label}`;
   const pA = r.p;
   const risk = (q) => 1 - (1 - q) ** L;
   const c = r.components;
