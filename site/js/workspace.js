@@ -148,8 +148,21 @@ export function initWorkspace() {
     target.focus({ preventScroll: true });
   }
 
+  /** Opens a view over the ratings from the ratings: a step forward in the browser's history, which Back then takes back. */
+  let openedFromRatings = false;
+  function openView(path) {
+    openedFromRatings = true;
+    location.hash = path;
+  }
+  /** Back to the ratings: one step back in the browser's history when the view was opened from them (so that its Back button does not make the browser's back button return to the view), otherwise to the ratings. */
+  function goBack() {
+    if (openedFromRatings) window.history.back();
+    else location.hash = '/ratings';
+  }
+
   function navigate() {
     const target = parseURL();
+    if (panelView(target.route.slice(1)) === 'ratings') openedFromRatings = false;
     const was = STAGE_PAGES.includes(pageName()) ? panelView(pageName()) : 'ratings';
     restoring = true;
     try {
@@ -171,18 +184,18 @@ export function initWorkspace() {
     if (!['driver', 'car'].includes(entity) || !Array.isArray(ids)) return;
     const snap = state.model?.snaps[state.raceIndex];
     history.compare(event.detail, snap ? +snap.year : history.state.to);
-    location.hash = '/history';
+    openView('/history');
   });
   window.addEventListener('f1:compare-head-to-head', () => {
-    location.hash = '/head-to-head';
+    openView('/head-to-head');
   });
   window.addEventListener('f1:open-view', (event) => {
     const { view, entity } = event.detail;
     if (view === 'history') history.show(entity);
-    location.hash = view === 'history' ? '/history' : '/head-to-head';
+    openView(view === 'history' ? '/history' : '/head-to-head');
   });
-  for (const button of document.querySelectorAll('.ledger-back')) button.addEventListener('click', () => (location.hash = '/ratings'));
-  window.addEventListener('f1:ledger-back', () => (location.hash = '/ratings'));
+  for (const button of document.querySelectorAll('.ledger-back')) button.addEventListener('click', goBack);
+  window.addEventListener('f1:ledger-back', goBack);
   // keeping the ratings open on the front page is the Ratings page, and letting go of them is the front page: the address follows (a view over the
   // ratings is open only while they are, so letting go of the panel there is the front page too)
   window.addEventListener('f1:ratings-pinned', (event) => {

@@ -1235,8 +1235,10 @@ const ledgerState = () =>
 const weekendTitle = () => evaluate("document.getElementById('ratingsTitle').textContent");
 const panelBeforeViews = await rectangleOfSelector('#stageLedger');
 const weekendBeforeViews = await weekendTitle();
+const entriesBefore = await evaluate('history.length');
 await evaluate("document.getElementById('ratingsOpenHistory').click()");
 await sleep(900);
+const entriesOpen = await evaluate('history.length');
 const historyBox = await rectangleOfSelector('#historyView');
 const inHistory = JSON.parse(await ledgerState());
 check(
@@ -1288,6 +1290,11 @@ await mouse('mouseMoved', 8, 300);
 await evaluate("document.querySelector('#historyView .ledger-back').click()");
 await sleep(700);
 const backFromHistory = JSON.parse(await ledgerState());
+check(
+  "opening a view is a step forward in the browser's history and Back in the panel is a step back (so the browser's back button does not return to the view)",
+  entriesOpen === entriesBefore + 1 && (await evaluate('history.length')) === entriesOpen,
+  JSON.stringify({ entriesBefore, entriesOpen, after: await evaluate('history.length') }),
+);
 check(
   'Back returns to the ratings of the same weekend, with the focus on the button that opened the history',
   backFromHistory.view === 'ratings' &&

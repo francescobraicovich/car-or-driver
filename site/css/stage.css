@@ -1684,7 +1684,7 @@ body[data-surface='stage'] main.workspace {
   opacity: 0.4;
 }
 .ledger .frame-foot .foot-views button::after {
-  content: '›'; /* it opens a view over the ratings */
+  content: '›' / ''; /* it opens a view over the ratings (and is no part of the button's name) */
   margin-left: 4px;
   color: var(--ink-3);
 }
