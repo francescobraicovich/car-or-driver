@@ -13,6 +13,7 @@ const IDS = [
   'headToHeadChart',
   'headToHeadChartWrap',
   'headToHeadNote',
+  'headToHeadState',
   'headToHeadOut',
   'headToHeadGridA',
   'headToHeadGridB',

@@ -7,6 +7,7 @@ import { drawChart, metricLabel, metricValue } from './charts.js';
 import { seriesColor } from './chart-renderer.js';
 import { carIdentity } from '../../packages/core/src/lineage.js';
 import { DESCRIPTIONS, METRICS, NAMES, isProbability } from './metric-text.js';
+import { hideInfoTip, infoButton, setInfo } from './info-tip.js';
 
 const MAX_SERIES = 8;
 const PLOT_PADDING = 10; // pixels of the plate (CSS .history-plot) above and below the chart
@@ -88,8 +89,8 @@ export function createHistoryView({ onChange }) {
           <button type="button" data-span="10">10 years</button>
           <button type="button" data-span="5">5 years</button>
         </div>
-      </div>
-      <p class="notes" id="historyNote"></p>`;
+      </div>`;
+    root.querySelector('.frame-tools label.field').after(Object.assign(infoButton(''), { id: 'historyInfo' })); // what the rating is, and how to read the chart
     el.chartsPanel.replaceChildren(root);
     ui = Object.fromEntries([...root.querySelectorAll('[id]')].map((n) => [n.id, n]));
 
@@ -324,6 +325,7 @@ export function createHistoryView({ onChange }) {
 
   function render() {
     if (!root || !state.model) return;
+    hideInfoTip(); // (the chart is drawn again under a pointer that may be on the icon)
     const type = hist.entity;
     const m = metric();
     for (const [id, on] of [
@@ -336,11 +338,19 @@ export function createHistoryView({ onChange }) {
     ui.historyMetric.innerHTML = METRICS[type]
       .map((x) => `<option value="${x}"${x === m ? ' selected' : ''}>${esc(NAMES[x])}</option>`)
       .join('');
-    ui.historyMetric.title = `${DESCRIPTIONS[m]}${isProbability(m) ? '' : ' 1,000 is the average of the field.'}`;
-    ui.historyNote.textContent =
-      type === 'car'
-        ? 'A car carries over only partly into a new season, so the lines step. Hover or use the arrow keys to read a weekend.'
-        : 'Each point is the rating after a weekend; gaps are seasons out. Hover or use the arrow keys to read a weekend.';
+    setInfo(
+      ui.historyInfo,
+      [
+        DESCRIPTIONS[m],
+        isProbability(m) ? '' : '1,000 is the average of the field.',
+        type === 'car'
+          ? 'A car carries over only partly into a new season, so the lines step.'
+          : 'Each point is the rating after a weekend; gaps are seasons out.',
+        'Hover, or use the arrow keys, to read a weekend.',
+      ]
+        .filter(Boolean)
+        .join(' '),
+    );
     const fill = ui.historyFill;
     const top = Math.max(1, seasons.length - 1);
     fill.style.left = `${(seasons.indexOf(hist.from) / top) * 100}%`;
@@ -355,6 +365,8 @@ export function createHistoryView({ onChange }) {
       xDomain: seasonSpan(),
       pointLabel: (p) => raceNames().get(String(p.raceId)),
       legend: false, // the chips name the lines
+      casing: true,
+      reference: isProbability(m) ? undefined : { value: 1000 }, // the average of the field, drawn as the ratings draw theirs
       height: () => Math.max(0, ui.historyPlot.clientHeight - PLOT_PADDING), // (0 while the view is hidden: the renderer then takes its own)
     });
     renderChips();

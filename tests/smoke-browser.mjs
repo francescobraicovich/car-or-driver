@@ -1271,11 +1271,30 @@ check(
   await (async () => {
     await evaluate("document.documentElement.dataset.theme = 'dark'");
     const colours = await evaluate(
-      "(() => { const chip = getComputedStyle(document.querySelector('#historyChips .series-chip i')).backgroundColor; const line = getComputedStyle(document.querySelector('#driverChart polyline')).stroke; return [chip, line]; })()",
+      "(() => { const chip = getComputedStyle(document.querySelector('#historyChips .series-chip i')).backgroundColor; const line = getComputedStyle(document.querySelector('#driverChart polyline[stroke^=\"var(--s\"]')).stroke; return [chip, line]; })()",
     );
     await evaluate('delete document.documentElement.dataset.theme');
-    return colours[0] === 'rgb(29, 99, 196)' && colours[1] === colours[0];
+    return colours[0] === 'rgb(250, 24, 2)' && colours[1] === colours[0];
   })(),
+);
+check(
+  'the history has an "i" that explains the rating and how to read the chart, and draws the average of the field as a line (for the ratings, not for the probabilities)',
+  (await evaluate(
+    "document.getElementById('historyInfo').dataset.info.includes('1,000') && document.getElementById('historyInfo').dataset.info.length > 60",
+  )) &&
+    (await evaluate('document.querySelectorAll(\'#driverChart line[stroke="var(--ink)"]\').length')) === 1 &&
+    (await (async () => {
+      await evaluate(
+        "(() => { const select = document.getElementById('historyMetric'); select.value = 'clean'; select.dispatchEvent(new Event('change', { bubbles: true })); })()",
+      );
+      await sleep(300);
+      const without = await evaluate('document.querySelectorAll(\'#driverChart line[stroke="var(--ink)"]\').length');
+      await evaluate(
+        "(() => { const select = document.getElementById('historyMetric'); select.value = 'combined'; select.dispatchEvent(new Event('change', { bubbles: true })); })()",
+      );
+      await sleep(300);
+      return without === 0;
+    })()),
 );
 const chartPlot = await rectangleOfSelector('#driverChart');
 await mouse('mouseMoved', chartPlot.x + chartPlot.width * 0.7, chartPlot.y + chartPlot.height * 0.5);
@@ -1311,12 +1330,57 @@ check(
   'the Versus button opens the head to head with a forecast, a bar in the colours of the two lines, and no scrolling',
   JSON.parse(await ledgerState()).view === 'head-to-head' &&
     /\d+%/.test((await evaluate("document.querySelector('.head-to-head-figures')?.textContent || ''")) || '') &&
-    (await styleOf('.head-to-head-bar i:first-child', 'backgroundColor')) === (await styleOf('#headToHeadChart polyline', 'stroke')) &&
-    (await styleOf('.head-to-head-bar i:last-child', 'backgroundColor')) ===
-      (await styleOf('#headToHeadChart polyline:nth-of-type(2)', 'stroke')) &&
+    (await styleOf('.head-to-head-bar i:first-child', 'backgroundColor')) ===
+      (await styleOf('#headToHeadChart polyline[stroke^="var(--s"]', 'stroke')) &&
+    (await evaluate(
+      "getComputedStyle(document.querySelector('.head-to-head-bar i:last-child')).backgroundColor === getComputedStyle([...document.querySelectorAll('#headToHeadChart polyline[stroke^=\"var(--s\"]')].find((line) => line.getAttribute('stroke') === 'var(--s2)')).stroke",
+    )) &&
     (await evaluate(
       "(() => { const body = document.querySelector('#headToHeadView .ledger-body, #headToHeadView .ledger-view-body'); return body.scrollHeight <= body.clientHeight + 1; })()",
     )),
+);
+// What explains a row is behind an "i" (and the views carry the figures and the names and little else): pointing at one, or focusing it, opens its
+// note beside it inside the stage; Escape closes the note and nothing else; the steps of the forecast are rows with a bar split between the two drivers
+const stepIcon = "document.querySelectorAll('#headToHeadView .head-to-head-steps li .info')[1]";
+const bars = await evaluate(
+  "(() => [...document.querySelectorAll('#headToHeadView .head-to-head-steps li .head-to-head-step-bar')].map((bar) => [bar.children.length, getComputedStyle(bar.children[0]).backgroundColor, getComputedStyle(bar.children[1]).backgroundColor]))()",
+);
+const resultText = await evaluate("document.getElementById('headToHeadOut').innerText.length");
+check(
+  'the head to head shows the figures, the names and bars for each step of the forecast, with the explanations behind icons',
+  bars.length >= 2 &&
+    bars.every((bar) => bar[0] === 2 && bar[1] === 'rgb(250, 24, 2)' && bar[2] === 'rgb(9, 26, 156)') &&
+    resultText < 420 &&
+    (await evaluate(
+      "[...document.querySelectorAll('#headToHeadView .info:not([hidden])')].length >= 6 && [...document.querySelectorAll('#headToHeadView .info:not([hidden])')].every((icon) => icon.dataset.info.length > 10 && icon.getAttribute('aria-label') === icon.dataset.info)",
+    )),
+  JSON.stringify({ bars, resultText }),
+);
+const iconAt = await evaluate(
+  `(() => { const r = ${stepIcon}.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; })()`,
+);
+await mouse('mouseMoved', iconAt[0], iconAt[1]);
+await sleep(350);
+const noteOpen = JSON.parse(
+  await evaluate(
+    `JSON.stringify((() => { const tip = document.getElementById('infoTip'); const stage = document.getElementById('stage').getBoundingClientRect(); const r = tip.getBoundingClientRect(); return { shown: !tip.hidden, inside: r.left >= stage.left && r.right <= stage.right && r.top >= stage.top && r.bottom <= stage.bottom, text: tip.textContent === ${stepIcon}.dataset.info, described: ${stepIcon}.getAttribute('aria-describedby') === 'infoTip', floating: getComputedStyle(tip).pointerEvents === 'none' }; })())`,
+  ),
+);
+check('pointing at an "i" opens its note beside it, inside the stage', Object.values(noteOpen).every(Boolean), JSON.stringify(noteOpen));
+await press('Escape', 'Escape', 27);
+await sleep(250);
+check(
+  'Escape closes the note and nothing else: the view is still open',
+  (await evaluate("document.getElementById('infoTip').hidden")) && JSON.parse(await ledgerState()).view === 'head-to-head',
+);
+await mouse('mouseMoved', 8, 300);
+await sleep(200);
+await evaluate(`${stepIcon}.focus()`);
+await sleep(250);
+check(
+  'focusing an "i" with the keyboard opens its note too, and moving on closes it',
+  (await evaluate("!document.getElementById('infoTip').hidden")) &&
+    (await evaluate("(document.activeElement.blur(), document.getElementById('infoTip').hidden)")),
 );
 await press('Escape', 'Escape', 27);
 await sleep(600);

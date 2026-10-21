@@ -339,6 +339,13 @@ export function renderPlot(svg, options) {
     kind === 'scatter'
       ? xScale.ticks.map((t) => ({ t, label: Number(t.toPrecision(5)).toString() }))
       : timeTicks(xLo, xHi, Math.max(3, Math.floor((box.right - box.left) / 90)));
+  // a reference line, drawn as the ratings draw their average: a solid ink line with a light halo
+  const reference = options.reference;
+  if (reference && reference.value >= yLo && reference.value <= yHi) {
+    const y = Y(reference.value);
+    node(axis, 'line', { x1: box.left, x2: box.right, y1: y, y2: y, stroke: 'var(--surface)', 'stroke-width': 3.5, opacity: 0.85 });
+    node(axis, 'line', { x1: box.left, x2: box.right, y1: y, y2: y, stroke: 'var(--ink)', 'stroke-width': 1.25 });
+  }
   for (const tk of xTicks) {
     node(axis, 'line', { x1: X(tk.t), x2: X(tk.t), y1: box.bottom, y2: box.bottom + 4, stroke: 'var(--rule)', 'stroke-width': 1 });
     node(axis, 'text', { x: X(tk.t), y: box.bottom + 18, fill: 'var(--ink-3)', 'font-size': 12, 'text-anchor': 'middle' }, tk.label);
@@ -377,8 +384,20 @@ export function renderPlot(svg, options) {
     const color = colorOf(s);
     const segments = splitSegments(s.points);
     for (const group of segments) {
+      const points = group.map((p) => `${X(timeOf(p)).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+      if (options.casing)
+        // a thin dark edge under the line, so that a pale colour shows on a light plate
+        node(layer, 'polyline', {
+          points,
+          fill: 'none',
+          stroke: 'rgb(0 0 0 / 0.2)',
+          'stroke-width': 3.8,
+          'stroke-linejoin': 'round',
+          'stroke-linecap': 'round',
+          'pointer-events': 'none',
+        });
       node(layer, 'polyline', {
-        points: group.map((p) => `${X(timeOf(p)).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' '),
+        points,
         fill: 'none',
         stroke: color,
         'stroke-width': 2,

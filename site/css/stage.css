@@ -461,6 +461,7 @@ body[data-surface='stage'] main.workspace {
    reads on the lightest and darkest pixel behind it, with the fill and with the darkest the shading can make. */
 .ledger,
 #chartValueTooltip.metal,
+.info-tip,
 .rating-card {
   --ink: #07080b;
   --ink-2: #14171c;
@@ -478,17 +479,20 @@ body[data-surface='stage'] main.workspace {
   --pos: #023317;
   --neg: #560709;
   --form: #fa1802; /* the colour of recent form */
-  /* the colours of the lines of a chart, in the order of the site's palette but darker, so that each is at least 3 to 1 against the lightest metal and the
-     darkest (tools: validate_palette.js on #e2e2e2 and #d0d0d0, which pass lightness, chroma, colour-blind separation and contrast); the lines are the
-     same on the panel whatever theme another page of the site was set to */
-  --s1: #1d63c4;
-  --s2: #b84808;
-  --s3: #067a5a;
-  --s4: #8c6000;
-  --s5: #b52c72;
-  --s6: #2b7a00;
-  --s7: #5b3fc9;
-  --s8: #c4222a;
+  /* the colours of the lines of a chart on the panel: the project owner's five (red, blue, turquoise, dark green, magenta), then violet, orange and
+     azure in the same vivid spirit; the same on the panel whatever theme another page was set to (Insights keeps the site's own palette). Checked
+     with the palette validator on the lightest metal (#e2e2e2): every pair, not only neighbours, is told apart (colour-blind separation at least 9.5,
+     normal vision at least 16.7). The five themselves are outside its lightness band (the blue, the dark green and the turquoise), the dark green is
+     below its chroma floor, and the turquoise, the orange and the azure are under 3 to 1 against light metal: the names on the chips, the table and
+     the tooltip say which line is which, and the lines have a thin dark edge (chart-renderer.js, `casing`) so that the pale ones show. */
+  --s1: #fa1802;
+  --s2: #091a9c;
+  --s3: #4ecdc4;
+  --s4: #065143;
+  --s5: #ce1483;
+  --s6: #7b2ff7;
+  --s7: #ff8a00;
+  --s8: #1e90ff;
   --form-edge: #5c0a00;
   --panel-plate: rgb(236 238 242 / 0.18);
   --panel-shade: rgb(0 0 0 / 0.11); /* the most the shading below can darken any point: the layers of it together */
@@ -723,10 +727,6 @@ body[data-surface='stage'] main.workspace {
   flex-direction: column;
   min-height: 100%;
 }
-.history .notes {
-  margin: 0;
-  padding: 4px 12px 8px;
-}
 .series-chips {
   display: flex;
   flex: none;
@@ -861,6 +861,13 @@ body[data-surface='stage'] main.workspace {
   vertical-align: bottom;
   white-space: normal; /* a name wraps over two lines rather than widening the table */
 }
+.ledger tbody tr:hover {
+  background: var(--ink); /* inverted, as the rows of the ratings are */
+  color: var(--surface);
+}
+.ledger tbody tr:hover th {
+  color: inherit;
+}
 .ledger tbody th {
   background: none;
   color: var(--ink);
@@ -876,7 +883,7 @@ body[data-surface='stage'] main.workspace {
   flex-wrap: wrap; /* on a phone the presets go under the slider */
   align-items: center;
   gap: 4px 10px;
-  padding: 8px 12px 2px;
+  padding: 8px 12px 10px;
 }
 .season-range .segmented button {
   white-space: nowrap;
@@ -949,10 +956,49 @@ body[data-surface='stage'] main.workspace {
   bottom: 0;
   background: var(--ink);
 }
+/* ── the small "i" and its note ──────────────────────── */
+/* What explains a label or a figure is behind an "i" (info-tip.js), so that the views carry the figures and the names and little else. */
+.ledger .info {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  min-height: 14px;
+  margin-left: 6px;
+  padding: 0;
+  border: 1px solid var(--ink-3);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-3);
+  font: 700 9px/1 var(--mono);
+  cursor: help;
+}
+.ledger .info:hover:not(:disabled),
+.ledger .info:focus-visible,
+.ledger .info[aria-describedby] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--surface);
+}
+.info-tip {
+  --panel-plate: rgb(238 240 244 / 0.94);
+  position: absolute;
+  z-index: 9;
+  width: max-content;
+  max-width: min(250px, calc(100% - 16px));
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.45;
+  pointer-events: none;
+}
+
 /* ── head to head ────────────────────────────────────── */
-/* Two drivers, A in the first colour of the chart's palette and B in the second (over the name, in the bar, and as the two lines under it), the chance
-   that each finishes ahead in large figures, and how the forecast is built under them; what changes the matchup (another season or car for either
-   driver, the conditions) is folded away until it is wanted. */
+/* Two drivers, A in the first colour of the chart's palette and B in the second (over the name, in the bars, and as the two lines under them), the
+   chance that each finishes ahead in large figures, and the forecast one stage at a time as rows like those of the ratings: a bar split between the
+   two drivers with the line at even odds drawn as the ratings draw their average, and the row under the pointer inverted. What explains a row is
+   behind its "i"; what changes the matchup (another season or car for either driver, the conditions) is folded away until it is wanted. */
 .head-to-head {
   display: flex;
   flex-direction: column;
@@ -1099,30 +1145,51 @@ body[data-surface='stage'] main.workspace {
   letter-spacing: -0.04em;
   line-height: 1;
 }
-.head-to-head-bar {
+/* the two bars (the main one and the one of each step): A and B side by side, and the line at even odds as the ratings draw their average */
+.head-to-head-bar,
+.head-to-head-step-bar {
+  --line: var(--ink);
+  --halo: rgb(255 255 255 / 0.85);
+  position: relative;
   display: flex;
-  gap: 2px;
-  height: 10px;
 }
-.head-to-head-bar i {
+.head-to-head-bar {
+  height: 12px;
+}
+.head-to-head-bar i,
+.head-to-head-step-bar i {
   display: block;
   min-width: 2px;
-  border-radius: 2px;
-  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.2);
 }
-.head-to-head-bar i:first-child {
+.head-to-head-bar i:first-child,
+.head-to-head-step-bar i:first-child {
   background: var(--s1);
 }
-.head-to-head-bar i:last-child {
+.head-to-head-bar i:last-child,
+.head-to-head-step-bar i:last-child {
   background: var(--s2);
 }
+.head-to-head-bar::after,
+.head-to-head-step-bar::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--line);
+  box-shadow: 0 0 0 1px var(--halo);
+}
 .head-to-head-steps {
-  margin-top: 12px;
+  margin-top: 10px;
   padding-top: 8px;
   border-top: 1px solid var(--border);
 }
 .head-to-head-steps h3 {
-  margin: 0 0 2px;
+  display: flex;
+  align-items: center;
+  margin: 0 0 4px;
   color: var(--ink-3);
   font-family: var(--display);
   font-size: 9.5px;
@@ -1130,43 +1197,62 @@ body[data-surface='stage'] main.workspace {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-.head-to-head-steps h3 small {
-  margin-left: 8px;
-  font-family: var(--text);
-  font-size: 10.5px;
-  letter-spacing: 0;
-  text-transform: none;
-}
 .head-to-head-steps ol {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .head-to-head-steps li {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 4px 0;
-  border-bottom: 1px solid var(--grid);
+  display: grid;
+  grid-template-columns: 9.5em minmax(0, 1fr) 4ch;
+  align-items: center;
+  gap: 10px;
+  min-height: 26px;
+  padding: 0 6px;
+  border-radius: 2px;
 }
-.head-to-head-steps li span {
+.head-to-head-steps li > span:first-child {
+  display: flex;
+  align-items: center;
   font-size: 11.5px;
   font-weight: 650;
+  white-space: nowrap;
 }
-.head-to-head-steps li small {
-  display: block;
-  color: var(--ink-3);
-  font-size: 10.5px;
-  font-weight: 450;
+.head-to-head-step-bar {
+  height: 10px;
 }
 .head-to-head-steps li b {
-  flex: none;
   font-family: var(--mono);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 800;
+  text-align: right;
+}
+/* the row under the pointer is inverted, as in the ratings (and so are the rows of the table below) */
+.head-to-head-steps li:hover,
+.head-to-head-parts tbody tr:hover {
+  background: var(--ink);
+  color: var(--surface);
+}
+.head-to-head-steps li:hover .head-to-head-step-bar {
+  --line: var(--surface);
+  --halo: rgb(10 11 15 / 0.85);
+}
+.head-to-head-steps li:hover .head-to-head-step-bar i {
+  box-shadow: inset 0 0 0 1px rgb(238 240 243 / 0.75);
+}
+.ledger .head-to-head-steps li:hover .info,
+.ledger .head-to-head-parts tbody tr:hover .info {
+  border-color: var(--surface);
+  color: var(--surface);
+}
+.ledger .head-to-head-steps li:hover .info:hover,
+.ledger .head-to-head-parts tbody tr:hover .info:hover {
+  background: var(--surface);
+  color: var(--ink);
 }
 .head-to-head-why {
+  display: flex;
+  align-items: center;
   margin: 6px 0 0;
   font-size: 11px;
   font-weight: 550;
@@ -1180,6 +1266,8 @@ body[data-surface='stage'] main.workspace {
   padding: 6px 8px 2px 0;
 }
 .head-to-head-facts dt {
+  display: flex;
+  align-items: center;
   color: var(--ink-3);
   font-family: var(--display);
   font-size: 9.5px;
@@ -1193,29 +1281,43 @@ body[data-surface='stage'] main.workspace {
   font-weight: 800;
 }
 .head-to-head-facts dd small {
-  display: block;
   color: var(--ink-3);
   font-family: var(--text);
   font-size: 10.5px;
   font-weight: 450;
 }
+.head-to-head-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.head-to-head-pair i {
+  width: 8px;
+  height: 8px;
+  background: var(--s1);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
+}
+.head-to-head-pair i.b {
+  margin-left: 8px;
+  background: var(--s2);
+}
 .head-to-head-parts {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 8px;
   border-collapse: collapse;
   table-layout: fixed;
   font-size: 11px;
 }
 .head-to-head-parts th:first-child {
-  width: 34%;
+  width: 40%;
 }
 .head-to-head-parts th,
 .head-to-head-parts td {
-  padding: 5px 0 5px 10px;
+  padding: 4px 6px;
   border-top: 1px solid var(--grid);
   border-bottom: 0;
   text-align: right;
-  vertical-align: top;
+  vertical-align: middle;
   white-space: normal;
   overflow-wrap: anywhere;
 }
@@ -1223,8 +1325,7 @@ body[data-surface='stage'] main.workspace {
   border-top: 0;
 }
 .head-to-head-parts tbody th {
-  padding-left: 0;
-  color: var(--ink-3);
+  color: inherit;
   font-family: var(--text);
   font-size: 11px;
   font-weight: 600;
@@ -1232,23 +1333,35 @@ body[data-surface='stage'] main.workspace {
   text-align: left;
   text-transform: none;
 }
+.head-to-head-parts tbody th > .info {
+  vertical-align: middle;
+}
 .head-to-head-parts td {
   font-family: var(--mono);
   font-weight: 800;
 }
-.head-to-head-parts td small {
-  display: block;
-  color: var(--ink-3);
-  font-family: var(--text);
-  font-size: 10.5px;
-  font-weight: 450;
-}
 .head-to-head-chart {
-  flex: none;
+  flex: 1 1 120px;
+  min-height: 120px;
   padding: 4px 6px;
+  overflow: hidden;
   border-radius: 4px;
   background: rgb(255 255 255 / 0.4);
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+}
+.head-to-head-foot {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.head-to-head-more {
+  flex: 1 1 auto;
+}
+.head-to-head-state {
+  margin-left: 6px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-weight: 500;
 }
 .head-to-head-more .controls {
   display: grid;
@@ -1258,9 +1371,6 @@ body[data-surface='stage'] main.workspace {
 }
 #headToHeadGridFields {
   display: contents;
-}
-.head-to-head .notes {
-  margin: 0;
 }
 /* the tooltip of a chart on the panel: the panel's metal, the lines' own colours */
 #chartValueTooltip.metal {

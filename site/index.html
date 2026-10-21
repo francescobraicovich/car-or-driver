@@ -47,6 +47,7 @@
     <link rel="modulepreload" href="../packages/core/src/json-serialization.js" />
     <link rel="modulepreload" href="js/workspace.js" />
     <link rel="modulepreload" href="js/stage-pages.js" />
+    <link rel="modulepreload" href="js/info-tip.js" />
     <link rel="modulepreload" href="js/stage-view.js" />
     <link rel="modulepreload" href="js/stage-geometry.js" />
     <link rel="modulepreload" href="js/stage-noise.js" />
@@ -243,31 +244,33 @@
                   <div id="headToHeadChartWrap" class="head-to-head-chart" hidden>
                     <svg id="headToHeadChart" class="chart" role="group"></svg>
                   </div>
-                  <details class="head-to-head-more">
-                    <summary>Conditions</summary>
-                    <div class="controls">
-                      <label class="field"
-                        >Conditions<select id="headToHeadWet">
-                          <option value="dry">Dry</option>
-                          <option value="wet">Wet</option>
-                        </select></label
-                      >
-                      <label class="field" id="headToHeadSessionField">Forecast timing<select id="headToHeadSession"></select></label>
-                      <label class="field"
-                        >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
-                      /></label>
-                      <label class="field">Circuit<select id="headToHeadCircuit"></select></label>
-                      <span id="headToHeadGridFields" class="controls" hidden>
+                  <div class="head-to-head-foot">
+                    <details class="head-to-head-more">
+                      <summary>Conditions <span class="head-to-head-state" id="headToHeadState"></span></summary>
+                      <div class="controls">
                         <label class="field"
-                          >Grid slot, driver A<input id="headToHeadGridA" type="number" min="1" max="24" step="1" placeholder="1–24"
-                        /></label>
+                          >Conditions<select id="headToHeadWet">
+                            <option value="dry">Dry</option>
+                            <option value="wet">Wet</option>
+                          </select></label
+                        >
+                        <label class="field" id="headToHeadSessionField">Forecast timing<select id="headToHeadSession"></select></label>
                         <label class="field"
-                          >Grid slot, driver B<input id="headToHeadGridB" type="number" min="1" max="24" step="1" placeholder="1–24"
+                          >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
                         /></label>
-                      </span>
-                    </div>
-                  </details>
-                  <p class="notes" id="headToHeadNote"></p>
+                        <label class="field">Circuit<select id="headToHeadCircuit"></select></label>
+                        <span id="headToHeadGridFields" class="controls" hidden>
+                          <label class="field"
+                            >Grid slot, driver A<input id="headToHeadGridA" type="number" min="1" max="24" step="1" placeholder="1–24"
+                          /></label>
+                          <label class="field"
+                            >Grid slot, driver B<input id="headToHeadGridB" type="number" min="1" max="24" step="1" placeholder="1–24"
+                          /></label>
+                        </span>
+                      </div>
+                    </details>
+                    <button type="button" class="info" id="headToHeadNote" hidden>i</button>
+                  </div>
                 </div>
               </div>
             </section>

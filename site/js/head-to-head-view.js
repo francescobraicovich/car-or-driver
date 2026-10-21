@@ -4,12 +4,34 @@ import { state } from './state.js';
 import { el } from './dom.js';
 import { drawChart } from './charts.js';
 import { esc } from './utils.js';
+import { hideInfoTip, infoHtml, setInfo } from './info-tip.js';
 
 const percent = (x) => `${Math.round(100 * x)}%`;
 const surname = (name) => name.trim().split(/\s+/).slice(-1)[0];
 const sessionNames = { pre: 'Before qualifying', post: 'After qualifying' };
 const signed = (x) => `${x > 0 ? '+' : x < 0 ? '−' : ''}${Math.abs(x).toFixed(0)}`;
 const SIDES = ['A', 'B'];
+const CHART_PADDING = 8; // pixels of the plate (CSS .head-to-head-chart) above and below the chart
+let lastForecast = null; // what the chart under the figures was drawn for, to draw it again when the room it has changes
+const setNote = (text) => setInfo(el.headToHeadNote, text); // what used to be a paragraph at the foot is behind the "i" beside the conditions
+/** A bar split between driver A and driver B: the share of each, with the line at even odds drawn by the style sheet. */
+const split = (p, className) =>
+  `<span class="${className}" aria-hidden="true"><i style="flex:${p}"></i><i style="flex:${1 - p}"></i></span>`;
+const swatches = (a, b) => `<span class="head-to-head-pair"><i class="a"></i>${a}<i class="b"></i>${b}</span>`;
+/** One line of the forecast's steps: what it is (with its explanation behind an icon), the split it gives, and the chance for driver A. */
+const stepRow = (label, p, note) =>
+  `<li><span>${esc(label)}${infoHtml(note)}</span>${split(p, 'head-to-head-step-bar')}<b>${percent(p)}</b></li>`;
+const stepsBlock = (rows, nameA, nameB, why = '') => `
+  <div class="head-to-head-steps">
+    <h3>How the forecast is built${infoHtml(`The chance that ${nameA} finishes ahead of ${nameB} after each stage of the model, and the split it gives.`)}</h3>
+    <ol>${rows.join('')}</ol>
+    ${why ? `<p class="head-to-head-why">${esc(why)}</p>` : ''}
+  </div>`;
+/** The conditions the forecast is made in, on one line in the title of the folded controls. */
+function conditionsLine(wet, L, timing) {
+  const circuit = el.headToHeadCircuit.value ? el.headToHeadCircuit.selectedOptions[0]?.textContent : '';
+  return [wet ? 'wet' : 'dry', `${L} laps`, timing, circuit].filter(Boolean).join(' · ');
+}
 const side = {}; // per-side controls, keyed `${name}${A|B}`; built once
 
 let forecasting = null; // head-to-head-forecasting.js, fetched the first time the page is shown
@@ -127,42 +149,36 @@ function stepsHtml(r, nameA, nameB, teammates, own) {
   let why = '';
   if (byRatings !== byForecast)
     why = own
-      ? `The ratings alone favour ${byRatings}. The forecast model also weighs recent form, the grid and the circuit, and favours ${byForecast}.`
+      ? `The ratings alone favour ${byRatings}. The forecast also weighs recent form, the grid and the circuit, and favours ${byForecast}.`
       : `The ratings favour ${byRatings}, but ${byForecast} has had the better recent form${teammates ? ', and the model trusts rating gaps between teammates less' : ''}.`;
-  const step = (label, p, note) => `<li><span>${label}<small>${note}</small></span><b>${percent(p)}</b></li>`;
-  const first = own
-    ? step(
-        'Ratings alone',
-        ratings,
-        `Driver plus car rating, with their uncertainty: a gap of ${signed(own.gap)} ± ${own.sd.toFixed(0)} points.`,
-      )
-    : step('Ratings alone', ratings, 'Driver rating plus car rating, as they stand.');
-  // the same ratings go through the forecast model with recent form switched off: that adds retirement risk and the
-  // calibration to how often gaps of this size have held up, so the step to the forecast is not credited to form alone
-  const second = !own
-    ? ''
-    : step(
-        'Calibrated',
-        r.breakdown.calibrated,
-        'Adds retirement risk and adjusts to how often gaps of this size have held up, before any recent form.',
-      );
-  const third = own
-    ? step(
-        'With recent form',
-        full,
-        'Adds how each driver and car has done over the last few races, and the grid and circuit when known. This is the forecast.',
-      )
-    : step('With recent form', full, 'Adds how each driver and car has done over the last few races. This is the forecast.');
-  return `
-    <div class="head-to-head-steps">
-      <h3>How the forecast is built <small>chance ${esc(nameA)} finishes ahead</small></h3>
-      <ol>
-        ${first}
-        ${second}
-        ${third}
-      </ol>
-      ${why ? `<p class="head-to-head-why">${esc(why)}</p>` : ''}
-    </div>`;
+  const rows = [
+    own
+      ? stepRow(
+          'Ratings alone',
+          ratings,
+          `Driver plus car rating, with their uncertainty: a gap of ${signed(own.gap)} ± ${own.sd.toFixed(0)} points.`,
+        )
+      : stepRow('Ratings alone', ratings, 'Driver rating plus car rating, as they stand.'),
+    // the same ratings go through the forecast model with recent form switched off: that adds retirement risk and the
+    // calibration to how often gaps of this size have held up, so the step to the forecast is not credited to form alone
+    ...(own
+      ? [
+          stepRow(
+            'Calibrated',
+            r.breakdown.calibrated,
+            'Adds retirement risk and adjusts to how often gaps of this size have held up, before any recent form.',
+          ),
+        ]
+      : []),
+    stepRow(
+      'With recent form',
+      full,
+      own
+        ? 'Adds how each driver and car has done over the last few races, and the grid and circuit when known. This is the forecast.'
+        : 'Adds how each driver and car has done over the last few races. This is the forecast.',
+    ),
+  ];
+  return stepsBlock(rows, nameA, nameB, why);
 }
 
 export function refreshHeadToHead() {
@@ -203,7 +219,8 @@ function drawHistory(r, names) {
   drawChart(svg, null, ids, series, names, 'combined', 'driver', {
     ...(dates.length ? { xDomain: [Math.min(...dates) - 14 * 864e5, Math.max(...dates) + 14 * 864e5] } : {}),
     legend: false, // the names above the figures have the colours
-    height: 120,
+    casing: true,
+    height: Math.max(0, el.headToHeadChartWrap.clientHeight - CHART_PADDING), // as tall as the room the panel leaves it (0 while hidden: the renderer then takes its own)
     colors: new Map([
       [ids[0], 'var(--s1)'], // driver A, as in the bar and over the name
       [ids[1], 'var(--s2)'],
@@ -218,9 +235,10 @@ function renderScenario(sides, wet, L) {
   el.headToHeadChartWrap.hidden = true;
   const circuitId = el.headToHeadCircuit.value || '';
   const r = forecasting.scenarioForecast(state.model, sides[0], sides[1], { wet, L, circuitId });
+  el.headToHeadState.textContent = conditionsLine(wet, L, '');
   if (r.error) {
     el.headToHeadOut.innerHTML = `<p class="head-to-head-why">${esc(r.error)}</p>`;
-    el.headToHeadNote.textContent = '';
+    setNote('');
     return;
   }
   const { a, b } = r;
@@ -232,43 +250,59 @@ function renderScenario(sides, wet, L) {
   const pA = r.p;
   const risk = (q) => 1 - (1 - q) ** L;
   const c = r.components;
-  const step = (label, p, note) => `<li><span>${label}<small>${note}</small></span><b>${percent(p)}</b></li>`;
   const skill = (x) => state.model.wetFinal?.get(x.driverId) ?? 0;
-  const row = (label, f) => `<tr><th scope="row">${label}</th><td>${f(a)}</td><td>${f(b)}</td></tr>`;
+  const row = (label, f, note = '') =>
+    `<tr><th scope="row">${label}${note ? infoHtml(note) : ''}</th><td>${f(a)}</td><td>${f(b)}</td></tr>`;
   const grid = latestGridIds();
   const onGrid = grid.has(String(a.driverId)) && grid.has(String(b.driverId)) && a.driverId !== b.driverId;
   const today = onGrid ? forecasting.forecastPreWeekend(state.model, a.driverId, b.driverId, { L, circuitId }).p : null;
   const gapParts = [`driver ${signed(c.driver)}`, `car ${signed(c.car)}`];
   if (wet) gapParts.push(`wet skill ${signed(c.wet)}`);
   if (circuitId) gapParts.push(`circuit ${signed(c.track)}`);
+  const stateSpace = forecasting.isStateSpace(state.model);
+  const rows = [
+    stepRow('Ratings alone', r.pPace, `Driver rating plus car rating: ${signed(r.gap)} points (${gapParts.join(', ')}).`),
+    stepRow(
+      stateSpace ? 'Calibrated' : 'Sharpened',
+      r.dry,
+      stateSpace
+        ? 'Adjusted to how often gaps of this size have held up in past races.'
+        : 'Gaps of this size have won more often than the raw ratings say.',
+    ),
+    ...(wet
+      ? [
+          stepRow(
+            'In the wet',
+            r.p,
+            `Wet races are harder to call, so the sharpening is cut back by about a fifth (×${forecasting.WET_RATIO}).`,
+          ),
+        ]
+      : []),
+  ];
   el.headToHeadOut.innerHTML = `
     <div class="head-to-head-names"><div>${esc(a.name)}<small>${esc(carWhen(a))}</small><small>${esc(driverWhen(a))}</small></div><div>${esc(b.name)}<small>${esc(carWhen(b))}</small><small>${esc(driverWhen(b))}</small></div></div>
     <div class="head-to-head-figures" aria-label="${esc(nameA)} ${percent(pA)}, ${esc(nameB)} ${percent(1 - pA)}"><span>${percent(pA)}</span><span>${percent(1 - pA)}</span></div>
     <div class="head-to-head-bar" aria-hidden="true"><i style="flex:${pA}"></i><i style="flex:${1 - pA}"></i></div>
-    <div class="head-to-head-steps">
-      <h3>How the forecast is built <small>chance ${esc(nameA)} finishes ahead</small></h3>
-      <ol>
-        ${step('Ratings alone', r.pPace, `Driver rating plus car rating: ${signed(r.gap)} points (${gapParts.join(', ')}).`)}
-        ${step(forecasting.isStateSpace(state.model) ? 'Calibrated' : 'Sharpened', r.dry, forecasting.isStateSpace(state.model) ? 'Adjusted to how often gaps of this size have held up in past races.' : 'Gaps of this size have won more often than the raw ratings say.')}
-        ${wet ? step('In the wet', r.p, `Wet races are harder to call, so the sharpening is cut back by about a fifth (×${forecasting.WET_RATIO}).`) : ''}
-      </ol>
-      ${today === null ? '' : `<p class="head-to-head-why">Today’s forecast for these two on the current grid is ${percent(today)} for ${esc(nameA)}. It also uses recent form, which a what-if cannot.</p>`}
-    </div>
+    ${stepsBlock(rows, nameA, nameB)}
+    ${today === null ? '' : `<p class="head-to-head-why">Today’s forecast: ${percent(today)} for ${esc(nameA)}${infoHtml('For these two on the current grid. It also uses recent form, which a what-if cannot.')}</p>`}
     <table class="head-to-head-parts">
       <thead><tr><th></th><th scope="col">${esc(nameA)}</th><th scope="col">${esc(nameB)}</th></tr></thead>
       <tbody>
-        ${row('Driver rating', (x) => `${x.driver.race.toFixed(0)}<small>${esc(driverWhen(x))}</small>`)}
-        ${row('Car rating', (x) => `${x.car.race.toFixed(0)}<small>${esc(carWhen(x))}</small>`)}
-        ${wet ? row('Wet skill', (x) => `${signed(skill(x))}<small>points, from wet races</small>`) : ''}
+        ${row('Driver rating', (x) => x.driver.race.toFixed(0), 'Race rating of the driver at the moment chosen.')}
+        ${row('Car rating', (x) => x.car.race.toFixed(0), 'Race rating of the car at the moment chosen.')}
+        ${wet ? row('Wet skill', (x) => signed(skill(x)), 'In points, from the driver’s wet races.') : ''}
         ${row(`Retirement risk, ${L} laps`, (x) => percent(risk(x === a ? r.qA : r.qB)))}
       </tbody>
     </table>`;
   const notes = [a.driver.note, a.car.note, b.driver.note, b.car.note].filter(Boolean);
-  el.headToHeadNote.textContent = `What-if matchup from ratings alone, with no recent form or qualifying. A rating is measured against the field of its own time, so comparing eras is a thought experiment.${notes.length ? ` ${[...new Set(notes)].join(' ')}` : ''}`;
+  setNote(
+    `What-if matchup from ratings alone, with no recent form or qualifying. A rating is measured against the field of its own time, so comparing eras is a thought experiment.${notes.length ? ` ${[...new Set(notes)].join(' ')}` : ''}`,
+  );
 }
 
 export function renderHeadToHead() {
   if (!state.model || !el.headToHeadA.value) return;
+  hideInfoTip(); // the icons under the pointer are drawn again
   if (!forecasting) {
     if (document.body.dataset.page === 'head-to-head')
       import('./head-to-head-forecasting.js').then((module) => {
@@ -304,6 +338,7 @@ export function renderHeadToHead() {
   if (!r) {
     el.headToHeadOut.textContent = 'These two drivers never appeared in the same race.';
     el.headToHeadChartWrap.hidden = true;
+    setNote('');
     return;
   }
   const same = el.headToHeadA.value === el.headToHeadB.value;
@@ -324,9 +359,9 @@ export function renderHeadToHead() {
     <div class="head-to-head-figures" aria-label="${esc(r.a.name)} ${percent(pA)}, ${esc(r.b.name)} ${percent(1 - pA)}"><span>${percent(pA)}</span><span>${percent(1 - pA)}</span></div>
     <div class="head-to-head-bar" aria-hidden="true"><i style="flex:${pA}"></i><i style="flex:${1 - pA}"></i></div>
     ${steps}
-    <dl class="head-to-head-facts two">
-      <div><dt>Race-rating gap</dt><dd>${same ? '0' : signed(gap)}${own ? ` ± ${own.sd.toFixed(0)}` : ''} points<small>${esc(nameA)} minus ${esc(nameB)}${teammates ? ', same car' : ', car included'}</small></dd></div>
-      <div><dt>Retirement risk over ${r.L} laps</dt><dd>${percent(risk(r.qA))} · ${percent(risk(r.qB))}<small>${esc(nameA)} · ${esc(nameB)}</small></dd></div>
+    <dl class="head-to-head-facts">
+      <div><dt>Race-rating gap${infoHtml(`${nameA} minus ${nameB}${teammates ? ', same car' : ', car included'}${own ? `, with one standard deviation of the estimate (±${own.sd.toFixed(0)})` : ''}.`)}</dt><dd>${same ? '0' : signed(gap)}${own ? ` ± ${own.sd.toFixed(0)}` : ''} <small>points</small></dd></div>
+      <div><dt>Retirement risk, ${r.L} laps${infoHtml(`The chance that each driver retires within ${r.L} laps: ${nameA} first, ${nameB} second.`)}</dt><dd>${swatches(percent(risk(r.qA)), percent(risk(r.qB)))}</dd></div>
     </dl>`;
   const form =
     r.forecastMode === 'post'
@@ -334,12 +369,28 @@ export function renderHeadToHead() {
       : r.forecastMode === 'grid'
         ? 'with the starting grid only'
         : 'before qualifying';
-  el.headToHeadNote.textContent = `Chance of finishing ahead over ${r.L} laps, ${form}, with results through the ${r.snap.year} ${r.snap.name}. A dry race is assumed; change that under Conditions.`;
+  el.headToHeadState.textContent = conditionsLine(
+    false,
+    r.L,
+    { post: 'after qualifying', grid: 'grid only' }[r.forecastMode] ?? 'before qualifying',
+  );
+  setNote(
+    `Chance of finishing ahead over ${r.L} laps, ${form}, with results through the ${r.snap.year} ${r.snap.name}. A dry race is assumed; change that under Conditions.`,
+  );
   el.headToHeadChartWrap.hidden = same;
+  lastForecast = same ? null : r;
   if (!same) drawHistory(r, state.model.dname);
 }
 
 export function initHeadToHead() {
+  let chartHeight = 0;
+  new ResizeObserver(() => {
+    const height = el.headToHeadChartWrap.clientHeight;
+    if (height > 0 && height !== chartHeight && lastForecast) {
+      chartHeight = height;
+      drawHistory(lastForecast, state.model.dname);
+    }
+  }).observe(el.headToHeadChartWrap);
   for (const node of [
     el.headToHeadA,
     el.headToHeadB,

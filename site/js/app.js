@@ -5,6 +5,7 @@ import { initWorkspace } from './workspace.js';
 import { initHeadToHead } from './head-to-head-view.js';
 import { initStage } from './stage-view.js';
 import { initTrack } from './track-view.js';
+import { initInfoTips } from './info-tip.js';
 
 // Insights, Methodology, Privacy and About are fetched the first time they are opened, not on every visit.
 const lazyPages = {
@@ -41,6 +42,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initWorkspace();
   initTrack(); // before the stage, which says at once if the ratings are shown (a link to #/ratings)
   initStage();
+  initInfoTips();
   // First successful build dismisses the loading veil and marks status ready.
   const dismissVeil = () => {
     document.getElementById('veil')?.classList.add('gone');
