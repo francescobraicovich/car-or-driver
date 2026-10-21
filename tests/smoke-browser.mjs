@@ -924,6 +924,26 @@ const moved = await evaluate("+document.getElementById('ratingsScrub').value");
 await evaluate("document.getElementById('ratingsPlay').click()");
 check('play advances the timeline at about the pace of its steps', moved >= 4, `index ${moved}`);
 
+// The date beside the slider is as wide for every weekend, and so is the slider: neither changes length as the weekends go by
+const dates = await evaluate(
+  `(async () => {
+    const slider = document.getElementById('ratingsScrub');
+    const now = document.getElementById('ratingsNow');
+    const samples = [];
+    for (let index = 0; index <= +slider.max; index += 17) {
+      slider.value = index;
+      slider.dispatchEvent(new Event('input', { bubbles: true }));
+      samples.push({ text: now.textContent, now: now.getBoundingClientRect().width, slider: slider.getBoundingClientRect().width, overflow: now.scrollWidth > now.clientWidth });
+    }
+    return { count: samples.length, lengths: [...new Set(samples.map((sample) => sample.text.length))].length, nowWidths: [...new Set(samples.map((sample) => sample.now))], sliderWidths: [...new Set(samples.map((sample) => sample.slider))], overflow: samples.filter((sample) => sample.overflow).length };
+  })()`,
+);
+check(
+  'the date and the slider keep one width over dates of different lengths',
+  dates.count >= 25 && dates.lengths >= 2 && dates.nowWidths.length === 1 && dates.sliderWidths.length === 1 && dates.overflow === 0,
+  JSON.stringify(dates),
+);
+
 // The bar-chart race: the rows stay from one weekend (or one rating) to the next, glide to their new places, their bars grow, a driver who joins
 // fades in, the average line glides; the order in the document follows when they have settled; nothing glides under reduced motion
 const slideTo = (index) =>

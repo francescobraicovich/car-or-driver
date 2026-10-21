@@ -38,6 +38,7 @@ const busy = () => Boolean(timer) || scrubbing;
 const PLAY_PATH = 'M3 1.5v13l11-6.5z';
 const PAUSE_PATH = 'M3 1.5h3.5v13H3zM9.5 1.5H13v13H9.5z';
 const dateFormat = new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' });
+let dateLength = { snaps: null, characters: 0 }; // the characters of the longest date of any weekend, for the width the date is given
 
 export function ratingRows(model, index, type, metric) {
   const snap = model?.snaps[index];
@@ -595,6 +596,9 @@ function syncTimeline(snap) {
   const { ratingsScrub: scrub } = controls;
   if (+scrub.max !== n - 1) scrub.max = String(n - 1);
   scrub.value = String(index);
+  if (dateLength.snaps !== snaps)
+    dateLength = { snaps, characters: Math.max(...snaps.map((s) => dateFormat.format(Date.parse(s.date)).length)) };
+  controls.ratingsNow.style.width = `${dateLength.characters}ch`; // the same for every weekend (in a monospaced font, see stage.css), so the slider does not change length with the date
   controls.ratingsNow.textContent = dateFormat.format(Date.parse(snap.date));
   controls.ratingsNow.dateTime = snap.date;
   scrub.setAttribute('aria-valuetext', `${snap.year} ${snap.name}`);

@@ -984,8 +984,12 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   padding: 0;
   background: none;
   color: var(--ink);
+  font-family: var(
+    --mono
+  ); /* every character as wide as every other: the date is as wide for 1 May as for 28 Sept, and the slider as long (the width is set in ratings-view.js) */
   font-size: 11px;
   font-weight: 650;
+  text-align: right;
   transform: none;
 }
 /* the foot: the downloads, the licence and the notes on one line */
