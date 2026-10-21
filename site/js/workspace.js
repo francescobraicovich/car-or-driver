@@ -3,7 +3,7 @@ import { state } from './state.js';
 import { setRace } from './ratings-view.js';
 import { createHistoryView } from './history-view.js';
 import { createThemeButton } from './theme.js';
-import { STAGE_PAGES, panelView } from './stage-pages.js';
+import { DECK_PAGES, STAGE_PAGES, panelView } from './stage-pages.js';
 
 // route -> the section that is the page.
 const PAGES = {
@@ -11,10 +11,10 @@ const PAGES = {
   '/ratings': 'home', // the ratings are the panel on the front page, kept open
   '/history': 'home', // the history and the head to head are views over the ratings, in the panel on the front page
   '/head-to-head': 'home',
-  '/insights': 'home', // the insights are a card of slides over the front page
-  '/methodology': 'methodology',
-  '/privacy': 'privacy',
-  '/about': 'about',
+  '/insights': 'home', // the insights, the methodology, the privacy notice and the about page are each a card of slides over the front page
+  '/methodology': 'home',
+  '/privacy': 'home',
+  '/about': 'home',
 };
 const DEFAULT_ROUTE = '/';
 // Hashes from earlier versions of the site (and of the shared links in the wild).
@@ -56,7 +56,7 @@ export function initWorkspace() {
   }
   let route = DEFAULT_ROUTE;
   let raceId = null;
-  let insightsSlide = null; // the id of the finding on the card of the Insights (none: the contents)
+  let deckSlide = null; // the id of the slide on the card of the page, if it is a card of slides (none: the contents)
   let raceDate = null;
   let restoring = false;
 
@@ -98,7 +98,7 @@ export function initWorkspace() {
 
   function readURLState(params) {
     history.readURL(params);
-    insightsSlide = /^[a-z0-9-]{1,48}$/.test(params.get('slide') || '') ? params.get('slide') : null;
+    deckSlide = /^[a-z0-9-]{1,48}$/.test(params.get('slide') || '') ? params.get('slide') : null;
     if (/^[A-Za-z0-9_-]{1,64}$/.test(params.get('race') || '')) {
       raceId = params.get('race');
       raceDate = null;
@@ -114,7 +114,7 @@ export function initWorkspace() {
     const params = new URLSearchParams({ v: '1' });
     history.writeURL(params);
     if (raceId) params.set('race', raceId);
-    if (route === '/insights' && insightsSlide) params.set('slide', insightsSlide);
+    if (DECK_PAGES.includes(pageName()) && deckSlide) params.set('slide', deckSlide);
     window.history.replaceState(null, '', `#${route}?${params}`);
   }
 
@@ -147,7 +147,8 @@ export function initWorkspace() {
     const now = panelView(pageName());
     const stage = STAGE_PAGES.includes(pageName());
     let target = pages.get(route);
-    if (pageName() === 'insights') target = $('insightsCard');
+    if (DECK_PAGES.includes(pageName()))
+      target = document.querySelector(`.deck-card[data-deck="${pageName()}"]`) ?? target; // (the card is made when its page is first shown, and takes the focus itself then)
     else if (now !== 'ratings') target = $(VIEW_IDS[now]).querySelector('.ledger-back');
     else if (stage && was !== 'ratings') target = $(was === 'history' ? 'ratingsOpenHistory' : 'ratingsOpenHeadToHead') ?? target;
     target.focus({ preventScroll: true });
@@ -194,8 +195,9 @@ export function initWorkspace() {
   window.addEventListener('f1:compare-head-to-head', () => {
     openView('/head-to-head');
   });
-  window.addEventListener('f1:insights-slide', (event) => {
-    insightsSlide = event.detail.id;
+  window.addEventListener('f1:deck-slide', (event) => {
+    if (event.detail.page !== pageName()) return;
+    deckSlide = event.detail.id;
     saveURL();
   });
   window.addEventListener('f1:open-view', (event) => {
@@ -209,7 +211,7 @@ export function initWorkspace() {
   // ratings is open only while they are, so letting go of the panel there is the front page too)
   window.addEventListener('f1:ratings-pinned', (event) => {
     const next = event.detail.pinned ? (panelView(pageName()) === 'ratings' ? '/ratings' : route) : '/';
-    if (route === next || route === '/insights' || !STAGE_PAGES.includes(pageName())) return; // (the card of the Insights is not about the panel)
+    if (route === next || DECK_PAGES.includes(pageName()) || !STAGE_PAGES.includes(pageName())) return; // (a card of slides is not about the panel)
     route = next;
     setPage();
     saveURL();

@@ -1597,7 +1597,7 @@ const insightsState = () =>
     panelShown: !document.getElementById('stageLedger').hidden,
     position: document.getElementById('insightsPosition').textContent,
     name: document.getElementById('insightsName').textContent,
-    open: [...document.querySelectorAll('.insights-slide')].map((slide) => !slide.inert).map((open, index) => (open ? index : -1)).filter((index) => index >= 0),
+    open: [...document.querySelectorAll('.deck-slide')].map((slide) => !slide.inert).map((open, index) => (open ? index : -1)).filter((index) => index >= 0),
     transform: document.getElementById('insightsTrack').style.transform,
     current: [...document.querySelectorAll('#insightsList button[aria-current="true"], #insightsTicks button[aria-current="true"]')].map((button) => button.dataset.slide),
     hash: location.hash.split('?')[0],
@@ -1610,7 +1610,7 @@ check(
   'the Insights are a card in the middle of the front page, over the grey picture, with no panel open and no pointing at the pictures',
   insightsAtStart.page === 'insights' &&
     insightsAtStart.surface === 'stage' &&
-    insightsAtStart.mode === 'insights' &&
+    insightsAtStart.mode === 'deck' &&
     insightsAtStart.state === 'open' &&
     !insightsAtStart.panelShown &&
     Math.abs(insightsBox.x + insightsBox.width / 2 - (stageBox.x + stageBox.width / 2)) <= 1.5 &&
@@ -1622,8 +1622,8 @@ check(
 check(
   'the first slide is the contents: the twenty findings under five topics, and a slide for each after it, all drawn',
   insightsAtStart.position === '1 / 21' &&
-    (await evaluate("document.querySelectorAll('.insights-contents button[data-slide]').length")) === 20 &&
-    (await evaluate("document.querySelectorAll('.insights-contents h3').length")) === 5 &&
+    (await evaluate("document.querySelectorAll('.deck-contents button[data-slide]').length")) === 20 &&
+    (await evaluate("document.querySelectorAll('.deck-contents h3').length")) === 5 &&
     (await evaluate("document.querySelectorAll('article.insight').length")) === 20 &&
     (await evaluate(
       "[...document.querySelectorAll('article.insight')].every((card) => card.querySelector('svg, table') && card.querySelector('.info'))",
@@ -1632,13 +1632,13 @@ check(
 );
 check(
   'in every chart of the card what is drawn stays inside its svg, and a chart is not shorter than it was drawn for (no chart spills over the plate under it)',
-  await evaluate(`[...document.querySelectorAll('.insights-card [data-chart] svg')].every((svg) => {
+  await evaluate(`[...document.querySelectorAll('.deck-card [data-chart] svg')].every((svg) => {
     const box = svg.getBBox();
     return box.y + box.height <= svg.height.baseVal.value + 2 && svg.parentElement.getBoundingClientRect().bottom + 1 >= svg.getBoundingClientRect().bottom;
   })`),
 );
 // jumping from the contents, and sliding there
-await evaluate('document.querySelector(\'.insights-contents button[data-slide="12"]\').click()');
+await evaluate('document.querySelector(\'.deck-contents button[data-slide="12"]\').click()');
 await sleep(900);
 const jumped = JSON.parse(await insightsState());
 check(
@@ -1728,7 +1728,7 @@ check(
   JSON.stringify(topicHeads),
 );
 await mouse('mouseMoved', 8, 300);
-const insightsInfo = await evaluate("document.querySelector('.insights-slide:not([inert]) .insight-title .info').dataset.info");
+const insightsInfo = await evaluate("document.querySelector('.deck-slide:not([inert]) .insight-title .info').dataset.info");
 check(
   'what a finding rests on is behind the "i" beside its title: how much weight it carries, and how it was computed',
   /^(Direct|Model-based): .* How it is computed: /.test(insightsInfo) && !/</.test(insightsInfo),
@@ -1958,7 +1958,7 @@ check(
 await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/?link=slide#/insights?v=1&slide=upsets` });
 await sleep(5000);
 const linkedSlide = await evaluate(
-  "JSON.stringify({ position: document.getElementById('insightsPosition').textContent, name: document.getElementById('insightsName').textContent, drawn: !!document.querySelector('.insights-slide:not([inert]) svg') })",
+  "JSON.stringify({ position: document.getElementById('insightsPosition').textContent, name: document.getElementById('insightsName').textContent, drawn: !!document.querySelector('.deck-slide:not([inert]) svg') })",
 );
 check(
   'a link straight to a finding opens the card on that slide, drawn',

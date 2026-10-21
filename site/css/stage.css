@@ -63,13 +63,11 @@ body[data-surface='stage'] main.workspace {
   cursor: none;
 }
 /* over the panel the pointer is the ordinary one, and the square steps aside */
-.stage[data-pointer='in'][data-coarse='false'] :is(.ledger, .insights-card, .insights-list),
-.stage[data-pointer='in'][data-coarse='false'] :is(.ledger, .insights-card, .insights-list) * {
+.stage[data-pointer='in'][data-coarse='false'] :is(.ledger, .deck-card, .deck-list),
+.stage[data-pointer='in'][data-coarse='false'] :is(.ledger, .deck-card, .deck-list) * {
   cursor: default;
 }
-.stage[data-pointer='in'][data-coarse='false']
-  :is(.ledger, .insights-card, .insights-list)
-  :is(button, select, summary, input, a):not(:disabled) {
+.stage[data-pointer='in'][data-coarse='false'] :is(.ledger, .deck-card, .deck-list) :is(button, select, summary, input, a):not(:disabled) {
   cursor: pointer;
 }
 .stage-filters {
@@ -484,7 +482,7 @@ body[data-surface='stage'] main.workspace {
 .ledger,
 #chartValueTooltip.metal,
 .info-tip,
-.insights-card,
+.deck-card,
 .rating-card {
   --ink: #07080b;
   --ink-2: #14171c;
@@ -640,7 +638,7 @@ body[data-surface='stage'] main.workspace {
 }
 /* the Close button sits in the corner of the header, and is there only while the ratings are kept open */
 .ledger-close,
-.insights-close {
+.deck-close {
   position: absolute;
   top: 5px;
   right: 6px;
@@ -845,25 +843,25 @@ body[data-surface='stage'] main.workspace {
   overflow: visible; /* the wrapper scrolls, so that the header row stays at its top */
 }
 .ledger table,
-.insights-card table {
+.deck-card table {
   font-family: var(--mono);
   font-size: 11px;
 }
 .ledger caption,
-.insights-card caption {
+.deck-card caption {
   padding: 0 0 6px;
   font-family: var(--text);
   font-size: 10.5px;
 }
 .ledger th,
 .ledger td,
-.insights-card th,
-.insights-card td {
+.deck-card th,
+.deck-card td {
   padding: 4px 8px;
   border-bottom-color: var(--grid);
 }
 .ledger th,
-.insights-card th {
+.deck-card th {
   background: rgb(236 238 242 / 0.92);
   color: var(--ink-3);
   font-family: var(--display);
@@ -876,16 +874,16 @@ body[data-surface='stage'] main.workspace {
   white-space: normal; /* a name wraps over two lines rather than widening the table */
 }
 .ledger tbody tr:hover,
-.insights-card tbody tr:hover {
+.deck-card tbody tr:hover {
   background: var(--ink); /* inverted, as the rows of the ratings are */
   color: var(--surface);
 }
 .ledger tbody tr:hover th,
-.insights-card tbody tr:hover th {
+.deck-card tbody tr:hover th {
   color: inherit;
 }
 .ledger tbody th,
-.insights-card tbody th {
+.deck-card tbody th {
   background: none;
   color: var(--ink);
   font-family: var(--mono);
@@ -976,7 +974,7 @@ body[data-surface='stage'] main.workspace {
 /* ── the small "i" and its note ──────────────────────── */
 /* What explains a label or a figure is behind an "i" (info-tip.js), so that the views carry the figures and the names and little else. */
 .ledger .info,
-.insights-card .info {
+.deck-card .info {
   display: inline-grid;
   flex: none;
   place-items: center;
@@ -995,9 +993,9 @@ body[data-surface='stage'] main.workspace {
 .ledger .info:hover:not(:disabled),
 .ledger .info:focus-visible,
 .ledger .info[aria-describedby],
-.insights-card .info:hover:not(:disabled),
-.insights-card .info:focus-visible,
-.insights-card .info[aria-describedby] {
+.deck-card .info:hover:not(:disabled),
+.deck-card .info:focus-visible,
+.deck-card .info[aria-describedby] {
   border-color: var(--ink);
   background: var(--ink);
   color: var(--surface);
@@ -1448,40 +1446,40 @@ body[data-surface='stage'] main.workspace {
    slide for each finding, sliding. The list of the slides stands beside it on the left, on the picture itself, when there is room; the ticks under the
    title (and the arrows, the keys and a swipe) do the same where there is not. The charts are drawn by insights-charts.js, which reads the stage's palette
    and the card's tokens, so they are in the colours of the History and of the Head to head. */
-.insights-card,
-.insights-list {
-  --insights-height: min(720px, calc(100% - 76px - var(--bottom-space, 58px)));
-  --insights-top: calc(68px + (100% - 76px - var(--bottom-space, 58px) - var(--insights-height)) / 2);
+.deck-card,
+.deck-list {
+  --deck-height: min(720px, calc(100% - 76px - var(--bottom-space, 58px)));
+  --deck-top: calc(68px + (100% - 76px - var(--bottom-space, 58px) - var(--deck-height)) / 2);
 }
-.insights-card {
+.deck-card {
   --panel-plate: rgb(238 240 244 / 0.93); /* denser than the card of a row: it is large, and the title and the sketches are behind it */
-  --insights-width: min(900px, calc(100% - 2 * clamp(18px, 5vw, 72px)));
+  --deck-width: min(900px, calc(100% - 2 * clamp(18px, 5vw, 72px)));
   position: absolute;
   z-index: 5;
-  top: var(--insights-top);
-  left: calc((100% - var(--insights-width)) / 2);
+  top: var(--deck-top);
+  left: calc((100% - var(--deck-width)) / 2);
   display: none;
   flex-direction: column;
-  width: var(--insights-width);
-  height: var(--insights-height);
+  width: var(--deck-width);
+  height: var(--deck-height);
   overflow: hidden;
 }
-.stage[data-mode='insights'] .insights-card {
+.deck-card[data-open] {
   display: flex;
-  animation: insights-in 0.3s ease-out;
+  animation: deck-in 0.3s ease-out;
 }
-@keyframes insights-in {
+@keyframes deck-in {
   from {
     opacity: 0;
     transform: translateY(12px);
   }
 }
 @media (min-width: 1280px) {
-  .insights-card {
-    --insights-width: min(900px, calc(100% - 540px)); /* the list of slides is on the left */
+  .deck-card {
+    --deck-width: min(900px, calc(100% - 540px)); /* the list of slides is on the left */
   }
 }
-.stage[data-layout='sheet'] .insights-card {
+.stage[data-layout='sheet'] .deck-card {
   top: auto;
   right: clamp(18px, 5vw, 72px);
   bottom: calc(var(--bottom-space, 58px) + 8px);
@@ -1489,21 +1487,21 @@ body[data-surface='stage'] main.workspace {
   width: auto;
   height: min(740px, 78vh, calc(100% - var(--bottom-space, 58px) - 80px));
 }
-.stage[data-mode='insights'] .hotspot {
+.stage[data-mode='deck'] .hotspot {
   visibility: hidden; /* the car and the hands are not for pointing at while the card is there */
 }
-.stage[data-mode='insights'] .word {
+.stage[data-mode='deck'] .word {
   pointer-events: none;
 }
-.stage[data-mode='insights'] .stage-title,
-.stage[data-mode='insights'] .stage-word-frame,
-.stage[data-mode='insights'] .stage-connector {
+.stage[data-mode='deck'] .stage-title,
+.stage[data-mode='deck'] .stage-word-frame,
+.stage[data-mode='deck'] .stage-connector {
   opacity: 0.3; /* behind the card */
 }
-.insights-card:focus {
+.deck-card:focus {
   outline: none; /* the card receives the focus when it opens, so that a screen reader starts at it; it is not a control */
 }
-.insights-head {
+.deck-head {
   position: relative;
   display: flex;
   flex: none;
@@ -1511,7 +1509,7 @@ body[data-surface='stage'] main.workspace {
   gap: 10px;
   padding: 10px 40px 2px 16px;
 }
-.insights-title {
+.deck-title {
   margin: 0;
   color: var(--ink-3);
   font-family: var(--display);
@@ -1520,19 +1518,19 @@ body[data-surface='stage'] main.workspace {
   letter-spacing: 0.14em;
   text-transform: uppercase;
 }
-.insights-position {
+.deck-position {
   margin-left: auto;
   font-family: var(--mono);
   font-size: 11px;
   font-weight: 650;
 }
-.insights-ticks {
+.deck-ticks {
   display: flex;
   flex: none;
   gap: 2px;
   padding: 6px 16px 4px;
 }
-.insights-ticks button {
+.deck-ticks button {
   position: relative;
   flex: 1 1 0;
   min-width: 0;
@@ -1540,10 +1538,10 @@ body[data-surface='stage'] main.workspace {
   padding: 0;
   border: 0;
 }
-.insights-ticks button.first {
+.deck-ticks button.first {
   margin-left: 6px; /* a gap between two topics */
 }
-.insights-ticks button::after {
+.deck-ticks button::after {
   content: '';
   position: absolute;
   top: 5px;
@@ -1552,21 +1550,21 @@ body[data-surface='stage'] main.workspace {
   height: 3px;
   background: var(--rule);
 }
-.insights-ticks button:hover::after {
+.deck-ticks button:hover::after {
   background: var(--ink-2);
 }
-.insights-ticks button[aria-current='true']::after {
+.deck-ticks button[aria-current='true']::after {
   top: 2px;
   height: 9px;
   background: var(--ink);
 }
-.insights-slides {
+.deck-slides {
   position: relative;
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
 }
-.insights-slides::after {
+.deck-slides::after {
   content: '';
   position: absolute;
   right: 0;
@@ -1576,23 +1574,23 @@ body[data-surface='stage'] main.workspace {
   background: linear-gradient(transparent, rgb(238 240 244 / 0.93)); /* what runs under the controls fades out */
   pointer-events: none;
 }
-.insights-track {
+.deck-track {
   display: flex;
   height: 100%;
   transition: transform 0.5s cubic-bezier(0.22, 0.8, 0.24, 1);
 }
-.insights-track.still {
+.deck-track.still {
   transition: none;
 }
-.insights-slide > .insight {
+.deck-slide > .insight {
   display: flex;
   flex-direction: column;
   min-height: 100%;
 }
-.insights-card [data-chart='main'] {
+.deck-card [data-chart='main'] {
   flex: 1 1 auto; /* free room on the slide goes to the chart (insights-charts.js draws it taller) */
 }
-.insights-slide {
+.deck-slide {
   flex: 0 0 100%;
   min-width: 0;
   height: 100%;
@@ -1600,14 +1598,14 @@ body[data-surface='stage'] main.workspace {
   overflow-y: auto;
   touch-action: pan-y;
 }
-.insights-foot {
+.deck-foot {
   display: flex;
   flex: none;
   align-items: center;
   gap: 10px;
   padding: 6px 14px 12px;
 }
-.insights-card .insights-foot button {
+.deck-card .deck-foot button {
   min-height: 26px;
   padding: 0 12px;
   border-color: var(--ink);
@@ -1615,22 +1613,22 @@ body[data-surface='stage'] main.workspace {
   color: var(--surface);
   font-weight: 650;
 }
-.insights-card .insights-foot button:hover:not(:disabled) {
+.deck-card .deck-foot button:hover:not(:disabled) {
   border-color: var(--ink-2);
   background: var(--ink-2);
 }
-.insights-foot button:disabled {
+.deck-foot button:disabled {
   opacity: 0.3;
 }
-#insightsPrevious::before {
+.deck-foot button:first-child::before {
   content: '‹' / '';
   margin-right: 6px;
 }
-#insightsNext::after {
+.deck-foot button:last-child::after {
   content: '›' / '';
   margin-left: 6px;
 }
-.insights-name {
+.deck-name {
   flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
@@ -1650,12 +1648,12 @@ body[data-surface='stage'] main.workspace {
   font-weight: 650;
   line-height: 1.35;
 }
-.insights-topics {
+.deck-topics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 14px 22px;
 }
-.insights-topics h3 {
+.deck-topics h3 {
   margin: 0 0 4px;
   padding-top: 6px;
   border-top: 2px solid var(--ink);
@@ -1666,12 +1664,12 @@ body[data-surface='stage'] main.workspace {
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.insights-topics ol {
+.deck-topics ol {
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.insights-card .insights-topics button {
+.deck-card .deck-topics button {
   display: flex;
   gap: 8px;
   width: 100%;
@@ -1682,7 +1680,7 @@ body[data-surface='stage'] main.workspace {
   line-height: 1.25;
   text-align: left;
 }
-.insights-topics .n {
+.deck-topics .n {
   flex: none;
   min-width: 2ch;
   color: var(--ink-3);
@@ -1690,12 +1688,12 @@ body[data-surface='stage'] main.workspace {
   font-size: 11px;
   text-align: right;
 }
-.insights-card .insights-topics button:hover:not(:disabled) {
+.deck-card .deck-topics button:hover:not(:disabled) {
   border-color: var(--ink);
   background: var(--ink);
   color: var(--surface);
 }
-.insights-topics button:hover .n {
+.deck-topics button:hover .n {
   color: inherit;
 }
 .insights-kinds {
@@ -1758,7 +1756,7 @@ body[data-surface='stage'] main.workspace {
   margin-right: 6px;
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
 }
-.insights-card [data-chart] {
+.deck-card [data-chart] {
   width: 100%;
   min-width: 0;
   padding: 6px 8px;
@@ -1766,7 +1764,7 @@ body[data-surface='stage'] main.workspace {
   background: rgb(255 255 255 / 0.4);
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
 }
-.insights-card [data-chart] svg {
+.deck-card [data-chart] svg {
   display: block;
   overflow: visible;
 }
@@ -1789,60 +1787,60 @@ body[data-surface='stage'] main.workspace {
   line-height: 1.3;
   text-transform: uppercase;
 }
-.insights-card svg text {
+.deck-card svg text {
   fill: var(--ink-3);
   font-family: var(--mono);
   font-size: 10px;
 }
-.insights-card svg text.secondary {
+.deck-card svg text.secondary {
   fill: var(--ink-2);
 }
-.insights-card svg text.primary {
+.deck-card svg text.primary {
   fill: var(--ink);
 }
-.insights-card svg .gridline {
+.deck-card svg .gridline {
   stroke: var(--grid);
   stroke-width: 1;
 }
-.insights-card svg .zero {
+.deck-card svg .zero {
   stroke: var(--rule);
   stroke-width: 1;
 }
-.insights-card .table-wrap {
+.deck-card .table-wrap {
   padding: 4px 0 0;
   overflow-x: auto;
 }
-.insights-card .insight-table .right {
+.deck-card .insight-table .right {
   text-align: right;
 }
-.insights-card .insight-table td,
-.insights-card .insight-table th {
+.deck-card .insight-table td,
+.deck-card .insight-table th {
   white-space: normal;
 }
 /* the list of the slides, on the picture itself, beside the card (where there is room for it) */
-.insights-list {
+.deck-list {
   position: absolute;
   z-index: 4;
-  top: var(--insights-top);
+  top: var(--deck-top);
   left: clamp(18px, 3vw, 48px);
   display: none;
   width: 196px;
-  max-height: var(--insights-height);
+  max-height: var(--deck-height);
   overflow-y: auto;
   scrollbar-width: none;
   color: var(--ink);
 }
 @media (min-width: 1280px) and (min-height: 700px) {
-  .stage[data-mode='insights'] .insights-list {
+  .deck-list[data-open] {
     display: block;
   }
 }
 /* a topic is a heading with a rule over it and a square before it (filled for the topic of the slide shown), and its findings stand under it, set in
    a little with a hairline down their left: the topics read as sections, not as lines of one list */
-.insights-list section {
+.deck-list section {
   margin-top: 18px;
 }
-.insights-list h3 {
+.deck-list h3 {
   display: flex;
   align-items: baseline;
   gap: 7px;
@@ -1856,7 +1854,7 @@ body[data-surface='stage'] main.workspace {
   line-height: 1.35;
   text-transform: uppercase;
 }
-.insights-list h3::before {
+.deck-list h3::before {
   content: '';
   flex: none;
   width: 7px;
@@ -1864,16 +1862,16 @@ body[data-surface='stage'] main.workspace {
   border: 1.5px solid var(--ink);
   transform: translateY(0.5px);
 }
-.insights-list section[data-current] h3::before {
+.deck-list section[data-current] h3::before {
   background: var(--ink);
 }
-.insights-list ol {
+.deck-list ol {
   margin: 0 0 0 9px;
   padding: 0;
   border-left: 1px solid rgb(5 5 5 / 0.35);
   list-style: none;
 }
-.insights-list button {
+.deck-list button {
   display: block;
   width: 100%;
   min-height: 21px;
@@ -1887,11 +1885,11 @@ body[data-surface='stage'] main.workspace {
   line-height: 1.3;
   text-align: left;
 }
-.insights-list .insights-list-home {
+.deck-list .deck-list-home {
   font-weight: 800;
 }
-.insights-list button:hover,
-.insights-list button[aria-current='true'] {
+.deck-list button:hover,
+.deck-list button[aria-current='true'] {
   background: var(--ink);
   color: #eef0f3; /* inverted, as the rows of the ratings are */
 }
@@ -1978,7 +1976,7 @@ body[data-surface='stage'] main.workspace {
 .ledger input,
 .ledger select,
 .ledger button,
-.insights-card button {
+.deck-card button {
   border-color: transparent;
   border-radius: 3px;
   background: transparent;
@@ -1986,7 +1984,7 @@ body[data-surface='stage'] main.workspace {
 }
 .ledger button:hover:not(:disabled),
 .ledger select:hover:not(:disabled),
-.insights-card button:hover:not(:disabled) {
+.deck-card button:hover:not(:disabled) {
   border-color: var(--ink-3);
   background: rgb(255 255 255 / 0.5);
 }
@@ -2550,10 +2548,10 @@ body[data-surface='stage'] main.workspace {
 }
 @media (prefers-reduced-motion: reduce) {
   .ledger-view,
-  .stage[data-mode='insights'] .insights-card {
+  .deck-card[data-open] {
     animation: none;
   }
-  .insights-track {
+  .deck-track {
     transition: none;
   }
   .track-table li,

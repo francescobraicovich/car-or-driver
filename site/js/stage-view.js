@@ -9,7 +9,7 @@
 import { setEntity } from './ratings-view.js';
 import { connectorPoints, panelColumn, sceneFades, sceneGeometry, subjectRectangle, titleLayout } from './stage-geometry.js';
 import { shake, sway } from './stage-noise.js';
-import { PINNED_PAGES, STAGE_PAGES } from './stage-pages.js';
+import { DECK_PAGES, PINNED_PAGES, STAGE_PAGES } from './stage-pages.js';
 
 const SUBJECTS = ['car', 'driver'];
 const CURSOR_SIZE = 22;
@@ -31,8 +31,6 @@ export function initStage() {
     wordFrame: $('stageWordFrame'),
     connector: { line: $('stageConnectorLine'), start: $('stageConnectorStart'), end: $('stageConnectorEnd') },
     ledger: $('stageLedger'),
-    insightsCard: $('insightsCard'),
-    insightsList: $('insightsList'),
     ledgerClose: $('stageLedgerClose'),
     trackTable: $('stageTrackTable'),
     trackPause: $('stageTrackPause'),
@@ -82,7 +80,7 @@ export function initStage() {
   const active = () => view.hover ?? view.focus ?? view.selected;
   const onStage = () => STAGE_PAGES.includes(document.body.dataset.page);
   const viewOpen = () => parts.ledger.dataset.view !== 'ratings'; // a view (the history, the head to head) is open over the ratings in the panel
-  const insightsOpen = () => document.body.dataset.page === 'insights'; // the card of the Insights is over the picture
+  const deckOpen = () => DECK_PAGES.includes(document.body.dataset.page); // a card of slides is over the picture
 
   // ── layout ──────────────────────────────────────────────────────────────
   const relative = (rectangle) => ({
@@ -169,8 +167,8 @@ export function initStage() {
   // ── state ───────────────────────────────────────────────────────────────
   function update() {
     const subject = active();
-    stage.dataset.state = view.selected || insightsOpen() ? 'open' : subject ? 'peek' : 'idle'; // (with the Insights the picture is grey, as behind the panel)
-    stage.dataset.mode = insightsOpen() ? 'insights' : '';
+    stage.dataset.state = view.selected || deckOpen() ? 'open' : subject ? 'peek' : 'idle'; // (with a card of slides the picture is grey, as behind the panel)
+    stage.dataset.mode = deckOpen() ? 'deck' : '';
     stage.dataset.subject = subject ?? '';
     stage.dataset.hover = view.hover ?? '';
     for (const name of SUBJECTS) parts.hotspots[name].setAttribute('aria-pressed', String(view.selected === name));
@@ -336,7 +334,7 @@ export function initStage() {
   }
   /** The pointer is on a picture (or its word): if the ratings show another picture, they switch only once the pointer stays a moment. */
   function pointAt(subject) {
-    if (viewOpen() || insightsOpen()) return; // a view over the ratings, or the card of the Insights, is open: pointing at the pictures does nothing
+    if (viewOpen() || deckOpen()) return; // a view over the ratings, or the card of the Insights, is open: pointing at the pictures does nothing
     clearTimeout(view.release);
     clearTimeout(view.switching);
     const showing = active();
@@ -375,7 +373,7 @@ export function initStage() {
     });
     /** Using it (a press, or the keyboard moving into it) keeps it open, so that letting go of a slider outside it does not close it. */
     const keepOpen = () => {
-      if (insightsOpen()) return;
+      if (deckOpen()) return;
       const subject = active();
       if (subject && view.selected !== subject) {
         view.selected = subject;
@@ -386,11 +384,14 @@ export function initStage() {
     element.addEventListener('focusin', keepOpen);
   };
   hold(parts.ledger);
-  hold(parts.insightsCard);
-  hold(parts.insightsList);
   hold(parts.trackTable);
   hold(parts.trackPause);
   hold(parts.trackSpeeds);
+  // a card of slides and its list are made when their page is first shown: they are held too
+  window.addEventListener('f1:deck-made', (event) => {
+    hold(event.detail.card);
+    hold(event.detail.list);
+  });
 
   // the picture's area and the word are two ways to the same subject
   for (const subject of SUBJECTS) {
