@@ -1712,6 +1712,21 @@ check(
     fromTicks.position === '10 / 21',
   JSON.stringify({ list, fromList: fromList.position, fromTicks: fromTicks.position }),
 );
+const topicHeads = JSON.parse(
+  await evaluate(`JSON.stringify({
+    heads: [...document.querySelectorAll('#insightsList h3')].map((head) => ({ rule: getComputedStyle(head).borderTopWidth, weight: getComputedStyle(head).fontWeight, marker: getComputedStyle(head, '::before').width })),
+    guide: [...document.querySelectorAll('#insightsList ol')].map((items) => getComputedStyle(items).borderLeftWidth),
+    marked: [...document.querySelectorAll('#insightsList section[data-current] h3')].map((head) => head.textContent),
+  })`),
+);
+check(
+  'the topics in the list of slides are headings of their own (a rule over each, bold, a square before it, the findings set in under it with a guide) and the topic of the slide shown is marked',
+  topicHeads.heads.length === 5 &&
+    topicHeads.heads.every((head) => head.rule === '2px' && Number(head.weight) >= 700 && head.marker === '7px') &&
+    topicHeads.guide.every((width) => width === '1px') &&
+    topicHeads.marked.join() === 'Champions and stars',
+  JSON.stringify(topicHeads),
+);
 await mouse('mouseMoved', 8, 300);
 const insightsInfo = await evaluate("document.querySelector('.insights-slide:not([inert]) .insight-title .info').dataset.info");
 check(

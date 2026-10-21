@@ -1657,11 +1657,13 @@ body[data-surface='stage'] main.workspace {
 }
 .insights-topics h3 {
   margin: 0 0 4px;
-  color: var(--ink-3);
+  padding-top: 6px;
+  border-top: 2px solid var(--ink);
+  color: var(--ink);
   font-family: var(--display);
   font-size: 9.5px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 .insights-topics ol {
@@ -1835,26 +1837,47 @@ body[data-surface='stage'] main.workspace {
     display: block;
   }
 }
+/* a topic is a heading with a rule over it and a square before it (filled for the topic of the slide shown), and its findings stand under it, set in
+   a little with a hairline down their left: the topics read as sections, not as lines of one list */
+.insights-list section {
+  margin-top: 18px;
+}
 .insights-list h3 {
-  margin: 12px 0 2px;
-  padding: 0 6px;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin: 0 0 4px;
+  padding: 6px 6px 0;
+  border-top: 2px solid var(--ink);
   font-family: var(--display);
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   line-height: 1.35;
   text-transform: uppercase;
 }
+.insights-list h3::before {
+  content: '';
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid var(--ink);
+  transform: translateY(0.5px);
+}
+.insights-list section[data-current] h3::before {
+  background: var(--ink);
+}
 .insights-list ol {
-  margin: 0;
+  margin: 0 0 0 9px;
   padding: 0;
+  border-left: 1px solid rgb(5 5 5 / 0.35);
   list-style: none;
 }
 .insights-list button {
   display: block;
   width: 100%;
   min-height: 21px;
-  padding: 2px 6px;
+  padding: 2px 6px 2px 10px;
   border: 0;
   border-radius: 2px;
   background: transparent;

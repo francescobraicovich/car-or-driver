@@ -74,12 +74,13 @@ export function initInsights() {
           `<button type="button" data-slide="${index}"${position === 0 ? ' class="first"' : ''} aria-label="${entry.title.replace(/"/g, '&quot;')}" title="${entry.label}" tabindex="-1"></button>`, // (the ticks are for the pointer: the keys, the arrows and the contents are for the keyboard)
       )
       .join('');
-    listHtml += `<section><h3>${topic.title}</h3><ol>${entries.map(({ entry, index }) => `<li><button type="button" data-slide="${index}">${entry.label}</button></li>`).join('')}</ol></section>`;
+    listHtml += `<section data-topic="${topic.id}"><h3>${topic.title}</h3><ol>${entries.map(({ entry, index }) => `<li><button type="button" data-slide="${index}">${entry.label}</button></li>`).join('')}</ol></section>`;
   });
   $('insightsTicks').innerHTML = tickHtml;
   $('insightsList').innerHTML = listHtml;
   const ticks = [...$('insightsTicks').children];
   const listButtons = [...$('insightsList').querySelectorAll('button')];
+  const listTopics = [...$('insightsList').querySelectorAll('section')];
 
   let current = -1;
   const idOf = (index) => (index > 0 ? INSIGHT_CARDS[index - 1].id : null);
@@ -97,8 +98,18 @@ export function initInsights() {
       node.setAttribute('aria-hidden', String(at !== next));
     });
     slideNodes[next].scrollTop = 0;
+    // on a short screen the list scrolls: the slide shown stays in view
+    const list = $('insightsList');
+    const entry = listButtons.find((button) => Number(button.dataset.slide) === next);
+    if (entry && list.clientHeight) {
+      if (entry.offsetTop < list.scrollTop) list.scrollTop = Math.max(0, entry.offsetTop - 28);
+      else if (entry.offsetTop + entry.offsetHeight > list.scrollTop + list.clientHeight)
+        list.scrollTop = entry.offsetTop + entry.offsetHeight - list.clientHeight + 8;
+    }
     ticks.forEach((tick, at) => tick.setAttribute('aria-current', String(at === next)));
     for (const button of listButtons) button.setAttribute('aria-current', String(Number(button.dataset.slide) === next));
+    for (const section of listTopics)
+      section.toggleAttribute('data-current', next > 0 && section.dataset.topic === INSIGHT_CARDS[next - 1].topic); // the topic of the slide shown
     $('insightsPosition').textContent = `${next + 1} / ${count}`;
     $('insightsName').textContent = slides[next];
     $('insightsPrevious').disabled = next === 0;
