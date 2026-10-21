@@ -222,54 +222,53 @@
                 <h2 class="ledger-view-title">Head to head</h2>
               </header>
               <div class="ledger-view-body">
-                <figure class="frame" id="headToHeadPanel" hidden>
-                  <header class="frame-head">
-                    <h2 class="frame-title">Head to head</h2>
-                    <p class="frame-sub">
-                      The chance that one driver finishes ahead of another in a race, from their ratings and recent form.
-                    </p>
-                  </header>
-                  <div class="head-to-head">
-                    <div class="head-to-head-pick">
-                      <div class="head-to-head-side" id="headToHeadSideA">
-                        <label class="field">Driver A<select id="headToHeadA"></select></label>
-                      </div>
-                      <span class="vs" aria-hidden="true">vs</span>
-                      <div class="head-to-head-side" id="headToHeadSideB">
-                        <label class="field">Driver B<select id="headToHeadB"></select></label>
-                      </div>
+                <div class="head-to-head" id="headToHeadPanel" hidden>
+                  <p class="sr-only">The chance that one driver finishes ahead of another in a race, from their ratings and recent form.</p>
+                  <div class="head-to-head-pick">
+                    <div class="head-to-head-side" id="headToHeadSideA">
+                      <label class="field"
+                        ><span class="head-to-head-label">Driver A</span
+                        ><select id="headToHeadA"></select
+                      ></label>
                     </div>
-                    <div id="headToHeadOut" class="head-to-head-result" aria-live="polite"></div>
-                    <details class="head-to-head-more">
-                      <summary>Change the conditions</summary>
-                      <div class="controls">
-                        <label class="field"
-                          >Conditions<select id="headToHeadWet">
-                            <option value="dry">Dry</option>
-                            <option value="wet">Wet</option>
-                          </select></label
-                        >
-                        <label class="field" id="headToHeadSessionField">Forecast timing<select id="headToHeadSession"></select></label>
-                        <label class="field"
-                          >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
-                        /></label>
-                        <label class="field">Circuit<select id="headToHeadCircuit"></select></label>
-                        <span id="headToHeadGridFields" class="controls" hidden>
-                          <label class="field"
-                            >Grid slot, driver A<input id="headToHeadGridA" type="number" min="1" max="24" step="1" placeholder="1–24"
-                          /></label>
-                          <label class="field"
-                            >Grid slot, driver B<input id="headToHeadGridB" type="number" min="1" max="24" step="1" placeholder="1–24"
-                          /></label>
-                        </span>
-                      </div>
-                    </details>
+                    <span class="vs" aria-hidden="true">vs</span>
+                    <div class="head-to-head-side" id="headToHeadSideB">
+                      <label class="field"
+                        ><span class="head-to-head-label">Driver B</span
+                        ><select id="headToHeadB"></select
+                      ></label>
+                    </div>
                   </div>
-                  <div id="headToHeadChartWrap" class="frame-body" hidden>
+                  <div id="headToHeadOut" class="head-to-head-result" aria-live="polite"></div>
+                  <div id="headToHeadChartWrap" class="head-to-head-chart" hidden>
                     <svg id="headToHeadChart" class="chart" role="group"></svg>
                   </div>
-                  <footer class="frame-foot"><p class="notes" id="headToHeadNote"></p></footer>
-                </figure>
+                  <details class="head-to-head-more">
+                    <summary>Conditions</summary>
+                    <div class="controls">
+                      <label class="field"
+                        >Conditions<select id="headToHeadWet">
+                          <option value="dry">Dry</option>
+                          <option value="wet">Wet</option>
+                        </select></label
+                      >
+                      <label class="field" id="headToHeadSessionField">Forecast timing<select id="headToHeadSession"></select></label>
+                      <label class="field"
+                        >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
+                      /></label>
+                      <label class="field">Circuit<select id="headToHeadCircuit"></select></label>
+                      <span id="headToHeadGridFields" class="controls" hidden>
+                        <label class="field"
+                          >Grid slot, driver A<input id="headToHeadGridA" type="number" min="1" max="24" step="1" placeholder="1–24"
+                        /></label>
+                        <label class="field"
+                          >Grid slot, driver B<input id="headToHeadGridB" type="number" min="1" max="24" step="1" placeholder="1–24"
+                        /></label>
+                      </span>
+                    </div>
+                  </details>
+                  <p class="notes" id="headToHeadNote"></p>
+                </div>
               </div>
             </section>
           </section>

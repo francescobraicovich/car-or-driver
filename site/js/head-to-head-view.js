@@ -42,7 +42,7 @@ function buildSides() {
     host.insertAdjacentHTML(
       'beforeend',
       `<details class="head-to-head-extras" id="headToHeadExtras${s}">
-        <summary>Another season, or another car</summary>
+        <summary>Another season or car</summary>
         <div class="head-to-head-when">
           <label class="field">Moment in career<select id="headToHeadWhen${s}">${MOMENTS}</select></label>
           <label class="field" id="headToHeadDateField${s}" hidden>Date<input type="date" id="headToHeadDate${s}" /></label>
@@ -200,16 +200,15 @@ function drawHistory(r, names) {
   const from = year - 5;
   const series = new Map(ids.map((id) => [id, (state.model.dh.get(id) || []).filter((p) => p.year >= from && p.year <= year)]));
   const dates = [...series.values()].flat().map((p) => Date.parse(p.date));
-  drawChart(
-    svg,
-    null,
-    ids,
-    series,
-    names,
-    'combined',
-    'driver',
-    dates.length ? { xDomain: [Math.min(...dates) - 14 * 864e5, Math.max(...dates) + 14 * 864e5] } : {},
-  );
+  drawChart(svg, null, ids, series, names, 'combined', 'driver', {
+    ...(dates.length ? { xDomain: [Math.min(...dates) - 14 * 864e5, Math.max(...dates) + 14 * 864e5] } : {}),
+    legend: false, // the names above the figures have the colours
+    height: 120,
+    colors: new Map([
+      [ids[0], 'var(--s1)'], // driver A, as in the bar and over the name
+      [ids[1], 'var(--s2)'],
+    ]),
+  });
 }
 
 /** A constructed matchup: any driver and car, at any moment, dry or wet. Ratings only. */
@@ -265,7 +264,7 @@ function renderScenario(sides, wet, L) {
       </tbody>
     </table>`;
   const notes = [a.driver.note, a.car.note, b.driver.note, b.car.note].filter(Boolean);
-  el.headToHeadNote.textContent = `What-if matchup from ratings alone, with no recent form or qualifying. A rating is measured against the field of its own time, so comparing eras is a thought experiment. The first figure is ${a.name}.${notes.length ? ` ${[...new Set(notes)].join(' ')}` : ''}`;
+  el.headToHeadNote.textContent = `What-if matchup from ratings alone, with no recent form or qualifying. A rating is measured against the field of its own time, so comparing eras is a thought experiment.${notes.length ? ` ${[...new Set(notes)].join(' ')}` : ''}`;
 }
 
 export function renderHeadToHead() {
@@ -335,7 +334,7 @@ export function renderHeadToHead() {
       : r.forecastMode === 'grid'
         ? 'with the starting grid only'
         : 'before qualifying';
-  el.headToHeadNote.textContent = `Chance of finishing ahead of the other driver over ${r.L} laps, ${form}, using results up to the ${r.snap.year} ${r.snap.name}. Assumes a dry race; set Conditions to Wet to change that. The first figure is ${r.a.name}.`;
+  el.headToHeadNote.textContent = `Chance of finishing ahead over ${r.L} laps, ${form}, with results through the ${r.snap.year} ${r.snap.name}. A dry race is assumed; change that under Conditions.`;
   el.headToHeadChartWrap.hidden = same;
   if (!same) drawHistory(r, state.model.dname);
 }

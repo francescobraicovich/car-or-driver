@@ -1224,6 +1224,142 @@ check(
   /\d+%/.test((await evaluate("document.querySelector('.head-to-head-figures')?.textContent || ''")) || '') &&
     (await evaluate("document.querySelectorAll('.head-to-head-parts tbody tr').length")) >= 3,
 );
+// The history and the head to head are views over the ratings, in the panel: a button in the panel opens each, the view covers the panel exactly, Back
+// (and the first Escape) returns to the same weekend with the focus on the button that opened it, the next Escape closes the panel
+await evaluate("location.hash = '#/ratings'");
+await sleep(900);
+const ledgerState = () =>
+  evaluate(
+    "JSON.stringify({ view: document.getElementById('stageLedger').dataset.view, page: document.body.dataset.page, surface: document.body.dataset.surface, stage: document.getElementById('stage').dataset.state, hash: location.hash.split('?')[0], focus: document.activeElement.id || document.activeElement.className })",
+  );
+const weekendTitle = () => evaluate("document.getElementById('ratingsTitle').textContent");
+const panelBeforeViews = await rectangleOfSelector('#stageLedger');
+const weekendBeforeViews = await weekendTitle();
+await evaluate("document.getElementById('ratingsOpenHistory').click()");
+await sleep(900);
+const historyBox = await rectangleOfSelector('#historyView');
+const inHistory = JSON.parse(await ledgerState());
+check(
+  'the History button in the panel opens the history over the ratings, kept open as a page of the front page',
+  inHistory.view === 'history' &&
+    inHistory.page === 'history' &&
+    inHistory.surface === 'stage' &&
+    inHistory.stage === 'open' &&
+    inHistory.hash === '#/history',
+  JSON.stringify(inHistory),
+);
+check(
+  'the history covers the panel exactly and the ratings are out of sight under it',
+  Math.abs(historyBox.x - panelBeforeViews.x - 1) <= 1.5 &&
+    Math.abs(historyBox.width - panelBeforeViews.width + 2) <= 2.5 &&
+    Math.abs(historyBox.height - panelBeforeViews.height + 2) <= 2.5 &&
+    (await evaluate("getComputedStyle(document.getElementById('ratingsHost')).visibility")) === 'hidden',
+  JSON.stringify({ panelBeforeViews, historyBox }),
+);
+check(
+  'the history shows a line and a chip for each driver, and fits the panel without scrolling',
+  (await evaluate("document.querySelectorAll('#driverChart polyline').length")) >= 2 &&
+    (await evaluate("document.querySelectorAll('#historyChips .series-chip').length")) >= 2 &&
+    (await evaluate(
+      "(() => { const body = document.querySelector('#historyView .ledger-view-body'); return body.scrollHeight <= body.clientHeight + 1; })()",
+    )),
+);
+check(
+  "the lines wear the same colour as their chips, and they are the panel's own colours whatever theme another page was set to",
+  await (async () => {
+    await evaluate("document.documentElement.dataset.theme = 'dark'");
+    const colours = await evaluate(
+      "(() => { const chip = getComputedStyle(document.querySelector('#historyChips .series-chip i')).backgroundColor; const line = getComputedStyle(document.querySelector('#driverChart polyline')).stroke; return [chip, line]; })()",
+    );
+    await evaluate('delete document.documentElement.dataset.theme');
+    return colours[0] === 'rgb(29, 99, 196)' && colours[1] === colours[0];
+  })(),
+);
+const chartPlot = await rectangleOfSelector('#driverChart');
+await mouse('mouseMoved', chartPlot.x + chartPlot.width * 0.7, chartPlot.y + chartPlot.height * 0.5);
+await sleep(300);
+check(
+  "a tooltip on the chart is in the panel's metal",
+  await evaluate(
+    "(() => { const tip = document.getElementById('chartValueTooltip'); return !tip.hidden && tip.classList.contains('metal') && tip.querySelectorAll('.tip-row').length >= 1; })()",
+  ),
+);
+await mouse('mouseMoved', 8, 300);
+await evaluate("document.querySelector('#historyView .ledger-back').click()");
+await sleep(700);
+const backFromHistory = JSON.parse(await ledgerState());
+check(
+  'Back returns to the ratings of the same weekend, with the focus on the button that opened the history',
+  backFromHistory.view === 'ratings' &&
+    backFromHistory.hash === '#/ratings' &&
+    backFromHistory.stage === 'open' &&
+    backFromHistory.focus === 'ratingsOpenHistory' &&
+    (await weekendTitle()) === weekendBeforeViews,
+  JSON.stringify(backFromHistory),
+);
+await evaluate("document.getElementById('ratingsOpenHeadToHead').click()");
+await sleep(1200);
+const styleOf = (selector, property) => evaluate(`getComputedStyle(document.querySelector('${selector}')).${property}`);
+check(
+  'the Versus button opens the head to head with a forecast, a bar in the colours of the two lines, and no scrolling',
+  JSON.parse(await ledgerState()).view === 'head-to-head' &&
+    /\d+%/.test((await evaluate("document.querySelector('.head-to-head-figures')?.textContent || ''")) || '') &&
+    (await styleOf('.head-to-head-bar i:first-child', 'backgroundColor')) === (await styleOf('#headToHeadChart polyline', 'stroke')) &&
+    (await styleOf('.head-to-head-bar i:last-child', 'backgroundColor')) ===
+      (await styleOf('#headToHeadChart polyline:nth-of-type(2)', 'stroke')) &&
+    (await evaluate(
+      "(() => { const body = document.querySelector('#headToHeadView .ledger-body, #headToHeadView .ledger-view-body'); return body.scrollHeight <= body.clientHeight + 1; })()",
+    )),
+);
+await press('Escape', 'Escape', 27);
+await sleep(600);
+const afterFirstEscape = JSON.parse(await ledgerState());
+check(
+  'the first Escape goes back to the ratings from the head to head, the next closes the panel',
+  afterFirstEscape.view === 'ratings' && afterFirstEscape.stage === 'open' && afterFirstEscape.focus === 'ratingsOpenHeadToHead',
+  JSON.stringify(afterFirstEscape),
+);
+await press('Escape', 'Escape', 27);
+await sleep(500);
+check(
+  'and the ratings are no longer kept open (the keyboard is put back on the picture, which previews them)',
+  JSON.parse(await ledgerState()).stage !== 'open' && (await evaluate('location.hash')) === '#/',
+);
+await evaluate("location.hash = '#/history'");
+await sleep(900);
+await evaluate("document.getElementById('stageLedgerClose').click()");
+await sleep(500);
+check(
+  'the cross closes the panel and its view at once: the address is the front page',
+  JSON.parse(await ledgerState()).stage !== 'open' &&
+    (await evaluate('location.hash')) === '#/' &&
+    JSON.parse(await ledgerState()).view === 'ratings',
+  await ledgerState(),
+);
+// the cars: the history opens on the cars, the head to head (of drivers) is not offered, and the panel is as tall as a view needs
+await evaluate("location.hash = '#/ratings'");
+await sleep(600);
+await evaluate("document.getElementById('ratingsCars').click()");
+await sleep(500);
+const carsLedgerBox = await rectangleOfSelector('#stageLedger');
+await evaluate("document.getElementById('ratingsOpenHistory').click()");
+await sleep(900);
+const carsHistoryLedgerBox = await rectangleOfSelector('#stageLedger');
+check(
+  'from the cars the history opens on the cars, in a panel that is not shorter than it needs',
+  (await evaluate("document.getElementById('historyCars').getAttribute('aria-pressed')")) === 'true' &&
+    (await evaluate("document.querySelectorAll('#historyChips .series-chip').length")) >= 3 &&
+    carsHistoryLedgerBox.height >= Math.min(carsLedgerBox.height, 560) &&
+    carsHistoryLedgerBox.height >= 560,
+  JSON.stringify({ carsLedgerBox, carsHistoryLedgerBox }),
+);
+await evaluate("document.querySelector('#historyView .ledger-back').click()");
+await sleep(500);
+check('and the head to head is not offered for the cars', await evaluate("document.getElementById('ratingsOpenHeadToHead').disabled"));
+await evaluate("document.getElementById('ratingsDrivers').click()");
+await sleep(400);
+await evaluate("location.hash = '#/ratings'");
+
 await evaluate("location.hash = '#/insights'");
 await sleep(1500);
 check(
@@ -1418,6 +1554,23 @@ check(
   linked.hidden === false && linked.moved && /^lap /.test(linked.lap),
   JSON.stringify(linked),
 );
+// Links straight to a view (a shared link): the panel is kept open with the view over the ratings, drawn at once (the head to head loads its
+// forecast on the way in)
+for (const [view, ready] of [
+  ['history', "document.querySelectorAll('#driverChart polyline').length >= 3"],
+  ['head-to-head', "/\\d+%/.test(document.querySelector('.head-to-head-figures')?.textContent || '')"],
+]) {
+  await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/?link=${view}#/${view}` });
+  await sleep(5000);
+  const opened = await evaluate(
+    `JSON.stringify({ view: document.getElementById('stageLedger').dataset.view, stage: document.getElementById('stage').dataset.state, shown: ${ready}, ledgerHidden: document.getElementById('stageLedger').hidden })`,
+  );
+  check(
+    `a link straight to #/${view} opens the ${view} over the ratings, drawn`,
+    JSON.parse(opened).view === view && JSON.parse(opened).stage === 'open' && JSON.parse(opened).shown && !JSON.parse(opened).ledgerHidden,
+    opened,
+  );
+}
 await send('Emulation.clearDeviceMetricsOverride');
 
 for (const c of checks) console.log(`${c.pass ? 'ok  ' : 'FAIL'} ${c.name}${c.detail ? ` (${c.detail})` : ''}`);

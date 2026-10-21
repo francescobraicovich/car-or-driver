@@ -95,7 +95,12 @@ export function drawChart(svg, legend, ids, hist, names, metric, type, extra = {
   if (!svg) return;
   if (!hiddenSeries.has(svg)) hiddenSeries.set(svg, new Set());
   const hidden = hiddenSeries.get(svg);
-  const series = ids.map((id) => ({ id, name: names.get(id) || id, points: prepareChartSeries(hist.get(id) || [], metric, type) }));
+  const series = ids.map((id) => ({
+    id,
+    name: names.get(id) || id,
+    points: prepareChartSeries(hist.get(id) || [], metric, type),
+    color: extra.colors?.get(id), // a colour of its own, if the caller gave one
+  }));
   const redraw = () => drawChart(svg, legend, ids, hist, names, metric, type, extra);
   const visual = type === 'car' && metric !== 'survival' && (el.carContinuity?.value ?? 'raw') !== 'raw';
   renderPlot(svg, {
