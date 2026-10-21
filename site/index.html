@@ -46,6 +46,7 @@
     <link rel="modulepreload" href="../packages/core/src/weekend-histories.js" />
     <link rel="modulepreload" href="../packages/core/src/json-serialization.js" />
     <link rel="modulepreload" href="js/workspace.js" />
+    <link rel="modulepreload" href="js/stage-pages.js" />
     <link rel="modulepreload" href="js/stage-view.js" />
     <link rel="modulepreload" href="js/stage-geometry.js" />
     <link rel="modulepreload" href="js/stage-noise.js" />
@@ -208,6 +209,69 @@
           <section class="ledger" id="stageLedger" aria-label="Ratings" hidden>
             <button type="button" class="ledger-close" id="stageLedgerClose" aria-label="Close the ratings" hidden>×</button>
             <div id="ratingsHost" hidden></div>
+            <section class="ledger-view" id="historyView" aria-label="Rating history">
+              <header class="ledger-view-head">
+                <button type="button" class="ledger-back">Ratings</button>
+                <h2 class="ledger-view-title">History</h2>
+              </header>
+              <div class="ledger-view-body" id="chartsPanel" hidden></div>
+            </section>
+            <section class="ledger-view" id="headToHeadView" aria-label="Head to head">
+              <header class="ledger-view-head">
+                <button type="button" class="ledger-back">Ratings</button>
+                <h2 class="ledger-view-title">Head to head</h2>
+              </header>
+              <div class="ledger-view-body">
+                <figure class="frame" id="headToHeadPanel" hidden>
+                  <header class="frame-head">
+                    <h2 class="frame-title">Head to head</h2>
+                    <p class="frame-sub">
+                      The chance that one driver finishes ahead of another in a race, from their ratings and recent form.
+                    </p>
+                  </header>
+                  <div class="head-to-head">
+                    <div class="head-to-head-pick">
+                      <div class="head-to-head-side" id="headToHeadSideA">
+                        <label class="field">Driver A<select id="headToHeadA"></select></label>
+                      </div>
+                      <span class="vs" aria-hidden="true">vs</span>
+                      <div class="head-to-head-side" id="headToHeadSideB">
+                        <label class="field">Driver B<select id="headToHeadB"></select></label>
+                      </div>
+                    </div>
+                    <div id="headToHeadOut" class="head-to-head-result" aria-live="polite"></div>
+                    <details class="head-to-head-more">
+                      <summary>Change the conditions</summary>
+                      <div class="controls">
+                        <label class="field"
+                          >Conditions<select id="headToHeadWet">
+                            <option value="dry">Dry</option>
+                            <option value="wet">Wet</option>
+                          </select></label
+                        >
+                        <label class="field" id="headToHeadSessionField">Forecast timing<select id="headToHeadSession"></select></label>
+                        <label class="field"
+                          >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
+                        /></label>
+                        <label class="field">Circuit<select id="headToHeadCircuit"></select></label>
+                        <span id="headToHeadGridFields" class="controls" hidden>
+                          <label class="field"
+                            >Grid slot, driver A<input id="headToHeadGridA" type="number" min="1" max="24" step="1" placeholder="1–24"
+                          /></label>
+                          <label class="field"
+                            >Grid slot, driver B<input id="headToHeadGridB" type="number" min="1" max="24" step="1" placeholder="1–24"
+                          /></label>
+                        </span>
+                      </div>
+                    </details>
+                  </div>
+                  <div id="headToHeadChartWrap" class="frame-body" hidden>
+                    <svg id="headToHeadChart" class="chart" role="group"></svg>
+                  </div>
+                  <footer class="frame-foot"><p class="notes" id="headToHeadNote"></p></footer>
+                </figure>
+              </div>
+            </section>
           </section>
 
           <aside class="track" id="stageTrack" aria-label="The race on the circuit" hidden>
@@ -247,59 +311,6 @@
             </nav>
           </footer>
         </div>
-      </section>
-
-      <section id="headToHead" aria-label="Head to head">
-        <figure class="frame" id="headToHeadPanel" hidden>
-          <header class="frame-head">
-            <h2 class="frame-title">Head to head</h2>
-            <p class="frame-sub">The chance that one driver finishes ahead of another in a race, from their ratings and recent form.</p>
-          </header>
-          <div class="head-to-head">
-            <div class="head-to-head-pick">
-              <div class="head-to-head-side" id="headToHeadSideA">
-                <label class="field">Driver A<select id="headToHeadA"></select></label>
-              </div>
-              <span class="vs" aria-hidden="true">vs</span>
-              <div class="head-to-head-side" id="headToHeadSideB">
-                <label class="field">Driver B<select id="headToHeadB"></select></label>
-              </div>
-            </div>
-            <div id="headToHeadOut" class="head-to-head-result" aria-live="polite"></div>
-            <details class="head-to-head-more">
-              <summary>Change the conditions</summary>
-              <div class="controls">
-                <label class="field"
-                  >Conditions<select id="headToHeadWet">
-                    <option value="dry">Dry</option>
-                    <option value="wet">Wet</option>
-                  </select></label
-                >
-                <label class="field" id="headToHeadSessionField">Forecast timing<select id="headToHeadSession"></select></label>
-                <label class="field"
-                  >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
-                /></label>
-                <label class="field">Circuit<select id="headToHeadCircuit"></select></label>
-                <span id="headToHeadGridFields" class="controls" hidden>
-                  <label class="field"
-                    >Grid slot, driver A<input id="headToHeadGridA" type="number" min="1" max="24" step="1" placeholder="1–24"
-                  /></label>
-                  <label class="field"
-                    >Grid slot, driver B<input id="headToHeadGridB" type="number" min="1" max="24" step="1" placeholder="1–24"
-                  /></label>
-                </span>
-              </div>
-            </details>
-          </div>
-          <div id="headToHeadChartWrap" class="frame-body" hidden>
-            <svg id="headToHeadChart" class="chart" role="group"></svg>
-          </div>
-          <footer class="frame-foot"><p class="notes" id="headToHeadNote"></p></footer>
-        </figure>
-      </section>
-
-      <section id="charts" aria-label="Rating history">
-        <div id="chartsPanel" hidden></div>
       </section>
 
       <section id="insights" aria-label="Insights">

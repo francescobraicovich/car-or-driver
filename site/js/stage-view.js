@@ -9,6 +9,7 @@
 import { setEntity } from './ratings-view.js';
 import { connectorPoints, panelColumn, sceneFades, sceneGeometry, subjectRectangle, titleLayout } from './stage-geometry.js';
 import { shake, sway } from './stage-noise.js';
+import { PINNED_PAGES, STAGE_PAGES } from './stage-pages.js';
 
 const SUBJECTS = ['car', 'driver'];
 const CURSOR_SIZE = 22;
@@ -77,7 +78,8 @@ export function initStage() {
     speed: 0, // how fast the pointer is moving, in pixels per millisecond (smoothed)
   };
   const active = () => view.hover ?? view.focus ?? view.selected;
-  const onStage = () => ['home', 'ratings'].includes(document.body.dataset.page);
+  const onStage = () => STAGE_PAGES.includes(document.body.dataset.page);
+  const viewOpen = () => parts.ledger.dataset.view !== 'ratings'; // a view (the history, the head to head) is open over the ratings in the panel
 
   // ── layout ──────────────────────────────────────────────────────────────
   const relative = (rectangle) => ({
@@ -330,6 +332,7 @@ export function initStage() {
   }
   /** The pointer is on a picture (or its word): if the ratings show another picture, they switch only once the pointer stays a moment. */
   function pointAt(subject) {
+    if (viewOpen()) return; // the panel shows a view over the ratings: pointing at the pictures does not change what is under it
     clearTimeout(view.release);
     clearTimeout(view.switching);
     const showing = active();
@@ -424,8 +427,10 @@ export function initStage() {
   parts.ledgerClose.addEventListener('click', close);
   document.addEventListener('keydown', (event) => {
     if (event.key !== 'Escape' || !onStage() || event.ctrlKey || event.metaKey || event.altKey) return;
-    if (event.target instanceof HTMLSelectElement) return; // Escape closes the open list of a menu, not the panel
-    close();
+    if (event.target instanceof HTMLSelectElement || event.defaultPrevented) return; // Escape closes the open list of a menu, not the panel
+    if (viewOpen())
+      window.dispatchEvent(new CustomEvent('f1:ledger-back')); // over the ratings it goes back to them; the next one closes the panel
+    else close();
   });
 
   const resizeObserver = new ResizeObserver(layout);
@@ -436,7 +441,7 @@ export function initStage() {
   window.addEventListener('f1:workspace-changed', () => {
     if (!onStage()) return;
     // the front page is the picture alone, and the ratings page is the same page with the panel kept open
-    if (document.body.dataset.page === 'ratings') view.selected ??= 'driver';
+    if (PINNED_PAGES.includes(document.body.dataset.page)) view.selected ??= 'driver';
     else view.selected = null;
     layout();
     update();
@@ -455,7 +460,7 @@ export function initStage() {
   });
 
   stage.dataset.coarse = String(!finePointer.matches);
-  if (document.body.dataset.page === 'ratings') view.selected = 'driver';
+  if (PINNED_PAGES.includes(document.body.dataset.page)) view.selected = 'driver';
   layout();
   update();
 }

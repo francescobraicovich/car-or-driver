@@ -385,6 +385,10 @@ export function createHistoryView({ onChange }) {
       for (const k of ['drivers', 'cars']) if (hist[k] !== null) params.set(k, hist[k].join(','));
       for (const k of ['from', 'to']) if (hist[k] !== null) params.set(k, String(hist[k]));
     },
+    /** Opened from the ratings of the drivers or of the cars: it shows the same. */
+    show(entity) {
+      if (['driver', 'car'].includes(entity)) hist.entity = entity;
+    },
     /** "Compare in history" from the ratings page. */
     compare({ entity, ids, metric: m }, year) {
       hist.entity = entity;

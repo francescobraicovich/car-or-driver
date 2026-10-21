@@ -1119,7 +1119,7 @@ await slideTo(+(await evaluate('document.getElementById("ratingsScrub").max')));
 await sleep(700);
 
 // History: lines, chips, table twin
-await evaluate("location.hash = '#/history'");
+await evaluate("location.hash = '#/insights'");
 await sleep(1200);
 {
   // the race runs only on the front page: on another page it is hidden and still
@@ -1131,6 +1131,8 @@ await sleep(1200);
     (await evaluate("document.getElementById('stageTrack').hidden")) && before === (await cx()),
   );
 }
+await evaluate("location.hash = '#/history'");
+await sleep(1200);
 check(
   'history draws one line per chip',
   (await evaluate("document.querySelectorAll('#driverChart polyline').length")) >=

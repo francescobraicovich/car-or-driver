@@ -154,6 +154,10 @@ function ensurePanel() {
     </div>
     <footer class="frame-foot">
       <span class="notes">CC BY-NC-SA 4.0 · <a href="#/about">credits</a></span>
+      <span class="foot-views" role="group" aria-label="Open over the ratings">
+        <button type="button" id="ratingsOpenHistory">History</button>
+        <button type="button" id="ratingsOpenHeadToHead">Versus</button>
+      </span>
     </footer>`;
   el.ratingsHost.append(panel);
   controls = Object.fromEntries([...panel.querySelectorAll('[id]')].map((n) => [n.id, n]));
@@ -211,6 +215,11 @@ function ensurePanel() {
     const ids = [...preferences.driver.selected];
     if (entity === 'driver' && ids.length === 2) window.dispatchEvent(new CustomEvent('f1:compare-head-to-head', { detail: { ids } }));
   });
+  for (const [id, view] of [
+    ['ratingsOpenHistory', 'history'],
+    ['ratingsOpenHeadToHead', 'head-to-head'],
+  ])
+    controls[id].addEventListener('click', () => window.dispatchEvent(new CustomEvent('f1:open-view', { detail: { view, entity } })));
   controls.ratingsClearSelection.addEventListener('click', () => {
     preferences[entity].selected.clear();
     renderRatings();
@@ -585,6 +594,8 @@ function updateSelection() {
     ? `${chosen.length} selected: ${chosen.map((id) => names.get(id)).join(', ')}`
     : '';
   controls.ratingsCompareHeadToHead.hidden = entity !== 'driver';
+  controls.ratingsOpenHeadToHead.disabled = entity !== 'driver';
+  controls.ratingsOpenHeadToHead.title = entity === 'driver' ? '' : 'Head to head compares drivers';
   controls.ratingsCompareHeadToHead.disabled = chosen.length !== 2;
   controls.ratingsCompareHeadToHead.title = chosen.length === 2 ? '' : 'Select exactly two drivers to forecast their race';
 }

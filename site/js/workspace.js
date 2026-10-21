@@ -3,13 +3,14 @@ import { state } from './state.js';
 import { setRace } from './ratings-view.js';
 import { createHistoryView } from './history-view.js';
 import { createThemeButton } from './theme.js';
+import { STAGE_PAGES, panelView } from './stage-pages.js';
 
 // route -> the section that is the page.
 const PAGES = {
   '/': 'home',
   '/ratings': 'home', // the ratings are the panel on the front page, kept open
-  '/history': 'charts',
-  '/head-to-head': 'headToHead',
+  '/history': 'home', // the history and the head to head are views over the ratings, in the panel on the front page
+  '/head-to-head': 'home',
   '/insights': 'insights',
   '/methodology': 'methodology',
   '/privacy': 'privacy',
@@ -36,6 +37,7 @@ const ALIASES = {
   backtest: '/methodology',
   '/geek/models': '/methodology',
 };
+const VIEW_IDS = { history: 'historyView', 'head-to-head': 'headToHeadView' };
 const $ = (id) => document.getElementById(id);
 const visible = (node, on) => {
   node.hidden = !on;
@@ -67,8 +69,15 @@ export function initWorkspace() {
 
   const pageName = () => (route === '/' ? 'home' : route.slice(1));
 
-  function display() {
+  /** The page the body is on, the surface it is (the front page or a page of its own) and what the panel shows (the ratings, or a view over them). */
+  function setPage() {
     document.body.dataset.page = pageName();
+    document.body.dataset.surface = STAGE_PAGES.includes(pageName()) ? 'stage' : 'page';
+    $('stageLedger').dataset.view = panelView(pageName());
+  }
+
+  function display() {
+    setPage();
     for (const link of document.querySelectorAll('#workspaceLinks a')) {
       if (link.getAttribute('href') === `#${route}`) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
@@ -129,8 +138,19 @@ export function initWorkspace() {
     rememberRace();
   }
 
+  /** Where the focus goes on a new page: the button to go back, in a view over the ratings; the button that opened the view, when coming back from it. */
+  function focusPage(was) {
+    const now = panelView(pageName());
+    const stage = STAGE_PAGES.includes(pageName());
+    let target = pages.get(route);
+    if (now !== 'ratings') target = $(VIEW_IDS[now]).querySelector('.ledger-back');
+    else if (stage && was !== 'ratings') target = $(was === 'history' ? 'ratingsOpenHistory' : 'ratingsOpenHeadToHead') ?? target;
+    target.focus({ preventScroll: true });
+  }
+
   function navigate() {
     const target = parseURL();
+    const was = STAGE_PAGES.includes(pageName()) ? panelView(pageName()) : 'ratings';
     restoring = true;
     try {
       route = target.route;
@@ -138,7 +158,7 @@ export function initWorkspace() {
       restoreRace();
       history.refresh();
       display();
-      pages.get(route).focus({ preventScroll: true });
+      focusPage(was);
       window.scrollTo(0, 0);
     } finally {
       restoring = false;
@@ -156,12 +176,20 @@ export function initWorkspace() {
   window.addEventListener('f1:compare-head-to-head', () => {
     location.hash = '/head-to-head';
   });
-  // keeping the ratings open on the front page is the Ratings page, and letting go of them is the front page: the address follows
+  window.addEventListener('f1:open-view', (event) => {
+    const { view, entity } = event.detail;
+    if (view === 'history') history.show(entity);
+    location.hash = view === 'history' ? '/history' : '/head-to-head';
+  });
+  for (const button of document.querySelectorAll('.ledger-back')) button.addEventListener('click', () => (location.hash = '/ratings'));
+  window.addEventListener('f1:ledger-back', () => (location.hash = '/ratings'));
+  // keeping the ratings open on the front page is the Ratings page, and letting go of them is the front page: the address follows (a view over the
+  // ratings is open only while they are, so letting go of the panel there is the front page too)
   window.addEventListener('f1:ratings-pinned', (event) => {
-    const next = event.detail.pinned ? '/ratings' : '/';
-    if (route === next || !['/', '/ratings'].includes(route)) return;
+    const next = event.detail.pinned ? (panelView(pageName()) === 'ratings' ? '/ratings' : route) : '/';
+    if (route === next || !STAGE_PAGES.includes(pageName())) return;
     route = next;
-    document.body.dataset.page = pageName();
+    setPage();
     saveURL();
   });
   window.addEventListener('hashchange', navigate);

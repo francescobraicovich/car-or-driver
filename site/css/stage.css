@@ -3,17 +3,17 @@
    text measured against it (tests/test-stage.mjs samples the pixels where the text sits); they are tokens on .stage so that the two states are
    defined in one place. */
 
-body:is([data-page='home'], [data-page='ratings']) {
+body[data-surface='stage'] {
   padding-bottom: 0;
   background: #d90a04;
 }
-body:is([data-page='home'], [data-page='ratings']) .site-nav,
-body:is([data-page='home'], [data-page='ratings']) .workspace-footer,
-body:is([data-page='home'], [data-page='ratings']) .workspace-status,
-body:is([data-page='home'], [data-page='ratings']) #veil {
+body[data-surface='stage'] .site-nav,
+body[data-surface='stage'] .workspace-footer,
+body[data-surface='stage'] .workspace-status,
+body[data-surface='stage'] #veil {
   display: none;
 }
-body:is([data-page='home'], [data-page='ratings']) main.workspace {
+body[data-surface='stage'] main.workspace {
   max-width: none;
   padding: 0;
 }
@@ -630,6 +630,81 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   font-size: 16px;
   line-height: 1;
 }
+/* ── the views over the ratings ──────────────────────── */
+/* The history and the head to head open over the ratings in the panel, on the same metal and the same size, with a button to go back. The ratings
+   stay where they are, out of sight, so that the panel does not change size; the view fills it and scrolls inside itself. */
+.ledger:not([data-view='ratings']) {
+  overflow: hidden;
+}
+.ledger:not([data-view='ratings']) #ratingsHost {
+  visibility: hidden;
+}
+.stage[data-layout='wide'] .ledger:not([data-view='ratings']) {
+  min-height: min(
+    640px,
+    calc(100% - 68px - var(--bottom-space, 58px) - 8px)
+  ); /* the cars are fewer than the drivers: the panel is not shorter than a view needs */
+}
+.stage[data-layout='sheet'] .ledger:not([data-view='ratings']) {
+  min-height: min(560px, 78vh, calc(100% - var(--bottom-space, 58px) - 80px));
+}
+.ledger-view {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: none;
+  flex-direction: column;
+  min-height: 0;
+}
+.ledger[data-view='history'] #historyView,
+.ledger[data-view='head-to-head'] #headToHeadView {
+  display: flex;
+  animation: ledger-view-in 0.22s ease-out;
+}
+@keyframes ledger-view-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+.ledger-view-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 34px 4px 8px;
+}
+.ledger-view-title {
+  margin: 0;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.ledger-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 22px;
+  padding: 0 8px 0 6px;
+  color: var(--ink-2);
+  font-weight: 600;
+}
+.ledger-back::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-bottom: 1.5px solid currentColor;
+  border-left: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+.ledger-view-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
 #ratingsHost {
   display: flex;
   flex: 0 1 auto;
@@ -1011,6 +1086,20 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
 .ledger .notes {
   font-size: 10.5px;
 }
+.ledger .foot-views {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+.ledger .frame-foot .foot-views button {
+  min-height: 20px;
+  padding: 0 6px;
+  color: var(--ink-2);
+  font-weight: 600;
+}
+.ledger .frame-foot .foot-views button:disabled {
+  opacity: 0.4;
+}
 .ledger .notes-more {
   font-size: 10.5px;
 }
@@ -1220,6 +1309,9 @@ body:is([data-page='home'], [data-page='ratings']) main.workspace {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .ledger-view {
+    animation: none;
+  }
   .track-table li,
   .ratings-list,
   .ratings-list li,
