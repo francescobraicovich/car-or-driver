@@ -74,6 +74,7 @@ export function initWorkspace() {
     document.body.dataset.page = pageName();
     document.body.dataset.surface = STAGE_PAGES.includes(pageName()) ? 'stage' : 'page';
     $('stageLedger').dataset.view = panelView(pageName());
+    if (panelView(pageName()) !== 'head-to-head') window.dispatchEvent(new CustomEvent('f1:versus-drivers', { detail: null })); // the two drivers lit in the race
   }
 
   function display() {

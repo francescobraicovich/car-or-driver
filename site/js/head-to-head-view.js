@@ -3,8 +3,10 @@
 import { state } from './state.js';
 import { el } from './dom.js';
 import { drawChart } from './charts.js';
+import { moveTimeCursor } from './chart-renderer.js';
 import { esc } from './utils.js';
 import { hideInfoTip, infoHtml, setInfo } from './info-tip.js';
+import { scrubWeekends, setRace } from './ratings-view.js';
 
 const percent = (x) => `${Math.round(100 * x)}%`;
 const surname = (name) => name.trim().split(/\s+/).slice(-1)[0];
@@ -12,11 +14,32 @@ const sessionNames = { pre: 'Before qualifying', post: 'After qualifying' };
 const signed = (x) => `${x > 0 ? '+' : x < 0 ? '−' : ''}${Math.abs(x).toFixed(0)}`;
 const SIDES = ['A', 'B'];
 const CHART_PADDING = 8; // pixels of the plate (CSS .head-to-head-chart) above and below the chart
-let lastForecast = null; // what the chart under the figures was drawn for, to draw it again when the room it has changes
+let lastChart = null; // what the chart under the figures was drawn for ({ ids, markers }), to draw it again when the room it has changes
+let sameCar = true; // both drivers are given the same car, so that the gap is the drivers' alone
+let todayCache = { key: '', p: 0 }; // the forecast for the pair on today's grid, which does not change while a date is dragged
+let resolved = null; // the moment each driver is at, as the forecast took it: { A: { raceId, date, rating }, B: ... }
+const dayFormat = new Intl.DateTimeFormat('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' });
+const dayText = (iso) => (iso ? dayFormat.format(Date.parse(iso)) : '');
 const setNote = (text) => setInfo(el.headToHeadNote, text); // what used to be a paragraph at the foot is behind the "i" beside the conditions
 /** A bar split between driver A and driver B: the share of each, with the line at even odds drawn by the style sheet. */
 const split = (p, className) =>
   `<span class="${className}" aria-hidden="true"><i style="flex:${p}"></i><i style="flex:${1 - p}"></i></span>`;
+/**
+ * The head of a result: the two names (each over a rule in the driver's colour, with what is under it), the chance of each in large figures with the
+ * rating the forecast took for the driver and the date of the weekend it is from, and the bar. A side is { name, lines, rating, date }.
+ */
+const topHtml = (a, b, pA, labelA, labelB) => {
+  const moment = (x) => `<span class="head-to-head-moment"><em>${x.rating}</em><small>${dayText(x.date)}</small></span>`;
+  const small = (x) => x.lines.map((line) => `<small>${esc(line)}</small>`).join('');
+  const reading = (label, p, x) => `${label} ${percent(p)}, rating ${x.rating} on ${dayText(x.date)}`;
+  return `
+    <div class="head-to-head-names"><div>${esc(a.name)}${small(a)}</div><div>${esc(b.name)}${small(b)}</div></div>
+    <div class="head-to-head-figures" aria-label="${esc(reading(labelA, pA, a))}; ${esc(reading(labelB, 1 - pA, b))}">
+      <span class="head-to-head-figure"><b>${percent(pA)}</b>${moment(a)}</span>
+      <span class="head-to-head-figure"><b>${percent(1 - pA)}</b>${moment(b)}</span>
+    </div>
+    <div class="head-to-head-bar" aria-hidden="true"><i style="flex:${pA}"></i><i style="flex:${1 - pA}"></i></div>`;
+};
 const swatches = (a, b) => `<span class="head-to-head-pair"><i class="a"></i>${a}<i class="b"></i>${b}</span>`;
 /** One line of the forecast's steps: what it is (with its explanation behind an icon), the split it gives, and the chance for driver A. */
 const stepRow = (label, p, note) =>
@@ -69,7 +92,7 @@ function buildSides() {
           <label class="field">Moment in career<select id="headToHeadWhen${s}">${MOMENTS}</select></label>
           <label class="field" id="headToHeadDateField${s}" hidden>Date<input type="date" id="headToHeadDate${s}" /></label>
         </div>
-        <label class="field">Car<select id="headToHeadCar${s}"></select></label>
+        <label class="field" id="headToHeadCarField${s}">Car<select id="headToHeadCar${s}"></select></label>
         <div class="head-to-head-when" id="headToHeadCarRow${s}" hidden>
           <label class="field">Car from<select id="headToHeadCarWhen${s}"><option value="same">Same time as the driver</option><option value="prime">Prime</option><option value="latest">Latest</option><option value="date">A specific date…</option></select></label>
           <label class="field" id="headToHeadCarDateField${s}" hidden>Date<input type="date" id="headToHeadCarDate${s}" /></label>
@@ -78,8 +101,12 @@ function buildSides() {
     );
     for (const node of host.querySelectorAll('[id]')) side[node.id] = node;
     for (const id of ['When', 'Date', 'Car', 'CarWhen', 'CarDate']) {
-      side[`headToHead${id}${s}`].addEventListener('change', renderHeadToHead);
-      side[`headToHead${id}${s}`].addEventListener('input', renderHeadToHead);
+      const changed = () => {
+        renderHeadToHead();
+        if (id === 'When' || id === 'Date') followMoment(s); // the moment of the driver changed: the race goes to that weekend
+      };
+      side[`headToHead${id}${s}`].addEventListener('change', changed);
+      side[`headToHead${id}${s}`].addEventListener('input', changed);
     }
   }
 }
@@ -106,8 +133,11 @@ function syncSide(s) {
   const car = side[`headToHeadCar${s}`].value;
   const carWhen = side[`headToHeadCarWhen${s}`].value;
   side[`headToHeadDateField${s}`].hidden = when !== 'date';
-  side[`headToHeadCarRow${s}`].hidden = !car;
-  side[`headToHeadCarDateField${s}`].hidden = !car || carWhen !== 'date';
+  side[`headToHeadCarField${s}`].hidden = sameCar; // the car is the same for both: there is nothing to choose
+  side[`headToHeadCarRow${s}`].hidden = sameCar || !car;
+  side[`headToHeadCarDateField${s}`].hidden = sameCar || !car || carWhen !== 'date';
+  el[`headToHeadSide${s}`].querySelector('summary').textContent = sameCar ? 'Another season' : 'Another season or car';
+  el[`headToHeadPrime${s}`].setAttribute('aria-pressed', String(when === 'prime'));
   const [from, to] = span(model.dh.get(el[`headToHead${s}`].value));
   const date = side[`headToHeadDate${s}`];
   Object.assign(date, { min: from, max: to });
@@ -128,6 +158,19 @@ function readSide(s) {
     carId: car,
     carWhen: { kind: carWhen, date: side[`headToHeadCarDate${s}`].value },
   };
+}
+
+/**
+ * The two sides as the forecast takes them. With the same car on, both are given the car of driver A at his moment, by the same car and the same
+ * explicit date (not "their own": that resolves against each driver's own weekends, and the forecast would then take them for different cars).
+ */
+function matchup() {
+  const sides = SIDES.map(readSide);
+  if (!sameCar) return sides;
+  const first = forecasting.resolveSide(state.model, sides[0]);
+  if (first.error) return sides;
+  const shared = { carId: first.constructorId, carWhen: { kind: 'date', date: first.car.to } };
+  return sides.map((x) => ({ ...x, ...shared }));
 }
 
 /** The live forecast (with recent form) only applies to today's grid, dry, as things stand. */
@@ -205,39 +248,124 @@ export function refreshHeadToHead() {
     tracks.map((t) => `<option value="${esc(t.id)}" ${t.id === keepC ? 'selected' : ''}>${esc(t.name)}</option>`).join('');
 }
 
-function drawHistory(r, names) {
+/** The two drivers' race ratings over both careers, with a marker for the moment each is taken at. */
+function drawHistory() {
   const svg = el.headToHeadChart;
-  const ids = [String(r.a.driverId), String(r.b.driverId)];
-  if (ids[0] === ids[1]) {
+  if (!lastChart) {
     svg.replaceChildren();
     return;
   }
-  const year = r.snap.year;
-  const from = year - 5;
-  const series = new Map(ids.map((id) => [id, (state.model.dh.get(id) || []).filter((p) => p.year >= from && p.year <= year)]));
+  const { ids, markers } = lastChart;
+  const series = new Map(ids.map((id) => [id, state.model.dh.get(id) || []]));
   const dates = [...series.values()].flat().map((p) => Date.parse(p.date));
-  drawChart(svg, null, ids, series, names, 'combined', 'driver', {
+  drawChart(svg, null, ids, series, state.model.dname, 'race', 'driver', {
     ...(dates.length ? { xDomain: [Math.min(...dates) - 14 * 864e5, Math.max(...dates) + 14 * 864e5] } : {}),
     legend: false, // the names above the figures have the colours
     casing: true,
     height: Math.max(0, el.headToHeadChartWrap.clientHeight - CHART_PADDING), // as tall as the room the panel leaves it (0 while hidden: the renderer then takes its own)
-    colors: new Map([
-      [ids[0], 'var(--s1)'], // driver A, as in the bar and over the name
-      [ids[1], 'var(--s2)'],
-    ]),
+    colors: new Map(
+      ids.length === 2
+        ? [
+            [ids[0], 'var(--s1)'], // driver A, as in the bar and over the name
+            [ids[1], 'var(--s2)'],
+          ]
+        : [[ids[0], 'var(--ink-3)']], // one driver at two moments: one line, and the markers have the two colours
+    ),
+    timeCursor: { markers, onScrub: scrub },
   });
+}
+
+/** Shows weekend number `index` of the ratings, and with it the race at the bottom right. */
+function goToWeekend(index, announce) {
+  if (index >= 0 && index !== state.raceIndex) setRace(index, { announce });
+}
+const weekendOfRace = (raceId) => state.model.snaps.findIndex((snap) => String(snap.raceId) === String(raceId));
+/** The last weekend on or before a time (the first one, before them all). */
+const weekendAt = (time) =>
+  Math.max(
+    0,
+    state.model.snaps.findLastIndex((snap) => Date.parse(snap.date) <= time),
+  );
+/** After a change of the moment of driver `s` (his prime, a date): the race goes to the weekend that moment is from. */
+function followMoment(s) {
+  if (resolved) goToWeekend(weekendOfRace(resolved[s].raceId), true);
+}
+
+/**
+ * Dragging along the chart sets the date of both drivers (each within his own career, as the date field would have it). The chart is not drawn
+ * again meanwhile (its markers move: drawing it would drop the drag), the moves are taken once a frame, and the weekends count as going by: the
+ * race on the page waits for the weekend the drag stops at, and the address is told once, at the end.
+ */
+let dragActive = false; // the date is being dragged: the chart is not drawn again meanwhile
+let draggedTo = 0;
+let dragFrame = 0;
+function scrub(time, phase) {
+  const apply = () => {
+    dragFrame = 0;
+    const iso = new Date(draggedTo).toISOString().slice(0, 10);
+    for (const s of SIDES) {
+      const [from, to] = span(state.model.dh.get(el[`headToHead${s}`].value));
+      side[`headToHeadWhen${s}`].value = 'date';
+      side[`headToHeadDate${s}`].value = iso < from ? from : iso > to ? to : iso;
+    }
+    renderHeadToHead();
+    goToWeekend(weekendAt(draggedTo), false);
+  };
+  draggedTo = time;
+  if (phase === 'start') {
+    dragActive = true;
+    scrubWeekends(true);
+  }
+  if (phase !== 'end') {
+    if (!dragFrame) dragFrame = requestAnimationFrame(apply);
+    return;
+  }
+  cancelAnimationFrame(dragFrame);
+  apply();
+  dragActive = false;
+  scrubWeekends(false);
+  const snap = state.model.snaps[state.raceIndex];
+  window.dispatchEvent(new CustomEvent('f1:race-changed', { detail: { index: state.raceIndex, raceId: snap.raceId, date: snap.date } }));
+}
+
+/** Tells the race on the page which two drivers are being compared (it lights their dots and rows in A's colour and B's). */
+function announceVersus() {
+  const [a, b] = [el.headToHeadA.value, el.headToHeadB.value];
+  window.dispatchEvent(new CustomEvent('f1:versus-drivers', { detail: { a, b: b === a ? null : b } }));
+}
+
+/** The chart under the figures, with a marker for the moment of each driver (A in the first colour, B in the second). */
+function showMoments() {
+  const ids = [el.headToHeadA.value, el.headToHeadB.value];
+  const markers = [
+    { time: Date.parse(resolved.A.date), color: 'var(--s1)' },
+    { time: Date.parse(resolved.B.date), color: 'var(--s2)' },
+  ];
+  showChart(ids[0] === ids[1] ? [ids[0]] : ids, markers);
+  if (document.body.dataset.page === 'head-to-head') announceVersus();
+}
+
+/** Draws the chart again, or only moves its markers if it is already drawn for these two drivers. */
+function showChart(ids, markers) {
+  const same = lastChart && lastChart.ids.join() === ids.join();
+  lastChart = { ids, markers };
+  el.headToHeadChartWrap.hidden = false;
+  if (same && el.headToHeadChart.childElementCount) moveTimeCursor(el.headToHeadChart, markers);
+  else drawHistory();
 }
 
 /** A constructed matchup: any driver and car, at any moment, dry or wet. Ratings only. */
 function renderScenario(sides, wet, L) {
   el.headToHeadSessionField.hidden = true;
   el.headToHeadGridFields.hidden = true;
-  el.headToHeadChartWrap.hidden = true;
   const circuitId = el.headToHeadCircuit.value || '';
   const r = forecasting.scenarioForecast(state.model, sides[0], sides[1], { wet, L, circuitId });
   el.headToHeadState.textContent = conditionsLine(wet, L, '');
   if (r.error) {
     el.headToHeadOut.innerHTML = `<p class="head-to-head-why">${esc(r.error)}</p>`;
+    el.headToHeadChartWrap.hidden = true;
+    el.headToHeadCarName.textContent = '';
+    resolved = lastChart = null;
     setNote('');
     return;
   }
@@ -252,12 +380,12 @@ function renderScenario(sides, wet, L) {
   const pA = r.p;
   const risk = (q) => 1 - (1 - q) ** L;
   const c = r.components;
-  const skill = (x) => state.model.wetFinal?.get(x.driverId) ?? 0;
-  const row = (label, f, note = '') =>
-    `<tr><th scope="row">${label}${note ? infoHtml(note) : ''}</th><td>${f(a)}</td><td>${f(b)}</td></tr>`;
   const grid = latestGridIds();
   const onGrid = grid.has(String(a.driverId)) && grid.has(String(b.driverId)) && a.driverId !== b.driverId;
-  const today = onGrid ? forecasting.forecastPreWeekend(state.model, a.driverId, b.driverId, { L, circuitId }).p : null;
+  const todayKey = `${a.driverId}|${b.driverId}|${L}|${circuitId}`;
+  if (onGrid && todayCache.key !== todayKey)
+    todayCache = { key: todayKey, p: forecasting.forecastPreWeekend(state.model, a.driverId, b.driverId, { L, circuitId }).p };
+  const today = onGrid ? todayCache.p : null;
   const gapParts = [`driver ${signed(c.driver)}`, `car ${signed(c.car)}`];
   if (wet) gapParts.push(`wet skill ${signed(c.wet)}`);
   if (circuitId) gapParts.push(`circuit ${signed(c.track)}`);
@@ -281,25 +409,26 @@ function renderScenario(sides, wet, L) {
         ]
       : []),
   ];
+  const head = (x) => ({ name: x.name, lines: sameCar ? [] : [carWhen(x)], rating: Math.round(x.driver.race), date: x.driver.to });
+  const [headA, headB] = [head(a), head(b)];
+  resolved = {
+    A: { raceId: a.driver.points[0].raceId, date: a.driver.to, rating: headA.rating },
+    B: { raceId: b.driver.points[0].raceId, date: b.driver.to, rating: headB.rating },
+  };
+  el.headToHeadCarName.textContent = sameCar ? carWhen(a) : ''; // the shared car, said once
   el.headToHeadOut.innerHTML = `
-    <div class="head-to-head-names"><div>${esc(a.name)}<small>${esc(carWhen(a))}</small><small>${esc(driverWhen(a))}</small></div><div>${esc(b.name)}<small>${esc(carWhen(b))}</small><small>${esc(driverWhen(b))}</small></div></div>
-    <div class="head-to-head-figures" aria-label="${esc(nameA)} ${percent(pA)}, ${esc(nameB)} ${percent(1 - pA)}"><span>${percent(pA)}</span><span>${percent(1 - pA)}</span></div>
-    <div class="head-to-head-bar" aria-hidden="true"><i style="flex:${pA}"></i><i style="flex:${1 - pA}"></i></div>
+    ${topHtml(headA, headB, pA, nameA, nameB)}
     ${stepsBlock(rows, nameA, nameB)}
-    ${today === null ? '' : `<p class="head-to-head-why">Today’s forecast: ${percent(today)} for ${esc(nameA)}${infoHtml('For these two on the current grid. It also uses recent form, which a what-if cannot.')}</p>`}
-    <table class="head-to-head-parts">
-      <thead><tr><th></th><th scope="col">${esc(nameA)}</th><th scope="col">${esc(nameB)}</th></tr></thead>
-      <tbody>
-        ${row('Driver rating', (x) => x.driver.race.toFixed(0), 'Race rating of the driver at the moment chosen.')}
-        ${row('Car rating', (x) => x.car.race.toFixed(0), 'Race rating of the car at the moment chosen.')}
-        ${wet ? row('Wet skill', (x) => signed(skill(x)), 'In points, from the driver’s wet races.') : ''}
-        ${row(`Retirement risk, ${L} laps`, (x) => percent(risk(x === a ? r.qA : r.qB)))}
-      </tbody>
-    </table>`;
+    ${today === null ? '' : `<p class="head-to-head-why">Today’s forecast: ${percent(today)} for ${esc(nameA)}${infoHtml('For these two on the current grid, in their own cars and with recent form.')}</p>`}
+    <dl class="head-to-head-facts">
+      <div><dt>Rating gap${infoHtml(`${nameA} minus ${nameB}, in points: ${gapParts.join(', ')}.`)}</dt><dd>${signed(r.gap)} <small>points</small></dd></div>
+      <div><dt>Retirement risk, ${L} laps${infoHtml(`The chance that each driver retires within ${L} laps: ${nameA} first, ${nameB} second.`)}</dt><dd>${swatches(percent(risk(r.qA)), percent(risk(r.qB)))}</dd></div>
+    </dl>`;
   const notes = [a.driver.note, a.car.note, b.driver.note, b.car.note].filter(Boolean);
   setNote(
-    `What-if matchup from ratings alone, with no recent form or qualifying. A rating is measured against the field of its own time, so comparing eras is a thought experiment.${notes.length ? ` ${[...new Set(notes)].join(' ')}` : ''}`,
+    `${sameCar ? 'Both drivers in the same car, so the gap is the drivers’ alone, from ratings only. ' : 'What-if matchup from ratings alone. '}No recent form or qualifying. A rating is measured against the field of its own time, so comparing eras is a thought experiment.${notes.length ? ` ${[...new Set(notes)].join(' ')}` : ''}`,
   );
+  showMoments();
 }
 
 export function renderHeadToHead() {
@@ -316,8 +445,9 @@ export function renderHeadToHead() {
   const L = Math.max(1, Math.round(+el.headToHeadLaps.value || 60));
   const mode = el.headToHeadSession.value || 'pre';
   if (side.headToHeadWhenA) {
+    el.headToHeadSameCar.setAttribute('aria-pressed', String(sameCar));
     for (const s of SIDES) syncSide(s);
-    const sides = SIDES.map(readSide);
+    const sides = matchup();
     const wet = el.headToHeadWet.value === 'wet';
     if (!isLive(sides, wet)) return renderScenario(sides, wet, L);
   }
@@ -340,6 +470,8 @@ export function renderHeadToHead() {
   if (!r) {
     el.headToHeadOut.textContent = 'These two drivers never appeared in the same race.';
     el.headToHeadChartWrap.hidden = true;
+    el.headToHeadCarName.textContent = '';
+    resolved = lastChart = null;
     setNote('');
     return;
   }
@@ -356,10 +488,16 @@ export function renderHeadToHead() {
   const nameB = surname(r.b.name);
   const teammates = r.a.constructorId === r.b.constructorId;
   const steps = r.breakdown && !same ? stepsHtml(r, nameA, nameB, teammates, own) : '';
+  const latestOf = (id) => state.model.dh.get(String(id)).at(-1);
+  const sideOf = (x) => {
+    const point = latestOf(x.driverId);
+    return { name: x.name, lines: [x.car], rating: Math.round(point.race), date: point.date, raceId: point.raceId };
+  };
+  const [headA, headB] = [sideOf(r.a), sideOf(r.b)];
+  resolved = { A: headA, B: headB };
+  el.headToHeadCarName.textContent = '';
   el.headToHeadOut.innerHTML = `
-    <div class="head-to-head-names"><div>${esc(r.a.name)}<small>${esc(r.a.car)}</small></div><div>${esc(r.b.name)}<small>${esc(r.b.car)}</small></div></div>
-    <div class="head-to-head-figures" aria-label="${esc(r.a.name)} ${percent(pA)}, ${esc(r.b.name)} ${percent(1 - pA)}"><span>${percent(pA)}</span><span>${percent(1 - pA)}</span></div>
-    <div class="head-to-head-bar" aria-hidden="true"><i style="flex:${pA}"></i><i style="flex:${1 - pA}"></i></div>
+    ${topHtml(headA, headB, pA, r.a.name, r.b.name)}
     ${steps}
     <dl class="head-to-head-facts">
       <div><dt>Race-rating gap${infoHtml(`${nameA} minus ${nameB}${teammates ? ', same car' : ', car included'}${own ? `, with one standard deviation of the estimate (±${own.sd.toFixed(0)})` : ''}.`)}</dt><dd>${same ? '0' : signed(gap)}${own ? ` ± ${own.sd.toFixed(0)}` : ''} <small>points</small></dd></div>
@@ -379,20 +517,30 @@ export function renderHeadToHead() {
   setNote(
     `Chance of finishing ahead over ${r.L} laps, ${form}, with results through the ${r.snap.year} ${r.snap.name}. A dry race is assumed; change that under Conditions.`,
   );
-  el.headToHeadChartWrap.hidden = same;
-  lastForecast = same ? null : r;
-  if (!same) drawHistory(r, state.model.dname);
+  showMoments();
 }
 
 export function initHeadToHead() {
   let chartHeight = 0;
   new ResizeObserver(() => {
     const height = el.headToHeadChartWrap.clientHeight;
-    if (height > 0 && height !== chartHeight && lastForecast) {
+    if (height > 0 && height !== chartHeight && lastChart && !dragActive) {
       chartHeight = height;
-      drawHistory(lastForecast, state.model.dname);
+      drawHistory();
     }
   }).observe(el.headToHeadChartWrap);
+  el.headToHeadSameCar.addEventListener('click', () => {
+    sameCar = !sameCar;
+    renderHeadToHead();
+  });
+  for (const s of SIDES)
+    el[`headToHeadPrime${s}`].addEventListener('click', () => {
+      // a driver's prime is the weekend his rating was highest; pressing it again goes back to his latest
+      const when = side[`headToHeadWhen${s}`];
+      when.value = when.value === 'prime' ? 'latest' : 'prime';
+      renderHeadToHead();
+      followMoment(s);
+    });
   for (const node of [
     el.headToHeadA,
     el.headToHeadB,

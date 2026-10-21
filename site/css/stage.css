@@ -454,6 +454,26 @@ body[data-surface='stage'] main.workspace {
   opacity: 0; /* over the panel the square steps aside (and the pointer is the ordinary one) */
 }
 
+/* ── the colours of the lines ────────────────────────── */
+/* On the stage (the panel, the two drivers lit in the race, the notes) and in the tooltip of a chart on the panel. */
+.stage,
+#chartValueTooltip.metal {
+  /* the colours of the lines of a chart on the panel: the project owner's five (red, blue, turquoise, dark green, magenta), then violet, orange and
+     azure in the same vivid spirit; the same on the panel whatever theme another page was set to (Insights keeps the site's own palette). Checked
+     with the palette validator on the lightest metal (#e2e2e2): every pair, not only neighbours, is told apart (colour-blind separation at least 9.5,
+     normal vision at least 16.7). The five themselves are outside its lightness band (the blue, the dark green and the turquoise), the dark green is
+     below its chroma floor, and the turquoise, the orange and the azure are under 3 to 1 against light metal: the names on the chips, the table and
+     the tooltip say which line is which, and the lines have a thin dark edge (chart-renderer.js, `casing`) so that the pale ones show. */
+  --s1: #fa1802;
+  --s2: #091a9c;
+  --s3: #4ecdc4;
+  --s4: #065143;
+  --s5: #ce1483;
+  --s6: #7b2ff7;
+  --s7: #ff8a00;
+  --s8: #1e90ff;
+}
+
 /* ── the ratings ─────────────────────────────────────── */
 /* The panel holds the ratings list of ratings-view.js, which reads its colours from the site's tokens. Here they are set again for dark ink on
    brushed metal, so the list needs no styles of its own; the card that opens on a row has the same surface. The fill under the text is almost clear
@@ -479,20 +499,6 @@ body[data-surface='stage'] main.workspace {
   --pos: #023317;
   --neg: #560709;
   --form: #fa1802; /* the colour of recent form */
-  /* the colours of the lines of a chart on the panel: the project owner's five (red, blue, turquoise, dark green, magenta), then violet, orange and
-     azure in the same vivid spirit; the same on the panel whatever theme another page was set to (Insights keeps the site's own palette). Checked
-     with the palette validator on the lightest metal (#e2e2e2): every pair, not only neighbours, is told apart (colour-blind separation at least 9.5,
-     normal vision at least 16.7). The five themselves are outside its lightness band (the blue, the dark green and the turquoise), the dark green is
-     below its chroma floor, and the turquoise, the orange and the azure are under 3 to 1 against light metal: the names on the chips, the table and
-     the tooltip say which line is which, and the lines have a thin dark edge (chart-renderer.js, `casing`) so that the pale ones show. */
-  --s1: #fa1802;
-  --s2: #091a9c;
-  --s3: #4ecdc4;
-  --s4: #065143;
-  --s5: #ce1483;
-  --s6: #7b2ff7;
-  --s7: #ff8a00;
-  --s8: #1e90ff;
   --form-edge: #5c0a00;
   --panel-plate: rgb(236 238 242 / 0.18);
   --panel-shade: rgb(0 0 0 / 0.11); /* the most the shading below can darken any point: the layers of it together */
@@ -646,21 +652,20 @@ body[data-surface='stage'] main.workspace {
 }
 /* ── the views over the ratings ──────────────────────── */
 /* The history and the head to head open over the ratings in the panel, on the same metal and the same size, with a button to go back. The ratings
-   stay where they are, out of sight, so that the panel does not change size; the view fills it and scrolls inside itself. */
+   stay where they are, out of sight; the view fills the panel and scrolls inside itself. */
 .ledger:not([data-view='ratings']) {
   overflow: hidden;
 }
 .ledger:not([data-view='ratings']) #ratingsHost {
   visibility: hidden;
 }
+/* a view has a height of its own, not the ratings' (which is that of the number of rows of the weekend: the cars are fewer than the drivers, and a
+   weekend of 20 drivers is shorter than one of 22), so the panel does not change size as the weekends go by under a date being dragged */
 .stage[data-layout='wide'] .ledger:not([data-view='ratings']) {
-  min-height: min(
-    640px,
-    calc(100% - 68px - var(--bottom-space, 58px) - 8px)
-  ); /* the cars are fewer than the drivers: the panel is not shorter than a view needs */
+  height: min(740px, calc(100% - 68px - var(--bottom-space, 58px) - 8px));
 }
 .stage[data-layout='sheet'] .ledger:not([data-view='ratings']) {
-  min-height: min(560px, 78vh, calc(100% - var(--bottom-space, 58px) - 80px));
+  height: min(740px, 78vh, calc(100% - var(--bottom-space, 58px) - 80px));
 }
 .ledger-view {
   position: absolute;
@@ -1018,6 +1023,26 @@ body[data-surface='stage'] main.workspace {
   align-content: start;
   min-width: 0;
 }
+.head-to-head-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 20px;
+}
+.ledger .head-to-head .head-to-head-prime {
+  min-height: 20px;
+  padding: 0 7px;
+  font-size: 10.5px;
+}
+.head-to-head-mode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ledger .head-to-head-mode .toggle {
+  min-height: 22px;
+}
 .ledger .head-to-head .head-to-head-label {
   display: flex;
   align-items: center;
@@ -1123,6 +1148,32 @@ body[data-surface='stage'] main.workspace {
 .head-to-head-names > div:last-child {
   border-top-color: var(--s2);
   text-align: right;
+}
+.head-to-head-figure {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.head-to-head-figure:last-child {
+  flex-direction: row-reverse;
+}
+.head-to-head-moment {
+  display: grid;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+.head-to-head-figure:last-child .head-to-head-moment {
+  text-align: right;
+}
+.head-to-head-moment em {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 800;
+}
+.head-to-head-moment small {
+  color: var(--ink-3);
 }
 .head-to-head-names small {
   display: block;
@@ -1917,6 +1968,16 @@ body[data-surface='stage'] main.workspace {
   box-shadow: inset 3px 0 0 var(--hot);
   font-weight: 800;
 }
+.track-table li.versus-a {
+  background: rgb(250 24 2 / 0.22);
+  box-shadow: inset 3px 0 0 var(--s1);
+  font-weight: 800;
+}
+.track-table li.versus-b {
+  background: rgb(9 26 156 / 0.18);
+  box-shadow: inset 3px 0 0 var(--s2);
+  font-weight: 800;
+}
 .track-halo,
 .track-line {
   fill: none;
@@ -1952,6 +2013,13 @@ body[data-surface='stage'] main.workspace {
 }
 .track-dot.hot {
   fill: var(--hot);
+}
+/* the two drivers of the Head to head: A in the first colour of the chart's palette and B in the second (the white edge keeps the blue on the black line) */
+.track-dot.versus-a {
+  fill: var(--s1);
+}
+.track-dot.versus-b {
+  fill: var(--s2);
 }
 .track-speeds {
   display: flex;

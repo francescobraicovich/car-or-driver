@@ -1220,9 +1220,9 @@ await evaluate(
 );
 await sleep(400);
 check(
-  'what-if matchup shows its parts and a probability',
+  'what-if matchup shows its two facts and a probability',
   /\d+%/.test((await evaluate("document.querySelector('.head-to-head-figures')?.textContent || ''")) || '') &&
-    (await evaluate("document.querySelectorAll('.head-to-head-parts tbody tr').length")) >= 3,
+    (await evaluate("document.querySelectorAll('.head-to-head-facts > div').length")) === 2,
 );
 // The history and the head to head are views over the ratings, in the panel: a button in the panel opens each, the view covers the panel exactly, Back
 // (and the first Escape) returns to the same weekend with the focus on the button that opened it, the next Escape closes the panel
@@ -1240,6 +1240,7 @@ await evaluate("document.getElementById('ratingsOpenHistory').click()");
 await sleep(900);
 const entriesOpen = await evaluate('history.length');
 const historyBox = await rectangleOfSelector('#historyView');
+const panelWithView = await rectangleOfSelector('#stageLedger');
 const inHistory = JSON.parse(await ledgerState());
 check(
   'the History button in the panel opens the history over the ratings, kept open as a page of the front page',
@@ -1251,12 +1252,14 @@ check(
   JSON.stringify(inHistory),
 );
 check(
-  'the history covers the panel exactly and the ratings are out of sight under it',
-  Math.abs(historyBox.x - panelBeforeViews.x - 1) <= 1.5 &&
-    Math.abs(historyBox.width - panelBeforeViews.width + 2) <= 2.5 &&
-    Math.abs(historyBox.height - panelBeforeViews.height + 2) <= 2.5 &&
+  'the history covers the panel (which keeps its place and width, and has a height of its own while a view is open) and the ratings are out of sight under it',
+  Math.abs(historyBox.x - panelWithView.x - 1) <= 1.5 &&
+    Math.abs(historyBox.width - panelWithView.width + 2) <= 2.5 &&
+    Math.abs(historyBox.height - panelWithView.height + 2) <= 2.5 &&
+    Math.abs(panelWithView.x - panelBeforeViews.x) <= 1.5 &&
+    Math.abs(panelWithView.width - panelBeforeViews.width) <= 1.5 &&
     (await evaluate("getComputedStyle(document.getElementById('ratingsHost')).visibility")) === 'hidden',
-  JSON.stringify({ panelBeforeViews, historyBox }),
+  JSON.stringify({ panelBeforeViews, panelWithView, historyBox }),
 );
 check(
   'the history shows a line and a chip for each driver, and fits the panel without scrolling',
@@ -1350,7 +1353,7 @@ check(
   'the head to head shows the figures, the names and bars for each step of the forecast, with the explanations behind icons',
   bars.length >= 2 &&
     bars.every((bar) => bar[0] === 2 && bar[1] === 'rgb(250, 24, 2)' && bar[2] === 'rgb(9, 26, 156)') &&
-    resultText < 420 &&
+    resultText < 520 &&
     (await evaluate(
       "[...document.querySelectorAll('#headToHeadView .info:not([hidden])')].length >= 6 && [...document.querySelectorAll('#headToHeadView .info:not([hidden])')].every((icon) => icon.dataset.info.length > 10 && icon.getAttribute('aria-label') === icon.dataset.info)",
     )),
@@ -1382,6 +1385,143 @@ check(
   (await evaluate("!document.getElementById('infoTip').hidden")) &&
     (await evaluate("(document.activeElement.blur(), document.getElementById('infoTip').hidden)")),
 );
+// Head to head: the same car is the standard setting, Prime puts a driver at his peak, the rating and the date of each driver are beside his chance, and
+// dragging along the plot sets the date of both: the race at the bottom right goes to that Grand Prix with the two drivers lit in their colours
+await mouse('mouseMoved', 8, 300);
+// (the checks above left driver B at his prime and the conditions wet: start from the standard setting)
+await evaluate(
+  "(() => { for (const s of ['A', 'B']) { const when = document.getElementById('headToHeadWhen' + s); when.value = 'latest'; when.dispatchEvent(new Event('change', { bubbles: true })); } const wet = document.getElementById('headToHeadWet'); wet.value = 'dry'; wet.dispatchEvent(new Event('change', { bubbles: true })); })()",
+);
+await sleep(500);
+const headToHeadState = () =>
+  evaluate(`JSON.stringify({
+    sameCar: document.getElementById('headToHeadSameCar').getAttribute('aria-pressed'),
+    car: document.getElementById('headToHeadCarName').textContent,
+    figures: [...document.querySelectorAll('.head-to-head-figure')].map((figure) => ({ chance: figure.querySelector('b').textContent, rating: figure.querySelector('em').textContent, date: figure.querySelector('small').textContent })),
+    weekend: document.getElementById('ratingsNow').textContent,
+    race: document.getElementById('stageTrack').dataset.raceId,
+    raceShown: !document.getElementById('stageTrack').hidden,
+    lines: document.querySelectorAll('#headToHeadChart polyline[stroke^="var("]').length, // (not the dark edges under them)
+    markers: [document.querySelectorAll('#headToHeadChart line[stroke="var(--s1)"]').length, document.querySelectorAll('#headToHeadChart line[stroke="var(--s2)"]').length],
+    steps: [...document.querySelectorAll('.head-to-head-steps li > span:first-child')].map((label) => label.firstChild.textContent),
+    lit: [...document.querySelectorAll('#stageTrackDots circle')].filter((dot) => dot.classList.contains('versus-a') || dot.classList.contains('versus-b')).map((dot) => getComputedStyle(dot).fill),
+    litRows: document.querySelectorAll('#stageTrackTable li.versus-a, #stageTrackTable li.versus-b').length,
+    prime: [document.getElementById('headToHeadPrimeA').getAttribute('aria-pressed'), document.getElementById('headToHeadPrimeB').getAttribute('aria-pressed')],
+    carFields: [...document.querySelectorAll('#headToHeadView [id^="headToHeadCarField"]')].map((field) => field.hidden),
+  })`);
+const standard = JSON.parse(await headToHeadState());
+check(
+  'the same car is the standard setting: it is on, the shared car is named once, the car pickers are not offered, and the plot is there with a marker for each driver',
+  standard.sameCar === 'true' &&
+    standard.car.length > 3 &&
+    standard.carFields.every(Boolean) &&
+    standard.lines === 2 &&
+    standard.markers[0] >= 1 &&
+    standard.markers[1] >= 1,
+  JSON.stringify(standard),
+);
+check(
+  'beside each chance are the rating the forecast takes and the date of the weekend it is from, and the two drivers are lit in the race in the colours of A and of B',
+  standard.figures.length === 2 &&
+    standard.figures.every(
+      (figure) => /^\d+%$/.test(figure.chance) && /^\d{3,4}$/.test(figure.rating) && /^\d{1,2} \w{3} \d{4}$/.test(figure.date),
+    ) &&
+    standard.lit.join() === 'rgb(250, 24, 2),rgb(9, 26, 156)' &&
+    standard.litRows === 2,
+  JSON.stringify(standard),
+);
+// Prime: B's peak is a different date, the race goes to that weekend, and the same button brings him back to his latest
+await evaluate("document.getElementById('headToHeadPrimeB').click()");
+await sleep(900);
+const primed = JSON.parse(await headToHeadState());
+check(
+  'Prime puts a driver at his peak: his date changes (the other stays), the race goes to that weekend, and pressing it again brings him back to his latest',
+  primed.prime.join() === 'false,true' &&
+    primed.figures[1].date !== standard.figures[1].date &&
+    primed.figures[0].date === standard.figures[0].date &&
+    primed.weekend === primed.figures[1].date &&
+    primed.race !== standard.race &&
+    primed.markers[0] >= 1 &&
+    (await (async () => {
+      await evaluate("document.getElementById('headToHeadPrimeB').click()");
+      await sleep(700);
+      const back = JSON.parse(await headToHeadState());
+      return back.prime.join() === 'false,false' && back.figures[1].date === standard.figures[1].date && back.race === standard.race;
+    })()),
+  JSON.stringify({ standard: standard.figures, primed: primed.figures, weekend: primed.weekend }),
+);
+// dragging along the plot: both drivers go to the date, the race waits while it moves and then goes to that Grand Prix; the address is told once
+const dragPlot = await rectangleOfSelector('#headToHeadChart');
+const dragY = dragPlot.y + dragPlot.height * 0.5;
+const entriesBeforeDrag = await evaluate('history.length');
+await mouse('mouseMoved', dragPlot.x + dragPlot.width * 0.85, dragY);
+await mouse('mousePressed', dragPlot.x + dragPlot.width * 0.85, dragY);
+for (const share of [0.8, 0.7, 0.62]) {
+  await mouse('mouseMoved', dragPlot.x + dragPlot.width * share, dragY, { buttons: 1 });
+  await sleep(60);
+}
+const dragging = JSON.parse(await headToHeadState());
+const addressMidDrag = await evaluate('location.hash');
+await mouse('mouseReleased', dragPlot.x + dragPlot.width * 0.62, dragY);
+await sleep(1500);
+const dragged = JSON.parse(await headToHeadState());
+check(
+  'dragging along the plot sets the date of both drivers, and the race (put away while it moves) goes to that Grand Prix with the two drivers lit in their colours',
+  dragging.figures[0].date === dragging.figures[1].date &&
+    dragging.figures[0].date !== standard.figures[0].date &&
+    dragging.raceShown === false &&
+    dragged.raceShown === true &&
+    dragged.race !== standard.race &&
+    dragged.weekend === dragged.figures[0].date &&
+    dragged.lit.join() === 'rgb(250, 24, 2),rgb(9, 26, 156)' &&
+    dragged.litRows === 2,
+  JSON.stringify({ dragging, dragged }),
+);
+check(
+  "the address is told once, when the drag ends (the browser would ignore it after a few hundred), and the browser's history does not grow",
+  !addressMidDrag.includes(`race=${dragged.race}`) &&
+    (await evaluate('location.hash')).includes(`race=${dragged.race}`) &&
+    (await evaluate('history.length')) === entriesBeforeDrag,
+  JSON.stringify({ addressMidDrag: addressMidDrag.slice(-24), now: (await evaluate('location.hash')).slice(-24) }),
+);
+// the plot is not drawn again while it is dragged: the chart element under the pointer stays, and the markers moved
+check('the markers moved with the drag (both at the dragged date, side by side)', dragged.markers[0] >= 1 && dragged.markers[1] >= 1);
+// Same car off, with both drivers at their latest: each in his own car again, and the forecast with recent form for the current grid
+await evaluate(
+  "(() => { for (const s of ['A', 'B']) { const when = document.getElementById('headToHeadWhen' + s); when.value = 'latest'; when.dispatchEvent(new Event('change', { bubbles: true })); } })()",
+);
+await sleep(300);
+await evaluate("document.getElementById('headToHeadSameCar').click()");
+await sleep(700);
+const own = JSON.parse(await headToHeadState());
+check(
+  'with the same car off the cars are offered again, and the forecast with recent form is back at the latest weekends',
+  own.sameCar === 'false' && own.carFields.every((hidden) => !hidden) && own.car === '' && own.steps.includes('With recent form'),
+  JSON.stringify(own),
+);
+await evaluate("document.getElementById('headToHeadSameCar').click()");
+await sleep(300);
+// one driver at two moments (his peak against his latest): one line with the two markers, and two dates
+const keepB = await evaluate("document.getElementById('headToHeadB').value");
+await evaluate(
+  "(() => { const b = document.getElementById('headToHeadB'); b.value = document.getElementById('headToHeadA').value; b.dispatchEvent(new Event('change', { bubbles: true })); })()",
+);
+await evaluate("document.getElementById('headToHeadPrimeB').click()");
+await sleep(800);
+const twoMoments = JSON.parse(await headToHeadState());
+check(
+  'the same driver at his peak and at his latest is one line with two markers, and two dates',
+  twoMoments.lines === 1 &&
+    twoMoments.figures[0].date !== twoMoments.figures[1].date &&
+    twoMoments.markers[0] >= 1 &&
+    twoMoments.markers[1] >= 1,
+  JSON.stringify(twoMoments),
+);
+await evaluate("document.getElementById('headToHeadPrimeB').click()");
+await evaluate(
+  `(() => { const b = document.getElementById('headToHeadB'); b.value = '${keepB}'; b.dispatchEvent(new Event('change', { bubbles: true })); })()`,
+);
+await sleep(500);
 await press('Escape', 'Escape', 27);
 await sleep(600);
 const afterFirstEscape = JSON.parse(await ledgerState());
@@ -1389,6 +1529,12 @@ check(
   'the first Escape goes back to the ratings from the head to head, the next closes the panel',
   afterFirstEscape.view === 'ratings' && afterFirstEscape.stage === 'open' && afterFirstEscape.focus === 'ratingsOpenHeadToHead',
   JSON.stringify(afterFirstEscape),
+);
+check(
+  'going back from the head to head puts the colours out in the race',
+  (await evaluate(
+    "document.querySelectorAll('#stageTrackDots .versus-a, #stageTrackDots .versus-b, #stageTrackTable .versus-a, #stageTrackTable .versus-b').length",
+  )) === 0,
 );
 await press('Escape', 'Escape', 27);
 await sleep(500);

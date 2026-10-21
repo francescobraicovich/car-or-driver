@@ -7,6 +7,8 @@ import { assignSlots, decimalsFor, nearestIndex, niceTicks, slotFor, spreadLabel
 
 const NS = 'http://www.w3.org/2000/svg';
 const charts = new WeakMap();
+const dragging = new WeakSet(); // the charts whose time cursor is being dragged: they are not drawn again until it is let go
+const timeCursors = new WeakMap(); // svg -> the function that moves its markers (the chart is not drawn again for that: it would drop a drag in progress)
 const slotsBySvg = new WeakMap();
 let tooltip;
 
@@ -162,7 +164,7 @@ function setup(svg, redraw, height) {
     if (typeof ResizeObserver !== 'undefined') {
       cache.observer = new ResizeObserver(() => {
         const width = Math.round(svg.getBoundingClientRect().width);
-        if (width > 0 && width !== cache.width) cache.redraw();
+        if (width > 0 && width !== cache.width && !dragging.has(svg)) cache.redraw();
       });
       cache.observer.observe(svg);
     }
@@ -437,6 +439,31 @@ export function renderPlot(svg, options) {
     }
   }
 
+  // a time cursor (Head to head): a marker for each moment in use, which the visitor can drag along the chart to change them
+  const cursor = options.timeCursor;
+  const marks = cursor ? node(svg, 'g', { 'pointer-events': 'none' }) : null;
+  if (cursor) {
+    const place = (markers) => {
+      marks.replaceChildren();
+      markers.forEach((marker, index) => {
+        // two markers at the same time stand side by side
+        const x = Math.max(box.left, Math.min(box.right, X(marker.time))) + (index - (markers.length - 1) / 2) * 3;
+        node(marks, 'line', { x1: x, x2: x, y1: box.top, y2: box.bottom, stroke: marker.color, 'stroke-width': 2 });
+        node(marks, 'rect', {
+          x: x - 4,
+          y: box.top - 9,
+          width: 8,
+          height: 8,
+          fill: marker.color,
+          stroke: 'var(--surface)',
+          'stroke-width': 1,
+        });
+      });
+    };
+    place(cursor.markers);
+    timeCursors.set(svg, place);
+  }
+
   // crosshair: one tooltip with every series at the nearest weekend
   const byTime = new Map();
   for (const s of series) {
@@ -500,6 +527,34 @@ export function renderPlot(svg, options) {
     const px = ((event.clientX - rect.left) * width) / rect.width;
     return nearestIndex(times, xLo + ((px - box.left) / (box.right - box.left)) * (xHi - xLo));
   };
+  if (cursor?.onScrub) {
+    // pressing on the chart and dragging sets the time; the callback is told the time (milliseconds) and the phase: start, move, end
+    const timeAt = (event) => {
+      const rect = svg.getBoundingClientRect();
+      const px = ((event.clientX - rect.left) * width) / rect.width;
+      return Math.max(xLo, Math.min(xHi, xLo + ((px - box.left) / (box.right - box.left)) * (xHi - xLo)));
+    };
+    overlay.style.cursor = 'ew-resize';
+    overlay.addEventListener('pointerdown', (e) => {
+      if (e.button) return;
+      // the moves and the release are taken on the window, not on the chart: the chart may be drawn again under the pointer (its size changes), and
+      // a drag held by an element that is gone would be dropped
+      dragging.add(svg);
+      const move = (event) => cursor.onScrub(timeAt(event), 'move');
+      const end = (event) => {
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', end);
+        window.removeEventListener('pointercancel', end);
+        dragging.delete(svg);
+        cursor.onScrub(timeAt(event), 'end');
+        if (Math.round(svg.getBoundingClientRect().width) !== charts.get(svg)?.width) charts.get(svg)?.redraw(); // a size change that waited
+      };
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', end);
+      window.addEventListener('pointercancel', end);
+      cursor.onScrub(timeAt(e), 'start');
+    });
+  }
   overlay.addEventListener('pointermove', (e) => show(locate(e), e.clientX, e.clientY));
   overlay.addEventListener('pointerdown', (e) => show(locate(e), e.clientX, e.clientY));
   overlay.addEventListener('pointerleave', (e) => {
@@ -524,4 +579,9 @@ export function renderPlot(svg, options) {
     e.preventDefault();
     show(Math.max(0, Math.min(times.length - 1, next)));
   });
+}
+
+/** Moves the markers of a chart drawn with a time cursor to these moments ({ time, color }, ...), without drawing it again. */
+export function moveTimeCursor(svg, markers) {
+  timeCursors.get(svg)?.(markers);
 }

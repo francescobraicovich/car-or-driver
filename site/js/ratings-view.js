@@ -92,6 +92,12 @@ export function populate() {
   setRace(state.model.snaps.length - 1, { announce: false });
 }
 
+/** The weekends are going by, as when the slider is held (Head to head sets it while its date is dragged): no card, and the race on the page waits for the weekend they stop at. */
+export function scrubWeekends(on) {
+  scrubbing = on;
+  if (!on) renderRatings(); // let go: drawn at rest, and the race comes back
+}
+
 function stop() {
   const playing = Boolean(timer);
   if (timer) clearInterval(timer);

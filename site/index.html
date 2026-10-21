@@ -227,18 +227,30 @@
                   <p class="sr-only">The chance that one driver finishes ahead of another in a race, from their ratings and recent form.</p>
                   <div class="head-to-head-pick">
                     <div class="head-to-head-side" id="headToHeadSideA">
+                      <div class="head-to-head-label-row">
+                        <span class="head-to-head-label">Driver A</span>
+                        <button type="button" class="toggle head-to-head-prime" id="headToHeadPrimeA" aria-pressed="false">Prime</button>
+                      </div>
                       <label class="field"
-                        ><span class="head-to-head-label">Driver A</span
+                        ><span class="sr-only">Driver A</span
                         ><select id="headToHeadA"></select
                       ></label>
                     </div>
                     <span class="vs" aria-hidden="true">vs</span>
                     <div class="head-to-head-side" id="headToHeadSideB">
+                      <div class="head-to-head-label-row">
+                        <span class="head-to-head-label">Driver B</span>
+                        <button type="button" class="toggle head-to-head-prime" id="headToHeadPrimeB" aria-pressed="false">Prime</button>
+                      </div>
                       <label class="field"
-                        ><span class="head-to-head-label">Driver B</span
+                        ><span class="sr-only">Driver B</span
                         ><select id="headToHeadB"></select
                       ></label>
                     </div>
+                  </div>
+                  <div class="head-to-head-mode">
+                    <button type="button" class="toggle" id="headToHeadSameCar" aria-pressed="true">Same car</button>
+                    <span class="head-to-head-state" id="headToHeadCarName"></span>
                   </div>
                   <div id="headToHeadOut" class="head-to-head-result" aria-live="polite"></div>
                   <div id="headToHeadChartWrap" class="head-to-head-chart" hidden>

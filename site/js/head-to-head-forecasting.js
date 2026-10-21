@@ -3,4 +3,4 @@
 export { forecastH2H, forecastPreWeekend } from '../../packages/core/src/forecast/head-to-head.js';
 export { isStateSpace } from '../../packages/core/src/forecast/prepare.js';
 export { ratingsAlone } from '../../packages/core/src/state-space/forecast.js';
-export { scenarioForecast, WET_RATIO } from '../../packages/core/src/forecast/scenario.js';
+export { resolveSide, scenarioForecast, WET_RATIO } from '../../packages/core/src/forecast/scenario.js';
