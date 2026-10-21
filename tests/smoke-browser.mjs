@@ -1531,6 +1531,12 @@ check(
   JSON.stringify(afterFirstEscape),
 );
 check(
+  'Back puts the ratings and the race where they were when the view was opened, after a date was dragged',
+  (await evaluate("document.getElementById('ratingsNow').textContent")) === standard.weekend &&
+    (await evaluate("document.getElementById('stageTrack').dataset.raceId")) === standard.race,
+  JSON.stringify({ standard: standard.weekend, now: await evaluate("document.getElementById('ratingsNow').textContent") }),
+);
+check(
   'going back from the head to head puts the colours out in the race',
   (await evaluate(
     "document.querySelectorAll('#stageTrackDots .versus-a, #stageTrackDots .versus-b, #stageTrackTable .versus-a, #stageTrackTable .versus-b').length",

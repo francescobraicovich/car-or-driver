@@ -567,7 +567,17 @@ export function initHeadToHead() {
     refreshHeadToHead();
     renderHeadToHead();
   });
+  // the ratings and the race go back to the weekend they were at when the view was opened, however it is left (a date dragged here is an exploration)
+  let weekendOnOpen = null;
   window.addEventListener('f1:workspace-changed', () => {
-    if (state.model && document.body.dataset.page === 'head-to-head') renderHeadToHead();
+    const open = document.body.dataset.page === 'head-to-head';
+    if (state.model && open) {
+      weekendOnOpen ??= state.raceIndex;
+      renderHeadToHead();
+    }
+    if (!open && weekendOnOpen !== null) {
+      goToWeekend(weekendOnOpen, true);
+      weekendOnOpen = null;
+    }
   });
 }
