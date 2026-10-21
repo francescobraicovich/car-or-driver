@@ -1683,6 +1683,11 @@ body[data-surface='stage'] main.workspace {
 .ledger .frame-foot .foot-views button:disabled {
   opacity: 0.4;
 }
+.ledger .frame-foot .foot-views button::after {
+  content: '›'; /* it opens a view over the ratings */
+  margin-left: 4px;
+  color: var(--ink-3);
+}
 .ledger .notes-more {
   font-size: 10.5px;
 }
