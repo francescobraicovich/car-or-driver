@@ -9,6 +9,7 @@ import { carIdentity } from '../../packages/core/src/lineage.js';
 import { DESCRIPTIONS, METRICS, NAMES, isProbability } from './metric-text.js';
 
 const MAX_SERIES = 8;
+const PLOT_PADDING = 10; // pixels of the plate (CSS .history-plot) above and below the chart
 const DEFAULT_SERIES = 5;
 const ID = /^[A-Za-z0-9_-]{1,64}$/;
 
@@ -54,45 +55,41 @@ export function createHistoryView({ onChange }) {
   const inRange = (points) => points.filter((p) => p.year >= hist.from && p.year <= hist.to);
 
   function build() {
-    root = document.createElement('figure');
-    root.className = 'frame';
+    root = document.createElement('div');
+    root.className = 'history';
     root.id = 'historyFrame';
     root.innerHTML = `
-      <header class="frame-head">
-        <h2 class="frame-title" id="historyTitle"></h2>
-        <p class="frame-sub" id="historySub"></p>
-      </header>
       <div class="frame-tools">
         <div class="segmented" role="group" aria-label="Show">
           <button type="button" id="historyDrivers" aria-pressed="true">Drivers</button>
           <button type="button" id="historyCars" aria-pressed="false">Cars</button>
         </div>
-        <label class="field">Rating<select id="historyMetric"></select></label>
-        <div class="field">
-          <span id="historyRangeLabel">Seasons</span>
-          <div class="range2" role="group" aria-labelledby="historyRangeLabel">
-            <div class="range2-track"><div class="range2-fill" id="historyFill"></div></div>
-            <input type="range" id="historyFrom" min="0" max="0" step="1" aria-label="First season" />
-            <input type="range" id="historyTo" min="0" max="0" step="1" aria-label="Last season" />
-          </div>
+        <label class="field"><span class="sr-only">Rating</span><select id="historyMetric"></select></label>
+        <div class="segmented spacer" role="group" aria-label="View">
+          <button type="button" id="historyChartView" aria-pressed="true">Chart</button>
+          <button type="button" id="historyTableView" aria-pressed="false">Table</button>
+        </div>
+      </div>
+      <div class="series-chips" id="historyChips"></div>
+      <div class="history-plot" id="historyPlot">
+        <svg id="driverChart" class="chart"></svg>
+        <svg id="carChart" class="chart" hidden></svg>
+        <div id="historyTable" class="table-wrap" hidden></div>
+      </div>
+      <div class="season-range">
+        <span class="season-range-label" id="historyRangeLabel">Seasons</span>
+        <div class="season-range-slider" role="group" aria-labelledby="historyRangeLabel">
+          <div class="season-range-track"><div class="season-range-fill" id="historyFill"></div></div>
+          <input type="range" id="historyFrom" min="0" max="0" step="1" aria-label="First season" />
+          <input type="range" id="historyTo" min="0" max="0" step="1" aria-label="Last season" />
         </div>
         <div class="segmented" role="group" aria-label="Range presets" id="historyPresets">
           <button type="button" data-span="all">All</button>
           <button type="button" data-span="10">10 years</button>
           <button type="button" data-span="5">5 years</button>
         </div>
-        <div class="segmented spacer" role="group" aria-label="View">
-          <button type="button" id="historyChartView" aria-pressed="true">Chart</button>
-          <button type="button" id="historyTableView" aria-pressed="false">Table</button>
-        </div>
       </div>
-      <div class="chips" id="historyChips"></div>
-      <div class="frame-body">
-        <svg id="driverChart" class="chart"></svg>
-        <svg id="carChart" class="chart" hidden></svg>
-        <div id="historyTable" class="table-wrap" hidden></div>
-      </div>
-      <footer class="frame-foot"><p class="notes" id="historyNote"></p></footer>`;
+      <p class="notes" id="historyNote"></p>`;
     el.chartsPanel.replaceChildren(root);
     ui = Object.fromEntries([...root.querySelectorAll('[id]')].map((n) => [n.id, n]));
 
@@ -133,6 +130,15 @@ export function createHistoryView({ onChange }) {
     };
     ui.historyFrom.addEventListener('input', onRange('from'));
     ui.historyTo.addEventListener('input', onRange('to'));
+    // the chart is as tall as the room the panel leaves it, so it is drawn again when that changes
+    let plotHeight = 0;
+    new ResizeObserver(() => {
+      const height = ui.historyPlot.clientHeight;
+      if (height > 0 && height !== plotHeight) {
+        plotHeight = height;
+        render();
+      }
+    }).observe(ui.historyPlot);
     ui.historyPresets.addEventListener('click', (event) => {
       const span = event.target.closest('button')?.dataset.span;
       if (!span) return;
@@ -186,13 +192,15 @@ export function createHistoryView({ onChange }) {
     const latest = seasons[seasons.length - 1];
     const snap = (year, fallback) =>
       seasons.reduce((best, s) => (Math.abs(s - (year ?? fallback)) < Math.abs(best - (year ?? fallback)) ? s : best), latest);
-    hist.from = snap(hist.from, seasons[0]);
+    ensureSelection();
+    // the seasons start where the lines do, until the visitor chooses (or a link says) otherwise
+    const earliest = Math.min(...hist[key()].map((id) => series().get(id)?.[0]?.year ?? Infinity));
+    hist.from = snap(hist.from, Number.isFinite(earliest) ? earliest : seasons[0]);
     hist.to = snap(hist.to, latest);
     if (hist.from > hist.to) hist.to = hist.from;
     for (const input of [ui.historyFrom, ui.historyTo]) input.max = String(seasons.length - 1);
     ui.historyFrom.value = String(seasons.indexOf(hist.from));
     ui.historyTo.value = String(seasons.indexOf(hist.to));
-    ensureSelection();
     render();
   }
 
@@ -211,7 +219,7 @@ export function createHistoryView({ onChange }) {
     const ids = hist[k];
     const chips = ids.map((id) => {
       const chip = document.createElement('span');
-      chip.className = 'chip';
+      chip.className = 'series-chip';
       chip.style.setProperty('--c', seriesColor(svg, { id }, type));
       const swatch = document.createElement('i');
       swatch.setAttribute('aria-hidden', 'true');
@@ -228,15 +236,15 @@ export function createHistoryView({ onChange }) {
       return chip;
     });
     const adder = document.createElement('div');
-    adder.className = 'adder';
+    adder.className = 'series-picker';
     const input = document.createElement('input');
     input.type = 'search';
     input.autocomplete = 'off';
-    input.placeholder = ids.length >= MAX_SERIES ? `Up to ${MAX_SERIES} at once` : `Add a ${type}…`;
+    input.placeholder = ids.length >= MAX_SERIES ? `Up to ${MAX_SERIES} at once` : `Add a ${type}`;
     input.disabled = ids.length >= MAX_SERIES;
     input.setAttribute('aria-label', `Add a ${type} to the chart`);
     const list = document.createElement('div');
-    list.className = 'adder-list';
+    list.className = 'series-picker-list';
     list.hidden = true;
     const add = (id) => {
       hist[k] = [...hist[k], id].slice(0, MAX_SERIES);
@@ -267,7 +275,10 @@ export function createHistoryView({ onChange }) {
     input.addEventListener('focus', fill);
     input.addEventListener('input', fill);
     input.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') list.hidden = true;
+      if (event.key === 'Escape' && !list.hidden) {
+        list.hidden = true;
+        event.preventDefault(); // the first Escape puts the list away; the panel's own Escape (back to the ratings) is for the next one
+      }
       if (event.key === 'Enter') {
         event.preventDefault();
         list.querySelector('button')?.click();
@@ -304,7 +315,7 @@ export function createHistoryView({ onChange }) {
       const points = (series().get(id) || []).filter((p) => p.year === year);
       const p = points[points.length - 1];
       const v = p ? metricValue(p, m, hist.entity) : NaN;
-      return Number.isFinite(v) ? `${v.toFixed(1)}${probability ? '%' : ''}` : '—';
+      return Number.isFinite(v) ? (probability ? `${v.toFixed(1)}%` : v.toFixed(0)) : '—'; // a rating is a whole number: its error is several points
     };
     ui.historyTable.innerHTML = `<div class="scroll"><table><caption>${esc(NAMES[m])} at the last weekend of each season</caption><thead><tr><th scope="col">Season</th>${ids.map((id) => `<th scope="col">${esc(names().get(id) || id)}</th>`).join('')}</tr></thead><tbody>${rows
       .map((y) => `<tr><th scope="row">${y}</th>${ids.map((id) => `<td>${value(id, y)}</td>`).join('')}</tr>`)
@@ -325,13 +336,11 @@ export function createHistoryView({ onChange }) {
     ui.historyMetric.innerHTML = METRICS[type]
       .map((x) => `<option value="${x}"${x === m ? ' selected' : ''}>${esc(NAMES[x])}</option>`)
       .join('');
-    const span = hist.from === hist.to ? String(hist.from) : `${hist.from}–${hist.to}`;
-    ui.historyTitle.textContent = `${type === 'driver' ? 'Driver' : 'Car'} ratings, ${span}`;
-    ui.historySub.textContent = `${NAMES[m]}. ${DESCRIPTIONS[m]}${isProbability(m) ? '' : ' 1,000 is the average of the field.'}`;
+    ui.historyMetric.title = `${DESCRIPTIONS[m]}${isProbability(m) ? '' : ' 1,000 is the average of the field.'}`;
     ui.historyNote.textContent =
       type === 'car'
-        ? 'Car ratings carry over only partly between seasons, so lines step at each new year. Gaps mean the entry did not start. Hover, tap or use the arrow keys to read values.'
-        : 'Gaps mean the driver did not start. Hover, tap or use the arrow keys to read values. Each point is the rating after that weekend.';
+        ? 'A car carries over only partly into a new season, so the lines step. Hover or use the arrow keys to read a weekend.'
+        : 'Each point is the rating after a weekend; gaps are seasons out. Hover or use the arrow keys to read a weekend.';
     const fill = ui.historyFill;
     const top = Math.max(1, seasons.length - 1);
     fill.style.left = `${(seasons.indexOf(hist.from) / top) * 100}%`;
@@ -345,6 +354,8 @@ export function createHistoryView({ onChange }) {
     drawChart(svg, null, hist[k], new Map(hist[k].map((id) => [id, inRange(series().get(id) || [])])), names(), m, type, {
       xDomain: seasonSpan(),
       pointLabel: (p) => raceNames().get(String(p.raceId)),
+      legend: false, // the chips name the lines
+      height: () => Math.max(0, ui.historyPlot.clientHeight - PLOT_PADDING), // (0 while the view is hidden: the renderer then takes its own)
     });
     renderChips();
     if (view === 'table') renderTable();

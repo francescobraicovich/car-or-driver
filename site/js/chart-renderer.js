@@ -170,7 +170,7 @@ function setup(svg, redraw, height) {
   cache.redraw = redraw;
   cache.width = Math.round(svg.getBoundingClientRect().width);
   const width = Math.max(280, cache.width || 640);
-  const h = height || (width < 520 ? 300 : 380);
+  const h = (typeof height === 'function' ? height() : height) || (width < 520 ? 300 : 380);
   svg.replaceChildren();
   hideTooltip();
   svg.setAttribute('viewBox', `0 0 ${width} ${h}`);
@@ -289,7 +289,7 @@ export function renderPlot(svg, options) {
   // With no direct labels (narrow screens, many series) a legend inside the
   // chart keeps identity off colour alone; it wraps onto as many rows as needed.
   const legendRows = [];
-  if (kind === 'line' && !labelled.length && series.length >= 2) {
+  if (kind === 'line' && options.legend !== false && !labelled.length && series.length >= 2) {
     let row = [];
     let used = 0;
     for (const s of series) {
@@ -453,7 +453,7 @@ export function renderPlot(svg, options) {
     for (const { s, p } of rows)
       node(cross, 'circle', { cx: X(t), cy: Y(p.v), r: 4.5, fill: colorOf(s), stroke: 'var(--surface)', 'stroke-width': 2 });
     const tip = tipElement();
-    tip.className = 'rich';
+    tip.className = svg.closest('.ledger') ? 'rich metal' : 'rich'; // on the panel the tooltip is in the panel's metal
     tip.replaceChildren();
     const head = document.createElement('div');
     head.className = 'tip-head';

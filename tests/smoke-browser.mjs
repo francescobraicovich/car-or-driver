@@ -1136,8 +1136,8 @@ await sleep(1200);
 check(
   'history draws one line per chip',
   (await evaluate("document.querySelectorAll('#driverChart polyline').length")) >=
-    (await evaluate("document.querySelectorAll('#historyChips .chip').length")) &&
-    (await evaluate("document.querySelectorAll('#historyChips .chip').length")) >= 3,
+    (await evaluate("document.querySelectorAll('#historyChips .series-chip').length")) &&
+    (await evaluate("document.querySelectorAll('#historyChips .series-chip').length")) >= 3,
 );
 await evaluate("document.getElementById('historyTableView').click()");
 await sleep(300);
@@ -1148,10 +1148,10 @@ await evaluate("document.getElementById('historyCars').click()");
 await sleep(400);
 const offered = (query) =>
   evaluate(`(() => {
-    const input = document.querySelector('#historyChips .adder input');
+    const input = document.querySelector('#historyChips .series-picker input');
     input.value = '${query}';
     input.dispatchEvent(new Event('input', { bubbles: true }));
-    return [...document.querySelectorAll('#historyChips .adder-list button')].map((b) => b.textContent);
+    return [...document.querySelectorAll('#historyChips .series-picker-list button')].map((b) => b.textContent);
   })()`);
 const aston = await offered('Aston');
 const racing = await offered('Racing Point');
@@ -1183,7 +1183,9 @@ check(
 );
 await evaluate("document.getElementById('ratingsCompareHistory').click()");
 await sleep(800);
-const chipNames = await evaluate("[...document.querySelectorAll('#historyChips .chip')].map((chip) => chip.textContent.replace('×', ''))");
+const chipNames = await evaluate(
+  "[...document.querySelectorAll('#historyChips .series-chip')].map((chip) => chip.textContent.replace('×', ''))",
+);
 check(
   'Compare in history opens History with exactly the selected drivers',
   chipNames.length === 2 && JSON.stringify(chipNames.slice().sort()) === JSON.stringify(pickedNames.slice().sort()),
