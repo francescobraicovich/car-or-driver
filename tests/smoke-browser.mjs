@@ -1889,7 +1889,7 @@ await sleep(800);
 check(
   "the Privacy page names the controller's regulator, the host and the stored value, and has the forget button",
   await evaluate(
-    "(() => { const text = document.getElementById('privacyBody').textContent; return ['Garante', 'Information Commissioner', 'Cloudflare', 'f1-theme', 'no cookies'].every((word) => text.includes(word)) && !!document.getElementById('forgetTheme'); })()",
+    "(() => { const text = document.getElementById('privacyCard').textContent; return ['Garante', 'Information Commissioner', 'Cloudflare', 'f1-theme', 'no cookies'].every((word) => text.includes(word)) && !!document.getElementById('forgetTheme'); })()",
   ),
 );
 await evaluate("document.getElementById('forgetTheme').click()");
@@ -1899,8 +1899,31 @@ await sleep(800);
 check(
   'the About page credits the data sources and gives the licence',
   await evaluate(
-    "(() => { const text = document.getElementById('aboutBody').textContent; return ['TracingInsights', 'Jolpica', 'Ergast', 'CC BY-NC-SA 4.0', 'non-commercial', 'Inter', 'KaTeX'].every((word) => text.includes(word)); })()",
+    "(() => { const text = document.getElementById('aboutCard').textContent; return ['TracingInsights', 'Jolpica', 'Ergast', 'CC BY-NC-SA 4.0', 'non-commercial', 'Inter', 'KaTeX'].every((word) => text.includes(word)); })()",
   ),
+);
+const legalDeck = async (hash) => {
+  await evaluate(`location.hash = '${hash}'`);
+  await sleep(900);
+  return evaluate(
+    `(() => { const page = document.body.dataset.page; const card = document.getElementById(page + 'Card'); return JSON.stringify({ mode: document.getElementById('stage').dataset.mode, slides: card.querySelectorAll('.deck-slide').length, list: document.querySelectorAll('#' + page + 'List button').length, position: document.getElementById(page + 'Position').textContent, shown: card.querySelector('.deck-slide:not([inert])')?.getAttribute('aria-label') }); })()`,
+  );
+};
+const privacyDeck = JSON.parse(await legalDeck('#/privacy'));
+check(
+  'Privacy is a card of slides: the contents with the summary, then ten sections',
+  privacyDeck.mode === 'deck' && privacyDeck.slides === 11 && privacyDeck.list === 11 && privacyDeck.position === '1 / 11',
+  JSON.stringify(privacyDeck),
+);
+check(
+  'the Privacy contents carry the summary of the notice',
+  await evaluate("document.getElementById('privacyCard').querySelector('.deck-slide:not([inert])').textContent.includes('In short')"),
+);
+const aboutDeck = JSON.parse(await legalDeck('#/about?v=1&slide=credits'));
+check(
+  'About opens at the credits when the address names them',
+  aboutDeck.mode === 'deck' && aboutDeck.slides === 10 && aboutDeck.position === '5 / 10' && /Data sources/.test(aboutDeck.shown),
+  JSON.stringify(aboutDeck),
 );
 check(
   'no link outside the navigation carries an icon',

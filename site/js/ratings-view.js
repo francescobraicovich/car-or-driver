@@ -159,7 +159,7 @@ function ensurePanel() {
       </div>
     </div>
     <footer class="frame-foot">
-      <span class="notes">CC BY-NC-SA 4.0 · <a href="#/about">credits</a></span>
+      <span class="notes">CC BY-NC-SA 4.0 · <a href="#/about?v=1&slide=credits">credits</a></span>
       <span class="foot-views" role="group" aria-label="Open over the ratings">
         <button type="button" id="ratingsOpenHistory">History</button>
         <button type="button" id="ratingsOpenHeadToHead">Versus</button>

@@ -53,7 +53,7 @@ export const PRIVACY_HTML = String.raw`
 </p>
 <ul>
   <li><b>Legal basis:</b> legitimate interests (GDPR Article 6(1)(f)) in analysing and discussing a public sport from public results. The estimates are labelled as estimates and can be wrong; they describe a driver's results in a car, not the person.</li>
-  <li><b>Where it comes from:</b> the public data tables credited on the <a href="#/about">About page</a>, not from the drivers themselves.</li>
+  <li><b>Where it comes from:</b> the public data tables credited on the <a href="#/about?v=1&slide=credits">About page</a>, not from the drivers themselves.</li>
   <li><b>How long:</b> the historical statistics are kept as long as the site exists, since the purpose is a lasting record of past seasons.</li>
   <li><b>If you are named here</b> and want something corrected or want to object, write to <a data-contact-email></a>; I will answer within one month.</li>
 </ul>
@@ -137,7 +137,7 @@ export const ABOUT_HTML = String.raw`
 </ul>
 
 <h3>References</h3>
-<p>The methods behind the ratings and the findings, with full references, are listed in <a href="#/methodology">part 8 of the Methodology</a>.</p>
+<p>The methods behind the ratings and the findings, with full references, are listed in <a href="#/methodology?v=1&slide=method-references">part 8 of the Methodology</a>.</p>
 
 <h3>Corrections and feedback</h3>
 <p>If you find an error in the numbers, the text or the credits, please write to <a data-contact-email></a> or open an issue in <a href="{{repositoryUrl}}" rel="noopener noreferrer">the repository</a>.</p>
