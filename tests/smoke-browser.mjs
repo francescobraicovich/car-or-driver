@@ -1119,7 +1119,7 @@ await slideTo(+(await evaluate('document.getElementById("ratingsScrub").max')));
 await sleep(700);
 
 // History: lines, chips, table twin
-await evaluate("location.hash = '#/insights'");
+await evaluate("location.hash = '#/methodology'");
 await sleep(1200);
 {
   // the race runs only on the front page: on another page it is hidden and still
@@ -1583,13 +1583,148 @@ await evaluate("document.getElementById('ratingsDrivers').click()");
 await sleep(400);
 await evaluate("location.hash = '#/ratings'");
 
+// The Insights: a card in the middle of the front page (the picture is grey, no panel is open), a slide show: the contents first, then a slide for each
+// finding with its chart, sliding; a list of the slides beside the card, the ticks under its title, the arrows and the keys move along it; the slide is in
+// the address
 await evaluate("location.hash = '#/insights'");
 await sleep(1500);
+const insightsState = () =>
+  evaluate(`JSON.stringify({
+    page: document.body.dataset.page,
+    surface: document.body.dataset.surface,
+    mode: document.getElementById('stage').dataset.mode,
+    state: document.getElementById('stage').dataset.state,
+    panelShown: !document.getElementById('stageLedger').hidden,
+    position: document.getElementById('insightsPosition').textContent,
+    name: document.getElementById('insightsName').textContent,
+    open: [...document.querySelectorAll('.insights-slide')].map((slide) => !slide.inert).map((open, index) => (open ? index : -1)).filter((index) => index >= 0),
+    transform: document.getElementById('insightsTrack').style.transform,
+    current: [...document.querySelectorAll('#insightsList button[aria-current="true"], #insightsTicks button[aria-current="true"]')].map((button) => button.dataset.slide),
+    hash: location.hash.split('?')[0],
+    slide: (location.hash.match(/slide=([a-z0-9-]*)/) || [])[1] ?? null,
+  })`);
+const insightsAtStart = JSON.parse(await insightsState());
+const insightsBox = await rectangleOfSelector('#insightsCard');
+const stageBox = await rectangleOfSelector('#stage');
 check(
-  'insights shows its findings with a drawn chart in each',
-  (await evaluate("document.querySelectorAll('#insightsBody article.insight').length")) === 20 &&
-    (await evaluate("[...document.querySelectorAll('#insightsBody article.insight')].every((a) => a.querySelector('svg, table'))")) &&
-    !(await evaluate("/undefined|NaN/.test(document.getElementById('insightsBody').textContent)")),
+  'the Insights are a card in the middle of the front page, over the grey picture, with no panel open and no pointing at the pictures',
+  insightsAtStart.page === 'insights' &&
+    insightsAtStart.surface === 'stage' &&
+    insightsAtStart.mode === 'insights' &&
+    insightsAtStart.state === 'open' &&
+    !insightsAtStart.panelShown &&
+    Math.abs(insightsBox.x + insightsBox.width / 2 - (stageBox.x + stageBox.width / 2)) <= 1.5 &&
+    insightsBox.y > 60 &&
+    insightsBox.y + insightsBox.height < stageBox.y + stageBox.height &&
+    (await evaluate("getComputedStyle(document.getElementById('hotspotCar')).visibility")) === 'hidden',
+  JSON.stringify({ insightsAtStart, insightsBox }),
+);
+check(
+  'the first slide is the contents: the twenty findings under five topics, and a slide for each after it, all drawn',
+  insightsAtStart.position === '1 / 21' &&
+    (await evaluate("document.querySelectorAll('.insights-contents button[data-slide]').length")) === 20 &&
+    (await evaluate("document.querySelectorAll('.insights-contents h3').length")) === 5 &&
+    (await evaluate("document.querySelectorAll('article.insight').length")) === 20 &&
+    (await evaluate(
+      "[...document.querySelectorAll('article.insight')].every((card) => card.querySelector('svg, table') && card.querySelector('.info'))",
+    )) &&
+    !(await evaluate("/undefined|NaN/.test(document.getElementById('insightsCard').textContent)")),
+);
+// jumping from the contents, and sliding there
+await evaluate('document.querySelector(\'.insights-contents button[data-slide="12"]\').click()');
+await sleep(900);
+const jumped = JSON.parse(await insightsState());
+check(
+  'a finding on the contents slide takes the card there (the track slides, the others are put out of reach, the address names it)',
+  jumped.position === '13 / 21' &&
+    jumped.open.join() === '12' &&
+    jumped.transform === 'translateX(-1200%)' &&
+    jumped.current.join() === '12,12' &&
+    jumped.hash === '#/insights' &&
+    jumped.slide === 'ageing',
+  JSON.stringify(jumped),
+);
+check(
+  'slides slide (an animation, not a cut), and the same under reduced motion is a cut',
+  (await evaluate("getComputedStyle(document.getElementById('insightsTrack')).transitionDuration")) !== '0s' &&
+    (await (async () => {
+      await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+      await sleep(100);
+      const still = await evaluate("getComputedStyle(document.getElementById('insightsTrack')).transitionDuration");
+      await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
+      return still === '0s';
+    })()),
+);
+// the arrows, the keys, the list and the ticks
+await evaluate("document.getElementById('insightsNext').click()");
+await sleep(700);
+const afterNext = JSON.parse(await insightsState());
+await press('ArrowLeft', 'ArrowLeft', 37);
+await sleep(500);
+await press('ArrowLeft', 'ArrowLeft', 37);
+await sleep(500);
+const afterKeys = JSON.parse(await insightsState());
+await press('Home', 'Home', 36);
+await sleep(600);
+const atHome = JSON.parse(await insightsState());
+await press('End', 'End', 35);
+await sleep(600);
+const atEnd = JSON.parse(await insightsState());
+check(
+  'Next, the arrow keys, Home and End move along the slides',
+  afterNext.position === '14 / 21' &&
+    afterKeys.position === '12 / 21' &&
+    atHome.position === '1 / 21' &&
+    atEnd.position === '21 / 21' &&
+    (await evaluate("document.getElementById('insightsNext').disabled")),
+  JSON.stringify({ afterNext: afterNext.position, afterKeys: afterKeys.position, atHome: atHome.position, atEnd: atEnd.position }),
+);
+const list = JSON.parse(
+  await evaluate(`JSON.stringify({
+    shown: getComputedStyle(document.getElementById('insightsList')).display !== 'none',
+    buttons: document.querySelectorAll('#insightsList button').length,
+    topics: document.querySelectorAll('#insightsList h3').length,
+    right: document.getElementById('insightsList').getBoundingClientRect().right,
+    cardLeft: document.getElementById('insightsCard').getBoundingClientRect().left,
+  })`),
+);
+await evaluate('document.querySelector(\'#insightsList button[data-slide="5"]\').click()');
+await sleep(700);
+const fromList = JSON.parse(await insightsState());
+await evaluate('document.querySelector(\'#insightsTicks button[data-slide="9"]\').click()');
+await sleep(700);
+const fromTicks = JSON.parse(await insightsState());
+check(
+  'the list of slides beside the card (five topics, the contents and the twenty findings, clear of the card) and the ticks under its title move to a slide',
+  list.shown &&
+    list.buttons === 21 &&
+    list.topics === 5 &&
+    list.right < list.cardLeft &&
+    fromList.position === '6 / 21' &&
+    fromList.current.join() === '5,5' &&
+    fromTicks.position === '10 / 21',
+  JSON.stringify({ list, fromList: fromList.position, fromTicks: fromTicks.position }),
+);
+await mouse('mouseMoved', 8, 300);
+const insightsInfo = await evaluate("document.querySelector('.insights-slide:not([inert]) .insight-title .info').dataset.info");
+check(
+  'what a finding rests on is behind the "i" beside its title: how much weight it carries, and how it was computed',
+  /^(Direct|Model-based): .* How it is computed: /.test(insightsInfo) && !/</.test(insightsInfo),
+  insightsInfo.slice(0, 120),
+);
+// the card is metal, and the lines in it are in the palette of the History and the Head to head
+check(
+  "the charts in the card are in the palette of the panel (a bar is red or blue), on the panel's metal",
+  (await evaluate(
+    "(() => { const fills = new Set([...document.querySelectorAll('#insight-explained-share rect')].map((rect) => getComputedStyle(rect).fill)); return fills.has('rgb(250, 24, 2)') && fills.has('rgb(9, 26, 156)'); })()",
+  )) && (await evaluate("getComputedStyle(document.getElementById('insightsCard')).backdropFilter")) !== 'none',
+);
+await press('Escape', 'Escape', 27);
+await sleep(700);
+check(
+  'Escape closes the card: the address is the front page',
+  (await evaluate('location.hash')) === '#/' &&
+    (await evaluate("getComputedStyle(document.getElementById('insightsCard')).display")) === 'none',
 );
 await evaluate("location.hash = '#/methodology'");
 await sleep(1200);
@@ -1737,6 +1872,24 @@ for (const page of ['home', 'ratings', 'history', 'head-to-head', 'insights', 'm
   const [scroll, inner] = await evaluate('[document.documentElement.scrollWidth, window.innerWidth]');
   check(`on a phone ${page} does not scroll sideways`, scroll <= inner, `${scroll} wide in ${inner}`);
 }
+// On a phone the Insights are a card across the screen, with no list beside it, and a swipe turns the slide
+await evaluate("location.hash = '#/insights'");
+await sleep(1200);
+const phoneCard = await rectangleOfSelector('#insightsCard');
+await send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 300, y: 500 }] });
+await send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 230, y: 503 }] });
+await send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 120, y: 505 }] });
+await send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+await sleep(900);
+check(
+  'on a phone the Insights are a card across the screen, without the list of slides, and a swipe turns to the next slide',
+  phoneCard.x >= 0 &&
+    phoneCard.x + phoneCard.width <= 375 &&
+    phoneCard.width > 300 &&
+    (await evaluate("getComputedStyle(document.getElementById('insightsList')).display")) === 'none' &&
+    (await evaluate("document.getElementById('insightsPosition').textContent")) === '2 / 21',
+  JSON.stringify({ phoneCard, position: await evaluate("document.getElementById('insightsPosition').textContent") }),
+);
 // On a phone the ratings are a sheet: a tap on the car keeps it open, it stays clear of both pictures and above the text at the bottom
 await evaluate("location.hash = '#/'");
 await sleep(900);
@@ -1779,6 +1932,17 @@ check(
 );
 // Links straight to a view (a shared link): the panel is kept open with the view over the ratings, drawn at once (the head to head loads its
 // forecast on the way in)
+// a link straight to a finding opens the card on its slide
+await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/?link=slide#/insights?v=1&slide=upsets` });
+await sleep(5000);
+const linkedSlide = await evaluate(
+  "JSON.stringify({ position: document.getElementById('insightsPosition').textContent, name: document.getElementById('insightsName').textContent, drawn: !!document.querySelector('.insights-slide:not([inert]) svg') })",
+);
+check(
+  'a link straight to a finding opens the card on that slide, drawn',
+  JSON.parse(linkedSlide).position === '20 / 21' && JSON.parse(linkedSlide).name === 'The biggest upsets' && JSON.parse(linkedSlide).drawn,
+  linkedSlide,
+);
 for (const [view, ready] of [
   ['history', "document.querySelectorAll('#driverChart polyline').length >= 3"],
   ['head-to-head', "/\\d+%/.test(document.querySelector('.head-to-head-figures')?.textContent || '')"],

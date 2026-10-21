@@ -29,6 +29,10 @@ const topics = new Set(INSIGHT_TOPICS.map((topic) => topic.id));
 for (const card of INSIGHT_CARDS) {
   assert.ok(topics.has(card.topic), `${card.id}: known topic`);
   assert.ok(['direct', 'model'].includes(card.kind), `${card.id}: known kind`);
+  assert.ok(
+    typeof card.label === 'string' && card.label.length > 0 && card.label.length <= 30,
+    `${card.id}: a short label of at most 30 characters for the list of slides`,
+  );
   const how = typeof card.how === 'function' ? card.how(INSIGHTS_DATA) : card.how;
   for (const [part, text] of [
     ['title', card.title],

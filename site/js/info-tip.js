@@ -56,6 +56,7 @@ function showInfoTip(button) {
   current = button;
   button.setAttribute('aria-describedby', element.id);
   element.textContent = button.dataset.info;
+  element.classList.toggle('wide', button.dataset.info.length > 260); // a long explanation (the notes of the Insights) gets a wider note
   element.hidden = false;
   const box = stage.getBoundingClientRect();
   const at = button.getBoundingClientRect();

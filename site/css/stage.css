@@ -63,11 +63,13 @@ body[data-surface='stage'] main.workspace {
   cursor: none;
 }
 /* over the panel the pointer is the ordinary one, and the square steps aside */
-.stage[data-pointer='in'][data-coarse='false'] .ledger,
-.stage[data-pointer='in'][data-coarse='false'] .ledger * {
+.stage[data-pointer='in'][data-coarse='false'] :is(.ledger, .insights-card, .insights-list),
+.stage[data-pointer='in'][data-coarse='false'] :is(.ledger, .insights-card, .insights-list) * {
   cursor: default;
 }
-.stage[data-pointer='in'][data-coarse='false'] .ledger :is(button, select, summary, input, a):not(:disabled) {
+.stage[data-pointer='in'][data-coarse='false']
+  :is(.ledger, .insights-card, .insights-list)
+  :is(button, select, summary, input, a):not(:disabled) {
   cursor: pointer;
 }
 .stage-filters {
@@ -482,6 +484,7 @@ body[data-surface='stage'] main.workspace {
 .ledger,
 #chartValueTooltip.metal,
 .info-tip,
+.insights-card,
 .rating-card {
   --ink: #07080b;
   --ink-2: #14171c;
@@ -636,7 +639,8 @@ body[data-surface='stage'] main.workspace {
   pointer-events: none;
 }
 /* the Close button sits in the corner of the header, and is there only while the ratings are kept open */
-.ledger-close {
+.ledger-close,
+.insights-close {
   position: absolute;
   top: 5px;
   right: 6px;
@@ -840,21 +844,26 @@ body[data-surface='stage'] main.workspace {
   max-height: none;
   overflow: visible; /* the wrapper scrolls, so that the header row stays at its top */
 }
-.ledger table {
+.ledger table,
+.insights-card table {
   font-family: var(--mono);
   font-size: 11px;
 }
-.ledger caption {
+.ledger caption,
+.insights-card caption {
   padding: 0 0 6px;
   font-family: var(--text);
   font-size: 10.5px;
 }
 .ledger th,
-.ledger td {
+.ledger td,
+.insights-card th,
+.insights-card td {
   padding: 4px 8px;
   border-bottom-color: var(--grid);
 }
-.ledger th {
+.ledger th,
+.insights-card th {
   background: rgb(236 238 242 / 0.92);
   color: var(--ink-3);
   font-family: var(--display);
@@ -866,14 +875,17 @@ body[data-surface='stage'] main.workspace {
   vertical-align: bottom;
   white-space: normal; /* a name wraps over two lines rather than widening the table */
 }
-.ledger tbody tr:hover {
+.ledger tbody tr:hover,
+.insights-card tbody tr:hover {
   background: var(--ink); /* inverted, as the rows of the ratings are */
   color: var(--surface);
 }
-.ledger tbody tr:hover th {
+.ledger tbody tr:hover th,
+.insights-card tbody tr:hover th {
   color: inherit;
 }
-.ledger tbody th {
+.ledger tbody th,
+.insights-card tbody th {
   background: none;
   color: var(--ink);
   font-family: var(--mono);
@@ -963,7 +975,8 @@ body[data-surface='stage'] main.workspace {
 }
 /* ── the small "i" and its note ──────────────────────── */
 /* What explains a label or a figure is behind an "i" (info-tip.js), so that the views carry the figures and the names and little else. */
-.ledger .info {
+.ledger .info,
+.insights-card .info {
   display: inline-grid;
   flex: none;
   place-items: center;
@@ -981,10 +994,16 @@ body[data-surface='stage'] main.workspace {
 }
 .ledger .info:hover:not(:disabled),
 .ledger .info:focus-visible,
-.ledger .info[aria-describedby] {
+.ledger .info[aria-describedby],
+.insights-card .info:hover:not(:disabled),
+.insights-card .info:focus-visible,
+.insights-card .info[aria-describedby] {
   border-color: var(--ink);
   background: var(--ink);
   color: var(--surface);
+}
+.info-tip.wide {
+  max-width: min(360px, calc(100% - 16px));
 }
 .info-tip {
   --panel-plate: rgb(238 240 244 / 0.94);
@@ -1424,6 +1443,432 @@ body[data-surface='stage'] main.workspace {
 #headToHeadGridFields {
   display: contents;
 }
+/* ── the insights ────────────────────────────────────── */
+/* A card in the middle of the picture (grey, as behind the panel), on the panel's metal and denser, because it covers the sketches: the contents, then one
+   slide for each finding, sliding. The list of the slides stands beside it on the left, on the picture itself, when there is room; the ticks under the
+   title (and the arrows, the keys and a swipe) do the same where there is not. The charts are drawn by insights-charts.js, which reads the stage's palette
+   and the card's tokens, so they are in the colours of the History and of the Head to head. */
+.insights-card,
+.insights-list {
+  --insights-height: min(680px, calc(100% - 76px - var(--bottom-space, 58px)));
+  --insights-top: calc(68px + (100% - 76px - var(--bottom-space, 58px) - var(--insights-height)) / 2);
+}
+.insights-card {
+  --panel-plate: rgb(238 240 244 / 0.93); /* denser than the card of a row: it is large, and the title and the sketches are behind it */
+  --insights-width: min(900px, calc(100% - 2 * clamp(18px, 5vw, 72px)));
+  position: absolute;
+  z-index: 5;
+  top: var(--insights-top);
+  left: calc((100% - var(--insights-width)) / 2);
+  display: none;
+  flex-direction: column;
+  width: var(--insights-width);
+  height: var(--insights-height);
+  overflow: hidden;
+}
+.stage[data-mode='insights'] .insights-card {
+  display: flex;
+  animation: insights-in 0.3s ease-out;
+}
+@keyframes insights-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@media (min-width: 1280px) {
+  .insights-card {
+    --insights-width: min(900px, calc(100% - 540px)); /* the list of slides is on the left */
+  }
+}
+.stage[data-layout='sheet'] .insights-card {
+  top: auto;
+  right: clamp(18px, 5vw, 72px);
+  bottom: calc(var(--bottom-space, 58px) + 8px);
+  left: clamp(18px, 5vw, 72px);
+  width: auto;
+  height: min(740px, 78vh, calc(100% - var(--bottom-space, 58px) - 80px));
+}
+.stage[data-mode='insights'] .hotspot {
+  visibility: hidden; /* the car and the hands are not for pointing at while the card is there */
+}
+.stage[data-mode='insights'] .word {
+  pointer-events: none;
+}
+.stage[data-mode='insights'] .stage-title,
+.stage[data-mode='insights'] .stage-word-frame,
+.stage[data-mode='insights'] .stage-connector {
+  opacity: 0.3; /* behind the card */
+}
+.insights-head {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 40px 2px 16px;
+}
+.insights-title {
+  margin: 0;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.insights-position {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 650;
+}
+.insights-ticks {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  padding: 6px 16px 4px;
+}
+.insights-ticks button {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 14px;
+  padding: 0;
+  border: 0;
+}
+.insights-ticks button.first {
+  margin-left: 6px; /* a gap between two topics */
+}
+.insights-ticks button::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: var(--rule);
+}
+.insights-ticks button:hover::after {
+  background: var(--ink-2);
+}
+.insights-ticks button[aria-current='true']::after {
+  top: 2px;
+  height: 9px;
+  background: var(--ink);
+}
+.insights-slides {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.insights-slides::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 18px;
+  background: linear-gradient(transparent, rgb(238 240 244 / 0.93)); /* what runs under the controls fades out */
+  pointer-events: none;
+}
+.insights-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+.insights-track.still {
+  transition: none;
+}
+.insights-slide > .insight {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.insights-card [data-chart='main'] {
+  flex: 1 1 auto; /* free room on the slide goes to the chart (insights-charts.js draws it taller) */
+}
+.insights-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 6px 18px 14px;
+  overflow-y: auto;
+  touch-action: pan-y;
+}
+.insights-foot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 12px;
+}
+.insights-card .insights-foot button {
+  min-height: 26px;
+  padding: 0 12px;
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--surface);
+  font-weight: 650;
+}
+.insights-card .insights-foot button:hover:not(:disabled) {
+  border-color: var(--ink-2);
+  background: var(--ink-2);
+}
+.insights-foot button:disabled {
+  opacity: 0.3;
+}
+#insightsPrevious::before {
+  content: '‹' / '';
+  margin-right: 6px;
+}
+#insightsNext::after {
+  content: '›' / '';
+  margin-left: 6px;
+}
+.insights-name {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* the contents: the five topics and the finding of each, as rows like those of the ratings (the one under the pointer inverted) */
+.insights-intro {
+  display: flex;
+  align-items: center;
+  margin: 8px 0 14px;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+.insights-topics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px 22px;
+}
+.insights-topics h3 {
+  margin: 0 0 4px;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.insights-topics ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.insights-card .insights-topics button {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  min-height: 24px;
+  padding: 3px 6px;
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.25;
+  text-align: left;
+}
+.insights-topics .n {
+  flex: none;
+  min-width: 2ch;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-align: right;
+}
+.insights-card .insights-topics button:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--surface);
+}
+.insights-topics button:hover .n {
+  color: inherit;
+}
+.insights-kinds {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 16px 0 0;
+}
+/* a finding */
+.insight-kind {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+}
+.insight-topic-name {
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.insight-chip {
+  display: inline-block;
+  padding: 0 7px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.insight-title {
+  margin: 0 0 6px;
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.22;
+  text-wrap: balance;
+}
+.insight-title .info {
+  vertical-align: 2px;
+}
+.insight-lead {
+  max-width: 72ch;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.insight-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 14px;
+  margin: 0 0 6px;
+  color: var(--ink-2);
+  font-size: 11px;
+}
+.insight-legend i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
+}
+.insights-card [data-chart] {
+  width: 100%;
+  min-width: 0;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.4);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+}
+.insights-card [data-chart] svg {
+  display: block;
+  overflow: visible;
+}
+.insight-extra {
+  margin-top: 8px;
+}
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px 16px;
+  margin-top: 8px;
+}
+.insight-grid h4 {
+  margin: 0 0 3px;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+.insights-card svg text {
+  fill: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+.insights-card svg text.secondary {
+  fill: var(--ink-2);
+}
+.insights-card svg text.primary {
+  fill: var(--ink);
+}
+.insights-card svg .gridline {
+  stroke: var(--grid);
+  stroke-width: 1;
+}
+.insights-card svg .zero {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+.insights-card .table-wrap {
+  padding: 4px 0 0;
+  overflow-x: auto;
+}
+.insights-card .insight-table .right {
+  text-align: right;
+}
+.insights-card .insight-table td,
+.insights-card .insight-table th {
+  white-space: normal;
+}
+/* the list of the slides, on the picture itself, beside the card (where there is room for it) */
+.insights-list {
+  position: absolute;
+  z-index: 4;
+  top: var(--insights-top);
+  left: clamp(18px, 3vw, 48px);
+  display: none;
+  width: 196px;
+  max-height: var(--insights-height);
+  overflow-y: auto;
+  scrollbar-width: none;
+  color: var(--ink);
+}
+@media (min-width: 1280px) and (min-height: 700px) {
+  .stage[data-mode='insights'] .insights-list {
+    display: block;
+  }
+}
+.insights-list h3 {
+  margin: 12px 0 2px;
+  padding: 0 6px;
+  font-family: var(--display);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.insights-list ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.insights-list button {
+  display: block;
+  width: 100%;
+  min-height: 21px;
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: inherit;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.3;
+  text-align: left;
+}
+.insights-list .insights-list-home {
+  font-weight: 800;
+}
+.insights-list button:hover,
+.insights-list button[aria-current='true'] {
+  background: var(--ink);
+  color: #eef0f3; /* inverted, as the rows of the ratings are */
+}
 /* the tooltip of a chart on the panel: the panel's metal, the lines' own colours */
 #chartValueTooltip.metal {
   --panel-plate: rgb(238 240 244 / 0.92);
@@ -1506,14 +1951,16 @@ body[data-surface='stage'] main.workspace {
 }
 .ledger input,
 .ledger select,
-.ledger button {
+.ledger button,
+.insights-card button {
   border-color: transparent;
   border-radius: 3px;
   background: transparent;
   font-size: 11px;
 }
 .ledger button:hover:not(:disabled),
-.ledger select:hover:not(:disabled) {
+.ledger select:hover:not(:disabled),
+.insights-card button:hover:not(:disabled) {
   border-color: var(--ink-3);
   background: rgb(255 255 255 / 0.5);
 }
@@ -2076,8 +2523,12 @@ body[data-surface='stage'] main.workspace {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ledger-view {
+  .ledger-view,
+  .stage[data-mode='insights'] .insights-card {
     animation: none;
+  }
+  .insights-track {
+    transition: none;
   }
   .track-table li,
   .ratings-list,

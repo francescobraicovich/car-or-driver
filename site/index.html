@@ -288,6 +288,24 @@
             </section>
           </section>
 
+          <nav class="insights-list" id="insightsList" aria-label="Slides of the Insights"></nav>
+          <section class="insights-card" id="insightsCard" aria-label="Insights" aria-roledescription="carousel" tabindex="-1">
+            <header class="insights-head">
+              <h2 class="insights-title">Insights</h2>
+              <span class="insights-position" id="insightsPosition" aria-live="polite"></span>
+              <button type="button" class="insights-close" id="insightsClose" aria-label="Close the insights">×</button>
+            </header>
+            <div class="insights-ticks" id="insightsTicks" role="group" aria-label="Slides"></div>
+            <div class="insights-slides" id="insightsSlides">
+              <div class="insights-track" id="insightsTrack"></div>
+            </div>
+            <footer class="insights-foot">
+              <button type="button" id="insightsPrevious">Previous</button>
+              <span class="insights-name" id="insightsName"></span>
+              <button type="button" id="insightsNext">Next</button>
+            </footer>
+          </section>
+
           <aside class="track" id="stageTrack" aria-label="The race on the circuit" hidden>
             <p class="track-title"><span id="stageTrackName"></span><span id="stageTrackLap"></span></p>
             <div class="track-body">
@@ -325,23 +343,6 @@
             </nav>
           </footer>
         </div>
-      </section>
-
-      <section id="insights" aria-label="Insights">
-        <figure class="frame">
-          <header class="frame-head">
-            <h2 class="frame-title">Insights</h2>
-            <p class="frame-sub">Twenty findings from every weekend since 2000, each with its chart and how it was computed.</p>
-          </header>
-          <div class="frame-body insights-body" id="insightsBody"></div>
-          <footer class="frame-foot">
-            <p class="notes">
-              The numbers are computed from the data through the latest race in the bundle and do not update live. How the ratings work,
-              with full references for the methods named in the notes: <a href="#/methodology">Methodology</a>. Data sources and licence:
-              <a href="#/about">About</a>.
-            </p>
-          </footer>
-        </figure>
       </section>
 
       <section id="methodology" aria-label="Methodology">

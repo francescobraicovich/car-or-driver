@@ -31,6 +31,8 @@ export function initStage() {
     wordFrame: $('stageWordFrame'),
     connector: { line: $('stageConnectorLine'), start: $('stageConnectorStart'), end: $('stageConnectorEnd') },
     ledger: $('stageLedger'),
+    insightsCard: $('insightsCard'),
+    insightsList: $('insightsList'),
     ledgerClose: $('stageLedgerClose'),
     trackTable: $('stageTrackTable'),
     trackPause: $('stageTrackPause'),
@@ -80,6 +82,7 @@ export function initStage() {
   const active = () => view.hover ?? view.focus ?? view.selected;
   const onStage = () => STAGE_PAGES.includes(document.body.dataset.page);
   const viewOpen = () => parts.ledger.dataset.view !== 'ratings'; // a view (the history, the head to head) is open over the ratings in the panel
+  const insightsOpen = () => document.body.dataset.page === 'insights'; // the card of the Insights is over the picture
 
   // ── layout ──────────────────────────────────────────────────────────────
   const relative = (rectangle) => ({
@@ -166,7 +169,8 @@ export function initStage() {
   // ── state ───────────────────────────────────────────────────────────────
   function update() {
     const subject = active();
-    stage.dataset.state = view.selected ? 'open' : subject ? 'peek' : 'idle';
+    stage.dataset.state = view.selected || insightsOpen() ? 'open' : subject ? 'peek' : 'idle'; // (with the Insights the picture is grey, as behind the panel)
+    stage.dataset.mode = insightsOpen() ? 'insights' : '';
     stage.dataset.subject = subject ?? '';
     stage.dataset.hover = view.hover ?? '';
     for (const name of SUBJECTS) parts.hotspots[name].setAttribute('aria-pressed', String(view.selected === name));
@@ -332,7 +336,7 @@ export function initStage() {
   }
   /** The pointer is on a picture (or its word): if the ratings show another picture, they switch only once the pointer stays a moment. */
   function pointAt(subject) {
-    if (viewOpen()) return; // the panel shows a view over the ratings: pointing at the pictures does not change what is under it
+    if (viewOpen() || insightsOpen()) return; // a view over the ratings, or the card of the Insights, is open: pointing at the pictures does nothing
     clearTimeout(view.release);
     clearTimeout(view.switching);
     const showing = active();
@@ -371,6 +375,7 @@ export function initStage() {
     });
     /** Using it (a press, or the keyboard moving into it) keeps it open, so that letting go of a slider outside it does not close it. */
     const keepOpen = () => {
+      if (insightsOpen()) return;
       const subject = active();
       if (subject && view.selected !== subject) {
         view.selected = subject;
@@ -381,6 +386,8 @@ export function initStage() {
     element.addEventListener('focusin', keepOpen);
   };
   hold(parts.ledger);
+  hold(parts.insightsCard);
+  hold(parts.insightsList);
   hold(parts.trackTable);
   hold(parts.trackPause);
   hold(parts.trackSpeeds);
