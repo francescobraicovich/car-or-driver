@@ -1630,6 +1630,13 @@ check(
     )) &&
     !(await evaluate("/undefined|NaN/.test(document.getElementById('insightsCard').textContent)")),
 );
+check(
+  'in every chart of the card what is drawn stays inside its svg, and a chart is not shorter than it was drawn for (no chart spills over the plate under it)',
+  await evaluate(`[...document.querySelectorAll('.insights-card [data-chart] svg')].every((svg) => {
+    const box = svg.getBBox();
+    return box.y + box.height <= svg.height.baseVal.value + 2 && svg.parentElement.getBoundingClientRect().bottom + 1 >= svg.getBoundingClientRect().bottom;
+  })`),
+);
 // jumping from the contents, and sliding there
 await evaluate('document.querySelector(\'.insights-contents button[data-slide="12"]\').click()');
 await sleep(900);

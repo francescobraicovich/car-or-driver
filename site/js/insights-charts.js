@@ -23,25 +23,29 @@ export const linearScale = (domainStart, domainEnd, rangeStart, rangeEnd) => (va
   rangeStart + ((value - domainStart) / (domainEnd - domainStart)) * (rangeEnd - rangeStart);
 
 /**
- * Draws into `container` with `draw(svg, width, height)`, and again whenever the container's width changes. A chart that has room to grow (on a slide
- * with free space under it, where the style sheet lets the chart's box grow) is drawn taller, up to one and a half times its own height.
+ * Draws into `container` with `draw(svg, width, height)`, and again whenever the container's width changes. A chart that takes its height from the
+ * pixels it is given (lines, scatter plots, axes) is drawn again taller, up to one and a half times its own height, if the box it is in has room to
+ * grow (on a slide, where the style sheet lets the box of the main chart grow into what is free). Horizontal bars set their own height from their rows
+ * and say so (`data-fixed`): they stay as they are.
  */
 export function mountChart(container, draw, heightFor) {
   let drawnWidth = -1;
   let drawnHeight = -1;
+  let stretchable = null; // not known until the chart has been drawn once
   const render = () => {
     const width = Math.floor(container.clientWidth);
     if (width < 1) return;
     const style = getComputedStyle(container);
     const room = Math.floor(container.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom));
     const own = heightFor(width);
-    const height = Math.round(Math.min(1.5 * own, Math.max(0.8 * own, room))); // (from four fifths of its own height to one and a half times it)
+    const height = stretchable ? Math.round(Math.min(1.5 * own, Math.max(own, room))) : own;
     if (width === drawnWidth && height <= drawnHeight + 4) return;
     drawnWidth = width;
     drawnHeight = height;
     const svg = createSvgElement('svg', { width, height, viewBox: `0 0 ${width} ${height}`, role: 'img' });
     container.replaceChildren(svg);
     draw(svg, width, height);
+    stretchable ??= svg.dataset.fixed !== 'true';
   };
   render();
   new ResizeObserver(render).observe(container);
@@ -126,6 +130,7 @@ export function drawLines(svg, width, height, options) {
  * grouped bars (`bars`). `baseline` is where bars start (zero unless the axis does not reach zero).
  */
 export function drawHorizontalBars(svg, width, items, options) {
+  svg.dataset.fixed = 'true'; // its height is that of its rows (see mountChart)
   const rowHeight = options.rowHeight || 22;
   const left = options.marginLeft || 150;
   const right = options.marginRight || 46;

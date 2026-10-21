@@ -1450,7 +1450,7 @@ body[data-surface='stage'] main.workspace {
    and the card's tokens, so they are in the colours of the History and of the Head to head. */
 .insights-card,
 .insights-list {
-  --insights-height: min(680px, calc(100% - 76px - var(--bottom-space, 58px)));
+  --insights-height: min(720px, calc(100% - 76px - var(--bottom-space, 58px)));
   --insights-top: calc(68px + (100% - 76px - var(--bottom-space, 58px) - var(--insights-height)) / 2);
 }
 .insights-card {
@@ -1499,6 +1499,9 @@ body[data-surface='stage'] main.workspace {
 .stage[data-mode='insights'] .stage-word-frame,
 .stage[data-mode='insights'] .stage-connector {
   opacity: 0.3; /* behind the card */
+}
+.insights-card:focus {
+  outline: none; /* the card receives the focus when it opens, so that a screen reader starts at it; it is not a control */
 }
 .insights-head {
   position: relative;

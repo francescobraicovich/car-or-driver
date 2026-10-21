@@ -64,14 +64,14 @@ export function initInsights() {
   const slideNodes = [...track.children];
 
   // the ticks under the title (a gap between two topics), and the list of slides beside the card
-  let tickHtml = `<button type="button" data-slide="0" aria-label="Contents" title="Contents"></button>`;
+  let tickHtml = `<button type="button" data-slide="0" aria-label="Contents" title="Contents" tabindex="-1"></button>`;
   let listHtml = `<button type="button" class="insights-list-home" data-slide="0">Contents</button>`;
   INSIGHT_TOPICS.forEach((topic) => {
     const entries = INSIGHT_CARDS.map((entry, index) => ({ entry, index: index + 1 })).filter(({ entry }) => entry.topic === topic.id);
     tickHtml += entries
       .map(
         ({ entry, index }, position) =>
-          `<button type="button" data-slide="${index}"${position === 0 ? ' class="first"' : ''} aria-label="${entry.title.replace(/"/g, '&quot;')}" title="${entry.label}"></button>`,
+          `<button type="button" data-slide="${index}"${position === 0 ? ' class="first"' : ''} aria-label="${entry.title.replace(/"/g, '&quot;')}" title="${entry.label}" tabindex="-1"></button>`, // (the ticks are for the pointer: the keys, the arrows and the contents are for the keyboard)
       )
       .join('');
     listHtml += `<section><h3>${topic.title}</h3><ol>${entries.map(({ entry, index }) => `<li><button type="button" data-slide="${index}">${entry.label}</button></li>`).join('')}</ol></section>`;
