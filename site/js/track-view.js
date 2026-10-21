@@ -11,7 +11,6 @@
 import { outlineTable, pointAt, smoothPath, startLine } from './track-geometry.js';
 import { lapClock, uniformClock } from './speed-profile.js';
 import { DEFAULT_SPEED, SPEEDS, STOP_SCREEN, buildReplay, gapsAt, progressesAt, screenClock, standingsAt } from './race-replay.js';
-import { STAGE_PAGES } from './stage-pages.js';
 
 const SVG = 'http://www.w3.org/2000/svg';
 const DOT = 4.2; // radius of a dot on the screen, in pixels
@@ -368,11 +367,8 @@ export function initTrack() {
     view.hotRatings = event.detail.id;
     paintHot();
   });
-  // the race runs only on the front page (and its ratings): on another page it stops, and starts again when the visitor comes back
-  window.addEventListener('f1:workspace-changed', () => {
-    if (STAGE_PAGES.includes(document.body.dataset.page)) show();
-    else hide();
-  });
+  // the race runs while the ratings are shown: show() stops it on a page that has no panel (a card of slides), and starts it again when the visitor comes back
+  window.addEventListener('f1:workspace-changed', show);
   new ResizeObserver(() => {
     if (box.hidden || !view.race) return;
     layoutTable();

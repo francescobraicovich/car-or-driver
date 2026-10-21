@@ -3,28 +3,32 @@
    text measured against it (tests/test-stage.mjs samples the pixels where the text sits); they are tokens on .stage so that the two states are
    defined in one place. */
 
-body[data-surface='stage'] {
-  padding-bottom: 0;
+html,
+body {
   background: #d90a04;
-}
-body[data-surface='stage'] .site-nav,
-body[data-surface='stage'] .workspace-footer,
-body[data-surface='stage'] .workspace-status,
-body[data-surface='stage'] #veil {
-  display: none;
-}
-body[data-surface='stage'] main.workspace {
-  max-width: none;
-  padding: 0;
 }
 #home {
   margin: 0;
+}
+#home:focus {
+  outline: none; /* the page receives the focus when a card closes, so that a screen reader starts at it; it is not a control */
+}
+/* Said by boot-probe.js when the scripts cannot start (nothing else is on the page then) */
+.start-error {
+  max-width: 62ch;
+  margin: 18vh auto 0;
+  padding: 0 18px;
+  color: #fff1e8;
+  font:
+    15px/1.55 'Inter',
+    system-ui,
+    sans-serif;
 }
 
 .stage {
   color-scheme: light;
   --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Menlo, Consolas, 'Liberation Mono', monospace;
-  --display: 'Lexend Giga', 'Space Grotesk', system-ui, sans-serif;
+  --display: 'Lexend Giga', system-ui, sans-serif;
   --text: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
   /* red drawing: white title over a soft dark-red haze, cream small text on the drawing's darker top and bottom bands */
   --stage-bg: #d90a04;
@@ -2504,7 +2508,7 @@ body[data-surface='stage'] main.workspace {
 }
 /* what is selected for comparison, on one line */
 .ledger .selection-bar {
-  position: static; /* the sticky bar of the old Ratings page sat above the phone tab bar */
+  position: static; /* the bar is not sticky inside the panel */
   display: flex;
   flex: none;
   flex-wrap: nowrap;

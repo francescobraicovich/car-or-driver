@@ -1,5 +1,5 @@
 // Small SVG chart toolkit for the Insights page: axes, lines, horizontal bars, scatter plots, legends and tables.
-// Colours and text come from the page's CSS variables, so the charts follow the light and dark themes. Every chart is drawn at the pixel
+// Colours and text come from the page's CSS variables, so the charts are in the colours of the card they are on. Every chart is drawn at the pixel
 // width of its container and redrawn when that width changes.
 
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';

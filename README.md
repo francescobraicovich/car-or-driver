@@ -82,7 +82,7 @@ tests/                 Golden-master, regression, structure, compliance and brow
 - **Code:** [MIT](LICENSE).
 - **Race data:** the tables in `data/` come from [TracingInsights/RaceData](https://github.com/TracingInsights/RaceData), which labels them CC0 but also credits [Jolpica-F1](https://github.com/jolpica/jolpica-f1) (CC BY-NC-SA 4.0) and Kaggle datasets that are reported to derive from the Ergast database. It does not say which table comes from which source, so this project follows the strictest licence involved.
 - **Ratings, findings, charts, text and the published data files:** [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/): credit, **non-commercial**, share-alike. The credit line and the full reasoning are in [data/NOTICE.md](data/NOTICE.md).
-- **Third-party files** in `site/vendor/` (Inter, Space Grotesk, Lexend Giga, KaTeX) keep their own licences, which are included.
+- **Third-party files** in `site/vendor/` (Inter, Lexend Giga, KaTeX) keep their own licences, which are included.
 - **The circuit outlines** in `site/assets/tracks.json` come from [bacinger/f1-circuits](https://github.com/bacinger/f1-circuits) (MIT); their licence is in `site/assets/tracks-licence.txt` and the source files are in `data/source/f1-circuits/`.
 - **The drawing** in `site/assets/art/` is not covered by any of the licences above: all rights reserved unless its owner says otherwise (see the notice in that folder).
 
@@ -90,7 +90,7 @@ Because the data is non-commercial, so is this project: **no advertising, no aff
 
 ## Privacy
 
-The site sets no cookies, has no analytics, and loads nothing from any other origin (fonts and formulas are served from the site itself, and a Content-Security-Policy makes the browser refuse anything else). The only thing it can store on a visitor's device is the light or dark theme, and only after they press the button. These are properties that tests check, not only promises: `tests/test-compliance.mjs` checks the files, the browser test checks the running site, and `tools/check-live-site.mjs` checks the deployed one. [docs/compliance.md](docs/compliance.md) records the rules that were checked (GDPR, UK GDPR, ePrivacy and others), what was done, and what only the operator can do. It is a careful record, not legal advice.
+The site sets no cookies, has no analytics, and loads nothing from any other origin (fonts and formulas are served from the site itself, and a Content-Security-Policy makes the browser refuse anything else). It stores nothing on a visitor's device. These are properties that tests check, not only promises: `tests/test-compliance.mjs` checks the files, the browser test checks the running site, and `tools/check-live-site.mjs` checks the deployed one. [docs/compliance.md](docs/compliance.md) records the rules that were checked (GDPR, UK GDPR, ePrivacy and others), what was done, and what only the operator can do. It is a careful record, not legal advice.
 
 ## Deploying
 

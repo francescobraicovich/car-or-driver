@@ -8,9 +8,12 @@
       name="description"
       content="Driver or Car separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 2000, head to head forecasts and twenty findings."
     />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3efe6" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#080b15" />
-    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <meta name="theme-color" content="#d90a04" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='20' height='20' fill='%23fa1802'/%3E%3Crect x='12' y='12' width='20' height='20' fill='%23091a9c'/%3E%3C/svg%3E"
+    />
     <!-- CANONICAL_TAGS: replaced at deploy time by .github/workflows/deploy.yml with canonical + og:url for the Pages URL -->
 
     <meta property="og:type" content="website" />
@@ -19,7 +22,6 @@
       property="og:description"
       content="Who is really fastest? Ratings that separate driver pace from car speed, with error bars, for every F1 weekend since 2000."
     />
-    <meta property="og:image" content="./assets/favicon.svg" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Driver or Car — who is really fastest in Formula 1?" />
     <meta
@@ -55,7 +57,6 @@
     <link rel="modulepreload" href="js/track-geometry.js" />
     <link rel="modulepreload" href="js/race-replay.js" />
     <link rel="modulepreload" href="js/speed-profile.js" />
-    <link rel="modulepreload" href="js/theme.js" />
     <link rel="modulepreload" href="js/history-view.js" />
     <link rel="modulepreload" href="../packages/core/src/lineage.js" />
     <link rel="modulepreload" href="js/head-to-head-view.js" />
@@ -80,53 +81,7 @@
   <body>
     <a class="skip-link" href="#/ratings">Skip to ratings</a>
 
-    <nav class="site-nav workspace-nav" aria-label="Main navigation">
-      <a class="brand" href="#/" aria-label="Driver or Car home"
-        ><img src="./assets/favicon.svg" alt="" width="26" height="26" /><span class="brand-name"
-          >Driver <span class="brand-join">or</span> Car</span
-        ></a
-      >
-      <div class="nav-links" id="workspaceLinks">
-        <a href="#/ratings"
-          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></svg
-          ><span class="label-full">Ratings</span></a
-        >
-        <a href="#/history"
-          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-9" /></svg><span class="label-full">History</span></a
-        >
-        <a href="#/head-to-head"
-          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l-3-3M17 17H7l3 3" /></svg
-          ><span class="label-full">Head to head</span><span class="label-short" aria-hidden="true">Versus</span></a
-        >
-        <a href="#/insights"
-          ><svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0012 3z" /></svg
-          ><span class="label-full">Insights</span></a
-        >
-        <a href="#/methodology"
-          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 21V5M9 8h6" /></svg
-          ><span class="label-full">Methodology</span><span class="label-short" aria-hidden="true">Method</span></a
-        >
-      </div>
-      <button id="shareView" type="button">Share</button>
-      <input id="shareURL" aria-label="Share URL" readonly hidden />
-      <span id="shareStatus" class="small" role="status"></span>
-    </nav>
-
-    <div id="veil" role="status" aria-live="polite">
-      <p class="veil-brand" aria-hidden="true">Driver <span class="brand-join">or</span> Car</p>
-      <div class="spinner" aria-hidden="true"></div>
-      <p>
-        <strong id="veilTitle">Loading race data…</strong><br /><span id="veilMsg">Fetching the ratings for every weekend since 2000.</span>
-      </p>
-      <p id="veilError" class="veil-error" hidden></p>
-    </div>
-
-    <header class="workspace-status" id="top">
-      <span class="status-pill" id="statusPill"
-        ><span class="dot" aria-hidden="true"></span><span id="status" class="status" role="status">Loading data…</span></span
-      >
-    </header>
+    <p class="start-error" id="startError" role="alert" hidden></p>
 
     <main id="workspace" class="workspace" hidden>
       <section id="home" aria-label="Driver or Car">
@@ -328,14 +283,6 @@
       </section>
     </main>
 
-    <footer class="workspace-footer">
-      <div class="footer-inner">
-        <span>Independent · Not affiliated with Formula 1 or the FIA.</span>
-        <nav class="footer-links" aria-label="About this site">
-          <a href="#/methodology">Methodology</a><a href="#/privacy">Privacy and cookies</a><a href="#/about">About, data and licences</a>
-        </nav>
-      </div>
-    </footer>
     <noscript><p style="padding: 20px; text-align: center">Driver or Car needs JavaScript to show the ratings and charts.</p></noscript>
     <script type="module" src="./js/app.js"></script>
   </body>

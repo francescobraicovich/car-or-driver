@@ -1,21 +1,12 @@
-// Page shell: hash routing between the pages, the theme toggle, the share link, and the weekend and history state kept in the URL.
+// Page shell: hash routing between the pages, and the weekend and history state kept in the URL.
 import { state } from './state.js';
 import { setRace } from './ratings-view.js';
 import { createHistoryView } from './history-view.js';
-import { createThemeButton } from './theme.js';
-import { DECK_PAGES, STAGE_PAGES, panelView } from './stage-pages.js';
+import { DECK_PAGES, panelView } from './stage-pages.js';
 
-// route -> the section that is the page.
-const PAGES = {
-  '/': 'home',
-  '/ratings': 'home', // the ratings are the panel on the front page, kept open
-  '/history': 'home', // the history and the head to head are views over the ratings, in the panel on the front page
-  '/head-to-head': 'home',
-  '/insights': 'home', // the insights, the methodology, the privacy notice and the about page are each a card of slides over the front page
-  '/methodology': 'home',
-  '/privacy': 'home',
-  '/about': 'home',
-};
+// Every route is the front page: the ratings are the panel on it, kept open; the history and the head to head are views over the ratings, in the
+// panel; the insights, the methodology, the privacy notice and the about page are each a card of slides over it.
+const ROUTES = ['/', '/ratings', '/history', '/head-to-head', '/insights', '/methodology', '/privacy', '/about'];
 const DEFAULT_ROUTE = '/';
 // Hashes from earlier versions of the site (and of the shared links in the wild).
 const ALIASES = {
@@ -39,21 +30,11 @@ const ALIASES = {
 };
 const VIEW_IDS = { history: 'historyView', 'head-to-head': 'headToHeadView' };
 const $ = (id) => document.getElementById(id);
-const visible = (node, on) => {
-  node.hidden = !on;
-  node.style.display = on ? '' : 'none';
-};
 
 export function initWorkspace() {
   const root = $('workspace');
-  $('shareView').before(createThemeButton());
-
-  const pages = new Map(Object.entries(PAGES).map(([path, id]) => [path, $(id)]));
-  for (const node of new Set(pages.values())) {
-    node.classList.add('workspace-page');
-    node.tabIndex = -1;
-    visible(node, false);
-  }
+  const home = $('home');
+  home.tabIndex = -1;
   let route = DEFAULT_ROUTE;
   let raceId = null;
   let deckSlide = null; // the id of the slide on the card of the page, if it is a card of slides (none: the contents)
@@ -70,28 +51,22 @@ export function initWorkspace() {
 
   const pageName = () => (route === '/' ? 'home' : route.slice(1));
 
-  /** The page the body is on, the surface it is (the front page or a page of its own) and what the panel shows (the ratings, or a view over them). */
+  /** The page the body is on, and what the panel shows (the ratings, or a view over them). */
   function setPage() {
     document.body.dataset.page = pageName();
-    document.body.dataset.surface = STAGE_PAGES.includes(pageName()) ? 'stage' : 'page';
     $('stageLedger').dataset.view = panelView(pageName());
     if (panelView(pageName()) !== 'head-to-head') window.dispatchEvent(new CustomEvent('f1:versus-drivers', { detail: null })); // the two drivers lit in the race
   }
 
   function display() {
     setPage();
-    for (const link of document.querySelectorAll('#workspaceLinks a')) {
-      if (link.getAttribute('href') === `#${route}`) link.setAttribute('aria-current', 'page');
-      else link.removeAttribute('aria-current');
-    }
-    for (const node of new Set(pages.values())) visible(node, node === pages.get(route));
     $('chartValueTooltip')?.setAttribute('hidden', '');
     window.dispatchEvent(new CustomEvent('f1:workspace-changed', { detail: { page: route } }));
   }
 
   function parseURL() {
     const [path, search = ''] = location.hash.slice(1).split('?');
-    const nextRoute = pages.has(path) ? path : ALIASES[path] || DEFAULT_ROUTE;
+    const nextRoute = ROUTES.includes(path) ? path : ALIASES[path] || DEFAULT_ROUTE;
     const params = new URLSearchParams(search.length <= 16000 ? search : '');
     return { route: nextRoute, params: params.get('v') === '1' ? params : new URLSearchParams() };
   }
@@ -145,12 +120,11 @@ export function initWorkspace() {
   /** Where the focus goes on a new page: the button to go back, in a view over the ratings; the button that opened the view, when coming back from it. */
   function focusPage(was) {
     const now = panelView(pageName());
-    const stage = STAGE_PAGES.includes(pageName());
-    let target = pages.get(route);
+    let target = home;
     if (DECK_PAGES.includes(pageName()))
       target = document.querySelector(`.deck-card[data-deck="${pageName()}"]`) ?? target; // (the card is made when its page is first shown, and takes the focus itself then)
     else if (now !== 'ratings') target = $(VIEW_IDS[now]).querySelector('.ledger-back');
-    else if (stage && was !== 'ratings') target = $(was === 'history' ? 'ratingsOpenHistory' : 'ratingsOpenHeadToHead') ?? target;
+    else if (was !== 'ratings') target = $(was === 'history' ? 'ratingsOpenHistory' : 'ratingsOpenHeadToHead') ?? target;
     target.focus({ preventScroll: true });
   }
 
@@ -169,7 +143,7 @@ export function initWorkspace() {
   function navigate() {
     const target = parseURL();
     if (panelView(target.route.slice(1)) === 'ratings') openedFromRatings = false;
-    const was = STAGE_PAGES.includes(pageName()) ? panelView(pageName()) : 'ratings';
+    const was = panelView(pageName());
     restoring = true;
     try {
       route = target.route;
@@ -211,7 +185,7 @@ export function initWorkspace() {
   // ratings is open only while they are, so letting go of the panel there is the front page too)
   window.addEventListener('f1:ratings-pinned', (event) => {
     const next = event.detail.pinned ? (panelView(pageName()) === 'ratings' ? '/ratings' : route) : '/';
-    if (route === next || DECK_PAGES.includes(pageName()) || !STAGE_PAGES.includes(pageName())) return; // (a card of slides is not about the panel)
+    if (route === next || DECK_PAGES.includes(pageName())) return; // (a card of slides is not about the panel)
     route = next;
     setPage();
     saveURL();
@@ -220,20 +194,6 @@ export function initWorkspace() {
   window.addEventListener('f1:race-changed', () => {
     rememberRace();
     saveURL();
-  });
-  $('shareView').addEventListener('click', async () => {
-    saveURL();
-    try {
-      await navigator.clipboard.writeText(location.href);
-      $('shareStatus').textContent = 'Link copied';
-      $('shareURL').hidden = true;
-    } catch {
-      $('shareURL').hidden = false;
-      $('shareURL').value = location.href;
-      $('shareURL').focus();
-      $('shareURL').select();
-      $('shareStatus').textContent = 'Copy link';
-    }
   });
   window.addEventListener('f1:model-ready', () => {
     restoreRace();

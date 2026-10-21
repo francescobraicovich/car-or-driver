@@ -45,7 +45,9 @@ const html = await homeResponse.text();
 
 for (const tag of html.match(/<(?:link|script|img|iframe|source)\b[^>]*>/gi) ?? []) {
   const address = tag.match(/\b(?:src|href)="([^"]+)"/i)?.[1];
-  if (address && new URL(address, home).origin !== home.origin) problems.push(`the page loads ${address} from another origin: ${tag}`);
+  // (a data: address, the icon, is in the page and makes no request)
+  if (address && !address.startsWith('data:') && new URL(address, home).origin !== home.origin)
+    problems.push(`the page loads ${address} from another origin: ${tag}`);
   if (/^<script\b/i.test(tag) && !/\bsrc=/.test(tag) && !/ld\+json/.test(tag)) problems.push(`the page contains an inline script: ${tag}`);
 }
 if (/\/cdn-cgi\//.test(html))

@@ -10,7 +10,6 @@ const TESTS = [
   'test-charts.mjs',
   'test-chart-math.mjs',
   'test-dom-ids.mjs',
-  'test-contrast.mjs',
   'test-head-to-head-breakdown.mjs',
   'test-form-shift.mjs',
   'test-scenario.mjs',

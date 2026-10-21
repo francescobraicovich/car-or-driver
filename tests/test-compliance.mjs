@@ -1,9 +1,9 @@
 // The privacy notice is only true while the site behaves as it says. This checks the files, so the notice cannot drift from the site (the browser
-// smoke test checks the running site: no request to another origin, no cookie, one stored value after a click). What is checked, and why, is in
+// smoke test checks the running site: no request to another origin, no cookie, nothing stored in the browser after every page has been opened). What is checked, and why, is in
 // docs/compliance.md.
 //   1. Nothing the site loads comes from another origin: no absolute address in a stylesheet, script, image, font or import, in the page, the
 //      scripts or the stylesheet. (Links a visitor may follow are allowed; they leave the site only when clicked.)
-//   2. The browser's storage is used in one place, theme.js, which writes one key, and only when the visitor presses the button.
+//   2. No script uses the browser's storage: the site stores nothing on the visitor's device.
 //   3. The response headers forbid loading from another origin and send no referrer.
 //   4. The third-party files that are served carry their licences and a notice naming the source.
 //   5. Every citation in the Methodology has an entry, and every entry says who, when and where.
@@ -63,14 +63,7 @@ const storageUsers = [];
 for (const file of scripts)
   if (/\b(?:localStorage|sessionStorage|indexedDB|document\.cookie|caches\.open|navigator\.serviceWorker)\b/.test(await read(file)))
     storageUsers.push(relative('.', file));
-assert.deepEqual(storageUsers, ['site/js/theme.js'], 'only theme.js may use the browser storage');
-const theme = await read('site/js/theme.js');
-assert.equal((theme.match(/localStorage\.setItem/g) ?? []).length, 1, 'one write');
-assert.ok(
-  theme.indexOf('localStorage.setItem') > theme.indexOf("addEventListener('click'"),
-  'the write happens in the click handler, not at load',
-);
-assert.match(theme, /STORAGE_KEY = 'f1-theme'/);
+assert.deepEqual(storageUsers, [], 'no script uses the browser storage');
 
 // 3. headers
 const headers = (await readDeployHeaders())['/*'];
@@ -82,10 +75,10 @@ assert.equal(headers['Referrer-Policy'], 'no-referrer');
 assert.equal(headers['X-Content-Type-Options'], 'nosniff');
 
 // 4. third-party files and their licences
-for (const file of ['inter-OFL-1.1.txt', 'space-grotesk-OFL-1.1.txt', 'lexend-giga-OFL-1.1.txt', 'katex-MIT.txt'])
+for (const file of ['inter-OFL-1.1.txt', 'lexend-giga-OFL-1.1.txt', 'katex-MIT.txt'])
   assert.ok(existsSync(`site/vendor/licenses/${file}`), `licence ${file}`);
 const notice = await read('site/vendor/NOTICE.txt');
-for (const word of ['Inter', 'Space Grotesk', 'Lexend Giga', 'KaTeX', 'SIL Open Font License', 'MIT'])
+for (const word of ['Inter', 'Lexend Giga', 'KaTeX', 'SIL Open Font License', 'MIT'])
   assert.ok(notice.includes(word), `NOTICE.txt names ${word}`);
 for (const file of await walk('site/vendor')) {
   if (/\.(woff2|js|css|txt)$/.test(file)) continue;
@@ -169,5 +162,5 @@ try {
   await rm('dist', { recursive: true, force: true });
 }
 console.log(
-  'PASS compliance: no request to another origin, one stored value on a click, strict headers, licences shipped, citations complete, only intended files published',
+  'PASS compliance: no request to another origin, nothing stored in the browser, strict headers, licences shipped, citations complete, only intended files published',
 );

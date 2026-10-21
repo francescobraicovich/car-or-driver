@@ -2,7 +2,6 @@
 export const el = {};
 
 const IDS = [
-  'status',
   'ratingsHost',
   'chartsPanel',
   'headToHeadPanel',

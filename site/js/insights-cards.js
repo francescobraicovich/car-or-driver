@@ -484,7 +484,7 @@ export const INSIGHT_CARDS = [
         ['var(--ink)', 'Package'],
       ]) + '<div class="insight-chart" data-chart="main"></div>',
     how: (data) =>
-      `Current published ratings after round ${data.dataThrough.round} of ${data.dataThrough.year}, relative to the field, sorted by package. Driver ratings are the portable level without the fit to the current car. Each driver's rating carries an uncertainty of about 12 to 18 points, which the Ratings page shows as error bars.`,
+      `Current published ratings after round ${data.dataThrough.round} of ${data.dataThrough.year}, relative to the field, sorted by package. Driver ratings are the portable level without the fit to the current car. Each driver's rating carries an uncertainty of about 12 to 18 points, which the ratings panel shows as error bars.`,
     draw: (data, root) => {
       const items = [...data.currentGrid]
         .sort((a, b) => b.driverRating + b.carRating - (a.driverRating + a.carRating))

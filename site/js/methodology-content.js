@@ -56,7 +56,7 @@ export const CONTENT_HTML = String.raw`
     <dt>Effective pace</dt>
     <dd>Combined pace, lowered by how often the driver or the car fails to finish, so that a quick but fragile entry ranks lower. (Part 3)</dd>
     <dt>Recent form</dt>
-    <dd>How the last few races compare with the rating. The forecast model uses it; the Ratings page can show it as an adjustment. (Part 4)</dd>
+    <dd>How the last few races compare with the rating. The forecast model uses it; the ratings panel can show it as an adjustment. (Part 4)</dd>
     <dt>Win probability</dt>
     <dd>The chance that one driver finishes ahead of another, on the Head to head page. (Part 4)</dd>
     <dt>Forecast error</dt>
@@ -191,7 +191,7 @@ export const CONTENT_HTML = String.raw`
     <li>
       <b>A new driver</b> (first seen after the first season of data) starts with the wide prior above, at a level about 25 points under the average of the current field. In qualifying they also carry a temporary penalty,
       <span class="math">A_i\leftarrow-{{q.dipR}}</span> with spread <span class="math">{{q.sdR}}</span>, that fades by a factor <span class="math">{{q.rhoR}}</span> each weekend: new drivers qualify well below where they settle, and the gap closes within a
-      few races. Race pace needs no such penalty. For a driver’s first five races the Ratings page marks their rating as provisional (“new”).
+      few races. Race pace needs no such penalty. For a driver’s first five races the ratings panel marks their rating as provisional (“new”).
     </li>
     <li>
       <b>A team that only changes its name</b> (Racing Point to Aston Martin, Toro Rosso to AlphaTauri to RB) keeps its car: <span class="math">C_c</span> carries on under the new name. After a takeover by a new owner (Jaguar to Red Bull, Honda to Brawn,
@@ -296,7 +296,7 @@ export const CONTENT_HTML = String.raw`
 
   <h4>From beliefs to the published numbers</h4>
   <p>
-    <b>Uncertainty.</b> A rating is a level relative to the field of that weekend, <span class="math">1000+(\text{level}_i-\overline{\text{level}})</span>, re-centred so that the entrants average 1,000. The bar on the Ratings page is the standard deviation of
+    <b>Uncertainty.</b> A rating is a level relative to the field of that weekend, <span class="math">1000+(\text{level}_i-\overline{\text{level}})</span>, re-centred so that the entrants average 1,000. The bar on the ratings panel is the standard deviation of
     that difference, which uses the full covariance over the <span class="math">n</span> entrants:
   </p>
   <div class="math block">\operatorname{sd}_i=\sqrt{P_{ii}-\frac{2}{n}\sum_{j}P_{ij}+\frac{1}{n^{2}}\sum_{j,k}P_{jk}}\ .</div>

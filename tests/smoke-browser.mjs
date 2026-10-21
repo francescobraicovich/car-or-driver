@@ -83,7 +83,7 @@ await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/` });
 
 for (let i = 0; i < 120; i++) {
   await sleep(1000);
-  const status = (await evaluate("document.getElementById('status')?.textContent || ''")) || '';
+  const status = (await evaluate("document.querySelector('.stage-tagline')?.textContent || ''")) || '';
   if ((await evaluate("document.body.dataset.ready === '1'")) || /failed|Could not/.test(status)) break;
 }
 
@@ -92,12 +92,18 @@ const checks = [];
 const check = (name, pass, detail = '') => checks.push({ name, pass: !!pass, detail });
 check('model built', ready);
 
-// The site is five pages: Ratings, History, Head to head, Insights, Methodology (Methodology is also linked from the footer)
+// The site is the front page and what opens over it: the links at its top are Ratings, History, Versus, Insights and Method, and the links at its foot
+// are Privacy, About and the source. Nothing of the old pages (header, loading screen, status line, footer, share button, theme button) is left.
 check(
-  'the navigation has exactly Ratings, History, Head to head, Insights and Methodology',
-  JSON.stringify(
-    await evaluate("[...document.querySelectorAll('#workspaceLinks a')].map((a) => a.querySelector('.label-full').textContent)"),
-  ) === JSON.stringify(['Ratings', 'History', 'Head to head', 'Insights', 'Methodology']),
+  'the links at the top of the front page are exactly ratings, history, versus, insights and method',
+  JSON.stringify(await evaluate("[...document.querySelectorAll('.stage-top a')].map((a) => a.textContent)")) ===
+    JSON.stringify(['ratings', 'history', 'versus', 'insights', 'method']),
+);
+check(
+  'nothing of the old pages is left: no header, loading screen, status line, footer, share button or theme button',
+  await evaluate(
+    "['veil', 'status', 'statusPill', 'workspaceLinks', 'shareView', 'shareURL', 'themeToggle'].every((id) => !document.getElementById(id)) && !document.querySelector('.site-nav, .workspace-footer, .workspace-status, .workspace-page') && document.body.dataset.surface === undefined",
+  ),
 );
 check(
   'there is no Home / Research switch and no research page',
@@ -106,18 +112,15 @@ check(
   )) && (await evaluate('document.body.dataset.mode === undefined')),
 );
 check(
-  'the footer links to Methodology',
-  await evaluate("[...document.querySelectorAll('.workspace-footer a')].some((a) => a.getAttribute('href') === '#/methodology')"),
+  'the foot of the front page links to Privacy, About and the source',
+  JSON.stringify(await evaluate("[...document.querySelectorAll('.stage-footer-links a')].map((a) => a.getAttribute('href'))")) ===
+    JSON.stringify(['#/privacy', '#/about', 'https://github.com/francescobraicovich/driver-or-car']),
 );
 
 // The front page: a red drawing with a white two-line title and a square cursor. Pointing at the car or the hands (or at the matching word) opens a
 // box, turns the rest black and white, shows the blue version inside the box, lights the word and shows the ratings; clicking the picture keeps them
 // open; the keyboard does the same; nothing wobbles under reduced motion
 check('the front page is the default page', (await evaluate('document.body.dataset.page')) === 'home');
-check(
-  'the front page is not hidden behind the loading screen',
-  (await evaluate("getComputedStyle(document.getElementById('veil')).display")) === 'none',
-);
 const rectangleOfSelector = (selector) =>
   evaluate(
     `(() => { const r = document.querySelector('${selector}').getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height }; })()`,
@@ -1230,7 +1233,7 @@ await evaluate("location.hash = '#/ratings'");
 await sleep(900);
 const ledgerState = () =>
   evaluate(
-    "JSON.stringify({ view: document.getElementById('stageLedger').dataset.view, page: document.body.dataset.page, surface: document.body.dataset.surface, stage: document.getElementById('stage').dataset.state, hash: location.hash.split('?')[0], focus: document.activeElement.id || document.activeElement.className })",
+    "JSON.stringify({ view: document.getElementById('stageLedger').dataset.view, page: document.body.dataset.page, stage: document.getElementById('stage').dataset.state, hash: location.hash.split('?')[0], focus: document.activeElement.id || document.activeElement.className })",
   );
 const weekendTitle = () => evaluate("document.getElementById('ratingsTitle').textContent");
 const panelBeforeViews = await rectangleOfSelector('#stageLedger');
@@ -1244,11 +1247,7 @@ const panelWithView = await rectangleOfSelector('#stageLedger');
 const inHistory = JSON.parse(await ledgerState());
 check(
   'the History button in the panel opens the history over the ratings, kept open as a page of the front page',
-  inHistory.view === 'history' &&
-    inHistory.page === 'history' &&
-    inHistory.surface === 'stage' &&
-    inHistory.stage === 'open' &&
-    inHistory.hash === '#/history',
+  inHistory.view === 'history' && inHistory.page === 'history' && inHistory.stage === 'open' && inHistory.hash === '#/history',
   JSON.stringify(inHistory),
 );
 check(
@@ -1270,13 +1269,11 @@ check(
     )),
 );
 check(
-  "the lines wear the same colour as their chips, and they are the panel's own colours whatever theme another page was set to",
+  "the lines wear the same colour as their chips, and they are the panel's own colours",
   await (async () => {
-    await evaluate("document.documentElement.dataset.theme = 'dark'");
     const colours = await evaluate(
       "(() => { const chip = getComputedStyle(document.querySelector('#historyChips .series-chip i')).backgroundColor; const line = getComputedStyle(document.querySelector('#driverChart polyline[stroke^=\"var(--s\"]')).stroke; return [chip, line]; })()",
     );
-    await evaluate('delete document.documentElement.dataset.theme');
     return colours[0] === 'rgb(250, 24, 2)' && colours[1] === colours[0];
   })(),
 );
@@ -1591,7 +1588,6 @@ await sleep(1500);
 const insightsState = () =>
   evaluate(`JSON.stringify({
     page: document.body.dataset.page,
-    surface: document.body.dataset.surface,
     mode: document.getElementById('stage').dataset.mode,
     state: document.getElementById('stage').dataset.state,
     panelShown: !document.getElementById('stageLedger').hidden,
@@ -1609,7 +1605,6 @@ const stageBox = await rectangleOfSelector('#stage');
 check(
   'the Insights are a card in the middle of the front page, over the grey picture, with no panel open and no pointing at the pictures',
   insightsAtStart.page === 'insights' &&
-    insightsAtStart.surface === 'stage' &&
     insightsAtStart.mode === 'deck' &&
     insightsAtStart.state === 'open' &&
     !insightsAtStart.panelShown &&
@@ -1845,7 +1840,7 @@ check(
 const landing = async (hash) => {
   await evaluate(`location.hash = '${hash}'`);
   await sleep(500);
-  return evaluate("document.body.dataset.page + ' ' + document.querySelectorAll('.workspace-page:not([hidden])').length");
+  return evaluate('document.body.dataset.page');
 };
 for (const [from, to] of [
   ['#/simple/ratings', 'ratings'],
@@ -1858,11 +1853,10 @@ for (const [from, to] of [
   ['#/predictor', 'head-to-head'],
 ]) {
   const got = await landing(from);
-  check(`the old address ${from} opens ${to}`, got === `${to} 1`, got);
+  check(`the old address ${from} opens ${to}`, got === to, got);
 }
 
-// Compliance (see docs/compliance.md): the site talks only to its own origin, sets no cookies, stores nothing until the visitor presses the theme
-// button (and then one value, which the Privacy page lets them remove), and its legal pages are there
+// Compliance (see docs/compliance.md): the site talks only to its own origin, sets no cookies, stores nothing in the browser, and its legal pages are there
 const ownOrigin = `http://localhost:${HTTP_PORT}/`;
 const foreign = requests.filter((url) => !url.startsWith(ownOrigin) && !url.startsWith('data:'));
 check(
@@ -1874,32 +1868,30 @@ check(
   'the site set no cookies',
   (await send('Network.getAllCookies')).result.cookies.length === 0 && (await evaluate('document.cookie')) === '',
 );
+for (const hash of ['#/', '#/ratings', '#/history', '#/head-to-head', '#/insights', '#/methodology', '#/privacy', '#/about']) {
+  await evaluate(`location.hash = '${hash}'`);
+  await sleep(700);
+}
 check(
-  'nothing is stored in the browser before the theme button is pressed',
-  (await evaluate('localStorage.length + sessionStorage.length')) === 0,
+  'nothing is stored in the browser after every page has been opened',
+  (await evaluate('localStorage.length + sessionStorage.length')) === 0 &&
+    (await evaluate('indexedDB.databases().then((list) => list.length)')) === 0,
   await evaluate('JSON.stringify([Object.keys(localStorage), Object.keys(sessionStorage)])'),
-);
-await evaluate("document.getElementById('themeToggle').click()");
-check(
-  'pressing the theme button stores one value, f1-theme',
-  JSON.stringify(await evaluate('Object.keys(localStorage)')) === JSON.stringify(['f1-theme']),
 );
 await evaluate("location.hash = '#/privacy'");
 await sleep(800);
 check(
-  "the Privacy page names the controller's regulator, the host and the stored value, and has the forget button",
+  "the Privacy page names the controller's regulator and the host, says there are no cookies, and no longer has a theme to forget",
   await evaluate(
-    "(() => { const text = document.getElementById('privacyCard').textContent; return ['Garante', 'Information Commissioner', 'Cloudflare', 'f1-theme', 'no cookies'].every((word) => text.includes(word)) && !!document.getElementById('forgetTheme'); })()",
+    "(() => { const text = document.getElementById('privacyCard').textContent; return ['Garante', 'Information Commissioner', 'Cloudflare', 'no cookies'].every((word) => text.includes(word)) && !text.includes('f1-theme') && !document.getElementById('forgetTheme'); })()",
   ),
 );
-await evaluate("document.getElementById('forgetTheme').click()");
-check('the forget button removes the stored theme', (await evaluate('localStorage.length')) === 0);
 await evaluate("location.hash = '#/about'");
 await sleep(800);
 check(
   'the About page credits the data sources and gives the licence',
   await evaluate(
-    "(() => { const text = document.getElementById('aboutCard').textContent; return ['TracingInsights', 'Jolpica', 'Ergast', 'CC BY-NC-SA 4.0', 'non-commercial', 'Inter', 'KaTeX'].every((word) => text.includes(word)); })()",
+    "(() => { const text = document.getElementById('aboutCard').textContent; return ['TracingInsights', 'Jolpica', 'Ergast', 'CC BY-NC-SA 4.0', 'non-commercial', 'Inter', 'KaTeX'].every((word) => text.includes(word)) && !text.includes('Space Grotesk'); })()",
   ),
 );
 const legalDeck = async (hash) => {
@@ -1929,19 +1921,10 @@ check(
   'no link outside the navigation carries an icon',
   (await evaluate("document.querySelectorAll('main a svg, footer a svg').length")) === 0,
 );
-check(
-  'the footer links to Methodology, Privacy and About',
-  JSON.stringify(await evaluate("[...document.querySelectorAll('.workspace-footer a')].map((a) => a.getAttribute('href'))")) ===
-    JSON.stringify(['#/methodology', '#/privacy', '#/about']),
-);
 
-// A phone: no page scrolls sideways, and the five pages are a tab bar fixed to the bottom of the screen
+// A phone: no page scrolls sideways
 await send('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 2, mobile: true });
 await sleep(500);
-check(
-  'on a phone the navigation is fixed to the bottom of the screen',
-  (await evaluate("getComputedStyle(document.getElementById('workspaceLinks')).position")) === 'fixed',
-);
 for (const page of ['home', 'ratings', 'history', 'head-to-head', 'insights', 'methodology', 'privacy', 'about']) {
   await evaluate(`location.hash = '#/${page}'`);
   await sleep(1200);

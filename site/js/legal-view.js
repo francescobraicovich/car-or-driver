@@ -2,7 +2,6 @@
 // site's identity filled in (site-identity.js). The first slide is the contents (for the Privacy notice, with its summary above the sections).
 import { SITE } from './site-identity.js';
 import { ABOUT_HTML, PRIVACY_HTML } from './legal-content.js';
-import { forgetTheme } from './theme.js';
 import { createDeck } from './slide-deck.js';
 
 const $ = (id) => document.getElementById(id);
@@ -110,7 +109,4 @@ export function initLegal() {
   });
   for (const id of ['privacyCard', 'aboutCard']) fillContact($(id));
   $('citationAddress').textContent = new URL('./', location.href).href.replace(/site\/$/, '');
-  $('forgetTheme').addEventListener('click', () => {
-    $('forgetThemeResult').textContent = forgetTheme() ? 'Removed. The site now follows your device setting.' : 'Nothing was stored.';
-  });
 }

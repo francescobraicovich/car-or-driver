@@ -9,7 +9,7 @@
 import { setEntity } from './ratings-view.js';
 import { connectorPoints, panelColumn, sceneFades, sceneGeometry, subjectRectangle, titleLayout } from './stage-geometry.js';
 import { shake, sway } from './stage-noise.js';
-import { DECK_PAGES, PINNED_PAGES, STAGE_PAGES } from './stage-pages.js';
+import { DECK_PAGES, PINNED_PAGES } from './stage-pages.js';
 
 const SUBJECTS = ['car', 'driver'];
 const CURSOR_SIZE = 22;
@@ -78,7 +78,6 @@ export function initStage() {
     speed: 0, // how fast the pointer is moving, in pixels per millisecond (smoothed)
   };
   const active = () => view.hover ?? view.focus ?? view.selected;
-  const onStage = () => STAGE_PAGES.includes(document.body.dataset.page);
   const viewOpen = () => parts.ledger.dataset.view !== 'ratings'; // a view (the history, the head to head) is open over the ratings in the panel
   const deckOpen = () => DECK_PAGES.includes(document.body.dataset.page); // a card of slides is over the picture
 
@@ -434,7 +433,7 @@ export function initStage() {
   }
   parts.ledgerClose.addEventListener('click', close);
   document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape' || !onStage() || event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.key !== 'Escape' || event.ctrlKey || event.metaKey || event.altKey) return;
     if (event.target instanceof HTMLSelectElement || event.defaultPrevented) return; // Escape closes the open list of a menu, not the panel
     if (viewOpen())
       window.dispatchEvent(new CustomEvent('f1:ledger-back')); // over the ratings it goes back to them; the next one closes the panel
@@ -447,7 +446,6 @@ export function initStage() {
   document.fonts?.ready.then(layout); // the words are measured once the title font is in
   reducedMotion.addEventListener('change', wake);
   window.addEventListener('f1:workspace-changed', () => {
-    if (!onStage()) return;
     // the front page is the picture alone, and the ratings page is the same page with the panel kept open
     if (PINNED_PAGES.includes(document.body.dataset.page)) view.selected ??= 'driver';
     else view.selected = null;

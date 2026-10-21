@@ -7,6 +7,6 @@ export const SITE = {
   operatorCountry: 'Italy',
   contactEmail: null, // for example 'privacy@example.org'
   repositoryUrl: 'https://github.com/francescobraicovich/driver-or-car',
-  lastUpdated: '19 October 2026', // change when the privacy notice or the legal page changes
+  lastUpdated: '21 October 2026', // change when the privacy notice or the legal page changes
   dataLicence: { name: 'CC BY-NC-SA 4.0', url: 'https://creativecommons.org/licenses/by-nc-sa/4.0/' },
 };
