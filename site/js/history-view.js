@@ -278,6 +278,9 @@ export function createHistoryView({ onChange }) {
     };
     input.addEventListener('focus', fill);
     input.addEventListener('input', fill);
+    list.addEventListener('mousedown', (event) => {
+      if (event.target.closest('button')) event.preventDefault(); // keep the search focused until its click selects the option
+    });
     input.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && !list.hidden) {
         list.hidden = true;

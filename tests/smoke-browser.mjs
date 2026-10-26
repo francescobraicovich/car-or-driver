@@ -1205,13 +1205,19 @@ await evaluate(`(() => {
   input.value = String(2016 - 1994);
   input.dispatchEvent(new Event('input', { bubbles: true }));
 })()`);
+await evaluate("document.querySelector('#historyChips .series-picker input').focus()");
 const schumacherOption = await offered('Michael Schumacher');
 check(
   'History offers drivers outside the selected seasons',
   schumacherOption.some((name) => name.includes('Michael Schumacher')),
 );
-await evaluate(`[...document.querySelectorAll('#historyChips .series-picker-list button')]
-  .find((button) => button.textContent.includes('Michael Schumacher'))?.click()`);
+const schumacherRect = await evaluate(`(() => {
+  const option = [...document.querySelectorAll('#historyChips .series-picker-list button')]
+    .find((button) => button.textContent.includes('Michael Schumacher'));
+  const rect = option.getBoundingClientRect();
+  return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+})()`);
+await click(schumacherRect.x + schumacherRect.width / 2, schumacherRect.y + schumacherRect.height / 2);
 check(
   'adding an earlier driver extends the History plot and season controls',
   (await evaluate("document.getElementById('historyRangeLabel').textContent")) === 'Seasons 1994–2026' &&
