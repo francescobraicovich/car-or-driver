@@ -1,4 +1,4 @@
-// Builds data/race-laps/<year>.json, one file for each season since 2000: for every race of the season, every driver's lap times (so that the race can be
+// Builds data/race-laps/<year>.json, one file for each rated season: for every race of the season, every driver's lap times (so that the race can be
 // replayed lap by lap on the front page, site/js/race-replay.js), their grid place and whether they were still racing at the end, and the stretches of time in
 // which the whole field stood still (red flags). The files are fetched one season at a time. Run after refreshing data/:
 //   node tools/build-race-laps.mjs
@@ -7,9 +7,9 @@ import { csv } from '../packages/core/src/csv.js';
 import { isFinishStatusName } from '../packages/core/src/status.js';
 import { LEAST_DRIVING, median, raceTypical } from '../site/js/race-replay.js';
 import { LICENCE_NOTICE } from './build-model.mjs';
+import { FIRST_YEAR } from '../packages/core/src/weekends.js';
 
 export const RACE_LAPS_FORMAT = 2;
-const FIRST_YEAR = 2000;
 /** A lap this many times longer than the driver's median lap is a long lap: a red flag shows as one for every car (a safety car lap is 1.3 to 1.7 times). */
 const LONG_LAP = 2.2;
 /** A stoppage is when this share of the cars still racing are in a long lap at the same time. */

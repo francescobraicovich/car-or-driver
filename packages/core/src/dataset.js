@@ -3,6 +3,7 @@
 import { csv } from './csv.js';
 import { buildDefaultMapping, isFinishStatusName, statusNameMap } from './status.js';
 import { parseLapPace } from './lap-pace.js';
+import { FIRST_YEAR } from './weekends.js';
 
 /** Public mirrors of the RaceData CSVs, tried in order. */
 export const REMOTE_BASES = [
@@ -31,7 +32,7 @@ export function buildTargetLaps(raw) {
   const years = new Map(raw.races.map((r) => [String(r.raceId), +r.year]));
   const targets = new Map();
   for (const r of raw.results) {
-    if ((years.get(String(r.raceId)) || 0) < 2000) continue;
+    if ((years.get(String(r.raceId)) || 0) < FIRST_YEAR) continue;
     const name = names.get(String(r.statusId)) || '';
     const laps = +r.laps;
     if (laps > 0 && !isFinishStatusName(name)) {

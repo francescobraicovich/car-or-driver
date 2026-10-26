@@ -3,7 +3,7 @@
 import { WET_RACES } from './wet-races.js';
 
 /** First season the model rates (earlier rows are ignored). */
-export const FIRST_YEAR = 2000;
+export const FIRST_YEAR = 1994;
 
 /** Map curated wet-weather (year, GP name) entries to raceIds. */
 export function buildWetSet(raw) {

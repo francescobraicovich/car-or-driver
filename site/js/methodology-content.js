@@ -70,7 +70,7 @@ export const CONTENT_HTML = String.raw`
   <h4>What goes in</h4>
   <p>
     Seven public tables: race results, qualifying results, the race calendar, drivers, constructors, finishing statuses, and lap times (circuits are optional).
-    They cover every Grand Prix weekend from 2000 and come from the open collection TracingInsights/RaceData <a class="cite" href="#" data-jump="ref-17">[17]</a>, which lists Jolpica-F1 <a class="cite" href="#" data-jump="ref-18">[18]</a> and two Kaggle datasets <a class="cite" href="#" data-jump="ref-19">[19]</a> among its sources.
+    Race results and lap times cover every rated Grand Prix weekend from 1994; qualifying records are incomplete in some early seasons. The tables come from the open collection TracingInsights/RaceData <a class="cite" href="#" data-jump="ref-17">[17]</a>, which lists Jolpica-F1 <a class="cite" href="#" data-jump="ref-18">[18]</a> and two Kaggle datasets <a class="cite" href="#" data-jump="ref-19">[19]</a> among its sources.
     The ratings are computed from them in advance, when the site is published, and the site shows the result. Their licences, and what that means for how the ratings may be used, are on the <a href="#/about">About page</a>.
     The model reads the weekends in date order and keeps no information from the future: a rating shown for a weekend uses that weekend and earlier ones only.
   </p>
@@ -225,7 +225,7 @@ export const CONTENT_HTML = String.raw`
   <figure class="method-figure">
     <div class="method-figure-box" id="methodologyUncertaintyChart"></div>
     <figcaption>
-      The error bar of a rating against the number of races the driver has driven, over every driver since 2000 (the band holds the middle 8 in 10). A debutant starts near ±20 points and learns fast over the first ten races,
+      The error bar of a rating against the number of races the driver has driven, over every driver since 1994 (the band holds the middle 8 in 10). A debutant starts near ±20 points and learns fast over the first ten races,
       but the error bar settles at about ±15 and never reaches zero, because pace keeps drifting: what was learnt a year ago is only partly true today.
     </figcaption>
   </figure>

@@ -2161,7 +2161,8 @@ const graphHover = JSON.parse(
   const box = document.getElementById('graphPlot').getBoundingClientRect();
   const year = Math.max(2027, Number(document.getElementById('graphLast').textContent) + 1);
   const grid = new Set([...document.querySelectorAll('#stageTrackDots circle[data-id]')].map((dot) => dot.dataset.id));
-  const points = snap.nodes.map((node) => ({ id: node[0], x: box.x + 55 + (node[2] - 1999) / (year - 1999) * (box.width - 73), y: box.y + 22 + (1110 - node[1]) / 220 * (box.height - 61) }));
+  const minYear = Number(document.getElementById('graphFirst').textContent) - 1;
+  const points = snap.nodes.map((node) => ({ id: node[0], x: box.x + 55 + (node[2] - minYear) / (year - minYear) * (box.width - 73), y: box.y + 22 + (1110 - node[1]) / 220 * (box.height - 61) }));
   const best = points.filter((point) => grid.has(point.id) && document.elementFromPoint(point.x, point.y) === document.getElementById('graphPlot')).map((point) => ({ ...point, gap: Math.min(...points.filter((other) => other !== point).map((other) => Math.hypot(other.x - point.x, other.y - point.y))) })).sort((a, b) => b.gap - a.gap)[0];
   window.graphHoverEvents = [];
   window.addEventListener('f1:row-hover', (event) => window.graphHoverEvents.push(event.detail.id));
@@ -2197,8 +2198,8 @@ check(
   oldGraph.drivers < 30 &&
     oldGraph.selected === '' &&
     !/Max Verstappen/.test(oldGraph.detail) &&
-    /2000/.test(oldGraph.weekend) &&
-    oldGraph.race === '158',
+    /1994/.test(oldGraph.weekend) &&
+    oldGraph.race === '257',
   JSON.stringify(oldGraph),
 );
 await evaluate(

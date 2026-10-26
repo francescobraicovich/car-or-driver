@@ -1,18 +1,19 @@
-// The data behind the replay of a race on the front page: data/race-laps/<year>.json (every driver's lap times in every race since 2000, and the red flags,
+// The data behind the replay of a race on the front page: data/race-laps/<year>.json (every driver's lap times in every race since 1994, and the red flags,
 // built by tools/build-race-laps.mjs from the CSV tables) and site/assets/tracks.json (the circuit outlines and their speed profiles, built by
 // tools/build-tracks.mjs from the files in data/source/f1-circuits). Both must be current, cover every race, and be plausible; and the replay built
 // from them (site/js/race-replay.js) must do what a replay of a real race has to:
 //   1. The files equal a fresh build (otherwise: npm run build:data).
-//   2. Every race with results since 2000 is there, and a winner's laps add up to the real race time.
+//   2. Every race with results since 1994 is there, and a winner's laps add up to the real race time.
 //   3. The red flags found are the known ones.
 //   4. In every race, for every car: its progress never goes backwards; it crosses the line at the moments its lap times say, and in the order the lap
 //      times record (the `position` of lap_times.csv); and no stretch of driving is faster than a car going 1.43 times its normal pace.
 //   5. The clock of the screen is a monotone map that takes a stoppage down to a few seconds.
-//   6. Every circuit raced since 2000 has an outline, except the four the source does not have; each outline is a closed loop in the right direction, and
+//   6. Every available circuit outline is a closed loop in the right direction,
 //      each has a speed profile of a plausible shape.
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 import { csv } from '../packages/core/src/csv.js';
+import { FIRST_YEAR } from '../packages/core/src/weekends.js';
 import { LICENCE_NOTICE } from '../tools/build-model.mjs';
 import { RACE_LAPS_FORMAT, assignCodes, buildRaceLaps, detectStops, parseLapTimes } from '../tools/build-race-laps.mjs';
 import { REVERSED, SOURCE_FILES, TRACK_FORMAT, outline, pathLength } from '../tools/build-tracks.mjs';
@@ -77,7 +78,7 @@ const winners = new Map(results.filter((row) => row.positionOrder === '1').map((
 let covered = 0;
 const exact = [];
 const cause = new Map(statuses.map((status) => [String(status.statusId), status.status]));
-for (const race of races.filter((row) => Number(row.year) >= 2000)) {
+for (const race of races.filter((row) => Number(row.year) >= FIRST_YEAR)) {
   const entry = fresh[race.year]?.[race.raceId];
   if (!winners.has(race.raceId)) continue; // not raced yet
   assert.ok(entry && entry.laps >= 1 && entry.entries.length >= 6, `${race.year} ${race.name} has laps and at least six entries`);
@@ -322,9 +323,13 @@ for (const [id, track] of Object.entries(tracks.tracks)) {
     assert.equal(area > 0, clockwise[name], `${name} is raced ${clockwise[name] ? 'clockwise' : 'anticlockwise'}`);
   }
 }
-const raced = new Set(races.filter((race) => Number(race.year) >= 2000 && winners.has(race.raceId)).map((race) => race.circuitId));
+const raced = new Set(races.filter((race) => Number(race.year) >= FIRST_YEAR && winners.has(race.raceId)).map((race) => race.circuitId));
 const without = [...raced].filter((id) => !tracks.tracks[id]).map((id) => ref.get(id));
-assert.deepEqual(without.sort(), ['buddh', 'fuji', 'valencia', 'yeongam'], 'only the four circuits that the source lacks have no outline');
+assert.deepEqual(
+  without.sort(),
+  ['adelaide', 'buddh', 'estoril', 'fuji', 'galvez', 'jerez', 'okayama', 'valencia', 'yeongam'],
+  'only circuits absent from the source lack an outline',
+);
 console.log(
   `PASS race laps and tracks: ${files.length} seasons and ${covered} races of lap times equal a fresh build; ${found.length} red flags; ${replays} replays monotone, on time, in the recorded order at ${crossings} crossings of the line, at most ${fastest.toFixed(2)} times normal pace; ${Object.keys(tracks.tracks).length} outlines with speed profiles (none for ${without.join(', ')})`,
 );

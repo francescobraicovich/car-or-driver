@@ -247,7 +247,7 @@ const stress = { ...worldFromHyper(base), winterC: 40, yearD: 8 };
   console.log('PASS matched filter: error bars cover, recovery beats the prior, every key described, reports render');
 }
 
-// ---- 6) wiring on the real data: the predictive scores reproduce docs/state-space.md ---------------------------------
+// ---- 6) wiring on the real data: regression scores for the 1994-start replay ---------------------------------
 {
   const data = await loadData('data');
   const prep = prepareReal(data, { holdout: false });
@@ -262,55 +262,58 @@ const stress = { ...worldFromHyper(base), winterC: 40, yearD: 8 };
     race: eloRun(prep.timeline, prep.weekends.slice(0, prep.n), snaps, 'race'),
     qual: eloRun(prep.timeline, prep.weekends.slice(0, prep.n), snaps, 'qual'),
   };
-  const docs = {
-    ss: { fit: 0.3866, w2: 0.3846, w3: 0.3639 },
-    elo: { fit: 0.4055, w2: 0.4018, w3: 0.3731 },
+  const current = {
+    ss: { fit: 0.3875, w2: 0.3839, w3: 0.364 },
+    elo: { fit: 0.4083, w2: 0.4025, w3: 0.3732 },
   };
   for (const [name, runs] of [
     ['ss', ss],
     ['elo', elo],
   ]) {
     const res = evaluateModel(prep.timeline, prep.identity, runs, { boot: { B: 20 } });
-    for (const [win, v] of Object.entries(docs[name])) {
+    for (const [win, v] of Object.entries(current[name])) {
       const got = res.headline[`predictive.loss.combined.all.${win}`].est;
-      assert.ok(Math.abs(got - v) < 0.0005, `${name} ${win}: ${got.toFixed(4)} vs docs ${v}`);
+      assert.ok(Math.abs(got - v) < 0.0001, `${name} ${win}: ${got.toFixed(4)} vs 1994-start fixture ${v}`);
     }
     for (const k of Object.keys(res.headline))
       if (!k.startsWith('forecast.')) assert.ok(describe(k), `headline key ${k} has a description`);
     if (name === 'ss') {
-      // the docs' calibration slopes of a frozen forecast for movers and stayers (0.43 and 1.05 on 2002-2015, race)
+      // Frozen forecast calibration slopes for movers and stayers on the 1994-start replay.
       const mv = res.headline['movers.race.frozenSlope.k5'].est;
       const st = res.headline['movers.race.frozenSlopeStayers.k5'].est;
-      assert.ok(mv > 0.2 && mv < 0.7 && st > 0.9 && st < 1.2, `frozen-rating slopes: movers ${mv.toFixed(2)}, stayers ${st.toFixed(2)}`);
+      assert.ok(mv > 0.5 && mv < 0.9 && st > 0.9 && st < 1.2, `frozen-rating slopes: movers ${mv.toFixed(2)}, stayers ${st.toFixed(2)}`);
     }
   }
   // The Elo reference retains its former heads; the published hybrid's refitted heads are checked against their dated fit report.
   const reference = eloForecastScores(prep);
-  for (const [window, expected] of Object.entries({ w2: [0.338, 0.3839, 0.3599], w3: [0.3262, 0.3615, 0.3672] })) {
+  for (const [window, expected] of Object.entries({ w2: [0.3384, 0.3845, 0.359], w3: [0.3266, 0.362, 0.3675] })) {
     const got = reference[window];
     [got.raceDay, got.thursday, got.qual].forEach((value, index) =>
       assert.ok(
-        Math.abs(value - expected[index]) < 0.0005,
-        `Elo forecast layer ${window}[${index}]: ${value.toFixed(4)} vs ${expected[index]}`,
+        Math.abs(value - expected[index]) < 0.0001,
+        `Elo forecast layer ${window}[${index}]: ${value.toFixed(4)} vs 1994-start fixture ${expected[index]}`,
       ),
     );
   }
   const published = deserialize(await readFile('data/model.json', 'utf8')).model;
-  const report = JSON.parse(await readFile('research/state-space/selection-report.json', 'utf8'));
+  const publishedScores = {
+    '2008-2011': [0.3362, 0.3811, 0.3491],
+    '2012-2015': [0.3248, 0.3593, 0.3628],
+  };
   for (const [fromYear, toYear] of [
     [2008, 2011],
     [2012, 2015],
   ]) {
     const summary = summarizeBacktest(published, { burnIn: 20, fromYear, toYear, diag: 'diag' }).overall;
-    const selected = report[`${fromYear}-${toYear}`];
-    for (const [actual, expected] of [
-      [summary.combinedLogLoss, selected.race_day_combined.new],
-      [summary.preCombinedLogLoss, selected.thursday_combined.new],
-      [summary.qualLogLoss, selected.heads.qual.new],
-    ])
-      assert.ok(Math.abs(actual - expected) < 0.0005, `published hybrid heads reproduce the ${fromYear}-${toYear} fit report`);
+    const actual = [summary.combinedLogLoss, summary.preCombinedLogLoss, summary.qualLogLoss];
+    actual.forEach((value, index) =>
+      assert.ok(
+        Math.abs(value - publishedScores[`${fromYear}-${toYear}`][index]) < 0.0001,
+        `published hybrid heads reproduce the ${fromYear}-${toYear} 1994-start fixture`,
+      ),
+    );
   }
   console.log(
-    'PASS real data: historical filter/Elo ratings and published hybrid heads reproduce their reports; holdout excluded by default',
+    'PASS real data: 1994-start filter/Elo ratings and published hybrid heads reproduce their fixtures; holdout excluded by default',
   );
 }

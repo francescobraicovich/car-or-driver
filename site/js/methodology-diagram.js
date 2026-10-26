@@ -11,7 +11,7 @@ export const DIAGRAM_HTML = String.raw`
     <li class="flow-stage">
       <p class="flow-step">Data <a href="#" data-jump="method-data">Part 2</a></p>
       <p>
-        Race results, qualifying times, lap times and finishing statuses for every Grand Prix weekend since 2000, read in date order.
+        Race results, available qualifying times, lap times and finishing statuses for every Grand Prix weekend since 1994, read in date order.
       </p>
     </li>
     <li class="flow-link" aria-hidden="true"><span>every pair of drivers in a session becomes one comparison</span></li>

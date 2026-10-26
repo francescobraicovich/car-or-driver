@@ -123,7 +123,7 @@ export const ABOUT_HTML = String.raw`
   The ratings, the findings, the charts and the data files the site publishes (<code>model-latest.json</code>, <code>model.json</code>, <code>export-rows.json</code> and the files of laps in <code>race-laps/</code>) are derived from the data above, so they are shared under the same terms: <a href="{{dataLicenceUrl}}" rel="noopener noreferrer">{{dataLicenceName}}</a>. In short, you may copy, share and adapt them if you give credit (the credit above, and a link to this site), say what you changed, do not use them commercially, and share what you make from them under the same licence.
 </p>
 <p>The text and the charts are shared under the same licence. The program code is open source under the MIT licence: <a href="{{repositoryUrl}}" rel="noopener noreferrer">the source code is on GitHub</a>. The third-party components listed below keep their own licences.</p>
-<p>To cite this site: {{operatorName}} (2026), <i>{{name}}: ratings of Formula 1 drivers and cars since 2000</i>, <span id="citationAddress"></span>.</p>
+<p>To cite this site: {{operatorName}} (2026), <i>{{name}}: ratings of Formula 1 drivers and cars since 1994</i>, <span id="citationAddress"></span>.</p>
 
 <h3>Software and fonts that come with the site</h3>
 <p>These are served from this site's own address, so your browser contacts no one else. Each keeps its own licence, and the licence texts are published with the files.</p>

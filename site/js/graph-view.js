@@ -125,7 +125,8 @@ export function initGraph() {
       bottom = 39;
     const pw = w - left - right,
       ph = h - top - bottom;
-    const minYear = 1999,
+    const firstYear = Number(state.model.snaps[0].year);
+    const minYear = firstYear - 1,
       maxYear = Math.max(2027, Number(selectedSnap().year) + 1);
     const minScore = 890,
       maxScore = 1110;
@@ -134,7 +135,7 @@ export function initGraph() {
     plot.clearRect(0, 0, w, h);
     plot.font = '10px ui-monospace, SFMono-Regular, monospace';
     plot.textBaseline = 'middle';
-    for (let year = 2000; year <= maxYear; year += 5) {
+    for (let year = Math.ceil(firstYear / 5) * 5; year <= maxYear; year += 5) {
       const x = xOf(year);
       plot.strokeStyle = 'rgba(28,39,66,.12)';
       plot.beginPath();

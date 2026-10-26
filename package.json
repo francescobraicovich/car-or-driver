@@ -12,7 +12,7 @@
     "node": ">=24"
   },
   "type": "module",
-  "description": "Ratings that separate Formula 1 driver pace from car pace, since 2000: the website and the research code",
+  "description": "Ratings that separate Formula 1 driver pace from car pace, since 1994: the website and the research code",
   "scripts": {
     "serve": "node tools/serve.mjs",
     "test": "node tests/run-all.mjs",

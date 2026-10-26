@@ -94,10 +94,12 @@ for (let i = 0; i < core.snaps.length; i++) {
   for (const k of ['weight', 'preWeight', 'obsCount']) assert.equal(x.diag[k], y.diag[k]);
   assert.equal(x.diag.q.weight, y.diag.q.weight);
 }
+// The research report records the old 2000-start model; these are the 1994-start
+// replay values for the same 2000–2015 evaluation window.
 const expected = JSON.parse(await readFile('research/final-results.json', 'utf8'));
 const historical = summarizeBacktest(elo, { burnIn: 20, fromYear: 2000, toYear: 2015 });
-assert.ok(Math.abs(historical.overall.combinedLogLoss - expected.windows.window_2000_2015.elo_post.loss) < 1e-10);
-assert.ok(Math.abs(historical.overall.preCombinedLogLoss - expected.windows.window_2000_2015.elo_pre.loss) < 1e-10);
+assert.ok(Math.abs(historical.overall.combinedLogLoss - 0.34316386459166587) < 1e-10);
+assert.ok(Math.abs(historical.overall.preCombinedLogLoss - 0.3849958281506682) < 1e-10);
 const rolling = summarizeBacktest(elo, { burnIn: 20, fromYear: 2016, toYear: 2100 });
 assert.ok(Number.isFinite(rolling.overall.combinedLogLoss));
 assert.ok(Number.isFinite(rolling.overall.preCombinedLogLoss));

@@ -400,7 +400,7 @@ export const INSIGHT_CARDS = [
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
-      "Average portable driver rating and average car rating over all of a driver's starts since 2000 (drivers with at least 60). Top right: strong drivers in strong cars. Top left: strong drivers in weak cars. Bottom right: strong cars, ordinary drivers. Only some names are labelled; hover for the rest.",
+      "Average portable driver rating and average car rating over all of a driver's starts since 1994 (drivers with at least 60). Top right: strong drivers in strong cars. Top left: strong drivers in weak cars. Bottom right: strong cars, ordinary drivers. Only some names are labelled; hover for the rest.",
     draw: (data, root) => {
       const points = data.careerDriverAndCar.map((row) => ({
         x: row.carRating,
@@ -455,7 +455,7 @@ export const INSIGHT_CARDS = [
           drawLines(svg, width, height, {
             xDomain: [rows[0].year, rows.at(-1).year],
             yDomain: [0, 1],
-            xTicks: [2000, 2004, 2008, 2012, 2016, 2020, 2024],
+            xTicks: [1995, 2000, 2005, 2010, 2015, 2020, 2025],
             yTicks: [0, 0.25, 0.5, 0.75, 1],
             yFormat: (value) => value.toFixed(2),
             series: [{ name: 'correlation', color: 'var(--s1)', markers: true, points: rows.map((row) => [row.year, row.correlation]) }],
@@ -520,7 +520,7 @@ export const INSIGHT_CARDS = [
       const largest = data.teammates.largestGaps[0];
       const redBull = data.teammates.teamAverages.at(-1);
       const odds = formatInteger(10 ** (largest.gap / 75));
-      return `The largest teammate gap since 2000 is ${largest.ahead} over ${largest.behind} in ${largest.year}: ${formatInteger(largest.gap)} rating points, about ${odds}-to-1 odds in a duel. ${redBull.team}'s two cars are the most lopsided pairing of any team (average gap ${formatInteger(redBull.gap)} points).`;
+      return `The largest teammate gap since 1994 is ${largest.ahead} over ${largest.behind} in ${largest.year}: ${formatInteger(largest.gap)} rating points, about ${odds}-to-1 odds in a duel. ${redBull.team}'s two cars are the most lopsided pairing of any team (average gap ${formatInteger(redBull.gap)} points).`;
     },
     body: () =>
       '<div class="insight-grid"><div><h4>Largest teammate gaps (season)</h4><div data-chart="largest"></div></div><div><h4>Verstappen against his teammate, by season</h4><div data-chart="verstappen"></div></div><div><h4>Career average gap to teammates (80+ races together)</h4><div data-chart="career"></div></div><div><h4>Average teammate gap by team (6+ pairings)</h4><div data-chart="teams"></div></div></div>',
@@ -599,7 +599,7 @@ export const INSIGHT_CARDS = [
     title: 'Saturday drivers and Sunday drivers',
     label: 'Saturday and Sunday',
     lead: (data) =>
-      `Some drivers are consistently quicker over one lap than over a race distance (Russell, Bottas, Grosjean) and some the reverse (Alonso, Montoya, Verstappen, Räikkönen). The pattern is stable: a driver's even-numbered seasons predict their odd-numbered ones with a correlation of ${data.qualifyingVersusRace.splitHalfCorrelation}. Cars show it too: Ferrari 2018 qualified far better than it raced.`,
+      `Some drivers are consistently quicker over one lap than over a race distance (Russell, Bottas, Grosjean) and some the reverse (Alonso, Montoya, Verstappen, Räikkönen). The pattern is stable: a driver's even-numbered seasons predict their odd-numbered ones with a correlation of ${data.qualifyingVersusRace.splitHalfCorrelation}. Cars show it too: McLaren 2012 qualified far better than it raced.`,
     body: () =>
       legendHtml([
         ['var(--s2)', 'Better in qualifying than in the race'],
@@ -670,9 +670,9 @@ export const INSIGHT_CARDS = [
     label: 'The ageing curve',
     lead: (data) => {
       const career = data.ageing.careers['Michael Schumacher'];
-      const ferrari = career.filter((season) => season.year <= 2006);
+      const ferrari = career.filter((season) => season.year >= 1996 && season.year <= 2006);
       const comeback = career.filter((season) => season.year >= 2010);
-      return `Drivers improve quickly into their mid-twenties, hold a plateau until about 29, then lose around 3 to 5 rating points a year. Schumacher's comeback at 41 to 43 averaged ${formatInteger(average(comeback.map((season) => season.rating)))} points above the field, close to ${formatInteger(average(ferrari.map((season) => season.rating)))} in his Ferrari years.`;
+      return `Drivers improve quickly into their mid-twenties, hold a plateau until about 29, then lose around 3 to 5 rating points a year. Schumacher's comeback at 41 to 43 averaged ${formatInteger(average(comeback.map((season) => season.rating)))} points above the field, compared with ${formatInteger(average(ferrari.map((season) => season.rating)))} in his Ferrari years.`;
     },
     body: () =>
       legendHtml([
@@ -844,7 +844,7 @@ export const INSIGHT_CARDS = [
           const axes = drawAxes(svg, width, height, {
             xDomain: [rows[0].year - 0.6, rows.at(-1).year + 0.6],
             yDomain: [0, 80],
-            xTicks: [2000, 2005, 2010, 2015, 2020, 2025],
+            xTicks: [1995, 2000, 2005, 2010, 2015, 2020, 2025],
             yTicks: [0, 20, 40, 60, 80],
           });
           const barWidth = (axes.x(2001) - axes.x(2000)) * 0.7;
@@ -1005,7 +1005,7 @@ export const INSIGHT_CARDS = [
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
-      'From the raw results: the share of starters whose finishing status is a mechanical cause (engine, gearbox, hydraulics and so on, by a fixed status table; ambiguous damage statuses are excluded), per season from 1950. The race data go back to 1950 although the ratings start in 2000. The latest season is incomplete.',
+      'From the raw results: the share of starters whose finishing status is a mechanical cause (engine, gearbox, hydraulics and so on, by a fixed status table; ambiguous damage statuses are excluded), per season from 1950. The race data go back to 1950 although the ratings start in 1994. The latest season is incomplete.',
     draw: (data, root) => {
       const rows = data.mechanicalRetirements;
       const at = (year) => rows.find((row) => row.year === year);
