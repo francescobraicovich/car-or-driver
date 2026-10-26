@@ -92,12 +92,13 @@ export const INSIGHT_CARDS = [
       const rows = data.bestCarAgainstBestDriver;
       mountChart(
         chartIn(root, 'main'),
-        (svg, width, height) =>
+        (svg, width, height) => {
+          const maximum = Math.ceil(Math.max(...rows.flatMap((row) => [row.carEdge, row.driverEdge])) / 40) * 40;
           drawLines(svg, width, height, {
-            xDomain: [2002, rows.at(-1).year],
-            yDomain: [0, 120],
-            xTicks: [2002, 2006, 2010, 2014, 2018, 2022, 2026],
-            yTicks: [0, 30, 60, 90, 120],
+            xDomain: [rows[0].year, rows.at(-1).year],
+            yDomain: [0, maximum],
+            xTicks: [1995, 2000, 2005, 2010, 2015, 2020, 2025],
+            yTicks: Array.from({ length: maximum / 40 + 1 }, (_, index) => index * 40),
             series: [
               { name: 'Best car', color: 'var(--s1)', markers: true, points: rows.map((row) => [row.year, row.carEdge]), label: 'car' },
               {
@@ -108,7 +109,8 @@ export const INSIGHT_CARDS = [
                 label: 'driver',
               },
             ],
-          }),
+          });
+        },
         () => 280,
       );
     },
@@ -143,7 +145,7 @@ export const INSIGHT_CARDS = [
           const axes = drawAxes(svg, width, height, {
             xDomain: [rows[0].year - 0.6, rows.at(-1).year + 0.6],
             yDomain: [0, 1],
-            xTicks: [2004, 2008, 2012, 2016, 2020, 2024],
+            xTicks: [2000, 2005, 2010, 2015, 2020, 2025],
             yTicks: [0, 0.25, 0.5, 0.75, 1],
             yFormat: (value) => `${value * 100}%`,
           });
@@ -350,12 +352,13 @@ export const INSIGHT_CARDS = [
     title: 'The championships with equal cars',
     label: 'Titles with equal cars',
     lead: (data) => {
-      const expected = Object.fromEntries(data.equalCarTitles.expected);
       const actual = data.equalCarTitles.actual;
-      const describe = (name) => `${expected[name].toFixed(1)} ${surname(name)} (${actual[name] || 0})`;
+      const leaders = data.equalCarTitles.expected.slice(0, 5);
+      const describe = ([name, expected]) => `${expected.toFixed(1)} ${surname(name)} (${actual[name] || 0})`;
+      const listed = leaders.map(describe);
       const first = data.equalCarTitles.seasons[0].year;
       const last = data.equalCarTitles.seasons.at(-1).year;
-      return `If every car were the same, ${first} to ${last} would have produced about ${describe('Fernando Alonso')}, ${describe('Max Verstappen')}, ${describe('Lewis Hamilton')} and ${describe('Sebastian Vettel')} titles, with the titles each actually won in brackets.`;
+      return `If every car were the same, ${first} to ${last} would have produced about ${listed.slice(0, -1).join(', ')} and ${listed.at(-1)} titles, with the titles each actually won in brackets.`;
     },
     body: () =>
       legendHtml([
@@ -363,7 +366,7 @@ export const INSIGHT_CARDS = [
         ['var(--ink-3)', 'Titles actually won'],
       ]) + '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="seasons"></div>',
     how: () =>
-      'For each season the driver with the highest season-average portable rating wins, with the approximate filter uncertainty simulated (6,000 draws) so a close call is split between drivers instead of awarded to one. The hybrid blend adds uncertainty not included in these draws. "Expected" sums those probabilities. The early seasons are nearly indistinguishable at the top, so they spread credit widely. The table lists the seasons where the likeliest best driver was not the champion.',
+      'For each season the driver with the highest season-average portable rating wins, with the approximate filter uncertainty simulated (6,000 draws) so a close call is split between drivers instead of awarded to one. The hybrid blend adds uncertainty not included in these draws. "Expected" sums those probabilities. The first seasons have less rating history and incomplete qualifying records, so their estimates deserve extra caution. The table lists the seasons where the likeliest best driver was not the champion.',
     draw: (data, root) => {
       const { expected, actual, seasons } = data.equalCarTitles;
       const items = expected.slice(0, 9).map(([name, value]) => ({
@@ -373,10 +376,17 @@ export const INSIGHT_CARDS = [
           { value: actual[name] || 0, color: 'var(--ink-3)', name: 'actual', text: String(actual[name] || 0) },
         ],
       }));
+      const maximum = Math.max(8, Math.ceil(Math.max(...items.flatMap((item) => item.bars.map((bar) => bar.value))) / 2) * 2);
       mountChart(
         chartIn(root, 'main'),
         (svg, width) =>
-          drawHorizontalBars(svg, width, items, { marginLeft: 140, rowHeight: 34, ticks: [0, 2, 4, 6, 8], minimum: 0, maximum: 8.2 }),
+          drawHorizontalBars(svg, width, items, {
+            marginLeft: 140,
+            rowHeight: 34,
+            ticks: Array.from({ length: maximum / 2 + 1 }, (_, index) => index * 2),
+            minimum: 0,
+            maximum: maximum + 0.2,
+          }),
         () => horizontalBarsHeight(items.length, 34),
       );
       const differing = seasons.filter((row) => row.likeliestBest !== row.champion);
@@ -771,7 +781,7 @@ export const INSIGHT_CARDS = [
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: (data) =>
-      `${data.homeAdvantage.duels.toLocaleString('en-GB')} duels between a home driver and a visitor, from ${data.homeAdvantage.homeStarts} home starts since 2002. The logistic fit (Cox 1958) takes the pre-race rating gap as given and estimates the extra effect of being at home in rating points; the interval is a bootstrap over races (Efron 1979). Only drivers with a matching nationality-to-country pair are counted.`,
+      `${data.homeAdvantage.duels.toLocaleString('en-GB')} duels between a home driver and a visitor, from ${data.homeAdvantage.homeStarts} home starts since ${data.analysisFrom}. The logistic fit (Cox 1958) takes the pre-race rating gap as given and estimates the extra effect of being at home in rating points; the interval is a bootstrap over races (Efron 1979). Only drivers with a matching nationality-to-country pair are counted.`,
     draw: (data, root) => {
       const { points, low, high } = data.homeAdvantage;
       mountChart(
@@ -841,11 +851,12 @@ export const INSIGHT_CARDS = [
       mountChart(
         chartIn(root, 'main'),
         (svg, width, height) => {
+          const maximum = Math.ceil(Math.max(...rows.map((row) => row.largestLead)) / 20) * 20;
           const axes = drawAxes(svg, width, height, {
             xDomain: [rows[0].year - 0.6, rows.at(-1).year + 0.6],
-            yDomain: [0, 80],
+            yDomain: [0, maximum],
             xTicks: [1995, 2000, 2005, 2010, 2015, 2020, 2025],
-            yTicks: [0, 20, 40, 60, 80],
+            yTicks: Array.from({ length: maximum / 20 + 1 }, (_, index) => index * 20),
           });
           const barWidth = (axes.x(2001) - axes.x(2000)) * 0.7;
           for (const row of rows) {
@@ -914,7 +925,7 @@ export const INSIGHT_CARDS = [
           drawLines(svg, width, height, {
             xDomain: [rows[0].year, rows.at(-1).year],
             yDomain: [-0.2, 1],
-            xTicks: [2002, 2006, 2010, 2014, 2018, 2022, 2026],
+            xTicks: [1995, 2000, 2005, 2010, 2015, 2020, 2025],
             yTicks: [0, 0.25, 0.5, 0.75, 1],
             yFormat: (value) => value.toFixed(2),
             series: [
@@ -998,7 +1009,7 @@ export const INSIGHT_CARDS = [
       const rows = data.mechanicalRetirements;
       const peak = rows.reduce((best, row) => (row.percent > best.percent ? row : best));
       const lowest = rows
-        .filter((row) => row.year >= 2000 && row.year < data.dataThrough.year)
+        .filter((row) => row.year < data.dataThrough.year)
         .reduce((best, row) => (row.percent < best.percent ? row : best));
       const latest = rows.at(-1);
       return `In ${peak.year}, ${formatInteger(peak.percent)}% of starters retired with a mechanical failure; in ${lowest.year}, ${formatInteger(lowest.percent)}%. New engine rules reset the clock: ${formatInteger(latest.percent)}% in ${latest.year}, levels last seen around 2017.`;

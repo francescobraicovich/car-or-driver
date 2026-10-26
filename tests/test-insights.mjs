@@ -81,6 +81,26 @@ assert.ok(
 const earlyThirtiesChange = [30, 31, 32, 33].reduce((sum, age) => sum + change(age), 0) / 4;
 assert.ok(earlyThirtiesChange <= -3 && earlyThirtiesChange >= -5, 'an average decline of about 3 to 5 points a year from 30');
 const model = JSON.parse(await readFile(`${ROOT}data/model.json`, 'utf8'));
+const firstRatedYear = model.model.snaps[0].year;
+assert.equal(D.analysisFrom, firstRatedYear + 2, 'pre-race analyses begin after two rated seasons');
+for (const [name, rows] of [
+  ['best car against best driver', D.bestCarAgainstBestDriver],
+  ['champions', D.champions],
+  ['driver and car sorting', D.driverCarSorting],
+  ['dominance', D.dominance],
+  ['equal-car titles', D.equalCarTitles.seasons],
+])
+  assert.equal(rows[0].year, firstRatedYear, `${name} begins with the first rated season`);
+assert.equal(D.winterOrder.correlations[0].year, firstRatedYear + 1, 'winter comparisons include the first transition');
+assert.equal(D.gridDependence.poleToWin[0].period.split('–')[0], String(firstRatedYear), 'pole-to-win eras start with rated history');
+const actualTitles = Object.fromEntries(
+  [...new Set(D.champions.map((champion) => champion.name))].map((name) => [
+    name,
+    D.champions.filter((champion) => champion.name === name).length,
+  ]),
+);
+assert.deepEqual(D.equalCarTitles.actual, actualTitles, 'actual title counts cover the same seasons as the champion chart');
+assert.equal(D.equalCarTitles.actual['Michael Schumacher'], 7, 'Schumacher has seven actual titles in the rated period');
 const people = csv(await readFile(`${ROOT}data/drivers.csv`, 'utf8'));
 const idByName = new Map(people.map((person) => [`${person.forename} ${person.surname}`, String(person.driverId)]));
 const birthById = new Map(people.map((person) => [String(person.driverId), person.dob]));
