@@ -334,10 +334,13 @@ export function runStateSpace(weekends, hyper = {}, ctx) {
               m[i] = (h.relStart ? fieldMean : 0) + h.muNew;
             }
             if (i < ND && h.sdR > 0 && debutYear[i] > firstYear) {
-              // a rookie's temporary debut adjustment: starts below zero and fades
+              // The first timed observation may arrive long after the debut in
+              // sparse qualifying years. Fade the debut prior through the race
+              // weekends already driven before this filter first sees a pair.
               const a = N0 + i;
-              m[a] = -h.dipR;
-              P[a][a] = h.sdR ** 2;
+              const priorDecay = h.rhoR ** appearances[i];
+              m[a] = -h.dipR * priorDecay;
+              P[a][a] = (h.sdR * priorDecay) ** 2;
               decayA[a] = h.rhoR;
               activeA.add(a);
             }

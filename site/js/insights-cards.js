@@ -679,8 +679,18 @@ export const INSIGHT_CARDS = [
     kind: 'model',
     title: 'Saturday drivers and Sunday drivers',
     label: 'Saturday and Sunday',
-    lead: (data) =>
-      `Some drivers are consistently quicker over one lap than over a race distance (Russell, Bottas, Grosjean) and some the reverse (Alonso, Montoya, Verstappen, Räikkönen). The pattern is stable: a driver's even-numbered seasons predict their odd-numbered ones with a correlation of ${data.qualifyingVersusRace.splitHalfCorrelation}. Cars show it too: McLaren 2012 qualified far better than it raced.`,
+    lead: (data) => {
+      const drivers = data.qualifyingVersusRace.drivers;
+      const saturday = [...drivers]
+        .sort((a, b) => b.difference - a.difference)
+        .slice(0, 3)
+        .map((row) => surname(row.name));
+      const sunday = [...drivers]
+        .sort((a, b) => a.difference - b.difference)
+        .slice(0, 4)
+        .map((row) => surname(row.name));
+      return `Some drivers are consistently quicker over one lap than over a race distance (${saturday.join(', ')}) and some the reverse (${sunday.join(', ')}). The pattern is stable: a driver's even-numbered seasons predict their odd-numbered ones with a correlation of ${data.qualifyingVersusRace.splitHalfCorrelation}. Cars show it too: McLaren 2012 qualified far better than it raced.`;
+    },
     body: () =>
       legendHtml([
         ['var(--s2)', 'Better in qualifying than in the race'],
@@ -1025,8 +1035,7 @@ export const INSIGHT_CARDS = [
     lead: (data) => {
       const slide = data.development.slides[0];
       const climb = data.development.climbs[0];
-      const mclaren = data.development.climbs.find((row) => row.team === 'McLaren' && row.year === 2023);
-      return `${slide.team} lost ${formatInteger(-slide.change)} rating points over the ${slide.year} season, the largest in-season slide. The biggest climb was ${climb.team} ${climb.year} (+${formatInteger(climb.change)}); McLaren 2023 (+${formatInteger(mclaren.change)}) is the standout among established front-runners.`;
+      return `${slide.team} lost ${formatInteger(-slide.change)} rating points over the ${slide.year} season, the largest in-season slide. The biggest climb was ${climb.team} ${climb.year} (+${formatInteger(climb.change)}); McLaren 2023 (+${formatInteger(data.development.mclaren2023)}) is the standout among established front-runners.`;
     },
     body: () =>
       legendHtml([

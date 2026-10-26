@@ -47,6 +47,18 @@ assert.deepEqual(
   buildTeammateGraph(model.model.snaps, csv(resultsText), csv(qualifyingText), csv(driverText)),
   'the published graph must match a fresh forward-only build',
 );
+for (const [raceId, one, two] of [
+  ['932', '8', '20'],
+  ['1052', '20', '840'],
+  ['1099', '846', '857'],
+]) {
+  const duel = published.snapshots.find((snap) => snap.raceId === raceId)?.duels.find((pair) => pair.includes(one) && pair.includes(two));
+  assert.equal(duel?.[2], 0, `documented interrupted Q1 ${raceId} is not graph evidence`);
+}
+assert.ok(
+  published.snapshots.find((snap) => snap.raceId === '1063')?.duels.every((duel) => duel[3] === 0),
+  'the 2021 Belgian safety-car classification is not a race duel',
+);
 assert(
   published.snapshots.every((snap) =>
     snap.nodes.every((node) => Number.isFinite(node[1]) && Number.isFinite(node[2]) && (node[4] === null || Number.isInteger(node[4]))),

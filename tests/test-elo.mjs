@@ -98,8 +98,8 @@ for (let i = 0; i < core.snaps.length; i++) {
 // replay values for the same 2000–2015 evaluation window.
 const expected = JSON.parse(await readFile('research/final-results.json', 'utf8'));
 const historical = summarizeBacktest(elo, { burnIn: 20, fromYear: 2000, toYear: 2015 });
-assert.ok(Math.abs(historical.overall.combinedLogLoss - 0.34305994976318527) < 1e-10);
-assert.ok(Math.abs(historical.overall.preCombinedLogLoss - 0.3849278681363944) < 1e-10);
+assert.ok(Math.abs(historical.overall.combinedLogLoss - 0.3429509375756501) < 1e-10);
+assert.ok(Math.abs(historical.overall.preCombinedLogLoss - 0.3848425996406673) < 1e-10);
 const rolling = summarizeBacktest(elo, { burnIn: 20, fromYear: 2016, toYear: 2100 });
 assert.ok(Number.isFinite(rolling.overall.combinedLogLoss));
 assert.ok(Number.isFinite(rolling.overall.preCombinedLogLoss));

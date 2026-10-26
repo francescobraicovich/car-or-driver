@@ -18,6 +18,10 @@ import { compareWindows } from './lap-pace.js';
  *   branch runs, exactly as the counters have always been reported.
  */
 export function buildRaceObservations({ rid, rows, maxLaps, lapPace, lapSnapshots, orderW, paceW, beta }) {
+  // A one-lap classification can be a safety-car parade rather than a race
+  // (2021 Belgium, race 1063). Positions then repeat the grid, not race pace.
+  // See formula1.com/en/latest/article/verstappen-takes-victory-in-severely-shortened-rain-affected-belgian-gp-as.4AqGhiKQfFaqr7KZjyDjPZ
+  if (maxLaps < 2) return { observations: [], retirements: 0, recovered: 0 };
   const rowByDriver = new Map(rows.map((r) => [r.driverId, r]));
   const observations = [];
   let retirements = 0;

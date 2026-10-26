@@ -1,5 +1,6 @@
 // A dated, teammate-only graph. Every snapshot is built from evidence observed
 // through that weekend; the same rule applies to every driver and every move.
+import { censoredQualifyingIds, parseQualTime } from '../packages/core/src/qualifying.js';
 const finitePosition = (value) => (/^\d+$/.test(String(value ?? '')) ? Number(value) : null);
 const keyOf = (a, b) => [a, b].sort((x, y) => Number(x) - Number(y)).join(':');
 
@@ -57,7 +58,11 @@ export function buildTeammateGraph(snaps, results, qualifying, driverRows = [], 
       if (!byTeam.has(team)) byTeam.set(team, []);
       byTeam.get(team).push(row);
     }
-    const qualifyingRows = new Map((qualifyingByRace.get(raceId) ?? []).map((row) => [String(row.driverId), row]));
+    const qualifyingRaceRows = qualifyingByRace.get(raceId) ?? [];
+    const qualifyingRows = new Map(qualifyingRaceRows.map((row) => [String(row.driverId), row]));
+    const censored = censoredQualifyingIds(qualifyingRaceRows);
+    const recordedLaps = (resultsByRace.get(raceId) ?? []).map((row) => Number(row.laps)).filter(Number.isFinite);
+    const competitiveRace = recordedLaps.length === 0 || Math.max(...recordedLaps) >= 2;
     const duels = [];
     for (const rows of byTeam.values()) {
       for (let i = 0; i < rows.length; i++)
@@ -68,17 +73,16 @@ export function buildTeammateGraph(snaps, results, qualifying, driverRows = [], 
           const qa = qualifyingRows.get(a);
           const qb = qualifyingRows.get(b);
           // Compare the last session both entered. A grid penalty never becomes qualifying evidence.
-          const session = ['q3', 'q2', 'q1'].find((part) => qa?.[part] && qb?.[part] && qa[part] !== '\\N' && qb[part] !== '\\N');
-          const seconds = (value) => {
-            const fields = String(value).split(':').map(Number);
-            return fields.length === 2 ? fields[0] * 60 + fields[1] : Number(value);
-          };
-          const qaTime = session ? seconds(qa[session]) : NaN;
-          const qbTime = session ? seconds(qb[session]) : NaN;
+          const session =
+            !censored.has(a) &&
+            !censored.has(b) &&
+            ['q3', 'q2', 'q1'].find((part) => Number.isFinite(parseQualTime(qa?.[part])) && Number.isFinite(parseQualTime(qb?.[part])));
+          const qaTime = session ? parseQualTime(qa[session]) : NaN;
+          const qbTime = session ? parseQualTime(qb[session]) : NaN;
           const q = Number.isFinite(qaTime) && Number.isFinite(qbTime) && Math.abs(qaTime - qbTime) < 2.5 ? Math.sign(qbTime - qaTime) : 0;
           const pa = finitePosition(ra.position);
           const pb = finitePosition(rb.position);
-          const r = pa && pb && pa !== pb ? Math.sign(pb - pa) : 0;
+          const r = competitiveRace && pa && pb && pa !== pb ? Math.sign(pb - pa) : 0;
           duels.push([a, b, q, r]);
           const key = keyOf(a, b);
           const pair = pairs.get(key) ?? { a, b, wins: 0, losses: 0 };

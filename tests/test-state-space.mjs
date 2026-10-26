@@ -216,6 +216,14 @@ import { STATE_SPACE } from '../packages/core/src/presets/state-space.js';
   const gap = (k) => off.ratings[k].drivers.get('n').m - dip.ratings[k].drivers.get('n').m;
   assert.ok(gap(first) > 5, `the debut dip lowers a newcomer's first rating (${gap(first).toFixed(1)} points)`);
   assert.ok(Math.abs(gap(first + 9)) < Math.abs(gap(first)) * 0.5, 'and fades over the following weekends');
+  const sparse = weekends.map((weekend, index) => (index >= first && index < first + 9 ? { ...weekend, obs: [] } : weekend));
+  const sparseOff = runStateSpace(sparse, base, ctx);
+  const sparseDip = runStateSpace(sparse, { ...base, sdR: 5, dipR: 40, rhoR: 0.7 }, ctx);
+  const delayedPrior = sparseOff.pre[first + 9].drivers.get('n') - sparseDip.pre[first + 9].drivers.get('n');
+  assert.ok(
+    Math.abs(delayedPrior - 40 * 0.7 ** 9) < 1e-9,
+    'a qualifying filter with nine missing rookie sessions uses the already faded debut prior',
+  );
   assert.equal(
     dip.ratings[first - 1].drivers.get('a').m,
     off.ratings[first - 1].drivers.get('a').m,

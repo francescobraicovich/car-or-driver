@@ -339,7 +339,9 @@ def development(tables):
     frame = pd.DataFrame(rows, columns=['year', 'team', 'change']).sort_values('change')
     describe = lambda rows_: [dict(year=int(r.year), team=r.team, change=rounded(r.change)) for r in rows_.itertuples()]
     trajectory = lambda team: [rounded(v, 0) for v in (tables.cars[(tables.cars.year == 2024) & (tables.cars.team == team)].sort_values('round').combined - 1000)]
-    return dict(slides=describe(frame.head(8)), climbs=describe(frame.tail(8)[::-1]), season2024={team: trajectory(team) for team in ['Red Bull', 'McLaren', 'Ferrari', 'Mercedes']})
+    mclaren_2023 = frame[(frame.year == 2023) & (frame.team == 'McLaren')].iloc[0].change
+    return dict(slides=describe(frame.head(8)), climbs=describe(frame.tail(8)[::-1]), mclaren2023=rounded(mclaren_2023),
+                season2024={team: trajectory(team) for team in ['Red Bull', 'McLaren', 'Ferrari', 'Mercedes']})
 
 
 def teammate_gaps(tables):

@@ -1,4 +1,14 @@
 // Qualifying helpers: time parsing, disruption treatment, pairwise observations.
+// These drivers set a Q1 time, but an independently documented interruption
+// prevented a representative final attempt. The raw qualifying table has no
+// incident field; keeping this small evidence list avoids guessing from pace.
+const INTERRUPTED_Q1 = new Set([
+  '932|20', // Vettel, Canada 2015: MGU-H problem. formula1.com/en/latest/article/qualifying-hamilton-on-pole-as-vettel-hits-trouble.3q90FQDlqLotDsCHO94f0G
+  '1052|20', // Vettel, Bahrain 2021: yellow flags. formula1.com/en/latest/article/vettel-upset-and-angry-after-yellow-flags-contribute-to-q1-exit-in-aston.4eYs7WWqruZOJr0dj5OQ20
+  '1099|846', // Norris, Saudi Arabia 2023: wall contact and steering damage. formula1.com/en/latest/article/perez-storms-to-pole-for-saudi-arabian-gp-as-verstappen-suffers-dramatic-q2.7gCZMp446nHFKrhFWrRi3d.7gCZMp446nHFKrhFWrRi3d
+]);
+
+const isKnownInterruptedQ1 = (q) => INTERRUPTED_Q1.has(`${q.raceId}|${q.driverId}`);
 export function parseQualTime(s) {
   s = (s || '').trim();
   if (!s || s === '\\N') return NaN;
@@ -21,6 +31,9 @@ export function qualifyingTreatment(q, year, qrows = []) {
   if (!Number.isFinite(t1)) {
     return { deep: '—', treatment: 'No valid Q1 time — qualifying pace censored', disrupted: true };
   }
+  if (isKnownInterruptedQ1(q)) {
+    return { deep: '—', treatment: 'Documented interrupted Q1 — qualifying pace censored', disrupted: true };
+  }
   if (censoredQ1Outliers(qrows).has(q.driverId)) {
     return { deep: '—', treatment: 'Isolated extreme Q1 lap — qualifying pace censored', disrupted: true };
   }
@@ -39,6 +52,13 @@ export function qualifyingTreatment(q, year, qrows = []) {
     treatment: 'Valid timed qualifying evidence',
     disrupted: false,
   };
+}
+
+/** Timed Q1 laps censored by a documented interruption or a severe statistical outlier. */
+export function censoredQualifyingIds(qrows) {
+  const ids = censoredQ1Outliers(qrows);
+  for (const row of qrows) if (isKnownInterruptedQ1(row)) ids.add(row.driverId);
+  return ids;
 }
 
 /**
@@ -77,7 +97,7 @@ export function censoredQ1Outliers(qrows) {
  * drivers set a valid time (Q3 > Q2 > Q1). Never compare across segments.
  */
 export function buildQualObservations(qrows) {
-  const censored = censoredQ1Outliers(qrows);
+  const censored = censoredQualifyingIds(qrows);
   qrows = qrows.filter((q) => !censored.has(q.driverId));
   const segs = ['q1', 'q2', 'q3'];
   const rank = {};
@@ -104,7 +124,7 @@ export function buildQualObservations(qrows) {
           break;
         }
       }
-      if (!seg) continue;
+      if (!seg || tx === ty) continue;
       const rx = rank[seg].get(x.driverId);
       const ry = rank[seg].get(y.driverId);
       if (!rx || !ry || rx === ry) continue;
