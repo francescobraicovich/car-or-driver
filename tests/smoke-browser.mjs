@@ -1200,6 +1200,24 @@ check(
   JSON.stringify([aston, racing]),
 );
 await evaluate("document.getElementById('historyDrivers').click()");
+await evaluate(`(() => {
+  const input = document.getElementById('historyFrom');
+  input.value = String(2016 - 1994);
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+})()`);
+const schumacherOption = await offered('Michael Schumacher');
+check(
+  'History offers drivers outside the selected seasons',
+  schumacherOption.some((name) => name.includes('Michael Schumacher')),
+);
+await evaluate(`[...document.querySelectorAll('#historyChips .series-picker-list button')]
+  .find((button) => button.textContent.includes('Michael Schumacher'))?.click()`);
+check(
+  'adding an earlier driver extends the History plot and season controls',
+  (await evaluate("document.getElementById('historyRangeLabel').textContent")) === 'Seasons 1994–2026' &&
+    (await evaluate("document.getElementById('historyFrom').value")) === '0' &&
+    (await evaluate("document.getElementById('historyChips').textContent")).includes('Michael Schumacher'),
+);
 
 // Comparing: two drivers selected on Ratings become exactly two lines in History, and the two sides of Head to head
 await evaluate("location.hash = '#/ratings'");

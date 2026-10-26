@@ -166,7 +166,6 @@ export function createHistoryView({ onChange }) {
         first: points[0]?.year,
         latest: points[points.length - 1]?.year,
         active: activeIds.has(String(id)),
-        points,
       }))
       .sort(
         (a, b) =>
@@ -247,15 +246,19 @@ export function createHistoryView({ onChange }) {
     const list = document.createElement('div');
     list.className = 'series-picker-list';
     list.hidden = true;
-    const add = (id) => {
-      hist[k] = [...hist[k], id].slice(0, MAX_SERIES);
+    const add = (candidate) => {
+      hist[k] = [...hist[k], candidate.id].slice(0, MAX_SERIES);
+      hist.from = Math.min(hist.from, candidate.first);
+      hist.to = Math.max(hist.to, candidate.latest);
+      ui.historyFrom.value = String(seasons.indexOf(hist.from));
+      ui.historyTo.value = String(seasons.indexOf(hist.to));
       render();
       onChange();
     };
     const fill = () => {
       const query = input.value.trim().toLowerCase();
       const options = catalog()
-        .filter((c) => !hist[k].includes(c.id) && inRange(c.points).length && (!query || c.name.toLowerCase().includes(query)))
+        .filter((c) => !hist[k].includes(c.id) && (!query || c.name.toLowerCase().includes(query)))
         .slice(0, 40);
       list.replaceChildren(
         ...(options.length
@@ -266,10 +269,10 @@ export function createHistoryView({ onChange }) {
               const years = document.createElement('span');
               years.textContent = c.first === c.latest ? String(c.first) : `${c.first}–${c.latest}`;
               b.append(years);
-              b.addEventListener('click', () => add(c.id));
+              b.addEventListener('click', () => add(c));
               return b;
             })
-          : [Object.assign(document.createElement('p'), { textContent: 'No match in this range.' })]),
+          : [Object.assign(document.createElement('p'), { textContent: 'No match.' })]),
       );
       list.hidden = false;
     };
