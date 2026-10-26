@@ -282,9 +282,24 @@
                 </select>
               </label>
             </header>
-            <p class="graph-intro">
-              Dots are drivers; lines link teammates. X: average year raced. Y: teammate-only score (higher is stronger).
-            </p>
+            <p class="graph-intro">Part of our model ranks drivers by how they performed against their past teammates.</p>
+            <details class="graph-guide">
+              <summary>How to read this</summary>
+              <div class="graph-guide-box">
+                <p>
+                  Each dot is a driver. Drivers who shared a team are linked, so the graph can also compare drivers through chains of
+                  teammates.
+                </p>
+                <p>
+                  Higher dots have stronger teammate results; left to right shows the average year each driver raced. Select a driver to see
+                  their links and head-to-head record.
+                </p>
+                <p>
+                  The vertical score uses teammate results alone and centres around 1,000. The published driver rating also uses the rest of
+                  our model, so the two numbers can differ.
+                </p>
+              </div>
+            </details>
             <div class="graph-main">
               <div class="graph-chart">
                 <div class="graph-plot-wrap">

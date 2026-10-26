@@ -1625,6 +1625,32 @@ body {
   font-size: 12px;
   line-height: 1.35;
 }
+.graph-guide {
+  flex: none;
+  color: #47516a;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.graph-guide summary {
+  width: fit-content;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.graph-guide-box {
+  max-height: min(170px, 25vh);
+  margin-top: 6px;
+  padding: 9px 11px;
+  overflow-y: auto;
+  border: 1px solid rgb(60 80 120 / 0.2);
+  background: rgb(255 255 255 / 0.8);
+}
+.graph-guide-box p {
+  margin: 0;
+}
+.graph-guide-box p + p {
+  margin-top: 5px;
+}
 .graph-main {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 0.46fr);
