@@ -63,7 +63,7 @@ const w1 = syntheticWorld(tl, idx, 'race', params, 1);
     }
   assert.equal(bad, 0, 'every observation has a positive weight, a binary outcome, two drivers and a consistent teammate flag');
   for (const src of ['finish', 'paceW', 'partial']) assert.ok(sources.get(src) > 100, `source ${src} is produced (${sources.get(src)})`);
-  assert.ok(sources.get('pace') > 0, 'the fallback source is produced too');
+  assert.equal(sources.get('pace') ?? 0, 0, 'disjoint race windows do not create a synthetic pace fallback');
   // the other session keeps the real observations; the requested one is replaced
   assert.deepEqual(
     w1.timeline.map((w) => w.obs.qual),

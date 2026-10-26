@@ -4,7 +4,7 @@
 // ranking. Real weekends have lap times in stints, retirements, rain, safety cars, strategy luck, development steps, a driver-car fit and a
 // qualifying session that is related to the race but not the same. v2 simulates those mechanisms and then builds the observations with the
 // exam's OWN code (buildRaceObservations, buildQualObservations, parseLapPace and the weights of elo-core.js), so the `finish`, `paceW`,
-// `pace`, `partial` and `qual` observations come out of simulated lap times, results and snapshots exactly as they do from the real files.
+// `partial` and `qual` observations come out of simulated lap times, results and snapshots exactly as they do from the real files.
 //
 // Opt-in: `syntheticWorld(..., { version: 2, ... })` or syntheticStudy(..., { world: { version: 2 } }). v1 is untouched.
 //
@@ -549,7 +549,7 @@ export function syntheticWorldV2(timeline, idx, session, params = {}, seed = 1) 
             level: { race: level('race', d), qual: level('qual', d) },
           };
         });
-        const covered = w.obs.race.some((o) => o.src === 'paceW' || o.src === 'pace' || o.src === 'partial');
+        const covered = w.obs.race.some((o) => o.src === 'paceW' || o.src === 'partial');
         obs = simulateRace({ w, parts, p, r: rRace, state, covered, wetFlag: !!w.wet, year });
       }
     } else if (session === 'qual') {

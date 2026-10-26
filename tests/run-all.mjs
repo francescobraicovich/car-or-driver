@@ -8,6 +8,8 @@ const TESTS = [
   'test-fast-paths.mjs',
   'test-qualifying-outliers.mjs',
   'test-short-race.mjs',
+  'test-lap-overlap.mjs',
+  'test-weekend-integrity.mjs',
   'test-elo.mjs',
   'test-charts.mjs',
   'test-chart-math.mjs',

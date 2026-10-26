@@ -1,7 +1,8 @@
 // Causal continuous form features. All state updates happen AFTER both forecasts.
 // Current qualifying is exposed only to the post-qualifying race forecast.
-import { buildQualObservations, parseQualTime } from '../qualifying.js';
+import { buildQualObservations, censoredQualifyingIds, censoredQualifyingSegments, qualifyingEvidenceTime } from '../qualifying.js';
 import { compareWindows } from '../lap-pace.js';
+import { compromisedRacePaceIds } from '../observations.js';
 import { isFinishStatusName } from '../status.js';
 
 const clip = (x, a, b) => Math.max(a, Math.min(b, x));
@@ -117,6 +118,8 @@ export class FormFeatures {
     );
     this.qpos = new Map(w.qrows.map((r) => [r.driverId, +r.position]));
     this.qby = new Map(w.qrows.map((r) => [r.driverId, r]));
+    this.qCensoredIds = censoredQualifyingIds(w.qrows);
+    this.qCensoredSegments = censoredQualifyingSegments(w.qrows);
     this.qteam = new Map();
     for (const r of w.qrows) {
       if (!this.qteam.has(r.constructorId)) this.qteam.set(r.constructorId, []);
@@ -149,8 +152,8 @@ export class FormFeatures {
     f.qual_team_now = mean(this.qteam.get(x.constructorId) || []) - mean(this.qteam.get(y.constructorId) || []);
     f.qual_driver_now = qdiff - f.qual_team_now;
     for (const seg of ['q1', 'q2', 'q3']) {
-      const a = parseQualTime(this.qby.get(x.driverId)?.[seg]);
-      const b = parseQualTime(this.qby.get(y.driverId)?.[seg]);
+      const a = this.qCensoredIds.has(x.driverId) ? NaN : qualifyingEvidenceTime(this.qby.get(x.driverId), seg, this.qCensoredSegments);
+      const b = this.qCensoredIds.has(y.driverId) ? NaN : qualifyingEvidenceTime(this.qby.get(y.driverId), seg, this.qCensoredSegments);
       f[`current_${seg}`] = Number.isFinite(a + b) ? clip((200 * (b - a)) / (a + b), -5, 5) : 0;
       f[`missing_${seg}`] = Number.isFinite(a + b) ? 0 : 1;
     }
@@ -166,6 +169,7 @@ export class FormFeatures {
   }
   afterWeekend({ info, rows }) {
     const pm = this.lapPace?.get(info.raceId);
+    const compromised = compromisedRacePaceIds(rows, Math.max(1, ...rows.map((row) => +row.laps || 0)), pm);
     const pp = [];
     if (pm)
       for (let i = 0; i < rows.length; i++)
@@ -174,7 +178,7 @@ export class FormFeatures {
             y = rows[j],
             a = pm.get(x.driverId),
             b = pm.get(y.driverId);
-          if (!a || !b) continue;
+          if (!a || !b || compromised.has(x.driverId) || compromised.has(y.driverId)) continue;
           const cw = compareWindows(a.win, b.win);
           if (cw)
             pp.push([x.driverId, y.driverId, clip((cw.faster * 200 * cw.gapSec) / (a.med + b.med), -5, 5), Math.min(1, cw.laps / 16)]);

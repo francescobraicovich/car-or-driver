@@ -2,8 +2,26 @@
 // comparison should count. Independent of the ratings, so it depends only on
 // the data and on the observation-defining parameters (the "exam").
 import { clamp } from './math.js';
-import { isFinishStatusName } from './status.js';
+import { defaultClass, isFinishStatusName } from './status.js';
 import { compareWindows } from './lap-pace.js';
+
+/** Identify short mechanical retirements whose recorded laps describe the fault. */
+export function compromisedRacePaceIds(rows, maxLaps, paceMap) {
+  const ids = new Set();
+  if (!paceMap) return ids;
+  for (const row of rows) {
+    if (defaultClass(row.statusName).mech < 0.55 || +row.laps > maxLaps / 4) continue;
+    const own = paceMap.get(row.driverId);
+    const mate = rows.find(
+      (other) => other.driverId !== row.driverId && other.constructorId === row.constructorId && isFinishStatusName(other.statusName),
+    );
+    const reference = mate && paceMap.get(mate.driverId);
+    if (!own || !reference || own.n < 3 || reference.n < 3) continue;
+    const shared = compareWindows(own.win, reference.win);
+    if (shared?.faster === -1 && shared.gapSec > 0.04 * reference.med) ids.add(row.driverId);
+  }
+  return ids;
+}
 
 /**
  * @param {object} args
@@ -33,10 +51,11 @@ export function buildRaceObservations({ rid, rows, maxLaps, lapPace, lapSnapshot
   // counting: retirees with pace rely on pace alone.
   let usedPace = false;
   let paceMap = null;
+  const compromisedPace = compromisedRacePaceIds(rows, maxLaps, lapPace?.get(rid));
   if (lapPace) {
     const pm = lapPace.get(rid);
     if (pm) {
-      const quick = rows.filter((r) => (pm.get(r.driverId)?.n ?? 0) >= 3);
+      const quick = rows.filter((r) => !compromisedPace.has(r.driverId) && (pm.get(r.driverId)?.n ?? 0) >= 3);
       if (quick.length >= 2) {
         usedPace = true;
         paceMap = pm;
@@ -46,22 +65,14 @@ export function buildRaceObservations({ rid, rows, maxLaps, lapPace, lapSnapshot
             const y = quick[j];
             const ex = pm.get(x.driverId);
             const ey = pm.get(y.driverId);
-            // Prefer like-for-like window comparison; fall back to global medians.
+            // Compare only laps from overlapping race windows. A short early
+            // stint may consist entirely of safety-car or wet laps while a
+            // finisher's representative laps come much later; whole-race
+            // medians then measure conditions rather than relative pace.
             const cw = compareWindows(ex.win, ey.win);
-            let o;
-            let ds;
-            let cov;
-            if (cw) {
-              o = cw.faster > 0 ? 1 : 0;
-              ds = cw.gapSec;
-              cov = clamp(cw.laps / 16, 0.25, 1);
-            } else {
-              ds = Math.abs(ex.med - ey.med);
-              if (ds < 1e-9) continue;
-              o = ex.med < ey.med ? 1 : 0;
-              cov = clamp(Math.min(ex.n, ey.n) / 8, 0.25, 1);
-            }
-            observations.push({ x, y, obs: o, gapSec: ds, base: cov * paceW, source: cw ? 'paceW' : 'pace' });
+            if (!cw) continue;
+            const cov = clamp(cw.laps / 16, 0.25, 1);
+            observations.push({ x, y, obs: cw.faster > 0 ? 1 : 0, gapSec: cw.gapSec, base: cov * paceW, source: 'paceW' });
           }
         }
       }
@@ -85,6 +96,7 @@ export function buildRaceObservations({ rid, rows, maxLaps, lapPace, lapSnapshot
     for (const r of rows) {
       if (isFinishStatusName(r.statusName)) continue;
       retirements++;
+      if (compromisedPace.has(r.driverId)) continue;
       // Retirees with lap coverage already learned from pace: skip snapshots.
       if (usedPace && (paceMap.get(r.driverId)?.n ?? 0) >= 3) continue;
       const lap = +r.laps;
@@ -96,7 +108,7 @@ export function buildRaceObservations({ rid, rows, maxLaps, lapPace, lapSnapshot
       recovered++;
       const expo = Math.pow(clamp(lap / maxLaps, 0, 1), beta);
       for (const [oid, pj] of sm) {
-        if (oid === r.driverId || !Number.isFinite(pj) || pi === pj) continue;
+        if (oid === r.driverId || compromisedPace.has(String(oid)) || !Number.isFinite(pj) || pi === pj) continue;
         const o = rowByDriver.get(String(oid));
         if (!o) continue;
         const a = r.driverId < o.driverId ? r.driverId : o.driverId;

@@ -73,7 +73,12 @@ export function groupWeekends(raw) {
     if (!ri || ri.year < FIRST_YEAR) continue;
     const rid = String(q.raceId);
     if (!byQual.has(rid)) byQual.set(rid, []);
-    byQual.get(rid).push({ ...q, raceId: rid, driverId: String(q.driverId), constructorId: String(q.constructorId) });
+    const driverId = String(q.driverId);
+    // The source occasionally retains a pre-rename constructor id in
+    // qualifying (Marussia/Manor in 2015). The entrant raced the same car on
+    // Sunday, so use the race row as the weekend's canonical team identity.
+    const raced = byRace.get(rid)?.find((r) => r.driverId === driverId);
+    byQual.get(rid).push({ ...q, raceId: rid, driverId, constructorId: raced?.constructorId ?? String(q.constructorId) });
   }
   const raceIds = [...byRace.keys()].sort((a, b) => {
     const x = rinfo.get(a);

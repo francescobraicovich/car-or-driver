@@ -1,6 +1,6 @@
 // A dated, teammate-only graph. Every snapshot is built from evidence observed
 // through that weekend; the same rule applies to every driver and every move.
-import { censoredQualifyingIds, parseQualTime } from '../packages/core/src/qualifying.js';
+import { censoredQualifyingIds, censoredQualifyingSegments, qualifyingEvidenceTime } from '../packages/core/src/qualifying.js';
 const finitePosition = (value) => (/^\d+$/.test(String(value ?? '')) ? Number(value) : null);
 const keyOf = (a, b) => [a, b].sort((x, y) => Number(x) - Number(y)).join(':');
 
@@ -61,6 +61,7 @@ export function buildTeammateGraph(snaps, results, qualifying, driverRows = [], 
     const qualifyingRaceRows = qualifyingByRace.get(raceId) ?? [];
     const qualifyingRows = new Map(qualifyingRaceRows.map((row) => [String(row.driverId), row]));
     const censored = censoredQualifyingIds(qualifyingRaceRows);
+    const censoredSegments = censoredQualifyingSegments(qualifyingRaceRows);
     const recordedLaps = (resultsByRace.get(raceId) ?? []).map((row) => Number(row.laps)).filter(Number.isFinite);
     const competitiveRace = recordedLaps.length === 0 || Math.max(...recordedLaps) >= 2;
     const duels = [];
@@ -76,9 +77,13 @@ export function buildTeammateGraph(snaps, results, qualifying, driverRows = [], 
           const session =
             !censored.has(a) &&
             !censored.has(b) &&
-            ['q3', 'q2', 'q1'].find((part) => Number.isFinite(parseQualTime(qa?.[part])) && Number.isFinite(parseQualTime(qb?.[part])));
-          const qaTime = session ? parseQualTime(qa[session]) : NaN;
-          const qbTime = session ? parseQualTime(qb[session]) : NaN;
+            ['q3', 'q2', 'q1'].find(
+              (part) =>
+                Number.isFinite(qualifyingEvidenceTime(qa, part, censoredSegments)) &&
+                Number.isFinite(qualifyingEvidenceTime(qb, part, censoredSegments)),
+            );
+          const qaTime = session ? qualifyingEvidenceTime(qa, session, censoredSegments) : NaN;
+          const qbTime = session ? qualifyingEvidenceTime(qb, session, censoredSegments) : NaN;
           const q = Number.isFinite(qaTime) && Number.isFinite(qbTime) && Math.abs(qaTime - qbTime) < 2.5 ? Math.sign(qbTime - qaTime) : 0;
           const pa = finitePosition(ra.position);
           const pb = finitePosition(rb.position);
