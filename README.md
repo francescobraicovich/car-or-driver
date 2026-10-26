@@ -1,8 +1,8 @@
-# Driver or Car
+# Car or Driver
 
 **How much of a Formula 1 result is the driver, and how much is the car?**
 
-Driver or Car is a free, non-commercial website and the research code behind it. It rates every driver and every car at every race weekend since 2000, with an error bar on every number, and shows the ratings, their history, head-to-head forecasts and twenty findings about the split between driver and car.
+Car or Driver is a free, non-commercial website and the research code behind it. It rates every driver and every car at every race weekend since 2000, with an error bar on every number, and shows the ratings, their history, head-to-head forecasts and twenty findings about the split between driver and car.
 
 It is an independent personal project. It is not affiliated with Formula 1, the FIA or any team or driver.
 
@@ -13,22 +13,23 @@ It is an independent personal project. It is not affiliated with Formula 1, the 
 | **Front page and ratings** | A drawing of a car and a driver's hands under the title. Point at either (or at its word in the title) and a box opens, the picture turns black and white, the blue version shows inside the box and a panel opens on the left with the ratings of the cars or of the drivers: a ranking after any weekend since 2000, all rows at once, each with its error and a bar; a slider to play through the seasons as a bar-chart race (the rows glide to their new places and the bars grow); the rating to show; and a way to select entries and compare them. Press to keep the panel open (the address then is `#/ratings`). The real race of the weekend is replayed at the bottom right on its circuit, at 1 to 50 times the real speed (you choose), from the lap times of every car (overtakes, pit stops, safety cars and red flags included), with a live timing table of places and gaps; pointing at a driver highlights his dot and his row of the table. |
 | **History** | Rating lines for the drivers or cars you choose, over any range of seasons. It opens over the ratings, in the panel, with a button to go back (`#/history`). |
 | **Head to head** | The chance that one driver finishes ahead of another, from their ratings and recent form, with what-if options (another season, another car, wet weather). It opens over the ratings, in the panel (`#/head-to-head`): the same car for both drivers to begin with, a Prime button for each, and a date to drag along their rating history, which takes the race at the bottom right to that Grand Prix. |
+| **Graph** | Every driver in the data, positioned by mean year raced and a teammate-only graph score. Scrub to any weekend, inspect each driver's published rating, age and complete teammate record, and follow favorable and unfavorable links. On wide screens, selecting a driver also lights their dot in the mini GP (`#/graph`). |
 | **Insights** | Twenty findings, each with a chart and a note on how it was computed: how much of a race is the car, who the best teammates are, how the order survives a winter, and more. They are a slide show on a card over the front page (`#/insights`): the contents first, then a slide for each finding, reached from the contents, from the list of slides beside the card, with the arrow keys or a swipe. |
 | **Methodology** | How the numbers are computed, from first principles, written for readers with university mathematics and no knowledge of Formula 1; with references. |
 
 ## How it works, in one paragraph
 
-Each driver and each car has a hidden pace that changes slowly over time. We never see it; we see results: which of two drivers finished ahead of the other. The model says how the odds of that depend on the hidden paces (a logistic curve), keeps a probabilistic belief about every pace, and updates all the beliefs together with Bayes' rule after every weekend. This is a joint state-space model, run on qualifying and on the race, and the race model reads the qualifying model. Ratings are centred on **1,000** on a 75-point scale: a lead of 75 points means 10:1 odds. The published rating of a driver is the level that travels between cars, not the fit with a particular car.
+Each driver and each car has a hidden pace that changes over time. We see results, not that pace directly. Joint state-space filters estimate driver and car levels from race and qualifying comparisons; an online pair-ranking learner supplies a third portable driver estimate. The published hybrid blends these dated estimates after every weekend: driver 48% race filter, 32% qualifying filter, 20% online ranking; car 75% race filter, 25% qualifying filter. The driver–car fit stays inside the learners rather than the posted driver rating. Ratings are centred on **1,000** on a 75-point scale: a lead of 75 points gives 10:1 odds in the basic pair model. The displayed uncertainty is an approximation from the state-space filter and does not include the complete blend.
 
 It is judged by how well it forecasts each weekend from earlier weekends only (a coin flip scores 0.6931 on this measure; lower is better):
 
-| Window | Coin flip | A conventional Elo-style system (kept as a benchmark) | These ratings |
+| Window | Coin flip | Previous published ratings | Hybrid ratings |
 | --- | --- | --- | --- |
-| Ratings alone, 2008–2011 | 0.6931 | 0.4018 | **0.3846** |
-| Ratings alone, 2012–2015 | 0.6931 | 0.3731 | **0.3639** |
-| Ratings alone, 2016 onward (a second look, not an untouched test; data through 2026 round 17) | 0.6931 | 0.4085 | **0.3977** |
+| Ratings alone, 2008–2011 | 0.6931 | 0.3846 | **0.3820** |
+| Ratings alone, 2012–2015 | 0.6931 | 0.3640 | **0.3601** |
+| Ratings alone, 2016–2025 (inspected during selection) | 0.6931 | 0.3989 | **0.3965** |
 
-The hardest test is a driver in a new car, forecast from the rating before the move and nothing else: that is still forecast worse than a driver who stayed (see [OPEN_PROBLEMS.md](OPEN_PROBLEMS.md)). The reasoning behind the design is in [docs/detach.md](docs/detach.md) and [docs/state-space.md](docs/state-space.md); every metric is defined in [docs/metrics.md](docs/metrics.md).
+The hardest test is a driver in a new car, forecast from the rating before the move and nothing else: the hybrid improves this test but remains above 0.5 loss in every historical period (see [OPEN_PROBLEMS.md](OPEN_PROBLEMS.md)). The shipped method and its evidence are in [docs/hybrid.md](docs/hybrid.md); the filters it builds on are in [docs/state-space.md](docs/state-space.md). The historical metric definitions are in [docs/metrics.md](docs/metrics.md).
 
 ## Run it
 
@@ -49,7 +50,7 @@ The server serves the repository root, so the page can import `packages/core/` a
 
 ## How the site gets its numbers
 
-The ratings are **computed once, when the site is published**, not in every visitor's browser. `node tools/build-model.mjs` builds the model from the CSV tables in `data/` and writes `data/model-latest.json` (the first screen), `data/model.json` (every weekend) and `data/export-rows.json` (the rows of every weekend, for anyone who wants them as a table; the site itself does not load it). The site downloads the other two. Each records a fingerprint of the data and of `packages/core/src`; `tests/test-model-file.mjs` fails if they are out of date, and it also checks that what a visitor sees equals a fresh build. After changing the data or the model, run `npm run build:data` and commit the result: it runs `tools/build-model.mjs` and also `tools/build-race-laps.mjs` (every driver's lap times for each season, `data/race-laps/`, behind the replay of the race) and `tools/build-tracks.mjs` (the circuit outlines, `site/assets/tracks.json`). A circuit that has not raced before needs an outline: add its file from `data/source/f1-circuits/` and a line in `SOURCE_FILES` in `tools/build-tracks.mjs` (the test fails until you do, or until you add the circuit to the few it lists as having none).
+The ratings are **computed once, when the site is published**, not in every visitor's browser. `node tools/build-model.mjs` builds the model from the CSV tables in `data/` and writes `data/model-latest.json` (the first screen), `data/model.json` (every weekend) and `data/export-rows.json` (the rows of every weekend, for anyone who wants them as a table; the site itself does not load it). The site downloads the other two. Each records a fingerprint of the data and of `packages/core/src`; `tests/test-model-file.mjs` fails if they are out of date, and it also checks that what a visitor sees equals a fresh build. After changing the data or the model, run `npm run build:data` and commit the result: it runs `tools/build-model.mjs`, `tools/build-teammate-graph.mjs` (the dated graph at `data/teammate-graph.json`), `tools/build-race-laps.mjs` (every driver's lap times for each season, `data/race-laps/`, behind the replay of the race), and `tools/build-tracks.mjs` (the circuit outlines, `site/assets/tracks.json`). A circuit that has not raced before needs an outline: add its file from `data/source/f1-circuits/` and a line in `SOURCE_FILES` in `tools/build-tracks.mjs` (the test fails until you do, or until you add the circuit to the few it lists as having none).
 
 The first screen needs about 0.06 MB; see [docs/deployment.md](docs/deployment.md) for the measurements.
 
@@ -58,11 +59,12 @@ The first screen needs about 0.06 MB; see [docs/deployment.md](docs/deployment.m
 ```
 site/                  The website: static files, no build step
   index.html, css/, assets/
-  js/                  The pages (ratings, history, head-to-head, insights, methodology, legal), routing, charts, the model loader
+  js/                  The pages (ratings, history, head-to-head, graph, insights, methodology, legal), routing, charts, the model loader
   vendor/              Third-party fonts and KaTeX, served from the site itself, with their licences
 packages/
   core/src/            The model: pure JavaScript with no DOM, runs in Node or the browser
     state-space/         The joint state-space model: observations, filter, race-reads-qualifying link, build
+    hybrid/              The online ranking learner and fixed blend of driver/car levels
     forecast/            Form trackers, head-to-head forecasts, what-if matchups
     elo-*.js             A conventional Elo-style system, kept as a benchmark and for two small per-driver tracks
     json-serialization.js  How the built model is written to and read from JSON

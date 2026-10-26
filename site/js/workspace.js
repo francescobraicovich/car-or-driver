@@ -6,7 +6,7 @@ import { DECK_PAGES, panelView } from './stage-pages.js';
 
 // Every route is the front page: the ratings are the panel on it, kept open; the history and the head to head are views over the ratings, in the
 // panel; the insights, the methodology, the privacy notice and the about page are each a card of slides over it.
-const ROUTES = ['/', '/ratings', '/history', '/head-to-head', '/insights', '/methodology', '/privacy', '/about'];
+const ROUTES = ['/', '/ratings', '/history', '/head-to-head', '/graph', '/insights', '/methodology', '/privacy', '/about'];
 const DEFAULT_ROUTE = '/';
 // Hashes from earlier versions of the site (and of the shared links in the wild).
 const ALIASES = {
@@ -121,7 +121,8 @@ export function initWorkspace() {
   function focusPage(was) {
     const now = panelView(pageName());
     let target = home;
-    if (DECK_PAGES.includes(pageName()))
+    if (pageName() === 'graph') target = $('graphPage') ?? target;
+    else if (DECK_PAGES.includes(pageName()))
       target = document.querySelector(`.deck-card[data-deck="${pageName()}"]`) ?? target; // (the card is made when its page is first shown, and takes the focus itself then)
     else if (now !== 'ratings') target = $(VIEW_IDS[now]).querySelector('.ledger-back');
     else if (was !== 'ratings') target = $(was === 'history' ? 'ratingsOpenHistory' : 'ratingsOpenHeadToHead') ?? target;
@@ -191,6 +192,11 @@ export function initWorkspace() {
     saveURL();
   });
   window.addEventListener('hashchange', navigate);
+  $('stage').addEventListener('pointerdown', (event) => {
+    if (!DECK_PAGES.includes(pageName())) return;
+    if (event.target.closest('.deck-card, .deck-list, .graph-page, .stage-top, .stage-bottom, .track')) return;
+    location.hash = '#/';
+  });
   window.addEventListener('f1:race-changed', () => {
     rememberRace();
     saveURL();

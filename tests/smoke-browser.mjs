@@ -92,12 +92,12 @@ const checks = [];
 const check = (name, pass, detail = '') => checks.push({ name, pass: !!pass, detail });
 check('model built', ready);
 
-// The site is the front page and what opens over it: the links at its top are Ratings, History, Versus, Insights and Method, and the links at its foot
+// The site is the front page and what opens over it: the links at its top are Ratings, History, Versus, Graph, Insights and Method, and the links at its foot
 // are Privacy, About and the source. Nothing of the old pages (header, loading screen, status line, footer, share button, theme button) is left.
 check(
-  'the links at the top of the front page are exactly ratings, history, versus, insights and method',
+  'the links at the top of the front page are exactly ratings, history, versus, graph, insights and method',
   JSON.stringify(await evaluate("[...document.querySelectorAll('.stage-top a')].map((a) => a.textContent)")) ===
-    JSON.stringify(['ratings', 'history', 'versus', 'insights', 'method']),
+    JSON.stringify(['ratings', 'history', 'versus', 'graph', 'insights', 'method']),
 );
 check(
   'nothing of the old pages is left: no header, loading screen, status line, footer, share button or theme button',
@@ -114,7 +114,7 @@ check(
 check(
   'the foot of the front page links to Privacy, About and the source',
   JSON.stringify(await evaluate("[...document.querySelectorAll('.stage-footer-links a')].map((a) => a.getAttribute('href'))")) ===
-    JSON.stringify(['#/privacy', '#/about', 'https://github.com/francescobraicovich/driver-or-car']),
+    JSON.stringify(['#/privacy', '#/about', 'https://github.com/francescobraicovich/car-or-driver']),
 );
 
 // The front page: a red drawing with a white two-line title and a square cursor. Pointing at the car or the hands (or at the matching word) opens a
@@ -128,6 +128,11 @@ const rectangleOfSelector = (selector) =>
 const rectangleOf = (id) => rectangleOfSelector(`#${id}`);
 const wordOf = (subject) => rectangleOfSelector(`#stageTitle .title-core .word-${subject}`); // the copies behind the title carry the same classes
 const opacityOf = (selector) => evaluate(`getComputedStyle(document.querySelector('${selector}')).opacity`);
+// the title is drawn once for each way it can look, and the style sheet shows one of them (by its clip): which are shown now
+const shownLooks = () =>
+  evaluate(
+    "[...document.querySelectorAll('#stageTitle .title-variant')].filter((v) => !getComputedStyle(v).clipPath.startsWith('inset(100%')).map((v) => v.className.replace('title-variant ', '')).join(' + ')",
+  );
 const mouse = (type, x, y, extra = {}) => send('Input.dispatchMouseEvent', { type, x, y, button: 'left', clickCount: 1, ...extra });
 const click = async (x, y) => {
   await mouse('mouseMoved', x, y);
@@ -176,15 +181,25 @@ check(
 );
 check(
   'the red drawing is all that shows to begin with',
-  (await evaluate("getComputedStyle(document.querySelector('.layer-mono')).opacity")) === '0' && (await isState('idle', '')),
+  (await evaluate("getComputedStyle(document.querySelector('.layer-mono')).opacity")) === '0' &&
+    (await isState('idle', '')) &&
+    (await shownLooks()) === 'ink-light',
 );
 const wordDriver = await wordOf('driver');
 const wordCar = await wordOf('car');
 check(
-  'the title reads Driver or Car, in white, on two lines',
-  (await evaluate("document.getElementById('stageTitle').getAttribute('aria-label')")) === 'Driver or Car' &&
+  'the title reads Car or Driver, in white, on two lines',
+  (await evaluate("document.getElementById('stageTitle').getAttribute('aria-label')")) === 'Car or Driver' &&
+    (
+      await evaluate(
+        "[...document.querySelectorAll('#stageTitle .title-core .title-line')].map((line) => line.textContent.replace(/\\s+/g, ' ').trim())",
+      )
+    )?.join('|') === 'CAR OR|DRIVER' &&
+    (await evaluate(
+      "[document.title, document.querySelector('meta[property=\\\"og:title\\\"]')?.content, document.querySelector('meta[name=\\\"twitter:title\\\"]')?.content].join('|')",
+    )) === 'Car or Driver|Car or Driver|Car or Driver' &&
     (await evaluate("getComputedStyle(document.getElementById('stageTitle')).color")) === 'rgb(255, 255, 255)' &&
-    wordDriver.y + wordDriver.height <= wordCar.y + 2,
+    wordCar.y + wordCar.height <= wordDriver.y + 2,
   JSON.stringify({ wordDriver, wordCar }),
 );
 const bottomLinks = await evaluate(
@@ -251,9 +266,10 @@ check(
 );
 check(
   'only the word CAR stays lit: the other words are dimmed',
-  (await opacityOf('#stageTitle .title-core .word-car')) === '1' &&
-    (await opacityOf('#stageTitle .title-core .word-driver')) !== '1' &&
-    (await opacityOf('#stageTitle .title-core .word-or')) !== '1',
+  (await shownLooks()) === 'ink-dark title-streaks + ink-dark lit-car' &&
+    (await opacityOf('#stageTitle .lit-car .word-car')) === '1' &&
+    (await opacityOf('#stageTitle .lit-car .word-driver')) !== '1' &&
+    (await opacityOf('#stageTitle .lit-car .word-or')) !== '1',
 );
 const wordFrame = await rectangleOf('stageWordFrame');
 check(
@@ -277,8 +293,9 @@ check(
   (await isState('peek', 'driver')) &&
     wordRows > 15 &&
     /^Driver ratings/.test(await panelTitle()) &&
-    (await opacityOf('#stageTitle .title-core .word-driver')) === '1' &&
-    (await opacityOf('#stageTitle .title-core .word-car')) !== '1',
+    (await shownLooks()) === 'ink-dark title-streaks + ink-dark lit-driver' &&
+    (await opacityOf('#stageTitle .lit-driver .word-driver')) === '1' &&
+    (await opacityOf('#stageTitle .lit-driver .word-car')) !== '1',
   `${wordRows} rows`,
 );
 await click(...centreOf(hands));
@@ -290,6 +307,25 @@ check(
     !(await evaluate("document.getElementById('stageLedgerClose').hidden")) &&
     (await evaluate("document.getElementById('hotspotDriver').getAttribute('aria-pressed')")) === 'true',
 );
+check(
+  'the ratings explain their default scale in one line',
+  (await evaluate("document.getElementById('ratingsGuideLine').textContent")) ===
+    'Estimated pace after this weekend · higher is faster · 1,000 is the average of this grid',
+);
+await evaluate("document.getElementById('ratingsGuideToggle').click()");
+check(
+  'How to read this opens an explanation and reports its state',
+  (await evaluate("document.getElementById('ratingsGuideToggle').getAttribute('aria-expanded')")) === 'true' &&
+    !(await evaluate("document.getElementById('ratingsGuideDetail').hidden")) &&
+    (await evaluate("document.getElementById('ratingsGuideText').textContent.includes('each driver would be in the same car')")),
+);
+await evaluate("document.getElementById('ratingsCars').click()");
+check(
+  'the car explanation separates car pace from the driver',
+  await evaluate("document.getElementById('ratingsGuideText').textContent.includes('each car would be with the same driver')"),
+);
+await evaluate("document.getElementById('ratingsDrivers').click()");
+await evaluate("document.getElementById('ratingsGuideToggle').click()");
 const ledgerBox = await rectangleOf('stageLedger');
 const bottomRow = await rectangleOfSelector('.stage-bottom');
 check(
@@ -1743,6 +1779,11 @@ check(
   (await evaluate('location.hash')) === '#/' &&
     (await evaluate("getComputedStyle(document.getElementById('insightsCard')).display")) === 'none',
 );
+await evaluate("location.hash = '#/insights'");
+await sleep(400);
+await click(stageBox.x + 8, stageBox.y + stageBox.height / 2);
+await sleep(300);
+check('clicking outside the Insights card closes it', (await evaluate('location.hash')) === '#/');
 await evaluate("location.hash = '#/methodology'");
 await sleep(1200);
 check(
@@ -1766,6 +1807,26 @@ check(
   !(await evaluate("/\\bElo\\b/i.test(document.getElementById('methodologyCard').textContent)")),
 );
 check(
+  'the methodology explains the published method without release history',
+  !(await evaluate(
+    "/previous published|original reference|first version|earlier filter|old model/i.test(document.getElementById('methodologyCard').textContent)",
+  )),
+);
+check(
+  'the driver/car split and teammate network react to their controls',
+  await evaluate(`(() => {
+    const split = document.querySelector('#methodologySplitLab input');
+    const graph = document.querySelector('#methodologyCareerGraph input');
+    const before = document.querySelector('#methodologySplitLab [data-value="a"]').textContent;
+    split.value = '25'; split.dispatchEvent(new Event('input', { bubbles: true }));
+    graph.value = '1'; graph.dispatchEvent(new Event('input', { bubbles: true }));
+    return before !== document.querySelector('#methodologySplitLab [data-value="a"]').textContent
+      && document.querySelector('#methodologySplitLab [data-value="package-a"]').textContent === '+100'
+      && document.querySelector('#methodologyCareerGraph .method-lab-reading').textContent.includes('through 1 link')
+      && document.querySelectorAll('#methodologyCareerGraph .method-network-link.active').length === 1;
+  })()`),
+);
+check(
   'methodology has its eight parts, the overview diagram, the settings tables and no unfilled placeholders',
   (await evaluate("document.querySelectorAll('#methodologyCard .method-part').length")) === 8 &&
     (await evaluate("document.querySelectorAll('#methodologyTrack .deck-slide').length")) === 9 &&
@@ -1785,6 +1846,12 @@ check(
     await evaluate('document.querySelector(\'#methodologyCard .deck-contents button[data-slide="3"]\').click()');
     await sleep(700);
     const third = await position();
+    const centered = await evaluate(`(() => {
+      const slide = document.querySelector('#methodologyCard .deck-slide:not([inert])');
+      const text = slide.querySelector('.deck-text');
+      const s = slide.getBoundingClientRect(), t = text.getBoundingClientRect();
+      return Math.abs((t.left + t.right) / 2 - (s.left + s.right) / 2) < 2;
+    })()`);
     const slide = await evaluate('(location.hash.match(/slide=([a-z0-9-]*)/) || [])[1]');
     await evaluate('document.querySelector(\'#methodologyCard [data-jump="method-forecasts"]\').click()');
     await sleep(700);
@@ -1797,6 +1864,7 @@ check(
     return (
       first === '1 / 9' &&
       third === '4 / 9' &&
+      centered &&
       slide === 'method-ratings' &&
       linked === '5 / 9' &&
       JSON.parse(reference).position === '9 / 9' &&
@@ -1868,7 +1936,7 @@ check(
   'the site set no cookies',
   (await send('Network.getAllCookies')).result.cookies.length === 0 && (await evaluate('document.cookie')) === '',
 );
-for (const hash of ['#/', '#/ratings', '#/history', '#/head-to-head', '#/insights', '#/methodology', '#/privacy', '#/about']) {
+for (const hash of ['#/', '#/ratings', '#/history', '#/head-to-head', '#/graph', '#/insights', '#/methodology', '#/privacy', '#/about']) {
   await evaluate(`location.hash = '${hash}'`);
   await sleep(700);
 }
@@ -1925,12 +1993,39 @@ check(
 // A phone: no page scrolls sideways
 await send('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 2, mobile: true });
 await sleep(500);
-for (const page of ['home', 'ratings', 'history', 'head-to-head', 'insights', 'methodology', 'privacy', 'about']) {
+for (const page of ['home', 'ratings', 'history', 'head-to-head', 'graph', 'insights', 'methodology', 'privacy', 'about']) {
   await evaluate(`location.hash = '#/${page}'`);
   await sleep(1200);
   const [scroll, inner] = await evaluate('[document.documentElement.scrollWidth, window.innerWidth]');
   check(`on a phone ${page} does not scroll sideways`, scroll <= inner, `${scroll} wide in ${inner}`);
 }
+await evaluate("location.hash = '#/graph'");
+await sleep(400);
+const phoneGraph = JSON.parse(
+  await evaluate(`(() => {
+  const box = (selector) => { const { x, y, width, height, right, bottom } = document.querySelector(selector).getBoundingClientRect(); return { x, y, width, height, right, bottom }; };
+  return JSON.stringify({ title: box('.graph-head h2'), picker: box('#graphDriver'), plot: box('#graphPlot'), detail: box('#graphDetail') });
+})()`),
+);
+check(
+  'on a phone the picker stays beside the title and the driver card stacks below the graph',
+  phoneGraph.picker.x > phoneGraph.title.x && phoneGraph.plot.height > 250 && phoneGraph.detail.y > phoneGraph.plot.bottom,
+  JSON.stringify(phoneGraph),
+);
+await evaluate("location.hash = '#/methodology'");
+await sleep(350);
+await evaluate('document.querySelector(\'#methodologyCard .deck-contents button[data-slide="3"]\').click()');
+await sleep(450);
+check(
+  'the teammate network fits the methodology card vertically on a phone',
+  await evaluate(`(() => {
+    const graph = document.getElementById('methodologyCareerGraph');
+    const svg = graph.querySelector('svg');
+    return svg.viewBox.baseVal.height > svg.viewBox.baseVal.width
+      && svg.getBoundingClientRect().width <= graph.getBoundingClientRect().width + 1
+      && graph.scrollWidth <= graph.clientWidth + 1;
+  })()`),
+);
 // On a phone the Insights are a card across the screen, with no list beside it, and a swipe turns the slide
 await evaluate("location.hash = '#/insights'");
 await sleep(1200);
@@ -2017,6 +2112,114 @@ for (const [view, ready] of [
     opened,
   );
 }
+await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/?link=graph#/graph` });
+await sleep(5000);
+const linkedGraph = await evaluate(
+  "(() => ({ shown: !document.getElementById('graphPage').hidden, drawn: document.getElementById('graphPlot').width > 0, drivers: document.getElementById('graphDriver').options.length, selected: document.getElementById('graphDriver').value, detail: document.getElementById('graphDetail').textContent, track: !document.getElementById('stageTrack').hidden, table: !document.getElementById('stageTrackTable').hidden, hot: document.querySelector('#stageTrackDots circle[data-id=\"830\"]')?.classList.contains('hot') }))()",
+);
+check(
+  'a link straight to the graph defaults to Max and lights him in the mini GP',
+  linkedGraph.shown &&
+    linkedGraph.drawn &&
+    linkedGraph.drivers > 100 &&
+    linkedGraph.selected === '830' &&
+    /Max Verstappen/.test(linkedGraph.detail) &&
+    /Age at date\s*29/.test(linkedGraph.detail) &&
+    !/approx/.test(linkedGraph.detail) &&
+    linkedGraph.track &&
+    linkedGraph.table &&
+    linkedGraph.hot,
+  JSON.stringify(linkedGraph),
+);
+check(
+  'the graph uses the same metal surface as Insights and has a visible close button',
+  await evaluate(
+    "(() => { const graph = getComputedStyle(document.getElementById('graphPage')); const metal = getComputedStyle(document.getElementById('stageLedger')); const close = document.getElementById('graphClose'); return graph.backgroundImage === metal.backgroundImage && graph.backdropFilter === metal.backdropFilter && close.getBoundingClientRect().width > 0; })()",
+  ),
+);
+const graphLayout = JSON.parse(
+  await evaluate(`(() => {
+  const box = (selector) => { const { x, y, width, height, right, bottom } = document.querySelector(selector).getBoundingClientRect(); return { x, y, width, height, right, bottom }; };
+  return JSON.stringify({ card: box('#graphPage'), title: box('.graph-head h2'), picker: box('#graphDriver'), plot: box('#graphPlot'), detail: box('#graphDetail'), timeline: box('#graphTimeline'), key: box('.graph-key') });
+})()`),
+);
+check(
+  'the graph has a compact header, a taller plot beside the driver card, and a timeline below',
+  graphLayout.picker.x > graphLayout.title.right &&
+    graphLayout.plot.y - graphLayout.card.y < 110 &&
+    graphLayout.plot.height > 500 &&
+    graphLayout.plot.width / graphLayout.plot.height < 1.5 &&
+    graphLayout.detail.x > graphLayout.plot.right &&
+    graphLayout.detail.height > graphLayout.plot.height &&
+    graphLayout.key.y > graphLayout.timeline.bottom,
+  JSON.stringify(graphLayout),
+);
+const graphHover = JSON.parse(
+  await evaluate(`(async () => {
+  const source = await (await fetch('../data/teammate-graph.json')).json();
+  const snap = source.snapshots.at(-1);
+  const box = document.getElementById('graphPlot').getBoundingClientRect();
+  const year = Math.max(2027, Number(document.getElementById('graphLast').textContent) + 1);
+  const grid = new Set([...document.querySelectorAll('#stageTrackDots circle[data-id]')].map((dot) => dot.dataset.id));
+  const points = snap.nodes.map((node) => ({ id: node[0], x: box.x + 55 + (node[2] - 1999) / (year - 1999) * (box.width - 73), y: box.y + 22 + (1110 - node[1]) / 220 * (box.height - 61) }));
+  const best = points.filter((point) => grid.has(point.id) && document.elementFromPoint(point.x, point.y) === document.getElementById('graphPlot')).map((point) => ({ ...point, gap: Math.min(...points.filter((other) => other !== point).map((other) => Math.hypot(other.x - point.x, other.y - point.y))) })).sort((a, b) => b.gap - a.gap)[0];
+  window.graphHoverEvents = [];
+  window.addEventListener('f1:row-hover', (event) => window.graphHoverEvents.push(event.detail.id));
+  return JSON.stringify({ ...best, plot: { x: box.x, y: box.y, width: box.width, height: box.height } });
+})()`),
+);
+await mouse('mouseMoved', graphHover.x, graphHover.y);
+await sleep(150);
+for (let i = 0; i < 12; i++) {
+  await mouse('mouseMoved', graphHover.x + (i % 2 ? 3 : -3), graphHover.y + (i % 3 ? 2 : -2));
+  await sleep(40);
+}
+const stableHover = JSON.parse(await evaluate('JSON.stringify(window.graphHoverEvents)'));
+const plotAfterHover = await rectangleOfSelector('#graphPlot');
+check(
+  'hover stays on one driver while the bubbles move',
+  graphHover.gap > 15 &&
+    stableHover.length > 0 &&
+    stableHover.every((id) => id === graphHover.id) &&
+    Math.abs(plotAfterHover.y - graphHover.plot.y) < 1 &&
+    Math.abs(plotAfterHover.height - graphHover.plot.height) < 1,
+  JSON.stringify({ graphHover, stableHover, plotAfterHover }),
+);
+await evaluate(
+  "(() => { const slider = document.getElementById('graphTimeline'); slider.value = '0'; slider.dispatchEvent(new Event('input', { bubbles: true })); })()",
+);
+await sleep(350);
+const oldGraph = await evaluate(
+  "(() => ({ drivers: document.getElementById('graphDriver').options.length, selected: document.getElementById('graphDriver').value, detail: document.getElementById('graphDetail').textContent, weekend: document.getElementById('graphWeekend').textContent, race: new URLSearchParams(location.hash.split('?')[1]).get('race') }))()",
+);
+check(
+  'the graph timeline rewinds the driver network and URL without future links',
+  oldGraph.drivers < 30 &&
+    oldGraph.selected === '' &&
+    !/Max Verstappen/.test(oldGraph.detail) &&
+    /2000/.test(oldGraph.weekend) &&
+    oldGraph.race === '158',
+  JSON.stringify(oldGraph),
+);
+await evaluate(
+  "(() => { const slider = document.getElementById('graphTimeline'); slider.value = slider.max; slider.dispatchEvent(new Event('input', { bubbles: true })); })()",
+);
+await sleep(350);
+check(
+  'the initial Max selection returns after rewinding to before his debut',
+  await evaluate(
+    "document.getElementById('graphDriver').value === '830' && /Max Verstappen/.test(document.getElementById('graphDetail').textContent)",
+  ),
+);
+await evaluate("document.getElementById('graphClose').click()");
+await sleep(300);
+check('the graph close button returns home', (await evaluate('location.hash')) === '#/');
+await evaluate("location.hash = '#/graph'");
+await sleep(500);
+const graphStage = await rectangleOfSelector('#stage');
+await click(graphStage.x + 8, graphStage.y + graphStage.height / 2);
+await sleep(300);
+check('clicking outside the graph card closes it', (await evaluate('location.hash')) === '#/');
 await send('Emulation.clearDeviceMetricsOverride');
 
 for (const c of checks) console.log(`${c.pass ? 'ok  ' : 'FAIL'} ${c.name}${c.detail ? ` (${c.detail})` : ''}`);

@@ -1,12 +1,12 @@
 {
-  "name": "driver-or-car",
+  "name": "car-or-driver",
   "version": "1.0.0",
   "private": true,
   "license": "MIT",
   "author": "Francesco Braicovich",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/francescobraicovich/driver-or-car.git"
+    "url": "git+https://github.com/francescobraicovich/car-or-driver.git"
   },
   "engines": {
     "node": ">=24"
@@ -32,8 +32,8 @@
     "research:heads-metrics": "node packages/research/node/heads-metrics.mjs",
     "research:findings": "node packages/research/node/export-ratings-table.mjs tmp/findings && python3 packages/research/python/compute-findings.py tmp/findings",
     "check:publication": "node tools/check-publication.mjs",
-    "build:model": "node tools/build-model.mjs",
-    "build:data": "node tools/build-model.mjs && node tools/build-race-laps.mjs && node tools/build-tracks.mjs"
+    "build:model": "node tools/build-model.mjs && node tools/build-teammate-graph.mjs",
+    "build:data": "node tools/build-model.mjs && node tools/build-teammate-graph.mjs && node tools/build-race-laps.mjs && node tools/build-tracks.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

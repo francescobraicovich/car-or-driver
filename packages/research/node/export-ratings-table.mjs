@@ -1,4 +1,4 @@
-// Exports the published state-space ratings of every weekend, and the retirement-cause table, for the findings computation
+// Exports the published hybrid ratings of every weekend, and the retirement-cause table, for the findings computation
 // (packages/research/python/compute-findings.py). Writes ratings-table.json and status-causes.json into the directory given as
 // the first argument.
 //   node packages/research/node/export-ratings-table.mjs <output directory>

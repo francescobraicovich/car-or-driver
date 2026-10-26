@@ -9,6 +9,7 @@ import { initInfoTips } from './info-tip.js';
 
 // Insights, Methodology, Privacy and About are fetched the first time they are opened, not on every visit.
 const lazyPages = {
+  graph: async () => (await import('./graph-view.js')).initGraph,
   insights: async () => (await import('./insights-view.js')).initInsights,
   methodology: async () => (await import('./methodology-view.js')).initMethodology,
   privacy: async () => (await import('./legal-view.js')).initLegal,

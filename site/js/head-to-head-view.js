@@ -185,7 +185,7 @@ function isLive(sides, wet) {
  */
 function stepsHtml(r, nameA, nameB, teammates, own) {
   const { full } = r.breakdown;
-  // State-space: "ratings alone" is the state-space ratings, with their uncertainty
+  // Hybrid ratings alone use the retained filter covariance for approximate uncertainty.
   const ratings = own ? own.p : r.breakdown.ratings;
   const favours = (p) => (p >= 0.5 ? nameA : nameB);
   const [byRatings, byForecast] = [ratings, full].map(favours);
@@ -199,7 +199,7 @@ function stepsHtml(r, nameA, nameB, teammates, own) {
       ? stepRow(
           'Ratings alone',
           ratings,
-          `Driver plus car rating, with their uncertainty: a gap of ${signed(own.gap)} ± ${own.sd.toFixed(0)} points.`,
+          `Driver plus car rating, with approximate filter uncertainty: a gap of ${signed(own.gap)} ± ${own.sd.toFixed(0)} points.`,
         )
       : stepRow('Ratings alone', ratings, 'Driver rating plus car rating, as they stand.'),
     // the same ratings go through the forecast model with recent form switched off: that adds retirement risk and the
@@ -478,7 +478,7 @@ export function renderHeadToHead() {
   const same = el.headToHeadA.value === el.headToHeadB.value;
   const pA = same ? 0.5 : r.p;
   const risk = (q) => 1 - (1 - q) ** r.L;
-  // State-space: the ratings alone, with their uncertainty. Otherwise the gap the forecast starts from.
+  // Hybrid ratings alone with approximate filter uncertainty; otherwise the gap the forecast starts from.
   const own =
     forecasting.isStateSpace(state.model) && !same
       ? forecasting.ratingsAlone(state.model, el.headToHeadA.value, el.headToHeadB.value)
@@ -500,7 +500,7 @@ export function renderHeadToHead() {
     ${topHtml(headA, headB, pA, r.a.name, r.b.name)}
     ${steps}
     <dl class="head-to-head-facts">
-      <div><dt>Race-rating gap${infoHtml(`${nameA} minus ${nameB}${teammates ? ', same car' : ', car included'}${own ? `, with one standard deviation of the estimate (±${own.sd.toFixed(0)})` : ''}.`)}</dt><dd>${same ? '0' : signed(gap)}${own ? ` ± ${own.sd.toFixed(0)}` : ''} <small>points</small></dd></div>
+      <div><dt>Race-rating gap${infoHtml(`${nameA} minus ${nameB}${teammates ? ', same car' : ', car included'}${own ? `, with approximate filter uncertainty (±${own.sd.toFixed(0)}; excludes the full blend)` : ''}.`)}</dt><dd>${same ? '0' : signed(gap)}${own ? ` ± ${own.sd.toFixed(0)}` : ''} <small>points</small></dd></div>
       <div><dt>Retirement risk, ${r.L} laps${infoHtml(`The chance that each driver retires within ${r.L} laps: ${nameA} first, ${nameB} second.`)}</dt><dd>${swatches(percent(risk(r.qA)), percent(risk(r.qB)))}</dd></div>
     </dl>`;
   const form =

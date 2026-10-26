@@ -1,6 +1,6 @@
 // Checks the deployed site against what the privacy notice says, because the tests run on a local server and a host can add things a local server
 // never does (a cookie from a bot-protection feature, an injected script, a missing header). Run it after every deploy:
-//   node tools/check-live-site.mjs https://driver-or-car.pages.dev/
+//   node tools/check-live-site.mjs https://car-or-driver.pages.dev/
 // It fetches the home page, every file the page names, and the data files, and fails if any response sets a cookie, if the security headers are
 // missing or different from tools/deploy-headers.txt, or if the page loads or embeds anything from another origin or from the host's own scripts
 // (/cdn-cgi/). It also tells you what it cannot see: scripts that run in a browser; open the site once with the browser's developer tools
@@ -62,6 +62,7 @@ const files = new Set(
 for (const extra of [
   '../data/model-latest.json',
   '../data/model.json',
+  '../data/teammate-graph.json',
   '../data/export-rows.json',
   '../data/race-laps/2026.json',
   './assets/tracks.json',

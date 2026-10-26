@@ -1,0 +1,462 @@
+{
+  "model": "hybrid-qualifying-ranking-v1",
+  "options": {
+    "qualifyingDriverShare": 0.4,
+    "rankingDriverShare": 0.2,
+    "qualifyingCarShare": 0.25,
+    "ranking": {
+      "learningRate": 180,
+      "teammateWeight": 2,
+      "fitPenalty": 0.15,
+      "levelPenalty": 0.001,
+      "carWinterRetention": 0.8,
+      "includeComponent": false
+    }
+  },
+  "weekends": 520,
+  "completed2026": 17,
+  "baseline": {
+    "slope": 0.9992652712996315,
+    "qualSlope": 1.1487036727826605,
+    "allPair": {
+      "2026": {
+        "loss": 0.38382542002757064,
+        "race": 0.3897903512400742,
+        "qualifying": 0.33448782036228686,
+        "pairs": 9865,
+        "weight": 94989.42949062696
+      },
+      "2008-11": {
+        "loss": 0.38455500303438,
+        "race": 0.3883039573433976,
+        "qualifying": 0.35402831548481045,
+        "pairs": 43583,
+        "weight": 432066.7079273098
+      },
+      "2012-15": {
+        "loss": 0.3639496346501229,
+        "race": 0.3638245308146338,
+        "qualifying": 0.36501839242835593,
+        "pairs": 45391,
+        "weight": 462184.5699527408
+      },
+      "2016-25": {
+        "loss": 0.39888240718096435,
+        "race": 0.39792198596083644,
+        "qualifying": 0.40846821394231947,
+        "pairs": 108607,
+        "weight": 1163349.4544014884
+      }
+    },
+    "movers": {
+      "2026": {
+        "loss": 0.2561277086912191,
+        "fieldLoss": 0.40504382336847755,
+        "duels": 16,
+        "accuracy": 0.8327024315304673
+      },
+      "2002-11": {
+        "loss": 0.6492157592940656,
+        "fieldLoss": 0.3757080424316061,
+        "duels": 220,
+        "accuracy": 0.6126135921663635
+      },
+      "2012-15": {
+        "loss": 0.7244252934919069,
+        "fieldLoss": 0.30924129308302384,
+        "duels": 116,
+        "accuracy": 0.6059879227088131
+      },
+      "2016-25": {
+        "loss": 0.6714408833232339,
+        "fieldLoss": 0.354409066301982,
+        "duels": 234,
+        "accuracy": 0.6075622820188158
+      }
+    }
+  },
+  "directRanking": {
+    "slope": 1.3283658752522247,
+    "qualSlope": 1.1487036727826605,
+    "allPair": {
+      "2026": {
+        "loss": 0.40513201014878475,
+        "race": 0.4136729147630806,
+        "qualifying": 0.33448782036228686,
+        "pairs": 9865,
+        "weight": 94989.42949062696
+      },
+      "2008-11": {
+        "loss": 0.4225846377232185,
+        "race": 0.4310039763510582,
+        "qualifying": 0.35402831548481045,
+        "pairs": 43583,
+        "weight": 432066.7079273098
+      },
+      "2012-15": {
+        "loss": 0.3852050531024435,
+        "race": 0.38756801010493896,
+        "qualifying": 0.36501839242835593,
+        "pairs": 45391,
+        "weight": 462184.5699527408
+      },
+      "2016-25": {
+        "loss": 0.4119063171889119,
+        "race": 0.4122507876541762,
+        "qualifying": 0.40846821394231947,
+        "pairs": 108607,
+        "weight": 1163349.4544014884
+      }
+    },
+    "movers": {
+      "2026": {
+        "loss": 0.295839991844048,
+        "fieldLoss": 0.40789325491213474,
+        "duels": 16,
+        "accuracy": 0.8327024315304673
+      },
+      "2002-11": {
+        "loss": 0.6180157362197841,
+        "fieldLoss": 0.42356434215689454,
+        "duels": 220,
+        "accuracy": 0.6804360973666341
+      },
+      "2012-15": {
+        "loss": 0.7090709503358523,
+        "fieldLoss": 0.3772995381147927,
+        "duels": 116,
+        "accuracy": 0.6551274027871606
+      },
+      "2016-25": {
+        "loss": 0.6630851717541604,
+        "fieldLoss": 0.3680377519311512,
+        "duels": 234,
+        "accuracy": 0.6586238511317167
+      }
+    }
+  },
+  "tunedRanking": {
+    "slope": 0.9199914498107791,
+    "qualSlope": 1.1487036727826605,
+    "allPair": {
+      "2026": {
+        "loss": 0.42026755278106265,
+        "race": 0.43063834922791516,
+        "qualifying": 0.33448782036228686,
+        "pairs": 9865,
+        "weight": 94989.42949062696
+      },
+      "2008-11": {
+        "loss": 0.4378049906108159,
+        "race": 0.4480935267220076,
+        "qualifying": 0.35402831548481045,
+        "pairs": 43583,
+        "weight": 432066.7079273098
+      },
+      "2012-15": {
+        "loss": 0.39413999386918047,
+        "race": 0.39754883365499055,
+        "qualifying": 0.36501839242835593,
+        "pairs": 45391,
+        "weight": 462184.5699527408
+      },
+      "2016-25": {
+        "loss": 0.41880196276691845,
+        "race": 0.4198373218036379,
+        "qualifying": 0.40846821394231947,
+        "pairs": 108607,
+        "weight": 1163349.4544014884
+      }
+    },
+    "movers": {
+      "2026": {
+        "loss": 0.306644973949307,
+        "fieldLoss": 0.411738560037502,
+        "duels": 16,
+        "accuracy": 0.8327024315304673
+      },
+      "2002-11": {
+        "loss": 0.6365816647671153,
+        "fieldLoss": 0.42118957234703297,
+        "duels": 220,
+        "accuracy": 0.6641591827261475
+      },
+      "2012-15": {
+        "loss": 0.6949671692538215,
+        "fieldLoss": 0.379227165759296,
+        "duels": 116,
+        "accuracy": 0.6551274027871606
+      },
+      "2016-25": {
+        "loss": 0.6395924169185372,
+        "fieldLoss": 0.3599446179241763,
+        "duels": 234,
+        "accuracy": 0.6531006086916652
+      }
+    }
+  },
+  "hybrid": {
+    "slope": 1.0104110157158668,
+    "qualSlope": 1.1487036727826605,
+    "allPair": {
+      "2026": {
+        "loss": 0.38386857777708394,
+        "race": 0.38983872677498604,
+        "qualifying": 0.33448782036228686,
+        "pairs": 9865,
+        "weight": 94989.42949062696
+      },
+      "2008-11": {
+        "loss": 0.3819937584271377,
+        "race": 0.3854281686510436,
+        "qualifying": 0.35402831548481045,
+        "pairs": 43583,
+        "weight": 432066.7079273098
+      },
+      "2012-15": {
+        "loss": 0.3601128494058035,
+        "race": 0.3595386292599692,
+        "qualifying": 0.36501839242835593,
+        "pairs": 45391,
+        "weight": 462184.5699527408
+      },
+      "2016-25": {
+        "loss": 0.3965119145255793,
+        "race": 0.3953139888882366,
+        "qualifying": 0.40846821394231947,
+        "pairs": 108607,
+        "weight": 1163349.4544014884
+      }
+    },
+    "movers": {
+      "2026": {
+        "loss": 0.2501660437734612,
+        "fieldLoss": 0.3972344125770948,
+        "duels": 16,
+        "accuracy": 0.8327024315304673
+      },
+      "2002-11": {
+        "loss": 0.6458414104122765,
+        "fieldLoss": 0.3774447577478589,
+        "duels": 220,
+        "accuracy": 0.6205678292449417
+      },
+      "2012-15": {
+        "loss": 0.7065628142814092,
+        "fieldLoss": 0.294143154859839,
+        "duels": 116,
+        "accuracy": 0.6059879227088131
+      },
+      "2016-25": {
+        "loss": 0.6494664970276037,
+        "fieldLoss": 0.3501495001140215,
+        "duels": 234,
+        "accuracy": 0.6020390395787644
+      }
+    }
+  },
+  "latest": {
+    "drivers": [
+      {
+        "rank": 1,
+        "id": "830",
+        "name": "Max Verstappen",
+        "rating": 77.3
+      },
+      {
+        "rank": 2,
+        "id": "844",
+        "name": "Charles Leclerc",
+        "rating": 40.1
+      },
+      {
+        "rank": 3,
+        "id": "846",
+        "name": "Lando Norris",
+        "rating": 29.2
+      },
+      {
+        "rank": 4,
+        "id": "832",
+        "name": "Carlos Sainz",
+        "rating": 16.8
+      },
+      {
+        "rank": 5,
+        "id": "863",
+        "name": "Andrea Kimi Antonelli",
+        "rating": 14.5
+      },
+      {
+        "rank": 6,
+        "id": "865",
+        "name": "Isack Hadjar",
+        "rating": 14.1
+      },
+      {
+        "rank": 7,
+        "id": "1",
+        "name": "Lewis Hamilton",
+        "rating": 12.4
+      },
+      {
+        "rank": 8,
+        "id": "847",
+        "name": "George Russell",
+        "rating": 12.2
+      },
+      {
+        "rank": 9,
+        "id": "857",
+        "name": "Oscar Piastri",
+        "rating": 9.2
+      },
+      {
+        "rank": 10,
+        "id": "4",
+        "name": "Fernando Alonso",
+        "rating": 7
+      },
+      {
+        "rank": 11,
+        "id": "807",
+        "name": "Nico Hülkenberg",
+        "rating": 6.4
+      },
+      {
+        "rank": 12,
+        "id": "842",
+        "name": "Pierre Gasly",
+        "rating": 2.5
+      },
+      {
+        "rank": 13,
+        "id": "848",
+        "name": "Alexander Albon",
+        "rating": -4.4
+      },
+      {
+        "rank": 14,
+        "id": "815",
+        "name": "Sergio Pérez",
+        "rating": -6.9
+      },
+      {
+        "rank": 15,
+        "id": "864",
+        "name": "Gabriel Bortoleto",
+        "rating": -7
+      },
+      {
+        "rank": 16,
+        "id": "860",
+        "name": "Oliver Bearman",
+        "rating": -8.2
+      },
+      {
+        "rank": 17,
+        "id": "859",
+        "name": "Liam Lawson",
+        "rating": -8.8
+      },
+      {
+        "rank": 18,
+        "id": "866",
+        "name": "Arvid Lindblad",
+        "rating": -18.8
+      },
+      {
+        "rank": 19,
+        "id": "861",
+        "name": "Franco Colapinto",
+        "rating": -19.5
+      },
+      {
+        "rank": 20,
+        "id": "839",
+        "name": "Esteban Ocon",
+        "rating": -23.5
+      },
+      {
+        "rank": 21,
+        "id": "840",
+        "name": "Lance Stroll",
+        "rating": -24.6
+      },
+      {
+        "rank": 22,
+        "id": "822",
+        "name": "Valtteri Bottas",
+        "rating": -32.4
+      }
+    ],
+    "cars": [
+      {
+        "rank": 1,
+        "id": "131",
+        "name": "Mercedes",
+        "rating": 102.3
+      },
+      {
+        "rank": 2,
+        "id": "6",
+        "name": "Ferrari",
+        "rating": 80.2
+      },
+      {
+        "rank": 3,
+        "id": "1",
+        "name": "McLaren",
+        "rating": 68.7
+      },
+      {
+        "rank": 4,
+        "id": "9",
+        "name": "Red Bull",
+        "rating": 45.3
+      },
+      {
+        "rank": 5,
+        "id": "215",
+        "name": "RB F1 Team",
+        "rating": 17.7
+      },
+      {
+        "rank": 6,
+        "id": "214",
+        "name": "Alpine F1 Team",
+        "rating": 9.1
+      },
+      {
+        "rank": 7,
+        "id": "217",
+        "name": "Audi",
+        "rating": -17.7
+      },
+      {
+        "rank": 8,
+        "id": "210",
+        "name": "Haas F1 Team",
+        "rating": -28.9
+      },
+      {
+        "rank": 9,
+        "id": "3",
+        "name": "Williams",
+        "rating": -64.8
+      },
+      {
+        "rank": 10,
+        "id": "117",
+        "name": "Aston Martin",
+        "rating": -91.6
+      },
+      {
+        "rank": 11,
+        "id": "216",
+        "name": "Cadillac",
+        "rating": -120.1
+      }
+    ]
+  }
+}

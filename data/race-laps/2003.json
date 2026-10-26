@@ -1,7 +1,7 @@
 {
  "format": 2,
  "dataVersion": "07396ffcac47b05d",
- "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).","nonCommercial":true},
+ "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2003,
  "codes": {"2":"HEI","4":"ALO","8":"RAI","11":"SAT","14":"COU","15":"TRU","17":"WEB","18":"BUT","21":"FIS","22":"BAR","23":"SCH","30":"MSC","31":"MON","35":"VIL","42":"PIZ","43":"DAM","44":"PAN","47":"BAU","48":"GEN","49":"FRE","50":"VER","51":"WIL","52":"FIR","53":"KIE"},
  "statuses": {"3":"Accident","4":"Collision","5":"Engine","6":"Gearbox","9":"Hydraulics","10":"Electrical","20":"Spun off","21":"Radiator","22":"Suspension","23":"Brakes","26":"Mechanical","27":"Tyre","30":"Driveshaft","32":"Fuel pressure","40":"Electronics","44":"Oil leak","60":"Out of fuel","69":"Fuel system","70":"Oil line","71":"Fuel rig","74":"Fuel"},

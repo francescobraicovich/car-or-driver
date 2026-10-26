@@ -2,7 +2,10 @@
 // DISCRIMINATE: a filter that leaks car swings into drivers lights up the leak tests, and a filter that freezes its drivers
 // passes the property tests but loses on forecast loss (which is why the predictive score sits beside them).
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { loadData } from '../packages/research/node/common.mjs';
+import { deserialize } from '../packages/core/src/json-serialization.js';
+import { summarizeBacktest } from '../packages/core/src/backtest.js';
 import {
   STATE_SPACE_DEFAULTS,
   catalogue,
@@ -27,7 +30,7 @@ import {
 import { describe } from '../packages/eval/src/catalog.js';
 import { compare, recoveryReport, scorecard } from '../packages/eval/src/report.js';
 import { STATE_SPACE } from '../packages/core/src/presets/state-space.js';
-import { eloForecastScores, prepareReal, stateSpaceForecastScores } from '../packages/eval/src/pipeline.js';
+import { eloForecastScores, prepareReal } from '../packages/eval/src/pipeline.js';
 
 // ---- 1) statistics -----------------------------------------------------------------------------------------------
 {
@@ -281,20 +284,33 @@ const stress = { ...worldFromHyper(base), winterC: 40, yearD: 8 };
       assert.ok(mv > 0.2 && mv < 0.7 && st > 0.9 && st < 1.2, `frozen-rating slopes: movers ${mv.toFixed(2)}, stayers ${st.toFixed(2)}`);
     }
   }
-  // the forecast layer (form trackers and heads) on each rating system, as in the docs' table
-  const wantForecast = {
-    elo: { w2: [0.338, 0.3839, 0.3599], w3: [0.3262, 0.3615, 0.3672] },
-    ss: { w2: [0.3371, 0.3818, 0.3494], w3: [0.3253, 0.3597, 0.3623] },
-  };
-  const got = { elo: eloForecastScores(prep), ss: stateSpaceForecastScores(prep, ss) };
-  for (const [name, wins] of Object.entries(wantForecast))
-    for (const [win, want] of Object.entries(wins)) {
-      const g = got[name][win];
-      [g.raceDay, g.thursday, g.qual].forEach((v, i) =>
-        assert.ok(Math.abs(v - want[i]) < 0.0005, `${name} forecast layer ${win}[${i}]: ${v.toFixed(4)} vs docs ${want[i]}`),
-      );
-    }
+  // The Elo reference retains its former heads; the published hybrid's refitted heads are checked against their dated fit report.
+  const reference = eloForecastScores(prep);
+  for (const [window, expected] of Object.entries({ w2: [0.338, 0.3839, 0.3599], w3: [0.3262, 0.3615, 0.3672] })) {
+    const got = reference[window];
+    [got.raceDay, got.thursday, got.qual].forEach((value, index) =>
+      assert.ok(
+        Math.abs(value - expected[index]) < 0.0005,
+        `Elo forecast layer ${window}[${index}]: ${value.toFixed(4)} vs ${expected[index]}`,
+      ),
+    );
+  }
+  const published = deserialize(await readFile('data/model.json', 'utf8')).model;
+  const report = JSON.parse(await readFile('research/state-space/selection-report.json', 'utf8'));
+  for (const [fromYear, toYear] of [
+    [2008, 2011],
+    [2012, 2015],
+  ]) {
+    const summary = summarizeBacktest(published, { burnIn: 20, fromYear, toYear, diag: 'diag' }).overall;
+    const selected = report[`${fromYear}-${toYear}`];
+    for (const [actual, expected] of [
+      [summary.combinedLogLoss, selected.race_day_combined.new],
+      [summary.preCombinedLogLoss, selected.thursday_combined.new],
+      [summary.qualLogLoss, selected.heads.qual.new],
+    ])
+      assert.ok(Math.abs(actual - expected) < 0.0005, `published hybrid heads reproduce the ${fromYear}-${toYear} fit report`);
+  }
   console.log(
-    'PASS real data: predictive and forecast-layer scores reproduce docs/state-space.md (state-space and Elo), holdout excluded by default',
+    'PASS real data: historical filter/Elo ratings and published hybrid heads reproduce their reports; holdout excluded by default',
   );
 }

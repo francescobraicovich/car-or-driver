@@ -12,6 +12,8 @@ import { writeFileSync } from 'node:fs';
 import { loadData } from './common.mjs';
 import { collectExamWithElo } from '../../core/src/elo-benchmark.js';
 import { runSession } from '../../core/src/state-space/build.js';
+import { carIdentity } from '../../core/src/lineage.js';
+import { hybridRatings } from '../../core/src/hybrid/ratings.js';
 import { STATE_SPACE } from '../../core/src/presets/state-space.js';
 
 const WRITE = process.argv.includes('--write');
@@ -25,10 +27,12 @@ const nll = (z, o) => -Math.log(Math.min(1 - 1e-12, Math.max(1e-12, 1 / (1 + Mat
 // ---- flat observation tables: each carries the raw log-odds of both systems -----------------------------------
 const rows = []; // { session, year, o, w, same, src, wet, zSS (variance-corrected), zPlain, zElo }
 const qualRun = runSession(weekends, 'qual', tmBoost);
+const raceRun = runSession(weekends, 'race', tmBoost, qualRun);
+const hybrid = hybridRatings(weekends, model.snaps, raceRun, qualRun, carIdentity);
 for (const session of ['race', 'qual']) {
   const hyper = STATE_SPACE[session];
   const k = Math.LN10 / hyper.s;
-  const run = session === 'qual' ? qualRun : runSession(weekends, 'race', tmBoost, qualRun); // the race filter reads the qualifying run (state-space/qualifying-link.js)
+  const run = session === 'qual' ? qualRun : hybrid;
   weekends.forEach((w, i) => {
     const list = session === 'race' ? w.raceObs : w.qualObs;
     list.forEach((o, q) => {

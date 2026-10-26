@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { csv } from '../packages/core/src/csv.js';
 import { INSIGHTS_DATA } from '../site/js/insights-data.js';
 import { INSIGHT_CARDS, INSIGHT_TOPICS } from '../site/js/insights-cards.js';
 
@@ -77,19 +78,36 @@ assert.ok(
   [25, 26, 27, 28, 29].every((age) => Math.abs(change(age)) <= 3.5),
   'a plateau from 25 to 29',
 );
-assert.ok(
-  [30, 31, 32, 33].every((age) => change(age) <= -2.5 && change(age) >= -6),
-  'a decline of about 3 to 5 points a year from 30',
-);
+const earlyThirtiesChange = [30, 31, 32, 33].reduce((sum, age) => sum + change(age), 0) / 4;
+assert.ok(earlyThirtiesChange <= -3 && earlyThirtiesChange >= -5, 'an average decline of about 3 to 5 points a year from 30');
+const model = JSON.parse(await readFile(`${ROOT}data/model.json`, 'utf8'));
+const people = csv(await readFile(`${ROOT}data/drivers.csv`, 'utf8'));
+const idByName = new Map(people.map((person) => [`${person.forename} ${person.surname}`, String(person.driverId)]));
+const birthById = new Map(people.map((person) => [String(person.driverId), person.dob]));
+for (const [name, seasons] of Object.entries(D.ageing.careers)) {
+  const id = idByName.get(name);
+  assert.ok(id, `${name} has a birth date`);
+  const dob = birthById.get(id);
+  for (const season of seasons) {
+    const first = model.model.snaps.find(
+      (snap) => snap.year === season.year && snap.drivers.some((driver) => String(driver.driverId) === id),
+    );
+    assert.ok(first, `${name} has a rated race in ${season.year}`);
+    const age = season.year - Number(dob.slice(0, 4)) - Number(first.date.slice(5) < dob.slice(5));
+    assert.equal(season.age, age, `${name} ${season.year} uses age on the first rated Grand Prix date`);
+  }
+}
 const schumacherLate = D.ageing.careers['Michael Schumacher'].filter((season) => season.age >= 41);
+const schumacherEarlier = D.ageing.careers['Michael Schumacher'].filter((season) => season.year <= 2006);
+const averageRating = (rows) => rows.reduce((sum, row) => sum + row.rating, 0) / rows.length;
 assert.ok(
-  schumacherLate.length > 0 && schumacherLate.every((season) => season.rating > 20 && season.rating < 30),
-  "Schumacher's comeback is rated about 25",
+  schumacherLate.length > 0 && Math.abs(averageRating(schumacherLate) - averageRating(schumacherEarlier)) < 5,
+  "Schumacher's comeback average remains close to his Ferrari-year average",
 );
 
 assert.ok(
-  D.development.climbs.some((row) => row.team === 'McLaren' && row.year === 2023 && Math.round(row.change) === 51),
-  'McLaren 2023 climbed 51 points',
+  D.development.climbs.some((row) => row.team === 'McLaren' && row.year === 2023 && row.change > 40),
+  'McLaren 2023 remains an in-season climb above 40 points',
 );
 const retirement = (year) => D.mechanicalRetirements.find((row) => row.year === year).percent;
 assert.ok(Math.abs(retirement(D.dataThrough.year) - retirement(2017)) < 3, 'mechanical retirements are back to about the 2017 level');

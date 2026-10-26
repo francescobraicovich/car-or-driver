@@ -83,7 +83,7 @@ export function drawUncertaintyByExperience(container, model) {
         xTicks: [1, 10, 20, 30, 40, 50, 60],
         yTicks: [10, 15, 20, 25],
         xTitle: 'Races driven so far',
-        yTitle: 'Error bar of the rating: one standard deviation, in points',
+        yTitle: 'Approximate filter standard deviation, in points',
         marginLeft: 40,
       });
       drawBand(
@@ -111,7 +111,7 @@ const fractionalYear = (isoDate) => {
   return date.getUTCFullYear() + (date.getUTCMonth() + date.getUTCDate() / 31) / 12;
 };
 
-/** One driver's published rating after each of their last weekends, with one standard deviation either side. */
+/** One driver's published rating after each recent weekend, with approximate filter uncertainty. */
 export function drawRatingThroughTime(container, model) {
   const WEEKENDS = 48;
   const latest = model.snaps.at(-1);

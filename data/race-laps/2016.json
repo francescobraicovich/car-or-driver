@@ -1,7 +1,7 @@
 {
  "format": 2,
  "dataVersion": "07396ffcac47b05d",
- "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).","nonCommercial":true},
+ "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2016,
  "codes": {"1":"HAM","3":"ROS","4":"ALO","8":"RAI","13":"MAS","18":"BUT","20":"VET","154":"GRO","807":"HUL","815":"PER","817":"RIC","821":"GUT","822":"BOT","825":"MAG","826":"KVY","828":"ERI","830":"VER","831":"NAS","832":"SAI","835":"PAL","836":"WEH","837":"HAR","838":"VAN","839":"OCO"},
  "statuses": {"3":"Accident","4":"Collision","5":"Engine","6":"Gearbox","20":"Spun off","22":"Suspension","23":"Brakes","25":"Overheating","26":"Mechanical","27":"Tyre","29":"Puncture","31":"Retired","36":"Wheel","44":"Oil leak","61":"Wheel nut","75":"Power loss","84":"Battery","130":"Collision damage","131":"Power Unit"},

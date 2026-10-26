@@ -1,7 +1,7 @@
 {
  "format": 2,
  "dataVersion": "07396ffcac47b05d",
- "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).","nonCommercial":true},
+ "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2008,
  "codes": {"1":"HAM","2":"HEI","3":"ROS","4":"ALO","5":"KOV","6":"NAK","7":"BOU","8":"RAI","9":"KUB","10":"GLO","11":"SAT","12":"PIQ","13":"MAS","14":"COU","15":"TRU","16":"SUT","17":"WEB","18":"BUT","19":"DAV","20":"VET","21":"FIS","22":"BAR"},
  "statuses": {"3":"Accident","4":"Collision","5":"Engine","6":"Gearbox","7":"Transmission","8":"Clutch","9":"Hydraulics","10":"Electrical","20":"Spun off","21":"Radiator","22":"Suspension","23":"Brakes","25":"Overheating","26":"Mechanical","27":"Tyre","28":"Driver Seat"},

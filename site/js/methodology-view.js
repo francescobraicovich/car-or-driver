@@ -4,11 +4,12 @@ import { state } from './state.js';
 import { renderPlot } from './chart-renderer.js';
 import { hasRatingsDiag, ratingsWindows, seasonLossSeries } from './backtest-figures.js';
 import { drawOddsCurve, drawRatingThroughTime, drawUncertaintyByExperience } from './methodology-figures.js';
+import { initCareerGraph, initSplitLab } from './methodology-interactives.js';
 import { NAIVE_LOGLOSS, summarizeBacktest } from '../../packages/core/src/backtest.js';
 import { TUNED_ELO } from '../../packages/core/src/presets/tuned-elo.js';
 import { MODEL_SETTINGS } from '../../packages/core/src/presets/model-settings.js';
 import { STATE_SPACE } from '../../packages/core/src/presets/state-space.js';
-import { METRICS } from './metrics-snapshot.js';
+import { HYBRID } from '../../packages/core/src/presets/hybrid.js';
 import { STATE_SPACE_FIT } from '../../packages/core/src/presets/state-space-fit.js';
 import { STATE_SPACE_DEFAULTS, STATE_SPACE_WINDOW } from '../../packages/core/src/state-space/filter.js';
 import { CONTENT_HTML } from './methodology-content.js';
@@ -104,7 +105,7 @@ const STATE_SPACE_PARAMETERS = [
   { key: 'rho', label: 'adapt rho', where: 'race', from: 'adapt', text: 'Option: share of that loss kept each following weekend.' },
   {
     key: 'varInfl',
-    text: 'Multiplier on the variance the filter reports, so that the error bars match how much ratings actually revise (1 = the filter’s own).',
+    text: 'Multiplier on the displayed race-filter variance, calibrated from dated rating revisions; the complete blend has no separately calibrated covariance.',
   },
 ];
 
@@ -126,7 +127,12 @@ const derived = {
   'adapt.dip': STATE_SPACE.adapt?.dip || 20,
   'adapt.rho': STATE_SPACE.adapt?.rho ?? 0.5,
   'adapt.state': STATE_SPACE.adapt?.dip ? 'on' : 'off',
-  ...METRICS,
+  ...Object.fromEntries(
+    Object.entries(HYBRID)
+      .filter(([, value]) => typeof value === 'number')
+      .map(([key, value]) => [`hybrid.${key}`, value]),
+  ),
+  ...Object.fromEntries(Object.entries(HYBRID.ranking).map(([key, value]) => [`hybrid.ranking.${key}`, value])),
 };
 const show = (v) => (typeof v === 'boolean' ? (v ? 'on' : 'off') : String(v));
 
@@ -250,7 +256,7 @@ function drawModelFigures() {
   const name = drawRatingThroughTime($('methodologyTimelineChart'), state.model);
   if (name)
     $('methodologyTimelineCaption').textContent =
-      `${name}: the published rating after each of their last 48 weekends, and one standard deviation either side. Ratings move a little after every weekend, and the band is the model’s honest statement of how far they could be wrong: differences smaller than the band are not reliable.`;
+      `${name}: the published rating after each of their last 48 weekends, with the race filter’s approximate standard deviation either side. The band does not include uncertainty from the full hybrid blend.`;
 }
 
 function render() {
@@ -302,7 +308,7 @@ export function initMethodology() {
     page: 'methodology',
     title: 'Methodology',
     before:
-      '<p class="deck-intro">How the ratings and forecasts are computed, from first principles. It assumes university-level mathematics and nothing about Formula 1 or rating systems.</p>',
+      '<p class="deck-intro">A guided account of how results become driver ratings, car ratings and forecasts. Start with the observable comparisons, then follow how the model learns from them.</p>',
     groups: [
       {
         slides: parts.map((part) => ({
@@ -315,6 +321,8 @@ export function initMethodology() {
     ],
     firstShown: () => {
       drawOddsCurve($('methodologyOddsChart'), MODEL_SETTINGS.scale);
+      initSplitLab($('methodologySplitLab'));
+      initCareerGraph($('methodologyCareerGraph'));
       render();
       typeset();
     },

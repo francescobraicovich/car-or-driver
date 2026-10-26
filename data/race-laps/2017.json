@@ -1,7 +1,7 @@
 {
  "format": 2,
  "dataVersion": "07396ffcac47b05d",
- "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).","nonCommercial":true},
+ "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2017,
  "codes": {"1":"HAM","4":"ALO","8":"RAI","13":"MAS","18":"BUT","20":"VET","154":"GRO","807":"HUL","814":"DIR","815":"PER","817":"RIC","822":"BOT","825":"MAG","826":"KVY","828":"ERI","830":"VER","832":"SAI","835":"PAL","836":"WEH","838":"VAN","839":"OCO","840":"STR","841":"GIO","842":"GAS","843":"HAR"},
  "statuses": {"3":"Accident","4":"Collision","5":"Engine","6":"Gearbox","9":"Hydraulics","10":"Electrical","22":"Suspension","23":"Brakes","30":"Driveshaft","32":"Fuel pressure","33":"Front wing","34":"Water pressure","36":"Wheel","44":"Oil leak","47":"Water leak","51":"Oil pressure","61":"Wheel nut","76":"Vibrations","84":"Battery","105":"Spark plugs","130":"Collision damage","131":"Power Unit","136":"Seat"},

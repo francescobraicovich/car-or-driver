@@ -1,7 +1,7 @@
 {
  "format": 2,
  "dataVersion": "07396ffcac47b05d",
- "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).","nonCommercial":true},
+ "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2004,
  "codes": {"2":"HEI","4":"ALO","8":"RAI","10":"GLO","11":"SAT","13":"MAS","14":"COU","15":"TRU","17":"WEB","18":"BUT","21":"FIS","22":"BAR","23":"SCH","30":"MSC","31":"MON","32":"KLI","35":"VIL","41":"ZON","42":"PIZ","43":"DAM","44":"PAN","45":"GPA","46":"BRU","47":"BAU","48":"GEN"},
  "statuses": {"2":"Disqualified","3":"Accident","4":"Collision","5":"Engine","6":"Gearbox","7":"Transmission","8":"Clutch","9":"Hydraulics","10":"Electrical","20":"Spun off","22":"Suspension","23":"Brakes","25":"Overheating","27":"Tyre","29":"Puncture","30":"Driveshaft","36":"Wheel","37":"Throttle","38":"Steering","40":"Electronics","62":"Not classified","63":"Pneumatics","64":"Handling","65":"Rear wing","66":"Fire"},

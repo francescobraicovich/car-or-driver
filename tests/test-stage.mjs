@@ -344,13 +344,13 @@ assert.deepEqual(barScale([]), { low: 0, high: 0 });
 }
 
 // ── the title and the line from a word to its picture ──
-// A stand-in for the real title (the page measures it in the browser): two lines, the first about 5.4 letters wide, the second about 4.4, centred.
+// A stand-in for the real title (the page measures it in the browser): CAR OR above DRIVER, centred.
 function titleBoxes(layout) {
   const em = layout.size;
   const block = { x: layout.centre - 2.7 * em, y: layout.top, width: 5.4 * em, height: 2 * layout.lineHeight * em };
   const lineHeight = layout.lineHeight * em;
-  const driver = { x: layout.centre - 2.5 * em, y: layout.top, width: 5 * em, height: lineHeight };
-  const car = { x: layout.centre + 0.2 * em, y: layout.top + lineHeight, width: 2.3 * em, height: lineHeight };
+  const car = { x: layout.centre - 2.3 * em, y: layout.top, width: 2.4 * em, height: lineHeight };
+  const driver = { x: layout.centre - 2.7 * em, y: layout.top + lineHeight, width: 5.4 * em, height: lineHeight };
   return { block, driver, car };
 }
 const overlaps = (a, b) => a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y;
@@ -410,7 +410,17 @@ const block = (selector) => {
 };
 const tokensOf = (text) => Object.fromEntries([...text.matchAll(/--([a-z0-9-]+):\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
 const red = tokensOf(block('.stage {'));
-const grey = { ...red, ...tokensOf(block(".stage[data-state='peek'],")) };
+const grey = {
+  ...red,
+  ...tokensOf(block(".stage[data-state='peek'] .stage-backdrop,")), // the colour of the page
+  ...tokensOf(block(".stage[data-state='peek'] :is(")), // the ink of the links, the track and the list of slides
+  ...tokensOf(block('.title-variant.ink-dark {')), // the ink of the title
+};
+assert.match(
+  css,
+  /\.stage\[data-state='peek'\] \.title-scrim,\n\.stage\[data-state='open'\] \.title-scrim \{\n\s+opacity: 0;/,
+  'there is no haze behind the title on the black and white drawing',
+);
 const trackTokens = tokensOf(block('.track {'));
 const panelTokens = tokensOf(block('.rating-card {')); // the tokens are set on the panel and the card together
 const cardTokens = tokensOf(block('.rating-card {\n  --panel-plate'));
@@ -519,7 +529,7 @@ for (const [width, height] of VIEWPORTS) {
         ['title', 3, 'title-ink'],
         ...(version === 'mono' ? [['dimmed word', 3, 'title-ink', dim]] : []), // a word is only dimmed while something is pointed at, and then the drawing is black and white
       ],
-      'scrim',
+      version === 'red' ? 'scrim' : null, // (the haze is only over the red drawing)
     );
   }
   // "click to open" under each box, in the blue of the box, on the black and white drawing

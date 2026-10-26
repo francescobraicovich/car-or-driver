@@ -22,12 +22,11 @@ export const DIAGRAM_HTML = String.raw`
         <span class="math">w_{xy}</span> for how much that comparison tells us.
       </p>
     </li>
-    <li class="flow-link" aria-hidden="true"><span>a model of how the odds depend on hidden pace, and Bayes’ rule after every weekend</span></li>
+    <li class="flow-link" aria-hidden="true"><span>three dated learners update only after each weekend</span></li>
     <li class="flow-stage">
       <p class="flow-step">Beliefs about pace <a href="#" data-jump="method-ratings">Part 3</a></p>
       <p>
-        A mean and a covariance for the hidden pace of every driver <span class="math">D</span> and every car <span class="math">C</span>, in rating points. Odds depend on the
-        strength <span class="math">S=D+A+C</span> (<span class="math">A</span>: the driver’s fit with their car).
+        Two joint state-space filters estimate driver and car pace with covariance. An online pair-ranking learner estimates another portable driver level. Their odds depend on driver, car and an internal driver–car fit.
       </p>
       <div class="flow-pair">
         <div class="flow-box">
@@ -40,14 +39,20 @@ export const DIAGRAM_HTML = String.raw`
           <span><span class="math">S=\beta D^{\text{qual}}+D+A+C+\gamma C^{\text{qual}}</span></span>
         </div>
       </div>
+      <div class="flow-pair">
+        <div class="flow-box">
+          <b>Online ranking learner</b>
+          <span>race pairs, shared update rule for every driver; portable level <span class="math">D^O</span></span>
+        </div>
+      </div>
     </li>
-    <li class="flow-link" aria-hidden="true"><span>read the beliefs off, with their uncertainty</span></li>
+    <li class="flow-link" aria-hidden="true"><span>blend the pre-weekend or post-weekend levels with fixed shares</span></li>
     <li class="flow-stage flow-site">
       <p class="flow-step">Ratings <a href="#" data-jump="method-ratings">Part 3</a></p>
       <div class="flow-outputs">
         <div class="flow-box">
-          <b>Rating ± uncertainty</b>
-          <span>driver <span class="math">D+\beta D^{\text{qual}}</span>, car <span class="math">C+\gamma C^{\text{qual}}</span>; the bar is the standard deviation</span>
+          <b>Rating ± approximate uncertainty</b>
+          <span>driver <span class="math">0.48D^R+0.32D^Q+0.20D^O</span>, car <span class="math">0.75C^R+0.25C^Q</span>; bars retain the race filter covariance</span>
         </div>
         <div class="flow-box">
           <b>Reliability</b>

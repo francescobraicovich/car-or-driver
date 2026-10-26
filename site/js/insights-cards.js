@@ -363,7 +363,7 @@ export const INSIGHT_CARDS = [
         ['var(--ink-3)', 'Titles actually won'],
       ]) + '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="seasons"></div>',
     how: () =>
-      'For each season the driver with the highest season-average portable rating wins, with the rating uncertainty simulated (6,000 draws) so a close call is split between drivers instead of awarded to one. "Expected" sums those probabilities. The early seasons are nearly indistinguishable at the top, so they spread credit widely. The table lists the seasons where the likeliest best driver was not the champion.',
+      'For each season the driver with the highest season-average portable rating wins, with the approximate filter uncertainty simulated (6,000 draws) so a close call is split between drivers instead of awarded to one. The hybrid blend adds uncertainty not included in these draws. "Expected" sums those probabilities. The early seasons are nearly indistinguishable at the top, so they spread credit widely. The table lists the seasons where the likeliest best driver was not the champion.',
     draw: (data, root) => {
       const { expected, actual, seasons } = data.equalCarTitles;
       const items = expected.slice(0, 9).map(([name, value]) => ({
@@ -484,7 +484,7 @@ export const INSIGHT_CARDS = [
         ['var(--ink)', 'Package'],
       ]) + '<div class="insight-chart" data-chart="main"></div>',
     how: (data) =>
-      `Current published ratings after round ${data.dataThrough.round} of ${data.dataThrough.year}, relative to the field, sorted by package. Driver ratings are the portable level without the fit to the current car. Each driver's rating carries an uncertainty of about 12 to 18 points, which the ratings panel shows as error bars.`,
+      `Current published hybrid ratings after round ${data.dataThrough.round} of ${data.dataThrough.year}, relative to the field, sorted by package. Driver ratings are portable levels without the fit to the current car. The ratings panel shows approximate filter error bars; they do not include uncertainty from the complete blend.`,
     draw: (data, root) => {
       const items = [...data.currentGrid]
         .sort((a, b) => b.driverRating + b.carRating - (a.driverRating + a.carRating))
@@ -668,8 +668,12 @@ export const INSIGHT_CARDS = [
     kind: 'model',
     title: 'The ageing curve, and the careers behind it',
     label: 'The ageing curve',
-    lead: () =>
-      "Drivers improve quickly into their mid-twenties, hold a plateau until about 29, then lose around 3 to 5 rating points a year. Schumacher's comeback at 41 to 43 was rated the same as his Ferrari years (about 25 points above the field).",
+    lead: (data) => {
+      const career = data.ageing.careers['Michael Schumacher'];
+      const ferrari = career.filter((season) => season.year <= 2006);
+      const comeback = career.filter((season) => season.year >= 2010);
+      return `Drivers improve quickly into their mid-twenties, hold a plateau until about 29, then lose around 3 to 5 rating points a year. Schumacher's comeback at 41 to 43 averaged ${formatInteger(average(comeback.map((season) => season.rating)))} points above the field, close to ${formatInteger(average(ferrari.map((season) => season.rating)))} in his Ferrari years.`;
+    },
     body: () =>
       legendHtml([
         ['var(--s7)', 'Schumacher'],
@@ -679,9 +683,9 @@ export const INSIGHT_CARDS = [
         ['var(--s5)', 'Vettel'],
         ['var(--s4)', 'Räikkönen'],
       ]) +
-      '<div class="insight-grid"><div><h4>Average change in rating from one season to the next, by age at the start</h4><div data-chart="steps"></div></div><div><h4>Season rating by age</h4><div data-chart="careers"></div></div></div>',
+      '<div class="insight-grid"><div><h4>Average change in rating from one season to the next, by age at the first race</h4><div data-chart="steps"></div></div><div><h4>Season rating by age at the first race</h4><div data-chart="careers"></div></div></div>',
     how: () =>
-      'Left: for drivers with consecutive full seasons (8+ races each), the mean change in portable rating by age, with one standard error; ages with fewer than 8 cases are dropped. Survivor bias applies: drivers who decline sharply leave, so late-career declines are understated. Right: season-average portable rating at each age.',
+      'Age is the driver’s completed years on their first rated Grand Prix date of that season, calculated from their birth date. Left: for drivers with consecutive full seasons (8+ races each), the mean change in portable rating by starting age, with one standard error; ages with fewer than 8 cases are dropped. Survivor bias applies: drivers who decline sharply leave, so late-career declines are understated. Right: season-average portable rating by starting age.',
     draw: (data, root) => {
       mountChart(
         chartIn(root, 'steps'),
@@ -941,7 +945,8 @@ export const INSIGHT_CARDS = [
     lead: (data) => {
       const slide = data.development.slides[0];
       const climb = data.development.climbs[0];
-      return `${slide.team} lost ${formatInteger(-slide.change)} rating points over the ${slide.year} season, the largest in-season slide. The biggest climb was ${climb.team} ${climb.year} (+${formatInteger(climb.change)}); McLaren 2023 (+51) is the standout among established front-runners.`;
+      const mclaren = data.development.climbs.find((row) => row.team === 'McLaren' && row.year === 2023);
+      return `${slide.team} lost ${formatInteger(-slide.change)} rating points over the ${slide.year} season, the largest in-season slide. The biggest climb was ${climb.team} ${climb.year} (+${formatInteger(climb.change)}); McLaren 2023 (+${formatInteger(mclaren.change)}) is the standout among established front-runners.`;
     },
     body: () =>
       legendHtml([

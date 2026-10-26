@@ -1,7 +1,7 @@
 {
  "format": 2,
  "dataVersion": "07396ffcac47b05d",
- "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).","nonCommercial":true},
+ "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2014,
  "codes": {"1":"HAM","3":"ROS","4":"ALO","8":"RAI","13":"MAS","16":"SUT","18":"BUT","20":"VET","154":"GRO","155":"KOB","807":"HUL","813":"MAL","815":"PER","817":"RIC","818":"VER","820":"CHI","821":"GUT","822":"BOT","824":"BIA","825":"MAG","826":"KVY","827":"LOT","828":"ERI","829":"STE"},
  "statuses": {"3":"Accident","4":"Collision","5":"Engine","6":"Gearbox","8":"Clutch","10":"Electrical","22":"Suspension","23":"Brakes","26":"Mechanical","31":"Retired","34":"Water pressure","39":"Technical","40":"Electronics","43":"Exhaust","44":"Oil leak","47":"Water leak","51":"Oil pressure","65":"Rear wing","79":"Drivetrain","101":"Turbo","130":"Collision damage","131":"Power Unit","132":"ERS"},

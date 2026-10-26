@@ -38,10 +38,11 @@ export async function loadModel() {
       document.body.dataset.ratingsReady = '1';
       window.dispatchEvent(new CustomEvent('f1:ratings-ready'));
     }
-    const { model: shipped, driverProfiles } = await fetchFile('model.json');
+    const { model: shipped, driverProfiles, sourceHash } = await fetchFile('model.json');
     const model = withHistories(shipped);
     state.model = model;
     state.profiles = driverProfiles ?? {};
+    state.modelSourceHash = sourceHash;
     populate();
     document.body.dataset.ready = '1';
     window.dispatchEvent(new CustomEvent('f1:model-ready'));

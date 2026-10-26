@@ -10,6 +10,15 @@ import { DESCRIPTIONS, NAMES, isProbability } from './metric-text.js';
 
 // Recent form adjusts the race-pace ratings only.
 const FORM_METRICS = ['combined', 'race'];
+const PACE_METRICS = ['combined', 'race', 'qual'];
+const GUIDE_TEXT = {
+  pace: 'Estimated pace after this weekend · higher is faster · 1,000 is the average of this grid',
+  effective: 'Effective pace after this weekend · higher is better · includes finishing risk',
+  clean: 'Clean-race probability after this weekend · higher % means fewer driver-caused retirements',
+  survival: 'Survival probability after this weekend · higher % means fewer mechanical failures',
+  incident: 'Driver incident rating after this weekend · higher means fewer driver-caused retirements',
+  reliability: 'Car reliability rating after this weekend · higher means fewer mechanical failures',
+};
 
 const preferences = {
   driver: { metric: 'combined', selected: new Set() },
@@ -19,7 +28,8 @@ let entity = 'driver';
 let formOn = false;
 let showSd = true;
 let ratingDecimals = 1;
-// One standard deviation of each rating (state-space model). Combined pace mixes the race and qualifying filters (the race filter reads the qualifying one, so the bar is slightly understated).
+// Approximate standard deviations from the state-space filters. The hybrid
+// blend does not propagate uncertainty from its qualifying and online signals.
 const SD_FIELD = { race: 'raceSd', qual: 'qualSd', combined: 'combinedSd' };
 const sdOf = (row, metric) => {
   const v = row[SD_FIELD[metric]];
@@ -142,6 +152,14 @@ function ensurePanel() {
       <button type="button" class="toggle" id="ratingsLayerForm" aria-pressed="false">form</button>
       <button type="button" class="toggle" id="ratingsSd" aria-pressed="true" aria-label="Uncertainty">±</button>
     </div>
+    <div class="ratings-guide">
+      <p id="ratingsGuideLine"></p>
+      <button type="button" id="ratingsGuideToggle" aria-controls="ratingsGuideDetail" aria-expanded="false">How to read this</button>
+    </div>
+    <div class="ratings-guide-detail" id="ratingsGuideDetail" hidden>
+      <p id="ratingsGuideText"></p>
+      <a href="#/methodology">Full method</a>
+    </div>
     <ol class="ratings-list" id="ratingsList"></ol>
     <div class="selection-bar" id="ratingsSelection" role="region" aria-label="Selected for comparison" hidden>
       <p class="selection-names" id="ratingsSelectionNames"></p>
@@ -167,6 +185,12 @@ function ensurePanel() {
     </footer>`;
   el.ratingsHost.append(panel);
   controls = Object.fromEntries([...panel.querySelectorAll('[id]')].map((n) => [n.id, n]));
+  controls.ratingsMetric.setAttribute('aria-describedby', 'ratingsGuideLine');
+  controls.ratingsGuideToggle.addEventListener('click', () => {
+    const open = controls.ratingsGuideDetail.hidden;
+    controls.ratingsGuideDetail.hidden = !open;
+    controls.ratingsGuideToggle.setAttribute('aria-expanded', String(open));
+  });
 
   for (const [id, which] of [
     ['ratingsDrivers', 'driver'],
@@ -308,7 +332,9 @@ function description(row, snap, metric, probability, st) {
   ];
   if (row.newDriver) lines.push(`New driver: ${row.races} race${row.races === 1 ? '' : 's'} so far, so the rating is provisional`);
   if (Number.isFinite(sdOf(row, metric)))
-    lines.push(`Uncertainty: ± ${sdOf(row, metric).toFixed(0)} points (one standard deviation, approximate)`);
+    lines.push(
+      `Uncertainty: ± ${sdOf(row, metric).toFixed(0)} points (approximate filter standard deviation; excludes the full hybrid blend)`,
+    );
   if (st.showForm) lines.push(`With recent form: ${fmt(row.formValue, probability)} (${signed(row.shift)} from form)`);
   lines.push(`Change since previous appearance: ${change}`, `${snap.year} ${snap.name}`);
   return lines.join('\n');
@@ -658,13 +684,21 @@ export function renderRatings() {
   controls.ratingsSd.setAttribute('aria-pressed', String(st.sd));
   controls.ratingsSd.toggleAttribute('disabled', !hasSd);
   controls.ratingsSd.hidden = panel.getBoundingClientRect().width < 400; // a phone has no room for the error beside every rating
-  controls.ratingsSd.title = hasSd ? 'Show one standard deviation of each rating' : 'This rating has no uncertainty estimate';
+  controls.ratingsSd.title = hasSd ? 'Show approximate filter uncertainty for each rating' : 'This rating has no uncertainty estimate';
   const rows = withForm(baseRows, st);
   const probability = isProbability(pref.metric);
   controls.ratingsLayerForm.setAttribute('aria-pressed', String(st.showForm));
   controls.ratingsLayerForm.toggleAttribute('disabled', Boolean(st.reason));
   controls.ratingsLayerForm.title = st.reason || 'Add the recent form of each driver to the rating';
   controls.ratingsMetric.title = DESCRIPTIONS[pref.metric];
+  controls.ratingsGuideLine.textContent = PACE_METRICS.includes(pref.metric) ? GUIDE_TEXT.pace : GUIDE_TEXT[pref.metric];
+  const paceMeaning =
+    entity === 'driver'
+      ? 'These rankings are our model’s estimates of how fast each driver would be in the same car. The model estimates the car’s effect separately.'
+      : 'These rankings are our model’s estimates of how fast each car would be with the same driver. The model estimates the driver’s effect separately.';
+  controls.ratingsGuideText.textContent = PACE_METRICS.includes(pref.metric)
+    ? `${paceMeaning} ${DESCRIPTIONS[pref.metric]} They are relative estimates, not lap times or championship points. 1,000 is the average of this grid. The ± value approximates uncertainty in the filter, not the full model.`
+    : `${DESCRIPTIONS[pref.metric]} This ranking estimates the ${entity === 'driver' ? 'driver' : 'car'} separately from the ${entity === 'driver' ? 'car' : 'driver'}. The ± value, where shown, approximates uncertainty in the filter, not the full model.`;
   // the weekend is in the pickers beside the title, so only a screen reader is told it twice
   controls.ratingsTitle.innerHTML = `${entity === 'driver' ? 'Driver' : 'Car'} ratings<span class="sr-only"> after the ${esc(`${snap.year} ${snap.name}`)}</span>`;
   hideCard();

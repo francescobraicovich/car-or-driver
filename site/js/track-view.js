@@ -110,7 +110,9 @@ export function initTrack() {
     const hot = new Set();
     if (view.hotTable) hot.add(view.hotTable);
     if (view.hotRatings != null)
-      for (const car of cars) if (view.entity === 'driver' ? car.id === view.hotRatings : car.team === view.hotRatings) hot.add(car.id);
+      for (const car of cars)
+        if (view.entity === 'driver' || document.body.dataset.page === 'graph' ? car.id === view.hotRatings : car.team === view.hotRatings)
+          hot.add(car.id);
     return hot;
   }
 
@@ -263,9 +265,10 @@ export function initTrack() {
   }
 
   async function show() {
-    if (!view.open || !view.wide || !view.snap) return hide();
+    const graph = document.body.dataset.page === 'graph';
+    if ((!view.open && !graph) || (!view.wide && !graph) || !view.snap) return hide();
     const room = parseFloat(getComputedStyle(stage).getPropertyValue('--track-room'));
-    if (!(room >= SMALLEST_ROOM)) return hide();
+    if (!graph && !(room >= SMALLEST_ROOM)) return hide();
     const key = view.snap.raceId;
     if (key === view.key && !box.hidden) {
       paintHot();
@@ -280,7 +283,7 @@ export function initTrack() {
     } catch {
       return hide(); // the ratings do not need the race
     }
-    if (view.key !== wanted || !view.open) return; // the weekend or the panel has changed meanwhile
+    if (view.key !== wanted || (!view.open && document.body.dataset.page !== 'graph')) return; // the weekend or the page has changed meanwhile
     const track = tracks[view.snap.circuitId];
     const race = season.races[view.snap.raceId];
     if (!track || !race) return hide(); // a circuit without an outline (Valencia, Fuji, Korea, India), or a race without lap times

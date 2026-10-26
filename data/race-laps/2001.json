@@ -1,7 +1,7 @@
 {
  "format": 2,
  "dataVersion": "07396ffcac47b05d",
- "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).","nonCommercial":true},
+ "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2001,
  "codes": {"2":"HEI","4":"ALO","8":"RAI","14":"COU","15":"TRU","18":"BUT","21":"FIS","22":"BAR","23":"SCH","30":"MSC","31":"MON","35":"VIL","37":"DLR","41":"ZON","44":"PAN","49":"FRE","50":"VER","54":"BUR","55":"ALE","56":"IRV","57":"HAK","58":"MAR","59":"BER","60":"MAZ","61":"ENG","62":"YOO"},
  "statuses": {"2":"Disqualified","3":"Accident","4":"Collision","5":"Engine","6":"Gearbox","7":"Transmission","8":"Clutch","9":"Hydraulics","10":"Electrical","20":"Spun off","22":"Suspension","23":"Brakes","30":"Driveshaft","32":"Fuel pressure","38":"Steering","43":"Exhaust","44":"Oil leak","47":"Water leak","51":"Oil pressure","71":"Fuel rig","84":"Battery","86":"Halfshaft","87":"Crankshaft"},

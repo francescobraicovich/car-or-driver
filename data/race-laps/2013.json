@@ -1,7 +1,7 @@
 {
  "format": 2,
  "dataVersion": "07396ffcac47b05d",
- "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).","nonCommercial":true},
+ "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2013,
  "codes": {"1":"HAM","3":"ROS","4":"ALO","5":"KOV","8":"RAI","13":"MAS","16":"SUT","17":"WEB","18":"BUT","20":"VET","154":"GRO","807":"HUL","813":"MAL","814":"DIR","815":"PER","817":"RIC","818":"VER","819":"PIC","820":"CHI","821":"GUT","822":"BOT","823":"VDG","824":"BIA"},
  "statuses": {"3":"Accident","4":"Collision","5":"Engine","6":"Gearbox","7":"Transmission","9":"Hydraulics","10":"Electrical","20":"Spun off","22":"Suspension","23":"Brakes","26":"Mechanical","27":"Tyre","29":"Puncture","31":"Retired","34":"Water pressure","36":"Wheel","44":"Oil leak","54":"Withdrew","61":"Wheel nut","63":"Pneumatics","91":"Alternator"},

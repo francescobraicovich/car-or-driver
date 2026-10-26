@@ -17,6 +17,7 @@ const TESTS = [
   'test-lineage.mjs',
   'test-forecast-parity.mjs',
   'test-state-space.mjs',
+  'test-hybrid.mjs',
   'test-state-space-forecast.mjs',
   'test-eval.mjs',
   'test-synthetic-v2.mjs',
@@ -27,6 +28,7 @@ const TESTS = [
   'test-stage.mjs',
   'test-insights.mjs',
   'test-layering.mjs',
+  'test-teammate-graph.mjs',
   'test-site-imports.mjs',
 ];
 

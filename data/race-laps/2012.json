@@ -1,7 +1,7 @@
 {
  "format": 2,
  "dataVersion": "07396ffcac47b05d",
- "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).","nonCommercial":true},
+ "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2012,
  "codes": {"1":"HAM","3":"ROS","4":"ALO","5":"KOV","8":"RAI","10":"GLO","13":"MAS","17":"WEB","18":"BUT","20":"VET","30":"MSC","37":"DLR","39":"KAR","154":"GRO","155":"KOB","807":"HUL","808":"PET","811":"SEN","813":"MAL","814":"DIR","815":"PER","816":"DAM","817":"RIC","818":"VER","819":"PIC"},
  "statuses": {"3":"Accident","4":"Collision","5":"Engine","6":"Gearbox","9":"Hydraulics","10":"Electrical","20":"Spun off","22":"Suspension","23":"Brakes","26":"Mechanical","29":"Puncture","31":"Retired","32":"Fuel pressure","37":"Throttle","38":"Steering","40":"Electronics","43":"Exhaust","61":"Wheel nut","65":"Rear wing","76":"Vibrations","91":"Alternator","130":"Collision damage"},

@@ -10,6 +10,8 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { loadData } from './common.mjs';
 import { runSession } from '../../core/src/state-space/build.js';
+import { carIdentity } from '../../core/src/lineage.js';
+import { hybridRatings } from '../../core/src/hybrid/ratings.js';
 import { collectExamWithElo } from '../../core/src/elo-benchmark.js';
 import { replayForecastLayer } from '../../core/src/state-space/replay.js';
 import { FormFeatures } from '../../core/src/forecast/form.js';
@@ -28,6 +30,7 @@ const weekends = exam.weekends.filter((w) => w.year <= through);
 const tmBoost = model.params.tmBoost;
 const qual = runSession(weekends, 'qual', tmBoost);
 const race = runSession(weekends, 'race', tmBoost, qual);
+const hybrid = hybridRatings(weekends, model.snaps.slice(0, weekends.length), race, qual, carIdentity);
 
 // Elo path: the form trackers on Elo ratings and the Elo heads
 const old = [];
@@ -62,7 +65,7 @@ const out = [];
 let seq = 0;
 replayForecastLayer(
   weekends,
-  { race: race.pre, qual: qual.pre },
+  { race: hybrid.pre, qual: qual.pre },
   {
     lapPace: ctx.lapPace,
     params: model.params,

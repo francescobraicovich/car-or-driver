@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Driver or Car — who is really fastest in Formula 1?</title>
+    <title>Car or Driver</title>
     <meta
       name="description"
-      content="Driver or Car separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 2000, head to head forecasts and twenty findings."
+      content="Car or Driver separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 2000, head to head forecasts and twenty findings."
     />
     <meta name="theme-color" content="#d90a04" />
     <link
@@ -17,13 +17,13 @@
     <!-- CANONICAL_TAGS: replaced at deploy time by .github/workflows/deploy.yml with canonical + og:url for the Pages URL -->
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Driver or Car — who is really fastest in Formula 1?" />
+    <meta property="og:title" content="Car or Driver" />
     <meta
       property="og:description"
       content="Who is really fastest? Ratings that separate driver pace from car speed, with error bars, for every F1 weekend since 2000."
     />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Driver or Car — who is really fastest in Formula 1?" />
+    <meta name="twitter:title" content="Car or Driver" />
     <meta
       name="twitter:description"
       content="Ratings that separate driver pace from car speed, with error bars, for every F1 weekend since 2000."
@@ -71,7 +71,7 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Driver or Car",
+        "name": "Car or Driver",
         "applicationCategory": "SportsApplication",
         "operatingSystem": "Web",
         "description": "Ratings that separate F1 driver pace from car speed, with uncertainty, since 2000."
@@ -84,7 +84,7 @@
     <p class="start-error" id="startError" role="alert" hidden></p>
 
     <main id="workspace" class="workspace" hidden>
-      <section id="home" aria-label="Driver or Car">
+      <section id="home" aria-label="Car or Driver">
         <div class="stage" id="stage" data-state="idle" data-subject="" data-hover="" data-pointer="" data-layout="sheet">
           <svg class="stage-filters" width="0" height="0" aria-hidden="true" focusable="false">
             <!-- the title's smoky edges and the two horizontal smears behind it; stage-view.js sets their strengths from the size of the title -->
@@ -108,6 +108,7 @@
               <feGaussianBlur id="titleSmearFarBlur" stdDeviation="70 1" />
             </filter>
           </svg>
+          <div class="stage-backdrop" aria-hidden="true"></div>
           <div class="scene" id="stageScene" aria-hidden="true">
             <img
               class="layer layer-red"
@@ -119,19 +120,21 @@
               fetchpriority="high"
             />
             <img class="layer layer-mono" src="./assets/art/mono.webp" alt="" width="1536" height="1024" decoding="async" />
-            <img class="layer layer-blue" src="./assets/art/blue.webp" alt="" width="1536" height="1024" decoding="async" />
+            <div class="blue-window">
+              <img class="layer layer-blue" src="./assets/art/blue.webp" alt="" width="1536" height="1024" decoding="async" />
+            </div>
           </div>
 
           <nav class="stage-bar stage-top stage-links" aria-label="Main navigation">
-            <a href="#/ratings">ratings</a><a href="#/history">history</a><a href="#/head-to-head">versus</a
+            <a href="#/ratings">ratings</a><a href="#/history">history</a><a href="#/head-to-head">versus</a><a href="#/graph">graph</a
             ><a href="#/insights">insights</a><a href="#/methodology">method</a>
           </nav>
 
-          <h1 class="stage-title" id="stageTitle" aria-label="Driver or Car">
+          <h1 class="stage-title" id="stageTitle" aria-label="Car or Driver">
             <span class="title-scrim" aria-hidden="true"></span>
             <span class="title-core">
+              <span class="title-line"><span class="word word-car" data-subject="car">CAR</span> <span class="word-or">OR</span></span>
               <span class="title-line"><span class="word word-driver" data-subject="driver">DRIVER</span></span>
-              <span class="title-line"><span class="word-or">OR</span> <span class="word word-car" data-subject="car">CAR</span></span>
             </span>
           </h1>
 
@@ -268,6 +271,44 @@
             </p>
           </aside>
 
+          <section class="graph-page" id="graphPage" aria-label="The teammate graph" tabindex="-1" hidden>
+            <button type="button" class="graph-close" id="graphClose" aria-label="Close the teammate graph">×</button>
+            <header class="graph-head">
+              <h2>Driver network</h2>
+              <label class="graph-driver-select">
+                <span class="sr-only">Choose driver</span>
+                <select id="graphDriver">
+                  <option value="">Choose driver</option>
+                </select>
+              </label>
+            </header>
+            <p class="graph-intro">
+              Dots are drivers; lines link teammates. X: average year raced. Y: teammate-only score (higher is stronger).
+            </p>
+            <div class="graph-main">
+              <div class="graph-chart">
+                <div class="graph-plot-wrap">
+                  <canvas id="graphPlot" role="img" aria-label="Drivers positioned by average year raced and teammate-only score"></canvas>
+                </div>
+                <div class="graph-time">
+                  <label for="graphTimeline">Weekend <strong id="graphWeekend"></strong></label
+                  ><input id="graphTimeline" type="range" min="0" value="0" step="1" />
+                  <div class="graph-time-ends"><span id="graphFirst"></span><span id="graphLast"></span></div>
+                  <span class="graph-key"><i class="graph-key-grid"></i> On this grid <i class="graph-key-other"></i> Earlier driver</span>
+                </div>
+              </div>
+              <aside class="graph-detail" id="graphDetail" aria-live="polite">
+                <div class="graph-detail-empty">
+                  <strong>Explore a driver</strong>
+                  <p>
+                    Hover a dot or choose a name to see ratings and teammate results. Green links favor that driver; pink links favor the
+                    teammate.
+                  </p>
+                </div>
+              </aside>
+            </div>
+          </section>
+
           <footer class="stage-bar stage-bottom">
             <p class="sr-only">
               How much of a Formula 1 result is the driver, and how much is the car? Point at the car, or at the driver's hands (tap them on
@@ -276,14 +317,14 @@
             <p class="stage-tagline" role="status"></p>
             <nav class="stage-links stage-footer-links" aria-label="About this site">
               <a href="#/privacy">privacy</a><a href="#/about">about</a
-              ><a href="https://github.com/francescobraicovich/driver-or-car" rel="noopener noreferrer">source</a>
+              ><a href="https://github.com/francescobraicovich/car-or-driver" rel="noopener noreferrer">source</a>
             </nav>
           </footer>
         </div>
       </section>
     </main>
 
-    <noscript><p style="padding: 20px; text-align: center">Driver or Car needs JavaScript to show the ratings and charts.</p></noscript>
+    <noscript><p style="padding: 20px; text-align: center">Car or Driver needs JavaScript to show the ratings and charts.</p></noscript>
     <script type="module" src="./js/app.js"></script>
   </body>
 </html>

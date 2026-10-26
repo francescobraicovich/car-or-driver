@@ -21,10 +21,10 @@ export const LICENCE_NOTICE = {
   licence: 'CC BY-NC-SA 4.0',
   url: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
   credit:
-    'Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).',
+    'Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).',
   nonCommercial: true,
 };
-const WEEKEND_SIGNIFICANT_DIGITS = 4; // a rating near 1000 is shown as a whole number; the forecast state and the CSV rows keep 9
+const WEEKEND_SIGNIFICANT_DIGITS = 6; // display still rounds to whole points; retain enough precision for what-if probabilities
 
 // The benchmark rating tracks stay: Head to head reads the circuit and wet-weather skills from them. Everything else the benchmark adds is for
 // comparison only and is left out, and so are the retirement audit tables, which no page reads.

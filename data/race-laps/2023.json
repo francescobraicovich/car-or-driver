@@ -1,7 +1,7 @@
 {
  "format": 2,
  "dataVersion": "07396ffcac47b05d",
- "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).","nonCommercial":true},
+ "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2023,
  "codes": {"1":"HAM","4":"ALO","807":"HUL","815":"PER","817":"RIC","822":"BOT","825":"MAG","830":"VER","832":"SAI","839":"OCO","840":"STR","842":"GAS","844":"LEC","846":"NOR","847":"RUS","848":"ALB","852":"TSU","855":"ZHO","856":"DEV","857":"PIA","858":"SAR","859":"LAW"},
  "statuses": {"3":"Accident","4":"Collision","5":"Engine","6":"Gearbox","10":"Electrical","21":"Radiator","23":"Brakes","25":"Overheating","26":"Mechanical","31":"Retired","38":"Steering","39":"Technical","44":"Oil leak","54":"Withdrew","65":"Rear wing","75":"Power loss","130":"Collision damage","139":"Illness","140":"Undertray"},

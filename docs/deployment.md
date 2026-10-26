@@ -22,7 +22,7 @@ Measured on this build (19 October 2026), compressed the way a CDN serves it:
 | --- | --- | --- |
 | `data/model-latest.json` (first screen) | 0.03 MB | about 0.04 MB (estimate) |
 | Site code and the model package for the first page (Head to head forecasting, about 0.5 MB, and the Insights and Methodology code are fetched when those pages open) | 0.03 MB | about 0.15 MB (estimate) |
-| `data/model.json` (full history, fetched after the first screen is shown) | 0.59 MB | about 0.9 MB (estimate) |
+| `data/model.json` (full history, fetched after the first screen is shown) | 0.80 MB | about 1.2 MB (estimate) |
 | Fonts, if self-hosted | about 0.1 MB (estimate) | |
 | **Before the ratings show** | **about 0.06 MB** | **about 0.1 MB (estimate)** |
 | **First visit, everything** | **about 0.75 MB** | **about 1.1 MB** |
@@ -56,12 +56,12 @@ So the 10 seconds of computing is gone, but on a poor mobile connection the firs
 | Before | 2.53 MB | about 14.2 s | about 3.8 s |
 | 1. The per-driver and per-car histories (`dh`, `ch`) left out of the file and rebuilt in the browser from the weekends (`packages/core/src/weekend-histories.js`; identical to the original, checked row by row) | 1.65 MB | about 9.4 s | about 2.7 s |
 | 2. The recent-form column computed when the file is built; the forecasting code (0.5 MB with the fitted tables) loads when Head to head opens | 1.08 MB | about 6.5 s | about 2.1 s |
-| 3. Weekend ratings kept to 4 significant digits (the pages show whole points) | | | |
-| 4. A first-screen file, `data/model-latest.json` (the latest weekend and each entry's previous row); the full 0.59 MB history is fetched after the ratings are on screen and replaces it. An address that names another page or a weekend waits for the full file | | | |
+| 3. Weekend ratings kept to 6 significant digits (the pages show whole points; matchups use the extra precision) | | | |
+| 4. A first-screen file, `data/model-latest.json` (the latest weekend and each entry's previous row); the full 0.80 MB history is fetched after the ratings are on screen and replaces it. An address that names another page or a weekend waits for the full file | | | |
 | 5. `modulepreload` for the 35 modules and a `preload` of the first-screen file, so the browser does not discover imports one level at a time (`tests/test-site-imports.mjs` fails if one is missing) | 0.14 MB | about 1.2 s | about 0.6 s |
 | 6. The first-screen file drops what only other pages read (the circuit and wet-weather skills were more than half of it; also the name lists); Insights and Methodology code is fetched when those pages are first opened. `tests/test-site-imports.mjs` also fails if `index.html` announces a module that is not loaded at start | **0.06 MB** | **about 0.8 s** | **about 0.6 s** |
 
-First-visit download down 98% (2.53 MB to 0.06 MB). The measured 0.4 s of processing is with the CPU slowed 4 times; the same page takes roughly 0.1 s on an unthrottled laptop. The full history arrives about 0.1 s later on a fast connection (0.59 MB more on a slow one) and is only needed for History, Head to head, Insights, Methodology and the weekend slider. Repeat visits still revalidate each file (a round trip each, answered "not modified"); a service worker or a content-hashed file name would remove that and is not done. The 4-digit rounding limits the sum of several ratings (a Head to head gap) to about one rating point of error; `tests/test-model-file.mjs` states the tolerances.
+First-visit download down 98% (2.53 MB to about 0.06 MB). The measured 0.4 s of processing is with the CPU slowed 4 times; the same page takes roughly 0.1 s on an unthrottled laptop. The full history is now 0.80 MB Brotli compressed after keeping more rating precision; it arrives after the first screen and is needed for History, Head to head, Insights, Methodology and the weekend slider. The timing figures above were measured before that precision change and should be remeasured before publication. Repeat visits still revalidate each file (a round trip each, answered "not modified"); a service worker or a content-hashed file name would remove that and is not done. Six significant digits keep rating-rounding error below about 0.001 point near 1,000; `tests/test-model-file.mjs` checks the what-if forecasts against a fresh build.
 
 
 ## One-time setup
@@ -71,9 +71,9 @@ First-visit download down 98% (2.53 MB to 0.06 MB). The measured 0.4 s of proces
 
    **Route A: Cloudflare builds from GitHub (simplest).** In the dashboard: *Workers & Pages*, *Create application*, *Pages*, *Connect to Git*, choose this repository (GitHub asks you to authorise Cloudflare for it). Then set:
 
-   - Project name: `driver-or-car` (the site will be at `https://driver-or-car.pages.dev/`)
+   - Project name: `car-or-driver` (the site will be at `https://car-or-driver.pages.dev/`)
    - Production branch: `main`; framework preset: none
-   - Build command: `npm ci && npm run lint && npm test && npm run check:publication && node tools/build-pages.mjs https://driver-or-car.pages.dev/`
+   - Build command: `npm ci && npm run lint && npm test && npm run check:publication && node tools/build-pages.mjs https://car-or-driver.pages.dev/`
    - Build output directory: `dist`
    - Environment variable: `NODE_VERSION` = `24`
 
@@ -82,7 +82,7 @@ First-visit download down 98% (2.53 MB to 0.06 MB). The measured 0.4 s of proces
    **Route B: GitHub Actions and Direct Upload.** `.github/workflows/deploy.yml` does the same with `cloudflare/wrangler-action` ([Cloudflare's CI guide](https://developers.cloudflare.com/pages/how-to/use-direct-upload-with-continuous-integration/)). Create the Pages project with *Direct Upload*, add the repository secrets `CLOUDFLARE_API_TOKEN` (an API token with the *Cloudflare Pages: Edit* permission) and `CLOUDFLARE_ACCOUNT_ID`, and the repository variable `SITE_URL` (the address with a trailing slash). The deploy job stays skipped until `SITE_URL` is set. Use one route, not both.
 
 3. **Cloudflare settings that must stay off** (the privacy notice depends on them; the full list is in [compliance.md](compliance.md), section 6): Web Analytics, Logpush, Bot Fight Mode, Waiting Room, Email Address Obfuscation and automatic script injection.
-4. **After the first deploy**, run `node tools/check-live-site.mjs https://driver-or-car.pages.dev/` (route B does it automatically). It fails if any response sets a cookie, a policy header is missing, or the page loads anything from another origin. Then open the site once with the browser's developer tools: *Application* should show no cookies and empty local storage, and *Network* only your own domain.
+4. **After the first deploy**, run `node tools/check-live-site.mjs https://car-or-driver.pages.dev/` (route B does it automatically). It fails if any response sets a cookie, a policy header is missing, or the page loads anything from another origin. Then open the site once with the browser's developer tools: *Application* should show no cookies and empty local storage, and *Network* only your own domain.
 5. **A custom domain** is optional (see the costs above): in the Pages project, *Custom domains*. Then update the address in the build command or `SITE_URL`, and in the README.
 
 ## Keeping the ratings current

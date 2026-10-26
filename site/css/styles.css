@@ -1,4 +1,4 @@
-/* Driver or Car — the tokens and the parts that the front page's panels are made of (chart frame, controls, charts, tables, the Methodology's text
+/* Car or Driver — the tokens and the parts that the front page's panels are made of (chart frame, controls, charts, tables, the Methodology's text
    and diagrams). The front page itself, the panel's metal and the cards of slides are in stage.css, which pins its own colours on the panel and the
    cards; the tokens here are what a part falls back to. The data colours are the eight-slot categorical palette (docs/design.md). */
 :root {

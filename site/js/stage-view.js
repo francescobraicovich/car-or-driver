@@ -26,6 +26,7 @@ export function initStage() {
   const title = $('stageTitle');
   const parts = {
     blue: stage.querySelector('.layer-blue'),
+    blueWindow: stage.querySelector('.blue-window'),
     cursor: $('stageCursor'),
     frame: $('stageFrame'),
     wordFrame: $('stageWordFrame'),
@@ -43,13 +44,25 @@ export function initStage() {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
 
-  // two copies of the title go behind it as streaks (the filters that smear them are set in layout())
+  // The title is drawn by copies of it, one for each way it can look (which of them shows is for the style sheet to say), and the one in the page, which
+  // is not drawn, is what is pointed at. Drawing a title again is slow where its filters are (the filters that smear and smoke it are set in layout()).
+  // Each way has a holder of its own: it is the holder that the style sheet clips.
   const core = title.querySelector('.title-core');
-  for (const name of ['far', 'near']) {
-    const layer = core.cloneNode(true);
-    layer.className = `title-layer title-smear-${name}`;
-    layer.setAttribute('aria-hidden', 'true');
-    title.insertBefore(layer, core);
+  const looks = [
+    ['ink-light', ['title-layer title-smear-far', 'title-layer title-smear-near', 'title-layer title-copy']], // white, when nothing is pointed at
+    ['ink-dark title-streaks', ['title-layer title-smear-far', 'title-layer title-smear-near']], // behind the letters
+    ...['all', 'car', 'driver'].map((lit) => [`ink-dark lit-${lit}`, ['title-layer title-copy']]), // black, with only one word lit
+  ];
+  for (const [look, layers] of looks) {
+    const holder = document.createElement('span');
+    holder.className = `title-variant ${look}`;
+    holder.setAttribute('aria-hidden', 'true');
+    for (const classes of layers) {
+      const layer = core.cloneNode(true);
+      layer.className = classes;
+      holder.append(layer);
+    }
+    title.insertBefore(holder, core);
   }
 
   const view = {
@@ -76,6 +89,8 @@ export function initStage() {
     error: null, // why the ratings could not be loaded, if they could not
     lastMove: 0,
     speed: 0, // how fast the pointer is moving, in pixels per millisecond (smoothed)
+    motionUntil: 0, // the picture's opening motion ends, even if a subject stays selected
+    sceneSettled: false,
   };
   const active = () => view.hover ?? view.focus ?? view.selected;
   const viewOpen = () => parts.ledger.dataset.view !== 'ratings'; // a view (the history, the head to head) is open over the ratings in the panel
@@ -142,6 +157,7 @@ export function initStage() {
     setTitleFilters(view.layout.size);
     for (const subject of SUBJECTS) view.words[subject] = relative(parts.words[subject].getBoundingClientRect());
     view.titleBox = relative(core.getBoundingClientRect());
+    view.sceneSettled = false;
     wake();
   }
 
@@ -172,6 +188,8 @@ export function initStage() {
     stage.dataset.hover = view.hover ?? '';
     for (const name of SUBJECTS) parts.hotspots[name].setAttribute('aria-pressed', String(view.selected === name));
     renderPanel();
+    view.motionUntil = performance.now() + 650;
+    view.sceneSettled = false;
     if (Boolean(view.selected) !== view.announced) {
       view.announced = Boolean(view.selected);
       window.dispatchEvent(new CustomEvent('f1:ratings-pinned', { detail: { pinned: view.announced } }));
@@ -222,7 +240,7 @@ export function initStage() {
     const dt = Math.min(0.05, Math.max(0.001, (now - view.last) / 1000));
     view.last = now;
     const still = reducedMotion.matches;
-    const amount = still ? 0 : 1;
+    const amount = still ? 0 : Math.min(1, Math.max(0, (view.motionUntil - now) / 300));
     let busy = false;
 
     // the small square follows the pointer with a lag, and shakes more the faster the pointer moves
@@ -233,52 +251,58 @@ export function initStage() {
       view.cursor.x += dx * follow;
       view.cursor.y += dy * follow;
       const speed = Math.hypot(dx, dy) / dt;
-      const resting = now - view.lastMove > 2500; // a pointer that has stopped for a while stops shaking, and the loop can rest
-      const shakiness = resting ? 0 : amount * (1 + Math.min(speed / 260, 4.5));
+      const resting = now - view.lastMove > 350; // stop the loop promptly once the pointer has settled
+      const pointerShake = still ? 0 : Math.min(1, Math.max(0, (350 - (now - view.lastMove)) / 180));
+      const shakiness = pointerShake * (1 + Math.min(speed / 260, 4.5));
       const x = view.cursor.x + shake(seconds, 11) * shakiness;
       const y = view.cursor.y + shake(seconds, 12) * shakiness;
       parts.cursor.style.transform = `translate(${x}px, ${y}px)`;
-      busy = !resting;
+      busy = !resting || Math.abs(dx) > 0.25 || Math.abs(dy) > 0.25;
     }
 
     const subject = active();
     if (subject) {
-      // the box on the picture opens out of the small square (or, with the keyboard and no pointer, out of the middle of the subject)
-      const rectangle = subjectRectangle(view.geometry, subject);
-      const target = { x: rectangle.x - view.origin.x, y: rectangle.y - view.origin.y, width: rectangle.width, height: rectangle.height };
-      if (!view.opened) {
-        const from = view.pointer
-          ? { x: view.cursor.x - CURSOR_SIZE / 2, y: view.cursor.y - CURSOR_SIZE / 2 }
-          : { x: target.x + target.width / 2, y: target.y + target.height / 2 };
-        view.frame = { ...from, width: CURSOR_SIZE, height: CURSOR_SIZE };
-      }
-      const open = still ? 1 : 1 - Math.exp(-dt * 13);
-      for (const key of ['x', 'y', 'width', 'height']) view.frame[key] += (target[key] - view.frame[key]) * open;
-      const box = wobbled(view.frame, seconds, 20, 3.2, amount);
-      place(parts.frame, box);
-      const { x: sceneX, y: sceneY, width: sceneWidth, height: sceneHeight } = view.geometry;
-      const inset = {
-        left: box.x + view.origin.x - sceneX,
-        top: box.y + view.origin.y - sceneY,
-        right: sceneWidth - (box.x + box.width + view.origin.x - sceneX),
-        bottom: sceneHeight - (box.y + box.height + view.origin.y - sceneY),
-      };
-      parts.blue.style.clipPath = `inset(${Math.max(0, inset.top)}px ${Math.max(0, inset.right)}px ${Math.max(0, inset.bottom)}px ${Math.max(0, inset.left)}px)`;
+      if (!view.sceneSettled) {
+        // the box on the picture opens out of the small square (or, with the keyboard and no pointer, out of the middle of the subject)
+        const rectangle = subjectRectangle(view.geometry, subject);
+        const target = { x: rectangle.x - view.origin.x, y: rectangle.y - view.origin.y, width: rectangle.width, height: rectangle.height };
+        if (!view.opened) {
+          const from = view.pointer
+            ? { x: view.cursor.x - CURSOR_SIZE / 2, y: view.cursor.y - CURSOR_SIZE / 2 }
+            : { x: target.x + target.width / 2, y: target.y + target.height / 2 };
+          view.frame = { ...from, width: CURSOR_SIZE, height: CURSOR_SIZE };
+        }
+        const open = still ? 1 : 1 - Math.exp(-dt * 13);
+        for (const key of ['x', 'y', 'width', 'height']) view.frame[key] += (target[key] - view.frame[key]) * open;
+        const frameClose = ['x', 'y', 'width', 'height'].every((key) => Math.abs(target[key] - view.frame[key]) <= 0.25);
+        if (frameClose && now >= view.motionUntil) Object.assign(view.frame, target);
+        const box = wobbled(view.frame, seconds, 20, 3.2, amount);
+        place(parts.frame, box);
+        const sceneLeft = box.x + view.origin.x - view.geometry.x;
+        const sceneTop = box.y + view.origin.y - view.geometry.y;
+        parts.blueWindow.style.transform = `translate3d(${sceneLeft}px, ${sceneTop}px, 0)`;
+        parts.blueWindow.style.width = `${box.width}px`;
+        parts.blueWindow.style.height = `${box.height}px`;
+        parts.blue.style.transform = `translate3d(${-sceneLeft}px, ${-sceneTop}px, 0)`;
 
-      // the lightly drawn box on the word, which moves from one word to the other when the pointer does, and the line from it to the picture's box
-      const wordTarget = around(view.words[subject], WORD_PADDING);
-      if (!view.wordOpened) view.wordFrame = { ...wordTarget };
-      for (const key of ['x', 'y', 'width', 'height']) view.wordFrame[key] += (wordTarget[key] - view.wordFrame[key]) * open;
-      const wordBox = wobbled(view.wordFrame, seconds, 40, 1.2, amount);
-      place(parts.wordFrame, wordBox);
-      const points = connectorPoints(wordBox, box, view.titleBox);
-      parts.connector.line.setAttribute('points', points.map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' '));
-      const [first, last] = [points[0], points[points.length - 1]];
-      parts.connector.start.setAttribute('x', (first.x - 3.5).toFixed(1));
-      parts.connector.start.setAttribute('y', (first.y - 3.5).toFixed(1));
-      parts.connector.end.setAttribute('x', (last.x - 3.5).toFixed(1));
-      parts.connector.end.setAttribute('y', (last.y - 3.5).toFixed(1));
-      busy = true;
+        // the lightly drawn box on the word, which moves from one word to the other when the pointer does, and the line from it to the picture's box
+        const wordTarget = around(view.words[subject], WORD_PADDING);
+        if (!view.wordOpened) view.wordFrame = { ...wordTarget };
+        for (const key of ['x', 'y', 'width', 'height']) view.wordFrame[key] += (wordTarget[key] - view.wordFrame[key]) * open;
+        const wordClose = ['x', 'y', 'width', 'height'].every((key) => Math.abs(wordTarget[key] - view.wordFrame[key]) <= 0.25);
+        if (wordClose && now >= view.motionUntil) Object.assign(view.wordFrame, wordTarget);
+        const wordBox = wobbled(view.wordFrame, seconds, 40, 1.2, amount);
+        place(parts.wordFrame, wordBox);
+        const points = connectorPoints(wordBox, box, view.titleBox);
+        parts.connector.line.setAttribute('points', points.map((point) => `${point.x.toFixed(1)},${point.y.toFixed(1)}`).join(' '));
+        const [first, last] = [points[0], points[points.length - 1]];
+        parts.connector.start.setAttribute('x', (first.x - 3.5).toFixed(1));
+        parts.connector.start.setAttribute('y', (first.y - 3.5).toFixed(1));
+        parts.connector.end.setAttribute('x', (last.x - 3.5).toFixed(1));
+        parts.connector.end.setAttribute('y', (last.y - 3.5).toFixed(1));
+        view.sceneSettled = now >= view.motionUntil && frameClose && wordClose;
+        busy ||= !view.sceneSettled;
+      }
     }
     view.opened = Boolean(subject);
     view.wordOpened = Boolean(subject);
@@ -299,7 +323,7 @@ export function initStage() {
       view.speed = 0.5 * view.speed + 0.5 * (Math.hypot(point.x - view.pointer.x, point.y - view.pointer.y) / (now - view.lastMove));
     view.pointer = point;
     view.lastMove = now;
-    stage.dataset.pointer = 'in';
+    if (stage.dataset.pointer !== 'in') stage.dataset.pointer = 'in'; // (written again at every move, the whole stage would be styled again)
     wake();
   });
   stage.addEventListener('pointerleave', (event) => {
@@ -308,7 +332,7 @@ export function initStage() {
     stage.dataset.pointer = '';
   });
   stage.addEventListener('pointerdown', (event) => {
-    if (event.target.closest('button, a, .ledger, .word, .track-table')) return;
+    if (event.target.closest('button, a, .ledger, .graph-page, .word, .track-table')) return;
     if (view.selected) {
       view.selected = null; // pressing on the picture, away from the car and the hands, lets go of the ratings
       update();
@@ -386,6 +410,7 @@ export function initStage() {
   hold(parts.trackTable);
   hold(parts.trackPause);
   hold(parts.trackSpeeds);
+  hold($('graphPage'));
   // a card of slides and its list are made when their page is first shown: they are held too
   window.addEventListener('f1:deck-made', (event) => {
     hold(event.detail.card);

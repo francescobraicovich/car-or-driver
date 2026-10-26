@@ -4,7 +4,7 @@ name: Deploy to Cloudflare Pages
 # every response. Only Cloudflare Pages reads _headers, so this is the only deploy target that matches the notice.
 #
 # One-time setup (see docs/deployment.md, route B): create the Pages project named below, add the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID,
-# and set the repository variable SITE_URL to the address of the site (for example https://driver-or-car.pages.dev/). The job is skipped until SITE_URL
+# and set the repository variable SITE_URL to the address of the site (for example https://car-or-driver.pages.dev/). The job is skipped until SITE_URL
 # is set, and in forks, which have no access to the secrets.
 
 on:
@@ -22,7 +22,7 @@ concurrency:
 
 jobs:
   deploy:
-    if: ${{ vars.SITE_URL != '' && github.repository == 'francescobraicovich/driver-or-car' }}
+    if: ${{ vars.SITE_URL != '' && github.repository == 'francescobraicovich/car-or-driver' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,7 +42,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=driver-or-car --branch=main
+          command: pages deploy dist --project-name=car-or-driver --branch=main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Check the live site against the privacy notice
         run: node tools/check-live-site.mjs "${{ vars.SITE_URL }}"
