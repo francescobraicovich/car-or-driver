@@ -17,6 +17,7 @@ import {
   formatOneDecimal,
   formatSigned,
   horizontalBarsHeight,
+  interactiveDot,
   legendHtml,
   mountChart,
   surname,
@@ -188,10 +189,16 @@ export const INSIGHT_CARDS = [
           );
           for (const row of rows) {
             svg.append(
-              createSvgElement(
-                'circle',
-                { cx: axes.x(row.year), cy: axes.y(row.betweenTeams), r: 2.8, fill: 'var(--ink)', stroke: 'var(--surface)' },
-                [createSvgElement('title', {}, `${row.year}: between teams ${formatInteger(row.betweenTeams * 100)}%`)],
+              interactiveDot(
+                svg,
+                createSvgElement('circle', {
+                  cx: axes.x(row.year),
+                  cy: axes.y(row.betweenTeams),
+                  r: 4,
+                  fill: 'var(--ink)',
+                  stroke: 'var(--surface)',
+                }),
+                `${row.year}: between teams ${formatInteger(row.betweenTeams * 100)}%`,
               ),
             );
           }
@@ -398,6 +405,70 @@ export const INSIGHT_CARDS = [
     },
   },
   {
+    id: 'era-timing',
+    topic: 'stars',
+    kind: 'model',
+    title: 'Were some drivers born at the wrong time?',
+    label: 'Lucky and unlucky eras',
+    lead: (data) => {
+      const eligible = data.eraTiming.filter((row) => row.best >= 0.2);
+      const unlucky = eligible[0];
+      const lucky = eligible.at(-1);
+      return `In this equal-car thought experiment, ${unlucky.name}'s strongest five seasons earn ${unlucky.actual.toFixed(2)} expected titles in their real years, against ${unlucky.median.toFixed(2)} in a typical five-year window. ${lucky.name} gained most from his timing: ${lucky.actual.toFixed(2)} against ${lucky.median.toFixed(2)}.`;
+    },
+    body: () =>
+      legendHtml([
+        ['var(--s2)', 'Fewer expected titles in actual years than a typical era'],
+        ['var(--s1)', 'More expected titles in actual years'],
+      ]) + '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="examples"></div>',
+    how: () =>
+      'Each dot is a driver with five consecutive full seasons and at least 0.2 expected equal-car titles in some placement. We take their strongest five-season stretch by average portable driver rating, keep each season’s rating and model uncertainty fixed, and move that sequence through every complete five-year window from 1994. Each year, we estimate the chance of being the highest-rated driver in an equal car against that year’s field; the five chances add to expected titles. Horizontal position is the median over possible windows; vertical position is actual years minus that median. A negative vertical value suggests an unlucky era, a positive one a fortunate era. This does not reconstruct real championships: ratings are relative to each year’s grid, eras are not perfectly comparable, drivers would affect their new rivals, and model uncertainty omits uncertainty in the hybrid blend.',
+    draw: (data, root) => {
+      const rows = data.eraTiming.filter((row) => row.best >= 0.2);
+      const maxX = Math.ceil(Math.max(...rows.map((row) => row.median)) * 2) / 2;
+      const minY = Math.floor(Math.min(...rows.map((row) => row.advantage)) * 4) / 4;
+      const maxY = Math.ceil(Math.max(...rows.map((row) => row.advantage)) * 4) / 4;
+      const points = rows.map((row) => ({
+        x: row.median,
+        y: row.advantage,
+        label: Math.abs(row.advantage) >= 0.3 || row === rows[0] ? surname(row.name) : '',
+        priority: Math.abs(row.advantage),
+        color: row.advantage < 0 ? 'var(--s2)' : 'var(--s1)',
+        radius: 5,
+        tooltip: `${row.name}: ${row.primeStart}–${row.primeStart + 4} prime; ${row.actual.toFixed(2)} expected titles then, ${row.median.toFixed(2)} in a typical era; best placement ${row.bestStart}–${row.bestStart + 4}: ${row.best.toFixed(2)}`,
+      }));
+      mountChart(
+        chartIn(root, 'main'),
+        (svg, width, height) =>
+          drawScatter(svg, width, height, {
+            xDomain: [0, maxX + 0.2],
+            yDomain: [minY - 0.1, maxY + 0.1],
+            xTicks: Array.from({ length: Math.floor(maxX / 0.5) + 1 }, (_, index) => index * 0.5),
+            yTicks: Array.from({ length: Math.round((maxY - minY) / 0.25) + 1 }, (_, index) => minY + index * 0.25),
+            xFormat: formatOneDecimal,
+            yFormat: formatOneDecimal,
+            xTitle: 'expected titles in a typical five-year era',
+            yTitle: 'actual years minus typical era',
+            guides: [[0, 0, maxX + 0.2, 0]],
+            points,
+          }),
+        (width) => Math.max(320, Math.min(450, width * 0.63)),
+      );
+      const examples = [rows[0], rows[1], rows.at(-2), rows.at(-1)];
+      chartIn(root, 'examples').innerHTML = tableHtml(
+        ['Driver', 'Prime', 'Real years', 'Typical era', 'Best placement'],
+        examples.map((row) => [
+          row.name,
+          `${row.primeStart}–${row.primeStart + 4}`,
+          row.actual.toFixed(2),
+          row.median.toFixed(2),
+          `${row.bestStart}–${row.bestStart + 4}: ${row.best.toFixed(2)}`,
+        ]),
+        [2, 3, 4],
+      );
+    },
+  },
+  {
     id: 'career-driver-and-car',
     topic: 'stars',
     kind: 'model',
@@ -410,7 +481,7 @@ export const INSIGHT_CARDS = [
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
-      "Average portable driver rating and average car rating over all of a driver's starts since 1994 (drivers with at least 60). Top right: strong drivers in strong cars. Top left: strong drivers in weak cars. Bottom right: strong cars, ordinary drivers. Only some names are labelled; hover for the rest.",
+      "Average portable driver rating and average car rating over all of a driver's starts since 1994 (drivers with at least 60). Top right: strong drivers in strong cars. Top left: strong drivers in weak cars. Bottom right: strong cars, ordinary drivers. Only some names are labelled; hover, focus or tap a dot for the rest.",
     draw: (data, root) => {
       const points = data.careerDriverAndCar.map((row) => ({
         x: row.carRating,
@@ -718,22 +789,16 @@ export const INSIGHT_CARDS = [
               }),
             );
             svg.append(
-              createSvgElement(
-                'circle',
-                {
+              interactiveDot(
+                svg,
+                createSvgElement('circle', {
                   cx: axes.x(step.age),
                   cy: axes.y(step.mean),
-                  r: 3.6,
+                  r: 4,
                   fill: step.mean >= 0 ? 'var(--s3)' : 'var(--s5)',
                   stroke: 'var(--surface)',
-                },
-                [
-                  createSvgElement(
-                    'title',
-                    {},
-                    `age ${step.age}: ${formatOneDecimal(step.mean)} ± ${formatOneDecimal(step.standardError)} (${step.cases} cases)`,
-                  ),
-                ],
+                }),
+                `age ${step.age}: ${formatOneDecimal(step.mean)} ± ${formatOneDecimal(step.standardError)} (${step.cases} cases)`,
               ),
             );
           }
@@ -880,13 +945,17 @@ export const INSIGHT_CARDS = [
               ),
             );
             svg.append(
-              createSvgElement('circle', {
-                cx: axes.x(row.year),
-                cy: axes.y(row.largestLead),
-                r: 2.8,
-                fill: 'var(--ink)',
-                stroke: 'var(--surface)',
-              }),
+              interactiveDot(
+                svg,
+                createSvgElement('circle', {
+                  cx: axes.x(row.year),
+                  cy: axes.y(row.largestLead),
+                  r: 4,
+                  fill: 'var(--ink)',
+                  stroke: 'var(--surface)',
+                }),
+                `${row.year} ${row.team}: largest lead ${formatOneDecimal(row.largestLead)} points`,
+              ),
             );
           }
           const largest = rows.reduce((best, row) => (row.largestLead > best.largestLead ? row : best));

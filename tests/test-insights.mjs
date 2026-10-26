@@ -24,7 +24,10 @@ const walk = (value, path) => {
 walk(INSIGHTS_DATA, 'data');
 assert.deepEqual(nonFinite, [], 'the snapshot holds no NaN or infinite number');
 
-assert.equal(INSIGHT_CARDS.length, 20, 'twenty findings');
+assert.equal(INSIGHT_CARDS.length, 21, 'twenty-one findings');
+assert.ok(INSIGHTS_DATA.eraTiming.length > 10, 'era comparison covers long careers');
+assert.ok(INSIGHTS_DATA.eraTiming.some((row) => row.name === 'Mika Häkkinen' && row.advantage < 0));
+assert.ok(INSIGHTS_DATA.eraTiming.some((row) => row.name === 'Max Verstappen' && row.advantage > 0));
 assert.equal(new Set(INSIGHT_CARDS.map((card) => card.id)).size, INSIGHT_CARDS.length, 'card ids are unique');
 const topics = new Set(INSIGHT_TOPICS.map((topic) => topic.id));
 for (const card of INSIGHT_CARDS) {

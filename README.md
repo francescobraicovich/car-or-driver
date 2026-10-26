@@ -2,7 +2,7 @@
 
 **How much of a Formula 1 result is the driver, and how much is the car?**
 
-Car or Driver is a free, non-commercial website and the research code behind it. It rates every driver and every car at every race weekend since 1994, with an error bar on every number, and shows the ratings, their history, head-to-head forecasts and twenty findings about the split between driver and car.
+Car or Driver is a free, non-commercial website and the research code behind it. It rates every driver and every car at every race weekend since 1994, with an error bar on every number, and shows the ratings, their history, head-to-head forecasts and twenty-one findings about the split between driver and car.
 
 It is an independent personal project. It is not affiliated with Formula 1, the FIA or any team or driver.
 

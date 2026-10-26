@@ -1651,11 +1651,11 @@ check(
   JSON.stringify({ insightsAtStart, insightsBox }),
 );
 check(
-  'the first slide is the contents: the twenty findings under five topics, and a slide for each after it, all drawn',
-  insightsAtStart.position === '1 / 21' &&
-    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents button[data-slide]').length")) === 20 &&
+  'the first slide is the contents: the twenty-one findings under five topics, and a slide for each after it, all drawn',
+  insightsAtStart.position === '1 / 22' &&
+    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents button[data-slide]').length")) === 21 &&
     (await evaluate("document.querySelectorAll('#insightsCard .deck-contents h3').length")) === 5 &&
-    (await evaluate("document.querySelectorAll('article.insight').length")) === 20 &&
+    (await evaluate("document.querySelectorAll('article.insight').length")) === 21 &&
     (await evaluate(
       "[...document.querySelectorAll('article.insight')].every((card) => card.querySelector('svg, table') && card.querySelector('.info'))",
     )) &&
@@ -1669,18 +1669,34 @@ check(
   })`),
 );
 // jumping from the contents, and sliding there
-await evaluate('document.querySelector(\'#insightsCard .deck-contents button[data-slide="12"]\').click()');
+await evaluate('document.querySelector(\'#insightsCard .deck-contents button[data-slide="13"]\').click()');
 await sleep(900);
 const jumped = JSON.parse(await insightsState());
 check(
   'a finding on the contents slide takes the card there (the track slides, the others are put out of reach, the address names it)',
-  jumped.position === '13 / 21' &&
-    jumped.open.join() === '12' &&
-    jumped.transform === 'translateX(-1200%)' &&
-    jumped.current.join() === '12,12' &&
+  jumped.position === '14 / 22' &&
+    jumped.open.join() === '13' &&
+    jumped.transform === 'translateX(-1300%)' &&
+    jumped.current.join() === '13,13' &&
     jumped.hash === '#/insights' &&
     jumped.slide === 'ageing',
   JSON.stringify(jumped),
+);
+const interactiveDot = JSON.parse(
+  await evaluate(`(() => {
+  const dot = document.querySelector('#insight-ageing .insight-point');
+  dot.focus();
+  const tooltip = dot.closest('[data-chart]').querySelector('.insight-point-tooltip');
+  const focused = !tooltip.hidden && tooltip.textContent === dot.getAttribute('aria-label');
+  dot.click();
+  const tapped = tooltip.dataset.pinned === 'true' && !tooltip.hidden;
+  dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  return JSON.stringify({ focused, tapped, escaped: tooltip.hidden });
+})()`),
+);
+check(
+  'insight dots reveal exact values on focus and tap, and Escape dismisses them',
+  interactiveDot.focused && interactiveDot.tapped && interactiveDot.escaped,
 );
 check(
   'slides slide (an animation, not a cut), and the same under reduced motion is a cut',
@@ -1710,10 +1726,10 @@ await sleep(600);
 const atEnd = JSON.parse(await insightsState());
 check(
   'Next, the arrow keys, Home and End move along the slides',
-  afterNext.position === '14 / 21' &&
-    afterKeys.position === '12 / 21' &&
-    atHome.position === '1 / 21' &&
-    atEnd.position === '21 / 21' &&
+  afterNext.position === '15 / 22' &&
+    afterKeys.position === '13 / 22' &&
+    atHome.position === '1 / 22' &&
+    atEnd.position === '22 / 22' &&
     (await evaluate("document.getElementById('insightsNext').disabled")),
   JSON.stringify({ afterNext: afterNext.position, afterKeys: afterKeys.position, atHome: atHome.position, atEnd: atEnd.position }),
 );
@@ -1733,14 +1749,14 @@ await evaluate('document.querySelector(\'#insightsTicks button[data-slide="9"]\'
 await sleep(700);
 const fromTicks = JSON.parse(await insightsState());
 check(
-  'the list of slides beside the card (five topics, the contents and the twenty findings, clear of the card) and the ticks under its title move to a slide',
+  'the list of slides beside the card (five topics, the contents and the twenty-one findings, clear of the card) and the ticks under its title move to a slide',
   list.shown &&
-    list.buttons === 21 &&
+    list.buttons === 22 &&
     list.topics === 5 &&
     list.right < list.cardLeft &&
-    fromList.position === '6 / 21' &&
+    fromList.position === '6 / 22' &&
     fromList.current.join() === '5,5' &&
-    fromTicks.position === '10 / 21',
+    fromTicks.position === '10 / 22',
   JSON.stringify({ list, fromList: fromList.position, fromTicks: fromTicks.position }),
 );
 const topicHeads = JSON.parse(
@@ -2041,7 +2057,7 @@ check(
     phoneCard.x + phoneCard.width <= 375 &&
     phoneCard.width > 300 &&
     (await evaluate("getComputedStyle(document.getElementById('insightsList')).display")) === 'none' &&
-    (await evaluate("document.getElementById('insightsPosition').textContent")) === '2 / 21',
+    (await evaluate("document.getElementById('insightsPosition').textContent")) === '2 / 22',
   JSON.stringify({ phoneCard, position: await evaluate("document.getElementById('insightsPosition').textContent") }),
 );
 // On a phone the ratings are a sheet: a tap on the car keeps it open, it stays clear of both pictures and above the text at the bottom
@@ -2094,7 +2110,7 @@ const linkedSlide = await evaluate(
 );
 check(
   'a link straight to a finding opens the card on that slide, drawn',
-  JSON.parse(linkedSlide).position === '20 / 21' && JSON.parse(linkedSlide).name === 'The biggest upsets' && JSON.parse(linkedSlide).drawn,
+  JSON.parse(linkedSlide).position === '21 / 22' && JSON.parse(linkedSlide).name === 'The biggest upsets' && JSON.parse(linkedSlide).drawn,
   linkedSlide,
 );
 for (const [view, ready] of [

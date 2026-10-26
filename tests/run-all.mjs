@@ -6,6 +6,7 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const TESTS = [
   'golden.mjs',
   'test-fast-paths.mjs',
+  'test-qualifying-outliers.mjs',
   'test-elo.mjs',
   'test-charts.mjs',
   'test-chart-math.mjs',

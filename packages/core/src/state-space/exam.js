@@ -88,7 +88,11 @@ export function collectExam(raw, lapSnapshots, maps, _params, lapPace = null, ca
         observe(ob, 'qual', wd);
         weight += wd;
       }
-      qDiag = { obsCount: qobs.length, disruptions: qrows.filter((q) => qualifyingTreatment(q, info.year).disrupted).length, weight };
+      qDiag = {
+        obsCount: qobs.length,
+        disruptions: qrows.filter((q) => qualifyingTreatment(q, info.year, qrows).disrupted).length,
+        weight,
+      };
     }
 
     // --- Race: finishes, lap pace and last-lap snapshots for retirements

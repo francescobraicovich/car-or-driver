@@ -263,8 +263,8 @@ const stress = { ...worldFromHyper(base), winterC: 40, yearD: 8 };
     qual: eloRun(prep.timeline, prep.weekends.slice(0, prep.n), snaps, 'qual'),
   };
   const current = {
-    ss: { fit: 0.3875, w2: 0.3839, w3: 0.364 },
-    elo: { fit: 0.4083, w2: 0.4025, w3: 0.3732 },
+    ss: { fit: 0.3873, w2: 0.3841, w3: 0.364 },
+    elo: { fit: 0.4081, w2: 0.4026, w3: 0.3731 },
   };
   for (const [name, runs] of [
     ['ss', ss],
@@ -286,7 +286,7 @@ const stress = { ...worldFromHyper(base), winterC: 40, yearD: 8 };
   }
   // The Elo reference retains its former heads; the published hybrid's refitted heads are checked against their dated fit report.
   const reference = eloForecastScores(prep);
-  for (const [window, expected] of Object.entries({ w2: [0.3384, 0.3845, 0.359], w3: [0.3266, 0.362, 0.3675] })) {
+  for (const [window, expected] of Object.entries({ w2: [0.33846, 0.384671, 0.359764], w3: [0.326384, 0.361814, 0.366455] })) {
     const got = reference[window];
     [got.raceDay, got.thursday, got.qual].forEach((value, index) =>
       assert.ok(
@@ -297,8 +297,8 @@ const stress = { ...worldFromHyper(base), winterC: 40, yearD: 8 };
   }
   const published = deserialize(await readFile('data/model.json', 'utf8')).model;
   const publishedScores = {
-    '2008-2011': [0.3362, 0.3811, 0.3491],
-    '2012-2015': [0.3248, 0.3593, 0.3628],
+    '2008-2011': [0.336376, 0.381256, 0.349622],
+    '2012-2015': [0.324641, 0.359146, 0.362162],
   };
   for (const [fromYear, toYear] of [
     [2008, 2011],

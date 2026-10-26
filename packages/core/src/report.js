@@ -88,7 +88,7 @@ export function auditWeekend({ rid, rows, qrows, year, lapSnapshots, mapFor, dna
     };
   });
   const qualAudit = qrows.map((q) => {
-    const t = qualifyingTreatment(q, year);
+    const t = qualifyingTreatment(q, year, qrows);
     return {
       pos: q.position,
       driver: dname.get(q.driverId) || q.driverId,

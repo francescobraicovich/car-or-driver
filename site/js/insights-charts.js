@@ -42,13 +42,63 @@ export function mountChart(container, draw, heightFor) {
     if (width === drawnWidth && height <= drawnHeight + 4) return;
     drawnWidth = width;
     drawnHeight = height;
-    const svg = createSvgElement('svg', { width, height, viewBox: `0 0 ${width} ${height}`, role: 'img' });
+    const svg = createSvgElement('svg', { width, height, viewBox: `0 0 ${width} ${height}`, role: 'group', 'aria-label': 'Insight chart' });
     container.replaceChildren(svg);
     draw(svg, width, height);
     stretchable ??= svg.dataset.fixed !== 'true';
   };
   render();
   new ResizeObserver(render).observe(container);
+}
+
+/** Reveal exact values on pointer, keyboard focus and tap. One tooltip is shared by all dots in a chart. */
+export function interactiveDot(svg, dot, description) {
+  if (!description) return dot;
+  const container = svg.parentElement;
+  let tooltip = container.querySelector('.insight-point-tooltip');
+  if (!tooltip) {
+    tooltip = document.createElement('div');
+    tooltip.className = 'insight-point-tooltip';
+    tooltip.hidden = true;
+    container.append(tooltip);
+  }
+  dot.classList.add('insight-point');
+  dot.setAttribute('tabindex', '0');
+  dot.setAttribute('role', 'button');
+  dot.setAttribute('aria-label', description);
+  const show = () => {
+    const bounds = container.getBoundingClientRect();
+    const point = dot.getBoundingClientRect();
+    tooltip.textContent = description;
+    tooltip.style.left = `${Math.max(8, Math.min(bounds.width - 12, point.left + point.width / 2 - bounds.left))}px`;
+    tooltip.style.top = `${point.top - bounds.top}px`;
+    tooltip.hidden = false;
+  };
+  const hide = () => {
+    if (tooltip.dataset.pinned !== 'true') tooltip.hidden = true;
+  };
+  dot.addEventListener('pointerenter', show);
+  dot.addEventListener('pointerleave', hide);
+  dot.addEventListener('focus', show);
+  dot.addEventListener('blur', hide);
+  dot.addEventListener('click', () => {
+    const pinned = tooltip.dataset.pinned === 'true' && tooltip.dataset.dot === description;
+    tooltip.dataset.pinned = String(!pinned);
+    tooltip.dataset.dot = description;
+    if (pinned) tooltip.hidden = true;
+    else show();
+  });
+  dot.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      tooltip.dataset.pinned = 'false';
+      tooltip.hidden = true;
+      dot.blur();
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      dot.click();
+    }
+  });
+  return dot;
 }
 
 export function drawText(svg, x, y, content, { anchor = 'start', className = '', baseline = 'auto' } = {}) {
@@ -95,17 +145,19 @@ export function drawLines(svg, width, height, options) {
     );
     if (series.markers) {
       for (const point of points) {
+        const description = `${series.name}, ${(options.xFormat || formatInteger)(point[0])}: ${formatOneDecimal(point[1])}`;
         svg.append(
-          createSvgElement(
-            'circle',
-            { cx: axes.x(point[0]), cy: axes.y(point[1]), r: 3, fill: series.color, stroke: 'var(--surface)', 'stroke-width': 1.5 },
-            [
-              createSvgElement(
-                'title',
-                {},
-                `${series.name}, ${(options.xFormat || formatInteger)(point[0])}: ${formatOneDecimal(point[1])}`,
-              ),
-            ],
+          interactiveDot(
+            svg,
+            createSvgElement('circle', {
+              cx: axes.x(point[0]),
+              cy: axes.y(point[1]),
+              r: 4,
+              fill: series.color,
+              stroke: 'var(--surface)',
+              'stroke-width': 1.5,
+            }),
+            description,
           ),
         );
       }
@@ -248,10 +300,11 @@ export function drawScatter(svg, width, height, options) {
     );
   }
   for (const point of options.points) {
+    const description = point.tooltip || point.label || `${point.x}, ${point.y}`;
     svg.append(
-      createSvgElement(
-        'circle',
-        {
+      interactiveDot(
+        svg,
+        createSvgElement('circle', {
           cx: axes.x(point.x),
           cy: axes.y(point.y),
           r: point.radius || options.radius || 4,
@@ -259,8 +312,8 @@ export function drawScatter(svg, width, height, options) {
           'fill-opacity': point.opacity ?? 0.8,
           stroke: 'var(--surface)',
           'stroke-width': 1,
-        },
-        [createSvgElement('title', {}, point.tooltip || point.label || '')],
+        }),
+        description,
       ),
     );
   }

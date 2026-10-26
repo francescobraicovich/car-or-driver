@@ -341,7 +341,7 @@ export function buildEloCore(raw, lapSnapshots, maps, p, lapPace = null, hooks =
         teammateShare: allw ? tw / allw : 0,
         driverLearnWeight: allw,
         teammateLearnWeight: tw,
-        disruptions: lean ? 0 : qrows.filter((q) => qualifyingTreatment(q, info.year).disrupted).length,
+        disruptions: lean ? 0 : qrows.filter((q) => qualifyingTreatment(q, info.year, qrows).disrupted).length,
         logLoss: lw ? loss / lw : NaN,
         brier: lw ? brier / lw : NaN,
         acc: lw ? hits / lw : NaN,

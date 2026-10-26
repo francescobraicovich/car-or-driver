@@ -17,6 +17,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+from numpy.polynomial.hermite import hermgauss
+from scipy.special import ndtr
 
 ROOT = Path(__file__).resolve().parents[3]
 DATA_DIRECTORY = ROOT / 'data'
@@ -231,6 +233,51 @@ def equal_car_titles(tables):
         seasons.append(dict(year=year, likeliestBest=top.driver, probability=rounded(top.chance, 2), champion=tables.driver_names[leaders[year]]))
     actual = pd.Series([season['champion'] for season in seasons]).value_counts().to_dict()
     return dict(expected=sorted([[name, rounded(value, 2)] for name, value in expected.items() if value >= 0.25], key=lambda item: -item[1]), actual=actual, seasons=seasons)
+
+
+def era_timing(tables):
+    """Move each driver's strongest five consecutive full seasons through the observed fields, holding their portable pace fixed."""
+    entrants = season_entrants(tables)
+    last_year = int(tables.drivers.year.max()) - 1
+    entrants = entrants[entrants.year <= last_year].copy()
+    season_rounds = tables.drivers.groupby('year')['round'].max()
+    entrants = entrants[entrants.apply(lambda row: row.races >= 0.5 * season_rounds[row.year], axis=1)]
+    fields = {year: group for year, group in entrants.groupby('year')}
+    years = list(range(tables.first_year, last_year + 1))
+    nodes, weights = hermgauss(24)
+
+    def chance_against_field(pace, uncertainty, field):
+        # Integrate over the focal driver's uncertain rating; each rival's rating is Normal.
+        if field.empty:
+            return 1.0
+        rival_pace = field.driverRating.to_numpy()
+        rival_sd = np.maximum(field.uncertainty.to_numpy(), 0.1)
+        samples = pace + np.sqrt(2) * max(uncertainty, 0.1) * nodes
+        win_given_sample = ndtr((samples[:, None] - rival_pace) / rival_sd).prod(axis=1)
+        return float(np.dot(weights, win_given_sample) / np.sqrt(np.pi))
+
+    rows = []
+    for name, career in entrants.groupby('driver'):
+        by_year = career.set_index('year')
+        windows = [start for start in years[:-4] if all(year in by_year.index for year in range(start, start + 5))]
+        if not windows:
+            continue
+        prime_start = max(windows, key=lambda start: by_year.loc[start:start + 4, 'driverRating'].mean())
+        prime = by_year.loc[prime_start:prime_start + 4]
+        shifts = []
+        for start in years[:-4]:
+            total = 0.0
+            for offset, row in enumerate(prime.itertuples()):
+                field = fields[start + offset]
+                field = field[field.driver != name]
+                total += chance_against_field(row.driverRating, row.uncertainty, field)
+            shifts.append(dict(start=start, titles=rounded(total, 2)))
+        actual = next(row['titles'] for row in shifts if row['start'] == prime_start)
+        median = rounded(np.median([row['titles'] for row in shifts]), 2)
+        best = max(shifts, key=lambda row: row['titles'])
+        rows.append(dict(name=name, primeStart=prime_start, actual=actual, median=median,
+                         advantage=rounded(actual - median, 2), bestStart=best['start'], best=best['titles'], shifts=shifts))
+    return sorted(rows, key=lambda row: row['advantage'])
 
 
 def career_driver_and_car(tables):
@@ -481,6 +528,7 @@ def main():
         exchangeRate=exchange_rate(tables),
         champions=champions(tables),
         equalCarTitles=equal_car_titles(tables),
+        eraTiming=era_timing(tables),
         careerDriverAndCar=career_driver_and_car(tables),
         driverCarSorting=driver_car_sorting(tables),
         upsets=upsets(tables),
