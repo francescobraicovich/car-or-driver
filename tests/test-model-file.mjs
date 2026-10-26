@@ -14,7 +14,7 @@ import { forecastH2H, forecastPreWeekend } from '../packages/core/src/forecast/h
 import { ratingsAlone } from '../packages/core/src/state-space/forecast.js';
 import { scenarioForecast } from '../packages/core/src/forecast/scenario.js';
 import { withHistories } from '../packages/core/src/weekend-histories.js';
-import { FILE_FORMAT, trimmedModel } from '../tools/build-model.mjs';
+import { FILE_FORMAT, driverProfiles, trimmedModel } from '../tools/build-model.mjs';
 import { modelSourceHash } from '../tools/model-source-hash.mjs';
 
 // 2. the serializer
@@ -63,17 +63,43 @@ assert.ok(!('dh' in file.model) && !('ch' in file.model), 'the file does not car
 
 // 3. a fresh build, with the benchmark, exactly as the site built it before the file existed
 const data = await loadData();
+// the card on a row of the ratings: names and birth dates of the drivers rated, from drivers.csv (the first screen's file has those on the latest weekend)
+const ratedIn = (snaps) => snaps.flatMap((snap) => snap.drivers.map((row) => row.driverId));
+assert.deepEqual(
+  file.driverProfiles,
+  driverProfiles(data.raw.drivers, ratedIn(file.model.snaps)),
+  "data/model.json carries the drivers' profiles",
+);
+assert.deepEqual(
+  latestFile.driverProfiles,
+  driverProfiles(data.raw.drivers, ratedIn(file.model.snaps.slice(-1))),
+  'and the first screen those on its weekend',
+);
+assert.ok(
+  Object.values(file.driverProfiles).every(([forename, surname]) => forename && surname),
+  'every driver rated has a first name and a surname',
+);
+assert.ok(
+  Object.values(file.driverProfiles).filter(([, , born]) => born).length > 0.9 * Object.keys(file.driverProfiles).length,
+  'nearly every one has a month of birth',
+);
+assert.ok(
+  Object.values(file.driverProfiles).every(([, , born]) => born === '' || /^\d{4}-\d{2}$/.test(born)),
+  'only the year and the month of birth are published, never a full date (the privacy notice says so)',
+);
+assert.ok(
+  !/\d{4}-\d{2}-\d{2}/.test(JSON.stringify([file.driverProfiles, latestFile.driverProfiles])),
+  'no full birth date is in either profile block',
+);
 const fresh = buildStateSpace(data.raw, data.lapSnapshots, data.maps, { modelKind: 'state-space' }, data.lapPace, {
   benchmark: eloBenchmark,
 });
 
 const TOLERANCE = 1e-5; // the forecast state is kept to 9 digits, so sums of it move by about 1e-5 points: a thousandth of the 0.01 a page can show
-// The weekends' rows are kept to 4 significant digits (a rating near 1000 to the whole point, which is what the pages show), so they, the histories
-// rebuilt from them and whatever is computed from them are compared to 5e-4 of their size (half a unit in the fourth digit is at most 5e-4 of a value).
-const ROUNDED_TOLERANCE = 5e-4;
-// A forecast is a probability shown to a whole percent (errors of about 1e-3 against the 5e-3 that would change the display) or a gap in rating points,
-// which sums several ratings each rounded to the whole point, so it may differ by a point.
-const forecastAllowance = (expected) => (Math.abs(expected) <= 1 ? 2e-3 : 1);
+// Weekend rows keep 6 significant digits (about 0.001 point near 1000), enough for what-if probabilities while the pages display whole points.
+const ROUNDED_TOLERANCE = 5e-6;
+// A forecast is shown to a whole percent, but the downloaded value should be much closer to a fresh build.
+const forecastAllowance = (expected) => (Math.abs(expected) <= 1 ? 2e-4 : 0.05);
 const allowance = (path, expected) =>
   /^forecasts|^methodology figures/.test(path)
     ? forecastAllowance(expected)

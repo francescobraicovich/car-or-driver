@@ -1,6 +1,6 @@
 // Checks the deployed site against what the privacy notice says, because the tests run on a local server and a host can add things a local server
 // never does (a cookie from a bot-protection feature, an injected script, a missing header). Run it after every deploy:
-//   node tools/check-live-site.mjs https://driver-or-car.pages.dev/
+//   node tools/check-live-site.mjs https://car-or-driver.pages.dev/
 // It fetches the home page, every file the page names, and the data files, and fails if any response sets a cookie, if the security headers are
 // missing or different from tools/deploy-headers.txt, or if the page loads or embeds anything from another origin or from the host's own scripts
 // (/cdn-cgi/). It also tells you what it cannot see: scripts that run in a browser; open the site once with the browser's developer tools
@@ -45,7 +45,9 @@ const html = await homeResponse.text();
 
 for (const tag of html.match(/<(?:link|script|img|iframe|source)\b[^>]*>/gi) ?? []) {
   const address = tag.match(/\b(?:src|href)="([^"]+)"/i)?.[1];
-  if (address && new URL(address, home).origin !== home.origin) problems.push(`the page loads ${address} from another origin: ${tag}`);
+  // (a data: address, the icon, is in the page and makes no request)
+  if (address && !address.startsWith('data:') && new URL(address, home).origin !== home.origin)
+    problems.push(`the page loads ${address} from another origin: ${tag}`);
   if (/^<script\b/i.test(tag) && !/\bsrc=/.test(tag) && !/ld\+json/.test(tag)) problems.push(`the page contains an inline script: ${tag}`);
 }
 if (/\/cdn-cgi\//.test(html))
@@ -57,7 +59,16 @@ if (/<script(?![^>]*\bsrc=)(?![^>]*ld\+json)[^>]*>/i.test(html)) problems.push('
 const files = new Set(
   [...html.matchAll(/\b(?:src|href)="([^"#]+)"/g)].map((m) => m[1]).filter((address) => !/^(?:[a-z]+:|\/\/|#)/i.test(address)),
 );
-for (const extra of ['../data/model-latest.json', '../data/model.json', '../data/export-rows.json', './vendor/NOTICE.txt'])
+for (const extra of [
+  '../data/model-latest.json',
+  '../data/model.json',
+  '../data/teammate-graph.json',
+  '../data/export-rows.json',
+  '../data/race-laps/2026.json',
+  './assets/tracks.json',
+  './assets/tracks-licence.txt',
+  './vendor/NOTICE.txt',
+])
   files.add(extra);
 for (const address of files) {
   const url = new URL(address, home);

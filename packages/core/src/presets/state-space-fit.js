@@ -6,14 +6,14 @@
 //           applied in the wet. Fitted on finishing-order pairs of 2002-2015.
 export const STATE_SPACE_FIT = {
   "slopes": {
-    "race": 0.9993,
+    "race": 1.0104,
     "qual": 1.1487,
     "eloRace": 1.0603,
     "eloQual": 0.9303
   },
   "scenario": {
-    "cars": 0.9931,
-    "teammates": 0.987,
-    "wetRatio": 0.7537
+    "cars": 0.9861,
+    "teammates": 1.031,
+    "wetRatio": 0.7393
   }
 };

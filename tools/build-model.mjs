@@ -1,7 +1,9 @@
-// Builds the ratings once and writes them as the two files the site downloads:
-//   data/model.json        every weekend's ratings and the forecast state (what every page reads); the histories are rebuilt from the weekends on load
-//   data/export-rows.json  the rows of the CSV download, fetched only when a visitor asks for it
-// Both carry a fingerprint of the data and the model source; tests/test-model-file.mjs fails if either changed since. Run after refreshing data/
+// Builds the ratings once and writes them as the files the site publishes:
+//   data/model-latest.json the first screen: the latest weekend's ratings and the small lists around them
+//   data/model.json        every weekend's ratings and the forecast state (what every page reads); the histories are rebuilt from the weekends on load,
+//                          and the names and months of birth of the drivers rated (driverProfiles) for the card on a row of the ratings
+//   data/export-rows.json  the rows of every weekend, as a table; the site no longer loads it (nothing links to it), it is published for anyone who wants it
+// All carry a fingerprint of the data and the model source; tests/test-model-file.mjs fails if any changed since. Run after refreshing data/
 // or changing packages/core:
 //   node tools/build-model.mjs
 import { writeFile } from 'node:fs/promises';
@@ -19,10 +21,10 @@ export const LICENCE_NOTICE = {
   licence: 'CC BY-NC-SA 4.0',
   url: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
   credit:
-    'Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Driver or Car).',
+    'Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).',
   nonCommercial: true,
 };
-const WEEKEND_SIGNIFICANT_DIGITS = 4; // a rating near 1000 is shown as a whole number; the forecast state and the CSV rows keep 9
+const WEEKEND_SIGNIFICANT_DIGITS = 6; // display still rounds to whole points; retain enough precision for what-if probabilities
 
 // The benchmark rating tracks stay: Head to head reads the circuit and wet-weather skills from them. Everything else the benchmark adds is for
 // comparison only and is left out, and so are the retirement audit tables, which no page reads.
@@ -86,6 +88,23 @@ export function latestModel(model) {
   };
 }
 
+/**
+ * The first name, surname and month of birth of every driver that has been rated (the ids given), for the card that opens on a row of the ratings:
+ * { driverId: [forename, surname, 'YYYY-MM' or ''] }. They come from data/drivers.csv. Only the year and the month are carried, so that the files
+ * the site publishes hold no full birth dates (the privacy notice says so) and an age is still right except in the month of the birthday.
+ */
+export function driverProfiles(drivers, ids) {
+  const wanted = new Set([...ids].map(String));
+  return Object.fromEntries(
+    drivers
+      .filter((driver) => wanted.has(String(driver.driverId)))
+      .map((driver) => [
+        String(driver.driverId),
+        [driver.forename || '', driver.surname || '', /^\d{4}-\d{2}-\d{2}$/.test(driver.dob) ? driver.dob.slice(0, 7) : ''],
+      ]),
+  );
+}
+
 if (import.meta.url === new URL(process.argv[1], 'file://').href) {
   const data = await loadData();
   const model = buildStateSpace(data.raw, data.lapSnapshots, data.maps, { modelKind: 'state-space' }, data.lapPace, {
@@ -93,9 +112,18 @@ if (import.meta.url === new URL(process.argv[1], 'file://').href) {
   });
   const { sourceHash, lastRace } = await modelSourceHash();
   const header = { format: FILE_FORMAT, sourceHash, lastRace, licence: LICENCE_NOTICE };
-  const modelText = serialize({ ...header, model: shippedModel(model) });
+  const ratedIn = (snaps) => snaps.flatMap((snap) => snap.drivers.map((row) => row.driverId));
+  const modelText = serialize({
+    ...header,
+    driverProfiles: driverProfiles(data.raw.drivers, ratedIn(model.snaps)),
+    model: shippedModel(model),
+  });
   const exportText = serialize({ ...header, rows: model.exportRows });
-  const latestText = serialize({ ...header, model: latestModel(model) });
+  const latestText = serialize({
+    ...header,
+    driverProfiles: driverProfiles(data.raw.drivers, ratedIn(model.snaps.slice(-1))),
+    model: latestModel(model),
+  });
   await writeFile('data/model-latest.json', latestText);
   await writeFile('data/model.json', modelText);
   await writeFile('data/export-rows.json', exportText);

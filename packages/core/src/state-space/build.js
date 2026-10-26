@@ -1,15 +1,17 @@
-// The ratings shown on the site come from the joint state-space model (state-space/filter.js).
+// The ratings shown on the site blend the joint state-space filters with a
+// forward-only comparison learner (hybrid/ratings.js).
 //
 // buildStateSpace collects the exam (state-space/exam.js: the observations of every weekend, the retirement hazards and the skeleton of the
 // snapshots), runs the state-space filters (qualifying, then the race filter that reads it) on the observations, and then
 //   - fills every snapshot row and the per-driver / per-car histories with the ratings, deriving combined, effective and
 //     package pace from them,
 //   - adds `ssDiag` (ratings-alone forecast quality, per weekend),
-//   - replays the forecast layer (form trackers and probability heads) with the state-space levels, as forecast
+//   - replays the forecast layer (form trackers and probability heads) with the hybrid levels, as forecast
 //     before each weekend, as its rating inputs (replay.js, inputs.js), and writes its per-weekend scores to `diag`.
 // A `benchmark` (elo-benchmark.js) can be passed to add the Elo model's ratings on the same exam next to these, so the two
 // rating systems can be compared; without one nothing here reads the Elo core.
 import { MODEL_SETTINGS } from '../presets/model-settings.js';
+import { hybridRatings } from '../hybrid/ratings.js';
 import { BASE, combineRating, gapToP, pToRating } from '../math.js';
 import { headToHeadWithHazard } from '../hazard.js';
 import { CONSTRUCTOR_LINEAGE, carIdentity } from '../lineage.js';
@@ -66,7 +68,8 @@ export function buildStateSpace(raw, lapSnapshots, maps, params, lapPace = null,
   const tmBoost = exam.model.params.tmBoost;
   const qual = runSession(exam.weekends, 'qual', tmBoost);
   const race = runSession(exam.weekends, 'race', tmBoost, qual);
-  const model = finishStateSpace(exam.model, exam.weekends, race, qual, data);
+  const hybrid = hybridRatings(exam.weekends, exam.model.snaps, race, qual, carLineage);
+  const model = finishStateSpace(exam.model, exam.weekends, hybrid, qual, data);
   benchmark?.attach(model, exam, data);
   return model;
 }
@@ -167,9 +170,9 @@ export function finishStateSpace(model, weekends, race, qual, { raw, lapPace }) 
     slopes,
     scenario: STATE_SPACE_FIT.scenario,
   };
-  model.params = { ...MODEL_SETTINGS, modelKind: 'state-space' };
+  model.params = { ...MODEL_SETTINGS, modelKind: 'state-space', ratingMethod: 'hybrid' };
 
-  // ---- the forecast layer: form trackers and probability heads, on the state-space levels as forecast before each weekend
+  // ---- the forecast layer: form trackers and probability heads, on the hybrid levels as forecast before each weekend
   const { form, diags } = replayForecastLayer(weekends, { race: race.pre, qual: qual.pre }, { lapPace, params, heads: STATE_SPACE_HEADS });
   model.snaps.forEach((snap, i) => {
     const d = snap.diag;

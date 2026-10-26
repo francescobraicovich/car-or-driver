@@ -1,0 +1,3424 @@
+/* The front page: a full-screen drawing in three colourings, a two-line white title with a streak, smoky edges and an ice-blue aura, a square cursor,
+   a box that opens around the car or the hands, a lightly boxed word joined to it by a line, and the ratings. Colours here belong to the drawing and to
+   text measured against it (tests/test-stage.mjs samples the pixels where the text sits); they are tokens on .stage so that the two states are
+   defined in one place. */
+
+html,
+body {
+  background: #d90a04;
+}
+#home {
+  margin: 0;
+}
+#home:focus {
+  outline: none; /* the page receives the focus when a card closes, so that a screen reader starts at it; it is not a control */
+}
+/* Said by boot-probe.js when the scripts cannot start (nothing else is on the page then) */
+.start-error {
+  max-width: 62ch;
+  margin: 18vh auto 0;
+  padding: 0 18px;
+  color: #fff1e8;
+  font:
+    15px/1.55 'Inter',
+    system-ui,
+    sans-serif;
+}
+
+.stage {
+  color-scheme: light;
+  --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --display: 'Lexend Giga', system-ui, sans-serif;
+  --text: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* red drawing: white title over a soft dark-red haze, cream small text on the drawing's darker top and bottom bands */
+  --stage-bg: #d90a04;
+  --ink: #fff1e8;
+  --title-ink: #fff;
+  --scrim: rgb(90 0 0 / 0.42);
+  --word-dim: 0.5;
+  --glow: 0 0 0.03em #fff, 0 0 0.12em #bff4ff, 0 0 0.3em #35d3ff, 0 0 0.7em #0a8cff, 0 0 1.3em rgb(10 100 255 / 0.7);
+  --word-fill: rgb(255 255 255 / 0.14);
+  --frame: #0a1a9c;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 420px;
+  overflow: hidden;
+  background: var(--stage-bg);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+/* black and white drawing: the text turns dark, because white on the light picture would not be readable. Safari draws the title again, which is
+   slow, whenever something large over or under it is drawn again: so the colour of the page is that of a layer of its own (the next rule), the tokens
+   are set only on the small things that use them (the links, the track, the box on the word, the list of slides), and the title is drawn once for
+   each colouring (below), the one that shows being chosen by a clip. */
+.stage-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: var(--stage-bg);
+  pointer-events: none;
+  transition: background-color 0.3s;
+  will-change: transform;
+}
+.stage[data-state='peek'] .stage-backdrop,
+.stage[data-state='open'] .stage-backdrop {
+  --stage-bg: #bcbcbc;
+}
+.stage[data-state='peek'] :is(.stage-bar, .hotspot, .track, .deck-list, .stage-word-frame),
+.stage[data-state='open'] :is(.stage-bar, .hotspot, .track, .deck-list, .stage-word-frame) {
+  --ink: #050505;
+  --word-fill: rgb(255 255 255 / 0.5);
+}
+/* the pointer is the square, wherever it is on the picture (this does not change while it moves: that would draw the title again) */
+.stage[data-coarse='false'],
+.stage[data-coarse='false'] * {
+  cursor: none;
+}
+/* over the panel the pointer is the ordinary one, and the square steps aside */
+.stage[data-coarse='false'] :is(.ledger, .deck-card, .deck-list, .graph-page),
+.stage[data-coarse='false'] :is(.ledger, .deck-card, .deck-list, .graph-page) * {
+  cursor: default;
+}
+.stage[data-coarse='false'] :is(.ledger, .deck-card, .deck-list, .graph-page) :is(button, select, summary, input, a):not(:disabled) {
+  cursor: pointer;
+}
+.stage-filters {
+  position: absolute;
+}
+
+/* ── the drawing ─────────────────────────────────────── */
+.scene {
+  position: absolute;
+  left: var(--scene-x, 0);
+  top: var(--scene-y, 0);
+  width: var(--scene-w, 100%);
+  height: var(--scene-h, 100%);
+  pointer-events: none;
+  overflow: hidden;
+  /* a picture that does not reach an edge of the screen fades into the page's colour there (the lengths are set by stage-view.js) */
+  --fade-mask-vertical: linear-gradient(
+    to bottom,
+    transparent,
+    #000 var(--fade-top, 0px),
+    #000 calc(100% - var(--fade-bottom, 0px)),
+    transparent
+  );
+  --fade-mask-horizontal: linear-gradient(
+    to right,
+    transparent,
+    #000 var(--fade-left, 0px),
+    #000 calc(100% - var(--fade-right, 0px)),
+    transparent
+  );
+  -webkit-mask-image: var(--fade-mask-vertical), var(--fade-mask-horizontal);
+  -webkit-mask-composite: source-in;
+  mask-image: var(--fade-mask-vertical), var(--fade-mask-horizontal);
+  mask-composite: intersect;
+}
+.layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+.layer-mono {
+  opacity: 0;
+  transition: opacity 0.28s;
+}
+.layer-blue {
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.blue-window {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  contain: layout paint;
+  pointer-events: none;
+}
+.blue-window .layer-blue {
+  width: var(--scene-w);
+  height: var(--scene-h);
+  max-width: none;
+}
+.stage[data-state='peek'] .layer-mono,
+.stage[data-state='open'] .layer-mono {
+  opacity: 1;
+}
+.stage[data-subject='car'] .layer-blue,
+.stage[data-subject='driver'] .layer-blue {
+  opacity: 1;
+}
+
+/* ── the two lines of links ──────────────────────────── */
+.stage-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  color: var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 24px;
+  padding: 16px clamp(18px, 5vw, 72px);
+}
+.stage-top {
+  top: 0;
+  justify-content: flex-end;
+}
+.stage-bottom {
+  bottom: 0;
+  flex-direction: column;
+  align-items: stretch;
+}
+.stage a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.stage-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.stage-links a {
+  padding: 3px 0;
+  border-bottom: 1px solid transparent;
+}
+.stage-links a:hover,
+.stage-links a:focus-visible {
+  border-bottom-color: var(--ink);
+}
+.stage a:focus-visible,
+.stage button:focus-visible {
+  outline: 2px dashed var(--ink);
+  outline-offset: 3px;
+}
+.stage-tagline {
+  max-width: 60ch;
+  margin: 0;
+  font-size: 12.5px;
+}
+.stage-tagline:empty {
+  display: none;
+}
+/* privacy at the left, about in the middle, source at the right */
+.stage-footer-links {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  width: 100%;
+}
+.stage-footer-links a:first-child {
+  justify-self: start;
+}
+.stage-footer-links a:nth-child(2) {
+  justify-self: center;
+}
+.stage-footer-links a:last-child {
+  justify-self: end;
+}
+
+/* ── the title ───────────────────────────────────────── */
+.stage-title {
+  position: absolute;
+  z-index: 4;
+  left: var(--title-x, 50%);
+  top: var(--title-top, 80px);
+  margin: 0;
+  transform: translateX(-50%);
+  font-family: var(--display);
+  font-size: var(--title-size, 56px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  color: var(--title-ink);
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+/* a haze, dark red over the red drawing, behind the lines: it keeps white readable where the drawing glows orange, and reads as smoke */
+.title-scrim {
+  position: absolute;
+  inset: -34% -22%;
+  background: radial-gradient(closest-side, var(--scrim) 58%, transparent);
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.stage[data-state='peek'] .title-scrim,
+.stage[data-state='open'] .title-scrim {
+  opacity: 0; /* no haze over the black and white drawing */
+}
+.title-line {
+  display: block;
+}
+/* The title is drawn by copies of it (stage-view.js), one for each way it can look, all drawn at once and kept: drawing one of them again (they have
+   filters, and Safari takes the best part of a second for the lot) is what made pointing at the car or the hands slow. Only one way shows at a time,
+   and what chooses it is the clip of the holder of the copies (a holder, because a clip on something with a filter draws it again), which costs
+   nothing. The title in the page is the one that is pointed at, and is not drawn. */
+.title-core {
+  display: block;
+  position: relative;
+  color: transparent;
+}
+.title-variant,
+.title-layer {
+  display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.title-variant {
+  clip-path: inset(100% 0 0 0);
+}
+.stage[data-state='idle'] .title-variant.ink-light,
+.stage[data-state='peek'] .title-variant.title-streaks,
+.stage[data-state='open'] .title-variant.title-streaks,
+.stage[data-subject='car'] .title-variant.lit-car,
+.stage[data-subject='driver'] .title-variant.lit-driver,
+.stage[data-subject=''][data-state='peek'] .title-variant.lit-all.ink-dark,
+.stage[data-subject=''][data-state='open'] .title-variant.lit-all.ink-dark {
+  clip-path: inset(-100vh -100vw);
+}
+/* black and white drawing: dark letters, and a glow that is only a trace of the light */
+.title-variant.ink-dark {
+  --title-ink: #050505;
+  --glow: 0 0 0.2em rgb(120 170 255 / 0.6), 0 0 0.7em rgb(40 110 255 / 0.4);
+}
+.title-layer {
+  color: var(--title-ink);
+  text-shadow: none;
+}
+.title-copy {
+  filter: url(#titleSmoke);
+  text-shadow: var(--glow);
+  animation: aura 3.4s ease-in-out infinite alternate;
+}
+@keyframes aura {
+  50% {
+    opacity: 0.93;
+  }
+}
+/* two streaks behind the letters, as the speed in the drawing trails behind the car: they drift, slowly */
+.title-smear-near {
+  filter: url(#titleSmearNear);
+  opacity: 0.7;
+  transform: translateX(-0.06em);
+  animation: smear 4s ease-in-out infinite alternate;
+}
+.title-smear-far {
+  filter: url(#titleSmearFar);
+  opacity: 0.45;
+  transform: translateX(-0.2em);
+  animation: smear 5.5s ease-in-out infinite alternate-reverse;
+}
+@keyframes smear {
+  to {
+    transform: translateX(-0.36em);
+  }
+}
+/* the copies of the title behind it are for looking at only: they are listed after .word below */
+.word {
+  display: inline-block;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.title-layer .word {
+  pointer-events: none;
+}
+.word-driver {
+  font-weight: 600;
+}
+.word-car {
+  font-weight: 800;
+}
+.word-or {
+  font-size: 0.9em;
+  font-style: italic;
+  font-weight: 200;
+  margin-right: 0.12em;
+}
+/* pointing at the car or the hands: only the matching word stays lit */
+.title-variant.lit-car :is(.word-driver, .word-or),
+.title-variant.lit-driver :is(.word-car, .word-or) {
+  opacity: var(--word-dim);
+}
+
+/* the lightly drawn box around the word, and the line to the picture */
+.stage-word-frame {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  border: 2px solid var(--frame);
+  background: var(--word-fill);
+  box-shadow:
+    0 0 0 1px #fff,
+    inset 0 0 0 1px #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  will-change: transform, width, height;
+}
+.stage[data-subject='car'] .stage-word-frame,
+.stage[data-subject='driver'] .stage-word-frame {
+  opacity: 1;
+}
+.stage-connector {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.stage-connector polyline {
+  fill: none;
+  stroke: var(--frame);
+  stroke-width: 2;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.4s ease-out;
+}
+.stage-connector rect {
+  fill: var(--frame);
+  opacity: 0;
+  transition: opacity 0.2s 0.15s;
+}
+.stage[data-subject='car'] .stage-connector polyline,
+.stage[data-subject='driver'] .stage-connector polyline {
+  stroke-dashoffset: 0;
+}
+.stage[data-subject='car'] .stage-connector rect,
+.stage[data-subject='driver'] .stage-connector rect {
+  opacity: 1;
+}
+
+/* ── what can be selected, the box and the cursor ────── */
+/* the site's general button hover (a tinted background and border) must not show on these */
+.stage .hotspot:hover:not(:disabled) {
+  background: none;
+  border-color: transparent;
+}
+.hotspot {
+  all: unset;
+  position: absolute;
+  z-index: 3;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.stage[data-coarse='true'][data-state='idle'] .hotspot {
+  outline: 1px dashed var(--ink);
+  outline-offset: -6px;
+  animation: hint 2.2s ease-in-out infinite;
+}
+@keyframes hint {
+  50% {
+    outline-color: transparent;
+  }
+}
+.stage-frame {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  border: 2px solid var(--frame);
+  box-shadow:
+    0 0 0 1px #fff,
+    inset 0 0 0 1px #fff;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s;
+  will-change: transform, width, height;
+}
+.stage[data-subject='car'] .stage-frame,
+.stage[data-subject='driver'] .stage-frame {
+  opacity: 1;
+}
+/* what to do, under the box, moving with it; once the ratings are kept open there is nothing left to say */
+.stage-frame-hint {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  color: var(--frame);
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-shadow: 0 0 6px #fff;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.stage[data-state='peek'] .stage-frame-hint {
+  opacity: 1;
+}
+.stage-cursor {
+  position: absolute;
+  z-index: 7;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border: 2px solid #fff;
+  box-shadow:
+    0 0 0 1px #000,
+    inset 0 0 0 1px #000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s;
+  will-change: transform;
+}
+.stage-cursor::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  background: #fff;
+  box-shadow: 0 0 0 1px #000;
+}
+.stage[data-pointer='in'][data-coarse='false'] .stage-cursor {
+  opacity: 1;
+}
+.stage[data-hover='car'] .stage-cursor,
+.stage[data-hover='driver'] .stage-cursor,
+.stage[data-pointer='in'][data-coarse='false'][data-over-panel='true'] .stage-cursor {
+  opacity: 0; /* over the panel the square steps aside (and the pointer is the ordinary one) */
+}
+
+/* ── the colours of the lines ────────────────────────── */
+/* On the stage (the panel, the two drivers lit in the race, the notes) and in the tooltip of a chart on the panel. */
+.stage,
+#chartValueTooltip.metal {
+  /* the colours of the lines of a chart on the panel: the project owner's five (red, blue, turquoise, dark green, magenta), then violet, orange and
+     azure in the same vivid spirit; the same on the panel whatever theme another page was set to (Insights keeps the site's own palette). Checked
+     with the palette validator on the lightest metal (#e2e2e2): every pair, not only neighbours, is told apart (colour-blind separation at least 9.5,
+     normal vision at least 16.7). The five themselves are outside its lightness band (the blue, the dark green and the turquoise), the dark green is
+     below its chroma floor, and the turquoise, the orange and the azure are under 3 to 1 against light metal: the names on the chips, the table and
+     the tooltip say which line is which, and the lines have a thin dark edge (chart-renderer.js, `casing`) so that the pale ones show. */
+  --s1: #fa1802;
+  --s2: #091a9c;
+  --s3: #4ecdc4;
+  --s4: #065143;
+  --s5: #ce1483;
+  --s6: #7b2ff7;
+  --s7: #ff8a00;
+  --s8: #1e90ff;
+}
+
+/* ── the ratings ─────────────────────────────────────── */
+/* The panel holds the ratings list of ratings-view.js, which reads its colours from the site's tokens. Here they are set again for dark ink on
+   brushed metal, so the list needs no styles of its own; the card that opens on a row has the same surface. The fill under the text is almost clear
+   (the drawing shows through, blurred), and the metal is light and shade on top of it: tests/test-stage.mjs checks that every text colour still
+   reads on the lightest and darkest pixel behind it, with the fill and with the darkest the shading can make. */
+.ledger,
+#chartValueTooltip.metal,
+.info-tip,
+.deck-card,
+.graph-page,
+.rating-card {
+  --ink: #07080b;
+  --ink-2: #14171c;
+  --ink-3: #1b1f26;
+  --surface: #eef0f3;
+  --surface-raised: #f7f8fa;
+  --grid: rgb(10 11 15 / 0.16);
+  --rule: rgb(10 11 15 / 0.38);
+  --border: rgb(10 11 15 / 0.26);
+  --wash: rgb(255 255 255 / 0.34);
+  --accent: #0a1a9c;
+  --accent-text: #08147a;
+  --accent-wash: rgb(10 26 156 / 0.12);
+  --on-accent: #fff;
+  --pos: #023317;
+  --neg: #560709;
+  --form: #fa1802; /* the colour of recent form */
+  --form-edge: #5c0a00;
+  --panel-plate: rgb(236 238 242 / 0.18);
+  --panel-shade: rgb(0 0 0 / 0.11); /* the most the shading below can darken any point: the layers of it together */
+  /* the metal: a lamp's light sweeping across a brushed plate (bright and dark bands), a gloss at the top, the foot of the plate in shade, and the brushing */
+  background-color: var(--panel-plate);
+  background-image:
+    linear-gradient(
+      115deg,
+      rgb(255 255 255 / 0.52) 0%,
+      rgb(255 255 255 / 0.1) 15%,
+      rgb(255 255 255 / 0) 23%,
+      rgb(255 255 255 / 0.36) 35%,
+      rgb(255 255 255 / 0.04) 45%,
+      rgb(0 0 0 / 0.03) 57%,
+      rgb(255 255 255 / 0.42) 69%,
+      rgb(255 255 255 / 0.05) 81%,
+      rgb(0 0 0 / 0.03) 100%
+    ),
+    radial-gradient(120% 70% at 50% 0%, rgb(255 255 255 / 0.26), transparent 62%),
+    linear-gradient(to bottom, transparent 62%, rgb(0 0 0 / 0.05) 100%),
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.08) 0 1px, rgb(0 0 0 / 0.03) 1px 3px);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  border-radius: 6px;
+  -webkit-backdrop-filter: blur(9px) saturate(1.2);
+  backdrop-filter: blur(9px) saturate(1.2);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    inset 1px 0 0 rgb(255 255 255 / 0.55),
+    inset 0 -1px 0 rgb(0 0 0 / 0.22),
+    inset -1px 0 0 rgb(0 0 0 / 0.1),
+    inset 0 0 36px rgb(255 255 255 / 0.2),
+    0 24px 60px rgb(0 0 0 / 0.3);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 13px;
+}
+.ledger {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  container-type: inline-size;
+  overflow-y: auto;
+}
+/* the card on a row: it can cover the sketches, so its fill is denser */
+.rating-card {
+  --panel-plate: rgb(238 240 244 / 0.84);
+  position: absolute;
+  z-index: 6;
+  width: 256px;
+  padding: 12px 14px;
+  pointer-events: none;
+}
+.card-name {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 4px;
+  line-height: 1.15;
+}
+.card-forename {
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.card-surname {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+}
+.card-facts {
+  margin: 0 0 8px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 14px;
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.card-grid dt {
+  align-self: center;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.card-grid dd {
+  margin: 0;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: right;
+}
+.card-value small {
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 500;
+}
+.card-value small.up {
+  color: var(--pos);
+}
+.card-value small.down {
+  color: var(--neg);
+}
+.stage[data-layout='wide'] .ledger {
+  left: var(--panel-left);
+  width: var(--panel-width);
+  top: 68px;
+  max-height: calc(100% - 68px - var(--bottom-space, 58px) - 8px);
+}
+.stage[data-layout='sheet'] .ledger {
+  --panel-plate: rgb(238 240 244 / 0.84); /* denser than the column: kept open, the sheet can cover the pictures */
+  left: clamp(18px, 5vw, 72px);
+  right: clamp(18px, 5vw, 72px);
+  bottom: calc(var(--bottom-space, 58px) + 8px);
+  max-height: min(78vh, calc(100% - var(--bottom-space, 58px) - 80px));
+}
+/* only shown because something is pointed at (a window that is narrow but has a mouse), the sheet stays below the pictures and must not catch the
+   pointer: if it covered the spot, the pointer would leave the car, the sheet would close, and it would open again */
+.stage[data-layout='sheet'][data-state='peek'] .ledger {
+  max-height: min(60vh, max(var(--ledger-room, 60vh), 220px));
+  pointer-events: none;
+}
+/* the Close button sits in the corner of the header, and is there only while the ratings are kept open */
+.ledger-close,
+.deck-close,
+.graph-close {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  z-index: 3;
+  width: 22px;
+  min-height: 22px;
+  padding: 0;
+  border-color: transparent;
+  border-radius: 3px;
+  background: transparent;
+  font-size: 16px;
+  line-height: 1;
+}
+/* ── the views over the ratings ──────────────────────── */
+/* The history and the head to head open over the ratings in the panel, on the same metal and the same size, with a button to go back. The ratings
+   stay where they are, out of sight; the view fills the panel and scrolls inside itself. */
+.ledger:not([data-view='ratings']) {
+  overflow: hidden;
+}
+.ledger:not([data-view='ratings']) #ratingsHost {
+  visibility: hidden;
+}
+/* a view has a height of its own, not the ratings' (which is that of the number of rows of the weekend: the cars are fewer than the drivers, and a
+   weekend of 20 drivers is shorter than one of 22), so the panel does not change size as the weekends go by under a date being dragged */
+.stage[data-layout='wide'] .ledger:not([data-view='ratings']) {
+  height: min(740px, calc(100% - 68px - var(--bottom-space, 58px) - 8px));
+}
+.stage[data-layout='sheet'] .ledger:not([data-view='ratings']) {
+  height: min(740px, 78vh, calc(100% - var(--bottom-space, 58px) - 80px));
+}
+.ledger-view {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: none;
+  flex-direction: column;
+  min-height: 0;
+}
+.ledger[data-view='history'] #historyView,
+.ledger[data-view='head-to-head'] #headToHeadView {
+  display: flex;
+  animation: ledger-view-in 0.22s ease-out;
+}
+@keyframes ledger-view-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+.ledger-view-head {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 34px 4px 8px;
+}
+.ledger-view-title {
+  margin: 0;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.ledger-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 22px;
+  padding: 0 8px 0 6px;
+  color: var(--ink-2);
+  font-weight: 600;
+}
+.ledger-back::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-bottom: 1.5px solid currentColor;
+  border-left: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+.ledger-view-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+/* ── history ─────────────────────────────────────────── */
+/* The lines of the chosen drivers or cars on a plate of lighter glass, which keeps the colours of the lines on one surface; the key is the chips above
+   it (each with its colour), the season range is a slider with two handles under it. */
+.history {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.series-chips {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 5px;
+  padding: 2px 12px 6px;
+}
+.series-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 22px;
+  padding: 0 2px 0 7px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.42);
+  font-size: 11px;
+  font-weight: 600;
+}
+.series-chip i {
+  width: 8px;
+  height: 8px;
+  background: var(--c, var(--ink));
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
+}
+.ledger .series-chip button {
+  width: 18px;
+  min-height: 18px;
+  height: 18px;
+  padding: 0;
+  border-radius: 2px;
+  color: var(--ink-3);
+  font-size: 14px;
+  line-height: 1;
+}
+.series-picker {
+  position: relative;
+}
+.ledger .series-picker input {
+  width: 118px;
+  min-height: 22px;
+  padding: 0 7px;
+  background: rgb(255 255 255 / 0.3);
+}
+.ledger .series-picker input::placeholder {
+  color: var(--ink-3);
+}
+.series-picker-list {
+  position: absolute;
+  z-index: 6;
+  top: calc(100% + 3px);
+  left: 0;
+  width: 250px;
+  max-height: 230px;
+  overflow-y: auto;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgb(244 245 247 / 0.97);
+  box-shadow: 0 10px 28px rgb(0 0 0 / 0.28);
+}
+.ledger .series-picker-list button {
+  display: flex;
+  width: 100%;
+  min-height: 22px;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 6px;
+  font-weight: 500;
+  text-align: left;
+}
+.series-picker-list button span {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10.5px;
+}
+.series-picker-list p {
+  margin: 0;
+  padding: 6px;
+  color: var(--ink-3);
+  font-size: 11px;
+}
+.history-plot {
+  position: relative;
+  flex: 1 1 220px;
+  min-height: 220px;
+  margin: 0 10px;
+  padding: 6px 8px 4px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.4);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+}
+.ledger svg.chart text {
+  font-family: var(--mono);
+  font-size: 10px;
+}
+.history-plot .table-wrap {
+  position: absolute;
+  inset: 6px 8px 4px;
+  padding: 0;
+  overflow-y: auto;
+}
+.history-plot .table-wrap .scroll {
+  max-height: none;
+  overflow: visible; /* the wrapper scrolls, so that the header row stays at its top */
+}
+.ledger table,
+.deck-card table {
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.ledger caption,
+.deck-card caption {
+  padding: 0 0 6px;
+  font-family: var(--text);
+  font-size: 10.5px;
+}
+.ledger th,
+.ledger td,
+.deck-card th,
+.deck-card td {
+  padding: 4px 8px;
+  border-bottom-color: var(--grid);
+}
+.ledger th,
+.deck-card th {
+  background: rgb(236 238 242 / 0.92);
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  vertical-align: bottom;
+  white-space: normal; /* a name wraps over two lines rather than widening the table */
+}
+.ledger tbody tr:hover,
+.deck-card tbody tr:hover {
+  background: var(--ink); /* inverted, as the rows of the ratings are */
+  color: var(--surface);
+}
+.ledger tbody tr:hover th,
+.deck-card tbody tr:hover th {
+  color: inherit;
+}
+.ledger tbody th,
+.deck-card tbody th {
+  background: none;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.season-range {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap; /* on a phone the presets go under the slider */
+  align-items: center;
+  gap: 4px 10px;
+  padding: 8px 12px 10px;
+}
+.season-range .segmented button {
+  white-space: nowrap;
+}
+.season-range-label {
+  flex: none;
+  min-width: 17ch;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 650;
+}
+.season-range-slider {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 80px;
+  height: 20px;
+}
+.season-range-slider input[type='range'] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 20px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  appearance: none;
+  pointer-events: none;
+}
+.season-range-slider input[type='range']::-webkit-slider-runnable-track {
+  height: 3px;
+  background: transparent;
+}
+.season-range-slider input[type='range']::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: -5.5px;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+  appearance: none;
+  pointer-events: auto;
+  cursor: grab;
+}
+.season-range-slider input[type='range']::-moz-range-track {
+  background: transparent;
+}
+.season-range-slider input[type='range']::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+  pointer-events: auto;
+  cursor: grab;
+}
+.season-range-track {
+  position: absolute;
+  top: 8.5px;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: var(--rule);
+}
+.season-range-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--ink);
+}
+/* ── the small "i" and its note ──────────────────────── */
+/* What explains a label or a figure is behind an "i" (info-tip.js), so that the views carry the figures and the names and little else. */
+.ledger .info,
+.deck-card .info {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  min-height: 14px;
+  margin-left: 6px;
+  padding: 0;
+  border: 1px solid var(--ink-3);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink-3);
+  font: 700 9px/1 var(--mono);
+  cursor: help;
+}
+.ledger .info:hover:not(:disabled),
+.ledger .info:focus-visible,
+.ledger .info[aria-describedby],
+.deck-card .info:hover:not(:disabled),
+.deck-card .info:focus-visible,
+.deck-card .info[aria-describedby] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--surface);
+}
+.info-tip.wide {
+  max-width: min(360px, calc(100% - 16px));
+}
+.info-tip {
+  --panel-plate: rgb(238 240 244 / 0.94);
+  position: absolute;
+  z-index: 9;
+  width: max-content;
+  max-width: min(250px, calc(100% - 16px));
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.45;
+  pointer-events: none;
+}
+
+/* ── head to head ────────────────────────────────────── */
+/* Two drivers, A in the first colour of the chart's palette and B in the second (over the name, in the bars, and as the two lines under them), the
+   chance that each finishes ahead in large figures, and the forecast one stage at a time as rows like those of the ratings: a bar split between the
+   two drivers with the line at even odds drawn as the ratings draw their average, and the row under the pointer inverted. What explains a row is
+   behind its "i"; what changes the matchup (another season or car for either driver, the conditions) is folded away until it is wanted. */
+.head-to-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 100%;
+  padding: 4px 12px 8px;
+}
+.head-to-head-pick {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+}
+.head-to-head-side {
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  min-width: 0;
+}
+.head-to-head-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 20px;
+}
+.ledger .head-to-head .head-to-head-prime {
+  min-height: 20px;
+  padding: 0 7px;
+  font-size: 10.5px;
+}
+.head-to-head-mode {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ledger .head-to-head-mode .toggle {
+  min-height: 22px;
+}
+.ledger .head-to-head .head-to-head-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.head-to-head-label::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--s1);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
+}
+#headToHeadSideB .head-to-head-label::before {
+  background: var(--s2);
+}
+.ledger .head-to-head-pick select {
+  width: 100%;
+  min-height: 28px;
+  padding-left: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.head-to-head-pick .vs {
+  padding-top: 24px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.head-to-head-extras,
+.head-to-head-more {
+  min-width: 0;
+}
+.head-to-head-extras summary,
+.head-to-head-more summary {
+  min-height: 18px;
+  color: var(--ink-3);
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.head-to-head-extras[open] summary {
+  margin-bottom: 6px;
+}
+.head-to-head-when {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.head-to-head-when .field {
+  flex: 1 1 100px;
+}
+.head-to-head-when .field[hidden] {
+  display: none;
+}
+.ledger .head-to-head .field {
+  gap: 2px;
+  color: var(--ink-3);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.ledger .head-to-head-extras select,
+.ledger .head-to-head-more select {
+  min-height: 22px;
+  font-size: 11px;
+  font-weight: 500;
+}
+.ledger .head-to-head input[type='number'],
+.ledger .head-to-head input[type='date'] {
+  min-height: 22px;
+  padding: 0 6px;
+  background: rgb(255 255 255 / 0.3);
+}
+.ledger .head-to-head .field,
+.ledger .head-to-head .field input,
+.ledger .head-to-head .field select {
+  width: 100%;
+}
+.head-to-head-result {
+  margin-top: 2px;
+}
+.head-to-head-names {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.head-to-head-names > div {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-top: 5px;
+  border-top: 3px solid var(--s1);
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+.head-to-head-names > div:last-child {
+  border-top-color: var(--s2);
+  text-align: right;
+}
+.head-to-head-figure {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.head-to-head-figure:last-child {
+  flex-direction: row-reverse;
+}
+.head-to-head-moment {
+  display: grid;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+.head-to-head-figure:last-child .head-to-head-moment {
+  text-align: right;
+}
+.head-to-head-moment em {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 800;
+}
+.head-to-head-moment small {
+  color: var(--ink-3);
+}
+.head-to-head-names small {
+  display: block;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.head-to-head-figures {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin: 4px 0;
+  font-family: var(--mono);
+  font-size: clamp(30px, 9vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+/* the two bars (the main one and the one of each step): A and B side by side, and the line at even odds as the ratings draw their average */
+.head-to-head-bar,
+.head-to-head-step-bar {
+  --line: var(--ink);
+  --halo: rgb(255 255 255 / 0.85);
+  position: relative;
+  display: flex;
+}
+.head-to-head-bar {
+  height: 12px;
+}
+.head-to-head-bar i,
+.head-to-head-step-bar i {
+  display: block;
+  min-width: 2px;
+}
+.head-to-head-bar i:first-child,
+.head-to-head-step-bar i:first-child {
+  background: var(--s1);
+}
+.head-to-head-bar i:last-child,
+.head-to-head-step-bar i:last-child {
+  background: var(--s2);
+}
+.head-to-head-bar::after,
+.head-to-head-step-bar::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 50%;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--line);
+  box-shadow: 0 0 0 1px var(--halo);
+}
+.head-to-head-steps {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.head-to-head-steps h3 {
+  display: flex;
+  align-items: center;
+  margin: 0 0 4px;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.head-to-head-steps ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.head-to-head-steps li {
+  display: grid;
+  grid-template-columns: 9.5em minmax(0, 1fr) 4ch;
+  align-items: center;
+  gap: 10px;
+  min-height: 26px;
+  padding: 0 6px;
+  border-radius: 2px;
+}
+.head-to-head-steps li > span:first-child {
+  display: flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.head-to-head-step-bar {
+  height: 10px;
+}
+.head-to-head-steps li b {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: right;
+}
+/* the row under the pointer is inverted, as in the ratings (and so are the rows of the table below) */
+.head-to-head-steps li:hover,
+.head-to-head-parts tbody tr:hover {
+  background: var(--ink);
+  color: var(--surface);
+}
+.head-to-head-steps li:hover .head-to-head-step-bar {
+  --line: var(--surface);
+  --halo: rgb(10 11 15 / 0.85);
+}
+.head-to-head-steps li:hover .head-to-head-step-bar i {
+  box-shadow: inset 0 0 0 1px rgb(238 240 243 / 0.75);
+}
+.ledger .head-to-head-steps li:hover .info,
+.ledger .head-to-head-parts tbody tr:hover .info {
+  border-color: var(--surface);
+  color: var(--surface);
+}
+.ledger .head-to-head-steps li:hover .info:hover,
+.ledger .head-to-head-parts tbody tr:hover .info:hover {
+  background: var(--surface);
+  color: var(--ink);
+}
+.head-to-head-why {
+  display: flex;
+  align-items: center;
+  margin: 6px 0 0;
+  font-size: 11px;
+  font-weight: 550;
+}
+.head-to-head-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 8px 0 0;
+}
+.head-to-head-facts > div {
+  padding: 6px 8px 2px 0;
+}
+.head-to-head-facts dt {
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.head-to-head-facts dt .info {
+  vertical-align: middle;
+}
+.head-to-head-facts dd {
+  margin: 2px 0 0;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 800;
+}
+.head-to-head-facts dd small {
+  color: var(--ink-3);
+  font-family: var(--text);
+  font-size: 10.5px;
+  font-weight: 450;
+}
+.head-to-head-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.head-to-head-pair i {
+  width: 8px;
+  height: 8px;
+  background: var(--s1);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
+}
+.head-to-head-pair i.b {
+  margin-left: 8px;
+  background: var(--s2);
+}
+.head-to-head-parts {
+  width: 100%;
+  margin-top: 8px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 11px;
+}
+.head-to-head-parts th:first-child {
+  width: 40%;
+}
+.head-to-head-parts th,
+.head-to-head-parts td {
+  padding: 4px 6px;
+  border-top: 1px solid var(--grid);
+  border-bottom: 0;
+  text-align: right;
+  vertical-align: middle;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.head-to-head-parts thead th {
+  border-top: 0;
+}
+.head-to-head-parts tbody th {
+  color: inherit;
+  font-family: var(--text);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+}
+.head-to-head-parts tbody th > .info {
+  vertical-align: middle;
+}
+.head-to-head-parts td {
+  font-family: var(--mono);
+  font-weight: 800;
+}
+.head-to-head-chart {
+  flex: 1 1 120px;
+  min-height: 120px;
+  padding: 4px 6px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.4);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+}
+.head-to-head-foot {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.head-to-head-more {
+  flex: 1 1 auto;
+}
+.head-to-head-state {
+  margin-left: 6px;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-weight: 500;
+}
+.head-to-head-more .controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 10px;
+  margin-top: 6px;
+}
+#headToHeadGridFields {
+  display: contents;
+}
+/* ── the insights ────────────────────────────────────── */
+/* A card in the middle of the picture (grey, as behind the panel), on the panel's metal and denser, because it covers the sketches: the contents, then one
+   slide for each finding, sliding. The list of the slides stands beside it on the left, on the picture itself, when there is room; the ticks under the
+   title (and the arrows, the keys and a swipe) do the same where there is not. The charts are drawn by insights-charts.js, which reads the stage's palette
+   and the card's tokens, so they are in the colours of the History and of the Head to head. */
+.deck-card,
+.deck-list {
+  --deck-height: min(720px, calc(100% - 76px - var(--bottom-space, 58px)));
+  --deck-top: calc(68px + (100% - 76px - var(--bottom-space, 58px) - var(--deck-height)) / 2);
+}
+.deck-card {
+  --panel-plate: rgb(238 240 244 / 0.93); /* denser than the card of a row: it is large, and the title and the sketches are behind it */
+  --deck-width: min(900px, calc(100% - 2 * clamp(18px, 5vw, 72px)));
+  position: absolute;
+  z-index: 5;
+  top: var(--deck-top);
+  left: calc((100% - var(--deck-width)) / 2);
+  display: none;
+  flex-direction: column;
+  width: var(--deck-width);
+  height: var(--deck-height);
+  overflow: hidden;
+}
+.deck-card[data-open] {
+  display: flex;
+  animation: deck-in 0.3s ease-out;
+}
+@keyframes deck-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@media (min-width: 1280px) {
+  .deck-card {
+    --deck-width: min(900px, calc(100% - 540px)); /* the list of slides is on the left */
+  }
+}
+.stage[data-layout='sheet'] .deck-card {
+  top: auto;
+  right: clamp(18px, 5vw, 72px);
+  bottom: calc(var(--bottom-space, 58px) + 8px);
+  left: clamp(18px, 5vw, 72px);
+  width: auto;
+  height: min(740px, 78vh, calc(100% - var(--bottom-space, 58px) - 80px));
+}
+.stage[data-mode='deck'] .hotspot {
+  visibility: hidden; /* the car and the hands are not for pointing at while the card is there */
+}
+.stage[data-mode='deck'] .word {
+  pointer-events: none;
+}
+.stage[data-mode='deck'] .stage-title,
+.stage[data-mode='deck'] .stage-word-frame,
+.stage[data-mode='deck'] .stage-connector {
+  opacity: 0.3; /* behind the card */
+}
+
+/* The dated teammate network has its own broad plate. The mini GP remains to
+   the right on roomy screens, so a highlighted node can light its race dot. */
+.graph-page {
+  --panel-plate: rgb(238 240 244 / 0.93);
+  position: absolute;
+  z-index: 5;
+  top: 68px;
+  bottom: calc(var(--bottom-space, 58px) + 10px);
+  left: clamp(18px, 4vw, 60px);
+  width: min(1120px, calc(100% - 420px));
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: clamp(13px, 1.4vw, 20px);
+  overflow: hidden;
+}
+.graph-page[hidden] {
+  display: none;
+}
+.graph-page:focus {
+  outline: none;
+}
+.graph-close {
+  top: 9px;
+  right: 10px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.graph-close:hover,
+.graph-close:focus-visible {
+  background: rgb(10 11 15 / 0.09);
+}
+.graph-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: none;
+  gap: 12px;
+  min-height: 38px;
+  padding-right: 22px;
+}
+.graph-head h2 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(23px, 2.1vw, 32px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+.graph-driver-select {
+  flex: none;
+}
+.graph-driver-select select {
+  width: 200px;
+  max-width: 100%;
+  padding: 6px 9px;
+  border: 1px solid #abb6c5;
+  border-radius: 3px;
+  background: #fff;
+  color: #1b2741;
+  font: 12px var(--display);
+}
+.graph-intro {
+  flex: none;
+  margin: 0;
+  color: #47516a;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.graph-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.46fr);
+  flex: 1 1 0;
+  gap: 14px;
+  min-height: 0;
+}
+.graph-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+}
+.graph-key {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.graph-key i {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+.graph-key-grid {
+  background: #1729a9;
+}
+.graph-key-other {
+  margin-left: 11px;
+  background: #909bad;
+}
+.graph-plot-wrap {
+  flex: 1 1 0;
+  min-height: 160px;
+  border: 1px solid rgb(60 80 120 / 0.15);
+  background: rgb(255 255 255 / 0.52);
+}
+.graph-plot-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+.graph-time {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  min-width: 0;
+}
+.graph-time label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.graph-time strong {
+  text-align: right;
+  font-weight: 700;
+}
+.graph-time input {
+  width: 100%;
+  accent-color: #1729a9;
+}
+.graph-time-ends {
+  display: flex;
+  justify-content: space-between;
+  color: #6b7587;
+  font: 10px var(--mono);
+}
+.graph-detail {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: 18px;
+  border: 1px solid rgb(60 80 120 / 0.2);
+  background: rgb(255 255 255 / 0.45);
+  font-size: 12px;
+}
+.graph-detail-empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 9px;
+  min-height: 100%;
+  max-width: 27ch;
+  margin: auto;
+  color: #687287;
+}
+.graph-detail-empty strong {
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 20px;
+}
+.graph-detail-empty p {
+  margin: 0;
+  line-height: 1.5;
+}
+.graph-detail-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 10px;
+}
+.graph-detail-heading small {
+  color: #c33a21;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+.graph-detail h3 {
+  margin: 3px 0 12px;
+  font-size: 23px;
+  line-height: 1.05;
+}
+.graph-detail-heading > span {
+  color: #667085;
+  white-space: nowrap;
+}
+.graph-detail-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px 8px;
+}
+.graph-detail-metrics div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.graph-detail-metrics span {
+  color: #6b7587;
+  font-size: 10px;
+}
+.graph-detail-metrics strong {
+  font-size: 17px;
+}
+.graph-detail h4 {
+  margin: 20px 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.graph-rivals {
+  display: grid;
+  gap: 2px;
+}
+.graph-rival {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) 52px 52px;
+  gap: 6px;
+  padding: 4px 6px;
+  border-left: 3px solid #9aa5b4;
+  font: 11px var(--mono);
+}
+.graph-rival.up {
+  border-color: #198a65;
+  background: rgb(25 138 101 / 0.07);
+}
+.graph-rival.down {
+  border-color: #d44778;
+  background: rgb(212 71 120 / 0.07);
+}
+.graph-rival span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.graph-note {
+  margin: 14px 0 0;
+  color: #687287;
+  line-height: 1.45;
+}
+body[data-page='graph'] .track:not([hidden]) {
+  z-index: 6;
+  width: 280px;
+  --map-height: min(270px, 31vh);
+}
+body[data-page='graph'] .track-title {
+  font-size: 9px;
+}
+@media (max-width: 1100px) {
+  .graph-page {
+    right: clamp(16px, 4vw, 45px);
+    width: auto;
+  }
+  body[data-page='graph'] .track:not([hidden]) {
+    display: none;
+  }
+}
+@media (max-width: 700px) {
+  .graph-page {
+    top: 76px;
+    bottom: calc(var(--bottom-space, 58px) + 4px);
+    padding: 13px;
+    gap: 7px;
+  }
+  .graph-main {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .graph-chart {
+    flex: 1 1 0;
+    min-height: 260px;
+  }
+  .graph-detail {
+    flex: 0 0 165px;
+    padding: 10px 12px;
+  }
+  .graph-head {
+    gap: 8px;
+    min-height: 34px;
+    padding-right: 18px;
+  }
+  .graph-head h2 {
+    font-size: 18px;
+  }
+  .graph-driver-select select {
+    width: min(39vw, 145px);
+    font-size: 11px;
+  }
+  .graph-key {
+    margin-top: 6px;
+    font-size: 9px;
+  }
+}
+@media (max-height: 620px) {
+  .graph-page {
+    overflow-y: auto;
+  }
+  .graph-main {
+    flex: none;
+    min-height: 350px;
+  }
+}
+.deck-card:focus {
+  outline: none; /* the card receives the focus when it opens, so that a screen reader starts at it; it is not a control */
+}
+.deck-head {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 40px 2px 16px;
+}
+.deck-title {
+  margin: 0;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.deck-position {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 650;
+}
+.deck-ticks {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  padding: 6px 16px 4px;
+}
+.deck-ticks button {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 14px;
+  padding: 0;
+  border: 0;
+}
+.deck-ticks button.first {
+  margin-left: 6px; /* a gap between two topics */
+}
+.deck-ticks button::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: var(--rule);
+}
+.deck-ticks button:hover::after {
+  background: var(--ink-2);
+}
+.deck-ticks button[aria-current='true']::after {
+  top: 2px;
+  height: 9px;
+  background: var(--ink);
+}
+.deck-slides {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.deck-slides::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 18px;
+  background: linear-gradient(transparent, rgb(238 240 244 / 0.93)); /* what runs under the controls fades out */
+  pointer-events: none;
+}
+.deck-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+.deck-track.still {
+  transition: none;
+}
+.deck-slide > .insight {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.deck-card [data-chart='main'] {
+  flex: 1 1 auto; /* free room on the slide goes to the chart (insights-charts.js draws it taller) */
+}
+.deck-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 6px 18px 14px;
+  overflow-y: auto;
+  touch-action: pan-y;
+}
+.deck-card[data-deck='methodology'] .deck-text,
+.deck-card[data-deck='methodology'] .deck-contents {
+  width: min(100%, 760px);
+  margin-inline: auto;
+}
+.deck-card[data-deck='methodology'] .deck-text p,
+.deck-card[data-deck='methodology'] .deck-text ul,
+.deck-card[data-deck='methodology'] .deck-text ol,
+.deck-card[data-deck='methodology'] .deck-text .glossary {
+  max-width: none;
+}
+.deck-card[data-deck='methodology'] .deck-text h3 {
+  margin-bottom: 14px;
+  font-size: 22px;
+}
+.deck-card[data-deck='methodology'] .deck-text h4 {
+  margin: 28px 0 9px;
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.deck-card[data-deck='methodology'] .deck-text p,
+.deck-card[data-deck='methodology'] .deck-text li,
+.deck-card[data-deck='methodology'] .deck-text dd {
+  font-size: 14px;
+  line-height: 1.65;
+}
+.deck-card[data-deck='methodology'] .deck-text p {
+  margin-bottom: 14px;
+}
+.deck-foot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px 12px;
+}
+.deck-card .deck-foot button {
+  min-height: 26px;
+  padding: 0 12px;
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--surface);
+  font-weight: 650;
+}
+.deck-card .deck-foot button:hover:not(:disabled) {
+  border-color: var(--ink-2);
+  background: var(--ink-2);
+}
+.deck-foot button:disabled {
+  opacity: 0.3;
+}
+.deck-foot button:first-child::before {
+  content: '‹' / '';
+  margin-right: 6px;
+}
+.deck-foot button:last-child::after {
+  content: '›' / '';
+  margin-left: 6px;
+}
+.deck-name {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* the contents: the five topics and the finding of each, as rows like those of the ratings (the one under the pointer inverted) */
+.deck-intro {
+  display: flex;
+  align-items: center;
+  margin: 8px 0 14px;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+.deck-topics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px 22px;
+}
+.deck-topics h3 {
+  margin: 0 0 4px;
+  padding-top: 6px;
+  border-top: 2px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--display);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.deck-topics ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.deck-card .deck-topics button {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  min-height: 24px;
+  padding: 3px 6px;
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.25;
+  text-align: left;
+}
+.deck-topics .n {
+  flex: none;
+  min-width: 2ch;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-align: right;
+}
+.deck-card .deck-topics button:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--surface);
+}
+.deck-topics button:hover .n {
+  color: inherit;
+}
+.insights-kinds {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 16px 0 0;
+}
+/* a finding */
+.insight-kind {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+}
+.insight-topic-name {
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.insight-chip {
+  display: inline-block;
+  padding: 0 7px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.insight-title {
+  margin: 0 0 6px;
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.22;
+  text-wrap: balance;
+}
+.insight-title .info {
+  vertical-align: 2px;
+}
+.insight-lead {
+  max-width: 72ch;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.insight-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 14px;
+  margin: 0 0 6px;
+  color: var(--ink-2);
+  font-size: 11px;
+}
+.insight-legend i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
+}
+.deck-card [data-chart] {
+  width: 100%;
+  min-width: 0;
+  padding: 6px 8px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.4);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+}
+.deck-card [data-chart] svg {
+  display: block;
+  overflow: visible;
+}
+.insight-extra {
+  margin-top: 8px;
+}
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 12px 16px;
+  margin-top: 8px;
+}
+.insight-grid h4 {
+  margin: 0 0 3px;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+.deck-card svg text {
+  fill: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 10px;
+}
+.deck-card svg text.secondary {
+  fill: var(--ink-2);
+}
+.deck-card svg text.primary {
+  fill: var(--ink);
+}
+.deck-card svg .gridline {
+  stroke: var(--grid);
+  stroke-width: 1;
+}
+.deck-card svg .zero {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+.deck-card .table-wrap {
+  padding: 4px 0 0;
+  overflow-x: auto;
+}
+.deck-card .insight-table .right {
+  text-align: right;
+}
+.deck-card .insight-table td,
+.deck-card .insight-table th {
+  white-space: normal;
+}
+/* ── text on a slide (the Methodology, the Privacy notice, the About page) ───── */
+/* The text is set as it was on the pages these replace (paragraphs, lists, tables, figures, formulas, a diagram), on the card's tokens: headings in the
+   panel's small capitals, numbers and code in mono, figures and formulas on plates of lighter glass like the charts. */
+.deck-text p,
+.deck-text ul,
+.deck-text ol,
+.deck-text .glossary {
+  max-width: 80ch; /* the lines of text stay readable; the tables, figures and formulas have the whole card */
+}
+.deck-text h3 {
+  margin: 0 0 8px;
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.22;
+}
+.deck-text h4 {
+  margin: 20px 0 5px;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.deck-text p,
+.deck-text li,
+.deck-text dd {
+  font-size: 13px;
+  line-height: 1.55;
+}
+.deck-text p {
+  margin: 0 0 10px;
+}
+.deck-text ul,
+.deck-text ol {
+  margin: 0 0 10px;
+  padding-left: 20px;
+}
+.deck-text li + li {
+  margin-top: 5px;
+}
+.deck-text a {
+  color: var(--accent-text);
+  text-underline-offset: 2px;
+}
+.deck-text .cite {
+  font-size: 0.85em;
+  text-decoration: none;
+}
+.deck-text code {
+  font: 12px var(--mono);
+}
+.deck-text .references {
+  padding-left: 28px;
+}
+.deck-text .references li {
+  margin-bottom: 7px;
+  overflow-wrap: anywhere;
+}
+.deck-text .glossary {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 6px 18px;
+  margin: 0 0 10px;
+}
+.deck-text .glossary dt {
+  font-size: 13px;
+  font-weight: 650;
+}
+.deck-text .glossary dd {
+  margin: 0;
+}
+.deck-text .math {
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+.deck-text .math.block {
+  display: block;
+  margin: 12px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.deck-text .math.typeset {
+  font-family: inherit;
+  font-size: inherit;
+}
+.deck-text .math.block.typeset {
+  font-size: 1.05em;
+}
+.deck-text .formula,
+.deck-text .method-figure,
+.deck-text .method-chart {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.4);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
+}
+.deck-text .formula {
+  font: 12px/1.8 var(--mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.deck-text .method-figure {
+  padding: 8px 10px 6px;
+}
+.deck-text .method-figure figcaption {
+  margin-top: 6px;
+  color: var(--ink-2);
+  font-size: 11px;
+}
+.deck-text .method-figure-box,
+.deck-text .method-chart svg {
+  display: block;
+  width: 100%;
+}
+.deck-text .method-interactive {
+  padding: 16px 18px;
+}
+.method-lab-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+.method-lab-head strong {
+  font-size: 14px;
+}
+.method-lab-head output {
+  color: var(--ink-2);
+  font: 12px var(--mono);
+  white-space: nowrap;
+}
+.method-lab-control {
+  display: grid;
+  gap: 5px;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.method-lab-control input {
+  width: 100%;
+  margin-inline: 0;
+  accent-color: var(--accent);
+}
+.method-split-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 12px;
+}
+.method-split-grid > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px;
+  background: rgb(255 255 255 / 0.42);
+}
+.method-split-grid span {
+  color: var(--ink-2);
+  font-size: 11px;
+}
+.method-split-grid b {
+  font: 700 15px var(--mono);
+}
+.method-interactive svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+.method-network-link line {
+  stroke: var(--rule);
+  stroke-width: 3;
+}
+.method-network-link.active line {
+  stroke: var(--accent);
+}
+.method-network-link text {
+  fill: var(--ink-3);
+  font: 12px var(--mono);
+}
+.method-network-link.active text {
+  fill: var(--ink);
+}
+.method-network-node circle {
+  fill: var(--surface);
+  stroke: var(--rule);
+  stroke-width: 2;
+}
+.method-network-node.active circle {
+  stroke: var(--accent);
+}
+.method-network-node text {
+  fill: var(--ink-2);
+  font: 700 18px var(--mono);
+}
+.deck-text .method-lab-reading {
+  margin: 8px 0 0;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .method-split-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .method-lab-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+.deck-text .stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 14px 0 6px;
+  border-top: 1px solid var(--border);
+}
+.deck-text .stats > div {
+  padding: 10px 14px 4px 0;
+}
+.deck-text .stats dt {
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.deck-text .stats dd {
+  margin: 3px 0 0;
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.deck-text .stats dd small {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-3);
+  font-family: var(--text);
+  font-size: 10.5px;
+  font-weight: 450;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+.deck-card .table-wrap {
+  padding: 4px 0 0;
+  overflow-x: auto; /* a table of settings has long text: it scrolls sideways on its own */
+}
+.deck-text .params {
+  width: 100%;
+}
+.deck-text .params tbody td.left,
+.deck-text .params tbody th.left {
+  min-width: 14rem;
+  font-family: var(--text);
+  font-size: 11.5px;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: none;
+  white-space: normal;
+}
+.deck-text .params tbody th[scope='row'].left {
+  font-family: var(--mono);
+  font-weight: 650;
+}
+.deck-text .params .group th {
+  padding-top: 14px;
+  color: var(--ink-2);
+}
+.deck-text .params td,
+.deck-text .params th {
+  vertical-align: top;
+}
+/* the diagram of the overview: the stages of the pipeline, stacked, with captioned links between them */
+.deck-text .flow {
+  margin: 14px 0 8px;
+}
+.deck-text .flow-caption {
+  margin-bottom: 8px;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.deck-text .flow-stages {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.deck-text .flow-stage {
+  margin: 0;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.4);
+}
+.deck-text .flow-stage p {
+  margin: 0 0 5px;
+  font-size: 12.5px;
+}
+.deck-text .flow-stage p:last-child {
+  margin-bottom: 0;
+}
+.deck-text .flow-step {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--display);
+  font-size: 9.5px !important;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.deck-text .flow-step a {
+  color: var(--ink-3);
+  font-family: var(--text);
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.deck-text .flow-site {
+  border-left: 3px solid var(--s2);
+}
+.deck-text .flow-test {
+  border-style: dashed;
+}
+.deck-text .flow-where {
+  color: var(--ink-3);
+  font-size: 11px !important;
+  font-weight: 650;
+}
+.deck-text .flow-link {
+  position: relative;
+  margin: 0 0 0 22px;
+  padding: 7px 0 7px 20px;
+  border-left: 2px solid var(--rule);
+  color: var(--ink-3);
+  font-size: 11.5px;
+  list-style: none;
+}
+.deck-text .flow-link::after {
+  content: '▼';
+  position: absolute;
+  bottom: -2px;
+  left: -7px;
+  color: var(--rule);
+  font-size: 11px;
+  line-height: 1;
+}
+.deck-text .flow-link-test {
+  border-left-style: dashed;
+}
+.deck-text .flow-pair,
+.deck-text .flow-outputs {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 6px;
+}
+.deck-text .flow-outputs {
+  flex-wrap: wrap;
+}
+.deck-text .flow-box {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 140px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.5);
+  font-size: 12px;
+}
+.deck-text .flow-box span {
+  color: var(--ink-2);
+}
+.deck-text .flow-arrow {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  color: var(--ink-3);
+  font-size: 11px;
+}
+.deck-text .flow-arrow span::after {
+  content: ' →';
+}
+.deck-text .legal-summary {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--ink);
+  background: rgb(255 255 255 / 0.4);
+}
+.deck-text .legal-summary p {
+  margin: 0;
+}
+.deck-text .legal-date {
+  color: var(--ink-3);
+  font-size: 11.5px;
+}
+/* the list of the slides, on the picture itself, beside the card (where there is room for it) */
+.deck-list {
+  position: absolute;
+  z-index: 4;
+  top: var(--deck-top);
+  left: clamp(18px, 3vw, 48px);
+  display: none;
+  width: 196px;
+  max-height: var(--deck-height);
+  overflow-y: auto;
+  scrollbar-width: none;
+  color: var(--ink);
+}
+@media (min-width: 1280px) and (min-height: 700px) {
+  .deck-list[data-open] {
+    display: block;
+  }
+}
+/* a topic is a heading with a rule over it and a square before it (filled for the topic of the slide shown), and its findings stand under it, set in
+   a little with a hairline down their left: the topics read as sections, not as lines of one list */
+.deck-list section {
+  margin-top: 18px;
+}
+.deck-list h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin: 0 0 4px;
+  padding: 6px 6px 0;
+  border-top: 2px solid var(--ink);
+  font-family: var(--display);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.deck-list h3::before {
+  content: '';
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid var(--ink);
+  transform: translateY(0.5px);
+}
+.deck-list section[data-current] h3::before {
+  background: var(--ink);
+}
+.deck-list ol {
+  margin: 0 0 0 9px;
+  padding: 0;
+  border-left: 1px solid rgb(5 5 5 / 0.35);
+  list-style: none;
+}
+.deck-list button {
+  display: block;
+  width: 100%;
+  min-height: 21px;
+  padding: 2px 6px 2px 10px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: inherit;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.3;
+  text-align: left;
+}
+.deck-list .deck-list-home {
+  font-weight: 800;
+}
+.deck-list button:hover,
+.deck-list button[aria-current='true'] {
+  background: var(--ink);
+  color: #eef0f3; /* inverted, as the rows of the ratings are */
+}
+/* the tooltip of a chart on the panel: the panel's metal, the lines' own colours */
+#chartValueTooltip.metal {
+  --panel-plate: rgb(238 240 244 / 0.92);
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+#chartValueTooltip.metal .tip-head {
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+#chartValueTooltip.metal .tip-row b {
+  min-width: 44px;
+  font-family: var(--mono);
+  font-weight: 800;
+}
+#chartValueTooltip.metal .tip-row span {
+  color: var(--ink);
+}
+#chartValueTooltip.metal .tip-row i {
+  width: 10px;
+  height: 0;
+}
+#ratingsHost {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+.ledger .frame {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+/* Drivers and Cars, the season and the Grand Prix on one line (the title is for screen readers: the buttons say it) */
+.ledger .frame-head {
+  display: flex;
+  flex: none;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 34px 2px 12px;
+}
+.ledger .timeline-pickers {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: nowrap;
+  min-width: 0;
+  margin-left: auto;
+  gap: 4px;
+}
+.ledger .timeline-pickers .field {
+  min-width: 0;
+}
+.ledger .timeline-pickers .field:first-child {
+  flex: none; /* the season always shows its year; the Grand Prix gives way */
+}
+.ledger .timeline-pickers select {
+  max-width: 150px;
+  text-overflow: ellipsis;
+}
+/* the controls: plain, small, and quiet until they are on */
+.ledger .frame-tools {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 2px 6px;
+  padding: 2px 12px 4px;
+}
+.ledger .frame-tools .field {
+  min-width: 0;
+}
+.ratings-guide {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  padding: 0 12px 5px;
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.35;
+}
+.ratings-guide p,
+.ratings-guide-detail p {
+  margin: 0;
+}
+.ratings-guide button {
+  min-height: 20px;
+  padding: 0;
+  color: var(--ink-2);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.ratings-guide-detail {
+  flex: none;
+  padding: 0 12px 8px;
+  color: var(--ink-2);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.ratings-guide-detail p {
+  max-width: 68ch;
+}
+.ratings-guide-detail a {
+  color: var(--ink);
+}
+.ledger input,
+.ledger select,
+.ledger button,
+.deck-card button {
+  border-color: transparent;
+  border-radius: 3px;
+  background: transparent;
+  font-size: 11px;
+}
+.ledger button:hover:not(:disabled),
+.ledger select:hover:not(:disabled),
+.deck-card button:hover:not(:disabled) {
+  border-color: var(--ink-3);
+  background: rgb(255 255 255 / 0.5);
+}
+.ledger .field {
+  gap: 0;
+  font-size: 11px;
+}
+.ledger select {
+  min-height: 22px;
+  padding: 0 18px 0 6px;
+  background: rgb(255 255 255 / 0.3);
+}
+.ledger .segmented {
+  gap: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.ledger .segmented button,
+.ledger .toggle {
+  min-height: 22px;
+  padding: 0 7px;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+.ledger .segmented button[aria-pressed='true'],
+.ledger .toggle[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--surface);
+}
+.ledger .segmented button[aria-pressed='true']:hover:not(:disabled),
+.ledger .toggle[aria-pressed='true']:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--ink-2);
+}
+.ledger .toggle:disabled {
+  opacity: 0.4;
+}
+#ratingsLayerForm {
+  margin-left: auto;
+}
+#ratingsLayerForm::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 5px;
+  background: var(--form);
+  box-shadow: inset 0 0 0 1px var(--form-edge);
+}
+
+/* the ratings: rank, name, rating, error, a bar of blocks, and the change; every row visible, and the one under the pointer inverted */
+@property --mean {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 50%;
+}
+.ratings-list {
+  transition: --mean 0.3s ease-out; /* the line at the average glides when the scale changes from one weekend to the next */
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: column;
+  min-height: calc(var(--rows, 20) * 13px);
+  margin: 0;
+  padding: 0 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.1; /* the most that has been rated at one weekend is 24, which still has to fit on a laptop 600 high without scrolling */
+  list-style: none;
+}
+.ratings-list li {
+  display: flex;
+  flex: 0 1 26px;
+  min-height: 13px;
+  transition:
+    transform 0.3s ease-out,
+    opacity 0.25s;
+}
+.ratings-list li.entering {
+  opacity: 0;
+  transition: none;
+}
+.ledger-row {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: 3ch var(--name, 18ch) 4.5ch minmax(0, 1fr) 6ch;
+  align-items: center;
+  gap: 0 1ch;
+  padding: 0 6px;
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.ratings-list.with-sd .ledger-row {
+  grid-template-columns: 3ch var(--name, 18ch) 4.5ch 4.5ch minmax(0, 1fr) 6ch;
+}
+.ratings-list.with-team .ledger-row {
+  grid-template-columns: 3ch var(--name, 18ch) var(--team, 12ch) 4.5ch minmax(0, 1fr) 6ch;
+}
+.ratings-list.with-team.with-sd .ledger-row {
+  grid-template-columns: 3ch var(--name, 18ch) var(--team, 12ch) 4.5ch 4.5ch minmax(0, 1fr) 6ch;
+}
+.ledger-row > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ledger-row .team,
+.ledger-row .deviation {
+  display: none;
+}
+.ratings-list.with-team .ledger-row .team,
+.ratings-list.with-sd .ledger-row .deviation {
+  display: block;
+}
+.ledger-row .rank,
+.ledger-row .rating,
+.ledger-row .deviation {
+  text-align: right;
+}
+.ledger-row .rank,
+.ledger-row .team,
+.ledger-row .deviation {
+  color: var(--ink-3);
+}
+.ledger-row .rating {
+  font-weight: 800;
+}
+.ledger-row .change.up {
+  color: var(--pos);
+}
+.ledger-row .change.down {
+  color: var(--neg);
+}
+/* the bar fills what is left of the row: blue to the rating, the form stacked on it in orange, and a vertical line at the average */
+.ledger-row .bar {
+  --track: rgb(10 26 156 / 0.5);
+  --line: var(--ink);
+  --halo: rgb(255 255 255 / 0.85);
+  --fill: var(--frame);
+  position: relative;
+  align-self: stretch;
+  overflow: visible;
+}
+.bar i {
+  position: absolute;
+  top: 22%;
+  bottom: 22%;
+}
+.bar-track {
+  left: 0;
+  right: 0;
+  background: conic-gradient(var(--track) 25%, transparent 0 50%, var(--track) 0 75%, transparent 0) 0 0 / 2px 2px;
+}
+.bar-base {
+  left: 0;
+  background: var(--fill);
+  transition: width 0.3s ease-out;
+}
+.bar-form {
+  min-width: 2px; /* a shift of a point or two still shows */
+  background: var(--form);
+  box-shadow: inset 0 0 0 1px var(--form-edge);
+  transition:
+    left 0.3s ease-out,
+    width 0.3s ease-out;
+}
+.bar-form.loss {
+  background: transparent;
+}
+.ledger-row .bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--mean, 50%);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--line);
+  box-shadow: 0 0 0 1px var(--halo);
+}
+.ledger-row.selected {
+  background: var(--accent-wash);
+  box-shadow: inset 2px 0 0 var(--accent);
+  font-weight: 700;
+}
+.ledger .ledger-row:hover,
+.ledger .ledger-row:focus-visible,
+.ledger .ledger-row.linked {
+  background: var(--ink);
+  color: var(--surface);
+  outline: none;
+}
+.ledger .ledger-row:hover > span,
+.ledger .ledger-row:focus-visible > span,
+.ledger .ledger-row.linked > span,
+.ledger .ledger-row:hover .change,
+.ledger .ledger-row:focus-visible .change,
+.ledger .ledger-row.linked .change {
+  color: var(--surface);
+}
+.ledger .ledger-row:hover .bar,
+.ledger .ledger-row:focus-visible .bar,
+.ledger .ledger-row.linked .bar {
+  --track: rgb(238 240 243 / 0.45);
+  --fill: var(--surface);
+  --line: var(--surface);
+  --halo: rgb(10 11 15 / 0.85);
+}
+/* what is selected for comparison, on one line */
+.ledger .selection-bar {
+  position: static; /* the bar is not sticky inside the panel */
+  display: flex;
+  flex: none;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 8px 0;
+  padding: 3px 4px 3px 10px;
+  border-radius: 4px;
+  background: rgb(238 240 244 / 0.9);
+  box-shadow: none;
+  font-size: 11px;
+}
+.ledger .selection-names {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ledger .selection-actions {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+.ledger .selection-bar button {
+  min-height: 22px;
+  padding: 0 8px;
+}
+.ledger .btn-primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.ledger .btn-primary:hover:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+/* the weekend: play, a thin slider and the date, on one line (if the screen is too short for every row, the panel scrolls) */
+.ledger .frame-dock {
+  flex: none;
+  margin-top: 4px;
+  padding: 3px 12px 4px;
+}
+.ledger .timeline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+}
+.ledger .play {
+  width: 22px;
+  height: 22px;
+  min-height: 22px;
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--surface);
+}
+.ledger .play:hover:not(:disabled) {
+  border-color: var(--ink-2);
+  background: var(--ink-2);
+}
+.ledger .play svg {
+  width: 9px;
+  height: 9px;
+}
+.ledger .scrub {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+}
+.ledger .scrub input[type='range']::-webkit-slider-runnable-track {
+  height: 3px;
+}
+.ledger .scrub-now {
+  position: static;
+  flex: none;
+  padding: 0;
+  background: none;
+  color: var(--ink);
+  font-family: var(
+    --mono
+  ); /* every character as wide as every other: the date is as wide for 1 May as for 28 Sept, and the slider as long (the width is set in ratings-view.js) */
+  font-size: 11px;
+  font-weight: 650;
+  text-align: right;
+  transform: none;
+}
+/* the foot: the downloads, the licence and the notes on one line */
+.ledger .frame-foot {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 6px;
+  margin: 0;
+  padding: 0 12px 7px;
+  border-top: 0;
+}
+.ledger .frame-foot button {
+  min-height: 20px;
+  padding: 0 2px;
+  font-size: 10.5px;
+}
+.ledger .notes {
+  font-size: 10.5px;
+}
+.ledger .foot-views {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+.ledger .frame-foot .foot-views button {
+  min-height: 20px;
+  padding: 0 6px;
+  color: var(--ink-2);
+  font-weight: 600;
+}
+.ledger .frame-foot .foot-views button:disabled {
+  opacity: 0.4;
+}
+.ledger .frame-foot .foot-views button::after {
+  content: '›' / ''; /* it opens a view over the ratings (and is no part of the button's name) */
+  margin-left: 4px;
+  color: var(--ink-3);
+}
+.ledger .notes-more {
+  font-size: 10.5px;
+}
+.ledger .notes-more summary {
+  cursor: pointer;
+  color: var(--ink-3);
+  font-size: 10.5px;
+}
+.ledger .notes-more .notes {
+  margin-top: 4px;
+}
+
+/* ── the track ───────────────────────────────────────── */
+/* At the bottom right, while the ratings are shown, on a wide screen: the circuit of the weekend with the race on it (a dot for each driver, from the
+   lap times of the real race), the lap, and beside it the live timing table (track-view.js). Where the car and the hands leave too little height for
+   it, the page does not show it (track-view.js reads --track-room). */
+.track {
+  --hot: #fa1802; /* the dot of the row under the pointer */
+  --hot-row: rgb(250 24 2 / 0.22); /* the row of the timing table that is pointed at */
+  position: absolute;
+  z-index: 3;
+  right: clamp(18px, 5vw, 72px);
+  bottom: calc(var(--bottom-space, 55px) + 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  --map-height: min(340px, calc(var(--track-room, 300px) - 64px));
+  width: min(560px, calc(100% - var(--panel-left, 0px) - var(--panel-width, 0px) - 2 * clamp(18px, 5vw, 72px) - 28px));
+  color: var(--ink);
+  font-family: var(--display);
+  pointer-events: none;
+}
+.stage[data-layout='sheet'] .track {
+  display: none;
+}
+.track-title,
+.track-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.track-foot {
+  font-weight: 500;
+}
+.track-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.track-map {
+  display: block;
+  flex: 1 1 0;
+  min-width: 0;
+  height: var(--map-height);
+  overflow: visible;
+}
+/* the live timing table: place, the three letters, and the gap to the leader; the rows move to their new places when the order changes */
+.track-table {
+  position: relative;
+  flex: none;
+  width: var(--table-width, 96px);
+  height: var(--map-height);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--mono);
+  font-size: var(--table-font, 10px);
+  pointer-events: auto;
+}
+.track-table[hidden] {
+  display: none;
+}
+.track-table li {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: 2ch 3.4ch 1fr;
+  gap: 0 0.6ch;
+  align-items: center;
+  box-sizing: border-box;
+  width: var(--column-width, 96px);
+  height: var(--row-height, 13px);
+  padding: 0 4px;
+  border-radius: 2px;
+  line-height: var(--row-height, 13px);
+  white-space: nowrap;
+  transition:
+    transform var(--glide, 0.55s) cubic-bezier(0.3, 0.1, 0.2, 1),
+    background-color 0.12s;
+}
+.track-table .place {
+  text-align: right;
+  opacity: 0.8;
+}
+.track-table .code {
+  font-weight: 700;
+}
+.track-table .gap {
+  overflow: hidden;
+  text-align: right;
+  text-overflow: clip;
+}
+.track-table li.out {
+  opacity: 0.55;
+}
+/* the driver, or the team, that is being pointed at in the ratings (or in this table): the same red as the dot */
+.track-table li.hot {
+  background: var(--hot-row);
+  box-shadow: inset 3px 0 0 var(--hot);
+  font-weight: 800;
+}
+.track-table li.versus-a {
+  background: rgb(250 24 2 / 0.22);
+  box-shadow: inset 3px 0 0 var(--s1);
+  font-weight: 800;
+}
+.track-table li.versus-b {
+  background: rgb(9 26 156 / 0.18);
+  box-shadow: inset 3px 0 0 var(--s2);
+  font-weight: 800;
+}
+.track-halo,
+.track-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.track-halo {
+  stroke: #fff;
+  stroke-opacity: 0.85;
+  stroke-width: 7px;
+}
+.track-line {
+  stroke: var(--ink);
+  stroke-width: 3px;
+}
+.track-start {
+  stroke: var(--frame);
+  stroke-width: 3px;
+  vector-effect: non-scaling-stroke;
+}
+.track-dot {
+  fill: var(--ink);
+  stroke: #fff;
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+}
+.track-dot {
+  transition: opacity 0.3s;
+}
+.track-dot.out {
+  opacity: 0;
+}
+.track-dot.hot {
+  fill: var(--hot);
+}
+/* the two drivers of the Head to head: A in the first colour of the chart's palette and B in the second (the white edge keeps the blue on the black line) */
+.track-dot.versus-a {
+  fill: var(--s1);
+}
+.track-dot.versus-b {
+  fill: var(--s2);
+}
+.track-speeds {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  pointer-events: auto;
+}
+.track-speeds > span {
+  margin-right: 6px;
+}
+.track-speeds button {
+  min-height: 22px;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.track-speeds button:hover {
+  border-color: var(--ink);
+}
+.track-speeds button[aria-pressed='true'] {
+  background: var(--ink);
+  color: #fff;
+}
+.track-pause {
+  min-height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  background: rgb(255 255 255 / 0.55);
+  color: var(--ink);
+  font: inherit;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.track-pause:hover {
+  background: var(--ink);
+  color: #fff;
+}
+
+@media (max-width: 720px) {
+  .stage-top {
+    padding-top: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ledger-view,
+  .deck-card[data-open] {
+    animation: none;
+  }
+  .deck-track {
+    transition: none;
+  }
+  .track-table li,
+  .ratings-list,
+  .ratings-list li,
+  .bar-base,
+  .bar-form {
+    transition: none;
+  }
+  .title-core,
+  .title-smear-near,
+  .title-smear-far,
+  .ledger,
+  .stage[data-coarse='true'][data-state='idle'] .hotspot {
+    animation: none;
+  }
+  .layer-mono,
+  .layer-blue,
+  .stage-frame,
+  .stage-word-frame,
+  .stage-connector polyline,
+  .stage-connector rect {
+    transition: none;
+  }
+}

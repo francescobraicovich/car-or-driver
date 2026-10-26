@@ -1,0 +1,5 @@
+The project owner created the drawing in this folder with ChatGPT and supplied its red.webp, blue.webp and mono.webp versions (three colourings of one picture of a car and a driver's hands). Under OpenAI's Europe Terms of Use (https://openai.com/policies/eu-terms-of-use/), the owner owns the output as between the owner and OpenAI, to the extent permitted by law.
+
+The drawing may be published as part of this site. It is NOT covered by the MIT licence of the program code or by the CC BY-NC-SA 4.0 licence of the ratings, findings and text. No separate permission to reuse it is granted here. OpenAI's terms do not override any third-party rights in material supplied as input or depicted in the output.
+
+The files were converted from PNG to WebP (quality 92) at the same size; nothing else was changed.

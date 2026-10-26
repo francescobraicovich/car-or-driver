@@ -1,14 +1,14 @@
-# Joint state-space ratings
+# Joint state-space filters
 
-The ratings on the site come from a joint state-space model of driver and car pace. This note records what it is, how its settings were chosen, what it was compared against, and what was tried and dropped. The forecast layer (form trackers and probability heads) reads the same ratings (see "The forecast layer" below). The Elo-style model it replaced is described in [elo.md](elo.md) and is kept as an alternative.
+The joint state-space filters remain the backbone of the site's [published hybrid](hybrid.md). This note records the filters, how their settings were chosen, what the earlier filter-only system was compared against, and what was tried and dropped. Numeric results below that refer to "state-space ratings" describe the earlier filter-only publication unless labelled otherwise. The current forecast layer reads the hybrid levels and its heads have been refitted; the new scorecard is in [hybrid.md](hybrid.md). The Elo-style model is described in [elo.md](elo.md) and kept as a benchmark.
 
 ## Summary
 
 - **Ratings are the product; forecasts check them.** The test that matters is how well the ratings alone forecast each weekend, from earlier weekends only, on the same observations and weights as the Elo benchmark's exam. The state-space ratings beat the Elo-style ratings in every window. The test that matters most is the hardest one: a driver in a new car, forecast from the rating he had before the move ([detach.md](detach.md)).
-- **Every rating has an uncertainty.** The model keeps a full covariance between drivers and cars, so the site shows error bars, and the Head to head page carries them into the probability. The race variances are scaled (`varInfl`) so that a driver's rating revises over six races by about as much as its bar says (see "Error bars" below).
+- **The filters have a covariance.** The filters keep a full covariance between drivers and cars, which the site carries into its approximate error bars and Head to head probability. The race variance scale (`varInfl`) was calibrated on the earlier filter-only ratings and has not been recalibrated for the full hybrid (see [hybrid.md](hybrid.md)).
 - **The race model reads the qualifying model.** A driver's race strength is `beta` times his qualifying level plus his own race level; a car's likewise with `gamma`. Qualifying measures a driver more cleanly and his qualifying skill travels between cars ([detach.md](detach.md)).
-- **The published driver rating is the portable level.** A driver's fit with his current car is a separate term that is used to forecast but not published, so a team change moves nobody's rating ([detach.md](detach.md)).
-- **One rating system.** The forecast layer takes the state-space ratings as its rating inputs, so the Head to head forecast is built on the ratings the site shows. The retirement risks are the model's own hazard statistics; the circuit offsets and wet-weather skill of the what-if still come from the Elo benchmark's simpler tracks.
+- **The filter's driver output is portable.** A driver's fit with his current car is a separate term used inside the filter and kept out of the posted blend ([detach.md](detach.md)).
+- **Published blend.** The forecast layer now takes hybrid driver and car levels as its rating inputs, so Head to head is built on the ratings the site shows. The retirement risks are the model's own hazard statistics; the circuit offsets and wet-weather skill of the what-if still come from the Elo benchmark's simpler tracks.
 - **What it does not fix.** Drivers in a new car are still forecast worse than drivers who stayed, more so since 2012, and the model does not anticipate how much a mover falls short of his rating in his first weekend ([diagnosis.md](diagnosis.md), [metrics.md](metrics.md)).
 
 ## The model
@@ -17,7 +17,7 @@ Race and qualifying are two copies of the same filter (`packages/core/src/state-
 
 Observations are the exam's own (finishing order, like-for-like lap pace, retirement snapshots, qualifying pairs) with the exam's weights (`packages/core/src/observations.js`, `exam.js`). Weights that define the score are never searched, so no setting can win by changing the test. The filter's learning weights may differ from the scoring weights (the fit lets lap pace count about as much as finishing order, where the exam gives order 16 times the weight).
 
-`buildStateSpace` (`packages/core/src/state-space/build.js`) first collects the exam (`state-space/exam.js`): the observations of every weekend with the weight each counts (`exam.js`), the retirement hazards known before it (`hazard.js`), the retirement audit and the skeleton of the snapshots. It runs the qualifying filter and then the race filter that reads it, fills every snapshot and history with the ratings and derives combined, effective and package pace from them, and then replays the forecast layer on the state-space levels (`state-space/replay.js`). Nothing in this path reads a rating of the Elo model; with `{ benchmark: eloBenchmark }` (`elo-benchmark.js`) the Elo model's ratings on the same exam are added next to the state-space ones, for the comparison. The rating-side inputs of the forecast layer are defined once, in `state-space/inputs.js`, which training, the build and serving all call.
+`buildStateSpace` (`packages/core/src/state-space/build.js`) first collects the exam (`state-space/exam.js`): the observations of every weekend with the weight each counts (`exam.js`), the retirement hazards known before it (`hazard.js`), the retirement audit and the skeleton of the snapshots. It runs the qualifying filter and then the race filter that reads it, runs the online ranking learner, blends their dated levels, fills every snapshot and history with the hybrid ratings and derives combined, effective and package pace from them. It then replays the forecast layer on hybrid levels (`state-space/replay.js`). Nothing in this path reads a rating of the Elo model; with `{ benchmark: eloBenchmark }` (`elo-benchmark.js`) the Elo model's ratings on the same exam are added next to the hybrid ones, for comparison. The rating-side inputs of the forecast layer are defined once, in `state-space/inputs.js`, which training, the build and serving all call.
 
 Two numerical safeguards keep the update stable when a prior is widened (a takeover, a long winter, a new team). The covariance update overwrites `P` in place and reads columns of it, so it reads them from a copy taken before the update: otherwise later entries of a row used already-updated values, `P` could turn indefinite, and a car level could swing by thousands of points in two races. And an iteration of the Laplace step that would raise the negative log posterior (an overshoot, which happens when a wide prior meets saturated pairs) is halved until it does not. With both, car levels stay under 300 even with car priors widened to sd 1500 (`tests/test-state-space.mjs`).
 
@@ -36,7 +36,7 @@ Two numerical safeguards keep the update stable when a prior is widened (a takeo
 
 The searches are coordinate searches with fixed multiplicative steps, so settings that never helped stayed at their starting values: these are good values, not proven optima. Two later hill climbs of the settings against structural scorecards found points that gained in the years they could see and lost on 2012–2015 and were not shipped ([history](history/README.md)); that is why 2012–2015 is a gate for any later change and not an objective.
 
-`STATE_SPACE_FIT`: race multiplier 0.9993, qualifying 1.149 (Elo: 1.060 and 0.930). What-if stretch: 0.993 for different cars and 0.987 for teammates, wet ratio 0.754.
+The hybrid's current `STATE_SPACE_FIT` values are generated by `state-space-calibrate.mjs` and shown in the site methodology. The historical filter-only results below used a race multiplier of 0.9993 and qualifying multiplier of 1.149.
 
 ## Results
 
@@ -76,7 +76,7 @@ Tried, with settings chosen on data through 2011 and checked on 2012–2015:
 - **A deeper permanent start** helped the first five races and hurt races six to ten.
 - **A fading debut dip** (temporary penalty that decays) fixed qualifying and is shipped for qualifying only (`dipR` 45, `sdR` 6.5536, `rhoR` 0.85, fitted on 2002–2011). For race pace a fitted dip did not hold up on 2012–2015, so it is off.
 
-Drivers within their first five races are tagged "new" on the Ratings page.
+Drivers within their first five races are tagged "new" in the ratings panel.
 
 ```bash
 node packages/research/node/state-space-rookies.mjs scan        # also scan2..scan4: start and anchor variants
@@ -90,11 +90,11 @@ The data gives a team a new constructor id when it changes its name, and the fil
 
 Effect on the ratings-alone exam (the table above is after the change): 2002–2007 −0.0002, 2008–2011 −0.0001, 2012–2015 −0.0008, 2016 onward −0.0001; by session the gains are in qualifying (−0.0013 on 2012–2015) and race 2012–2015 (−0.0007), with nothing worse than +0.0004 (qualifying 2008–2011). No setting was refitted; `state-space-calibrate.mjs --write` regenerated the multipliers.
 
-## The forecast layer
+## The former filter-only forecast layer
 
-The form trackers do not read ratings. The probability heads take six rating inputs (`baseline*`, `race_driver`, `race_car`, `qual_driver`, `qual_car`); these come from the state-space levels as forecast before each weekend (after the time update, before that weekend's pairs). The race baseline is the fitted slope on the gap, mixed with retirement risk; qualifying has no hazard mix; there is no circuit term (`state-space/inputs.js`).
+The form trackers do not read ratings. The probability heads take six rating inputs (`baseline*`, `race_driver`, `race_car`, `qual_driver`, `qual_car`). In the former filter-only version these came from the state-space levels as forecast before each weekend. They now read the pre-weekend hybrid driver and car levels; see [hybrid.md](hybrid.md). The race baseline is the fitted slope on the gap, mixed with retirement risk; qualifying has no hazard mix; there is no circuit term (`state-space/inputs.js`).
 
-The designs of the heads were not searched again: the selected ensembles (`research/selection.json`, the same designs as the Elo heads) were refitted on rows exported with the state-space inputs (`export-state-space-rows.mjs`, which also fails unless every non-rating column equals the Elo feature path row for row), for forecasts from 2008, 2012 and 2016 on data through 2007, 2011 and 2015. The acceptance rule was written before fitting (`research/state-space/ACCEPTANCE.md`): not worse than the Elo-input heads by more than 0.001 pooled, 0.002 in either window.
+The same selected ensemble designs (`research/selection.json`) were refitted on rows exported with the hybrid inputs (`export-state-space-rows.mjs`, which fails unless every non-rating column equals the Elo feature path row for row), for forecasts from 2008, 2012 and 2016 on data through 2007, 2011 and 2015. The acceptance rule (`research/state-space/ACCEPTANCE.md`) is not worse than the Elo-input heads by more than 0.001 pooled, 0.002 in either earlier window. The table below records the earlier filter-only fit for history; the current results are in [hybrid.md](hybrid.md).
 
 | Weighted log-loss | Window | Elo inputs | State-space inputs |
 | --- | --- | --- | --- |
@@ -105,7 +105,7 @@ The designs of the heads were not searched again: the selected ensembles (`resea
 | Qualifying head | 2008–2011 | 0.3599 | 0.3495 |
 | | 2012–2015 | 0.3672 | 0.3622 |
 
-The heads are refitted whenever the ratings change (the table is for the shipped ratings). How they behave on the metric suite, including for drivers in a new car, is in [metrics.md](metrics.md) and `research/eval/heads-metrics.txt` (`npm run research:heads-metrics`).
+The heads are refitted whenever the ratings change. The current fit report is `research/state-space/selection-report.json`.
 
 ```bash
 node packages/research/node/export-state-space-rows.mjs                        # rows + invariance check -> research/state-space/pairs.jsonl
@@ -115,12 +115,12 @@ node tests/test-state-space-forecast.mjs                                       #
 
 ## Limits
 
-- **Uncertainty is approximate.** Race driver bars are scaled to the revision test (above); race car bars are still about 1.6 times too narrow; with heavy-tailed noise bars were too small by more than half on synthetic data. The site says so beside the bars and shows ratings without decimals.
+- **Uncertainty is approximate.** The hybrid retains the race filter covariance without propagating the other two signals' uncertainty. The former filter-only car bars were already too narrow; see [hybrid.md](hybrid.md).
 - **Drivers in a new car are the weak point of the ratings.** Forecast from the rating before the move, they are still less predictable than drivers who stayed ([detach.md](detach.md), [diagnosis.md](diagnosis.md)).
 - **Cross-team driver comparisons are the weak point.** A teammate gap is known to roughly ±12, a cross-team driver gap to roughly ±18 in the finishing-order tests (from ±28 before any data); the production model also uses lap pace, so its bars are somewhat tighter.
 - **Some inputs are not state-space.** The circuit offsets and the wet-weather skill added in a what-if come from the Elo benchmark's simpler tracks (`elo-benchmark.js`); they were not re-estimated against the state-space expectations. (The retirement risks are the model's own hazard statistics, `hazard.js`; they never depended on a rating.)
 - **Cost.** A first load takes about 5 seconds longer than the Elo model (about 14 s against 8 s in headless Chrome), mostly the two filters, which now run one after the other (the race filter reads the qualifying one). Entities unseen for 100 weekends stop carrying correlations, which changes no reported number to four decimals and keeps the update fast.
-- **The 2016-onward window is spent.** It was read for an earlier version of the model and again as a second look for this one; figures for it are labelled so and never used to choose anything.
+- **The 2016-onward window is spent.** It was inspected during hybrid selection. Its results are selected historical evidence, not an untouched test.
 
 ## Reproduce
 

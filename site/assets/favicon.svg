@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Raw colours on purpose: an icon file cannot read the stylesheet. They are the palette's night, ember and blue. -->
-  <rect width="64" height="64" rx="14" fill="#0d1226"/>
-  <path d="M32 12a20 20 0 0 0 0 40z" fill="#ff5a36"/>
-  <path d="M32 12a20 20 0 0 1 0 40z" fill="#3987e5"/>
-  <circle cx="32" cy="32" r="7" fill="#0d1226"/>
-  <path d="M32 12v40" stroke="#0d1226" stroke-width="3"/>
-</svg>

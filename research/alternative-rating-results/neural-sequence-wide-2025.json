@@ -1,0 +1,287 @@
+{
+  "model": "dated-neural-lap-sequence",
+  "options": {
+    "hidden": 512,
+    "lapWeight": 0.5,
+    "learningRate": 0.001,
+    "updatesPerWeekend": 2,
+    "weightDecay": 0.001,
+    "outputPenalty": 0.03,
+    "pacePoints": 150,
+    "correctionScale": 80
+  },
+  "correctionShare": 0.25,
+  "weekends": 503,
+  "allPair": {
+    "2008-11": {
+      "combined": 0.3803373053220548,
+      "race": 0.383568288069727,
+      "qualifying": 0.35402831548481045
+    },
+    "2012-15": {
+      "combined": 0.35969324701222866,
+      "race": 0.35906991015362205,
+      "qualifying": 0.36501839242835593
+    },
+    "2016-25": {
+      "combined": 0.3966682068911554,
+      "race": 0.3954859404996311,
+      "qualifying": 0.40846821394231947
+    }
+  },
+  "movers": {
+    "2002-11": {
+      "teammateLoss": 0.6455462863817937,
+      "fieldLoss": 0.3771212385682571,
+      "accuracy": 0.6198004992404891,
+      "duels": 220
+    },
+    "2012-15": {
+      "teammateLoss": 0.7042744971847059,
+      "fieldLoss": 0.29557923420309834,
+      "accuracy": 0.6059879227088131,
+      "duels": 116
+    },
+    "2016-25": {
+      "teammateLoss": 0.6484937487290447,
+      "fieldLoss": 0.3511708366160618,
+      "accuracy": 0.6075622820188158,
+      "duels": 234
+    }
+  },
+  "calibration": {
+    "race": 0.9884396403525876,
+    "qualifying": 1.1487036727826605,
+    "field": 0.9646926743286304
+  },
+  "stability": {
+    "driver": {
+      "hybrid": {
+        "mean": 2.380385692906054,
+        "p95": 6.961602511198251,
+        "count": 9883
+      },
+      "neural": {
+        "mean": 2.6145360400024145,
+        "p95": 7.495015184870718,
+        "count": 9883
+      }
+    },
+    "car": {
+      "hybrid": {
+        "mean": 4.799684242423587,
+        "p95": 14.512677279166809,
+        "count": 5004
+      },
+      "neural": {
+        "mean": 5.008970435008973,
+        "p95": 14.933533152786822,
+        "count": 5004
+      }
+    }
+  },
+  "pairedReductionVersusHybrid": {
+    "allPair2008to2025": {
+      "est": 0.00035371748373770715,
+      "lo": -0.000032444974940044796,
+      "hi": 0.0008000308534102376,
+      "se": 0.00022237178179113345,
+      "n": 197581,
+      "clusters": 18
+    },
+    "frozenMover2002to2025": {
+      "est": 0.002136129004452963,
+      "lo": -0.0013741091403443701,
+      "hi": 0.00598000914342945,
+      "se": 0.0019063531142863809,
+      "n": 570,
+      "clusters": 75
+    }
+  },
+  "latest": {
+    "drivers": [
+      {
+        "rank": 1,
+        "id": "830",
+        "name": "Max Verstappen",
+        "rating": 88.2
+      },
+      {
+        "rank": 2,
+        "id": "844",
+        "name": "Charles Leclerc",
+        "rating": 44.5
+      },
+      {
+        "rank": 3,
+        "id": "846",
+        "name": "Lando Norris",
+        "rating": 33
+      },
+      {
+        "rank": 4,
+        "id": "847",
+        "name": "George Russell",
+        "rating": 28.8
+      },
+      {
+        "rank": 5,
+        "id": "832",
+        "name": "Carlos Sainz",
+        "rating": 28.4
+      },
+      {
+        "rank": 6,
+        "id": "4",
+        "name": "Fernando Alonso",
+        "rating": 19
+      },
+      {
+        "rank": 7,
+        "id": "857",
+        "name": "Oscar Piastri",
+        "rating": 15.2
+      },
+      {
+        "rank": 8,
+        "id": "807",
+        "name": "Nico Hülkenberg",
+        "rating": 7
+      },
+      {
+        "rank": 9,
+        "id": "848",
+        "name": "Alexander Albon",
+        "rating": 2.7
+      },
+      {
+        "rank": 10,
+        "id": "1",
+        "name": "Lewis Hamilton",
+        "rating": 0.8
+      },
+      {
+        "rank": 11,
+        "id": "860",
+        "name": "Oliver Bearman",
+        "rating": -2.3
+      },
+      {
+        "rank": 12,
+        "id": "842",
+        "name": "Pierre Gasly",
+        "rating": -4.1
+      },
+      {
+        "rank": 13,
+        "id": "864",
+        "name": "Gabriel Bortoleto",
+        "rating": -5.9
+      },
+      {
+        "rank": 14,
+        "id": "865",
+        "name": "Isack Hadjar",
+        "rating": -14.1
+      },
+      {
+        "rank": 15,
+        "id": "840",
+        "name": "Lance Stroll",
+        "rating": -17.5
+      },
+      {
+        "rank": 16,
+        "id": "863",
+        "name": "Andrea Kimi Antonelli",
+        "rating": -19.9
+      },
+      {
+        "rank": 17,
+        "id": "861",
+        "name": "Franco Colapinto",
+        "rating": -21.9
+      },
+      {
+        "rank": 18,
+        "id": "839",
+        "name": "Esteban Ocon",
+        "rating": -22.3
+      },
+      {
+        "rank": 19,
+        "id": "852",
+        "name": "Yuki Tsunoda",
+        "rating": -31.5
+      },
+      {
+        "rank": 20,
+        "id": "859",
+        "name": "Liam Lawson",
+        "rating": -36.9
+      }
+    ],
+    "cars": [
+      {
+        "rank": 1,
+        "id": "1",
+        "name": "McLaren",
+        "rating": 91.5
+      },
+      {
+        "rank": 2,
+        "id": "131",
+        "name": "Mercedes",
+        "rating": 41
+      },
+      {
+        "rank": 3,
+        "id": "6",
+        "name": "Ferrari",
+        "rating": 8.8
+      },
+      {
+        "rank": 4,
+        "id": "215",
+        "name": "RB F1 Team",
+        "rating": 4.6
+      },
+      {
+        "rank": 5,
+        "id": "9",
+        "name": "Red Bull",
+        "rating": 3.8
+      },
+      {
+        "rank": 6,
+        "id": "210",
+        "name": "Haas F1 Team",
+        "rating": -17.2
+      },
+      {
+        "rank": 7,
+        "id": "3",
+        "name": "Williams",
+        "rating": -17.6
+      },
+      {
+        "rank": 8,
+        "id": "117",
+        "name": "Aston Martin",
+        "rating": -29.2
+      },
+      {
+        "rank": 9,
+        "id": "15",
+        "name": "Sauber",
+        "rating": -29.7
+      },
+      {
+        "rank": 10,
+        "id": "214",
+        "name": "Alpine F1 Team",
+        "rating": -56
+      }
+    ]
+  }
+}

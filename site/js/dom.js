@@ -2,7 +2,6 @@
 export const el = {};
 
 const IDS = [
-  'status',
   'ratingsHost',
   'chartsPanel',
   'headToHeadPanel',
@@ -13,6 +12,11 @@ const IDS = [
   'headToHeadChart',
   'headToHeadChartWrap',
   'headToHeadNote',
+  'headToHeadState',
+  'headToHeadPrimeA',
+  'headToHeadPrimeB',
+  'headToHeadSameCar',
+  'headToHeadCarName',
   'headToHeadOut',
   'headToHeadGridA',
   'headToHeadGridB',

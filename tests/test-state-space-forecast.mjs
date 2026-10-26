@@ -10,6 +10,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { loadData } from '../packages/research/node/common.mjs';
 import { buildStateSpace, runSession } from '../packages/core/src/state-space/build.js';
+import { carIdentity } from '../packages/core/src/lineage.js';
+import { hybridRatings } from '../packages/core/src/hybrid/ratings.js';
 import { collectExam } from '../packages/core/src/state-space/exam.js';
 import { replayForecastLayer } from '../packages/core/src/state-space/replay.js';
 import { STATE_SPACE_HEADS } from '../packages/core/src/state-space/forecast-heads.js';
@@ -34,10 +36,12 @@ const before = (r) => +r.year < YEAR || (+r.year === YEAR && +r.round < ROUND);
 const { model: full, weekends } = collectExam(ctx.raw, ctx.lapSnapshots, ctx.maps, {}, ctx.lapPace);
 const tm = full.params.tmBoost;
 const qualRun = runSession(weekends, 'qual', tm);
+const raceRun = runSession(weekends, 'race', tm, qualRun);
+const hybrid = hybridRatings(weekends, full.snaps, raceRun, qualRun, carIdentity);
 const recorded = [];
 replayForecastLayer(
   weekends,
-  { race: runSession(weekends, 'race', tm, qualRun).pre, qual: qualRun.pre },
+  { race: hybrid.pre, qual: qualRun.pre },
   {
     lapPace: ctx.lapPace,
     params: full.params,
@@ -68,15 +72,19 @@ const onGrid = new Set(model.snaps.at(-1).drivers.map((d) => String(d.driverId))
 const pairs = recorded.filter((r) => onGrid.has(String(r.a)) && onGrid.has(String(r.b)));
 assert.ok(pairs.length >= 15, `${pairs.length} pairs comparable`);
 let worst = 0;
+let worstPair = null;
 let total = 0;
 for (const r of pairs) {
   const s = forecastPair(model, String(r.a), String(r.b), { L: 60, circuitId: race.circuitId, year: YEAR, round: ROUND });
   const d = Math.abs(s.p - r.pre);
-  worst = Math.max(worst, d);
+  if (d > worst) {
+    worst = d;
+    worstPair = r;
+  }
   total += d;
 }
 console.log(
-  `serving vs training on ${pairs.length} pairs: mean |diff| ${((100 * total) / pairs.length).toFixed(2)} pp, worst ${(100 * worst).toFixed(2)} pp`,
+  `serving vs training on ${pairs.length} pairs: mean |diff| ${((100 * total) / pairs.length).toFixed(2)} pp, worst ${(100 * worst).toFixed(2)} pp (${worstPair?.a} vs ${worstPair?.b})`,
 );
 assert.ok(total / pairs.length < 0.006, 'serving reproduces the training path (mean difference under 0.6 points)');
 assert.ok(worst < 0.03, 'and no pair is far off (under 3 points)');

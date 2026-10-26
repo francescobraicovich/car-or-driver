@@ -1,5 +1,5 @@
 // The text of the Privacy and the About pages, as HTML. Every statement about what the site does is checked by tests/test-compliance.mjs against what the
-// site's files actually contain (no cookies, no requests to other origins, one stored setting), so the notice cannot drift from the site.
+// site's files actually contain (no cookies, no requests to other origins, nothing stored), so the notice cannot drift from the site.
 // `{{name}}` is replaced from site-identity.js; an element with `data-contact-email` is filled with the contact address.
 //
 // The notice follows GDPR Articles 12 to 14 and the UK GDPR, with the ePrivacy Directive (and in the UK the Privacy and Electronic Communications
@@ -8,7 +8,7 @@
 
 export const PRIVACY_HTML = String.raw`
 <div class="legal-summary">
-  <p><b>In short.</b> This site has no accounts, no cookies, no advertising, no analytics and no forms. Every file it shows comes from its own address; nothing is loaded from another company. Your visit necessarily reaches the company that hosts the site (section 2). The only thing the site can store on your device is your light or dark theme, and only if you press the button that changes it (section 3).</p>
+  <p><b>In short.</b> This site has no accounts, no cookies, no advertising, no analytics and no forms. Every file it shows comes from its own address; nothing is loaded from another company. Your visit necessarily reaches the company that hosts the site (section 2). The site stores nothing on your device (section 3).</p>
 </div>
 <p class="legal-date">Last updated {{lastUpdated}}.</p>
 
@@ -33,9 +33,8 @@ export const PRIVACY_HTML = String.raw`
 <h3>3. Cookies and similar technologies</h3>
 <p><b>This site sets no cookies and loads no scripts, fonts, images, maps or embeds from other sites.</b> Fonts and the formula display come from this site's own files. That is why there is no cookie banner: there is nothing to ask your consent for. One caveat concerns the host, not this site: if Cloudflare's security systems suspect that a visit comes from an automated program, they may show a check and set a security cookie on that visitor's device. Such a cookie exists only for security and is not used for anything else; I have not switched on the Cloudflare features that set cookies.</p>
 <p>
-  There is one small exception, and it happens only if you ask for it. The header has a button that switches between a light and a dark theme. Until you press it, the site follows your device's setting and stores nothing. If you press it, your choice (the word <code>light</code> or <code>dark</code>) is saved in your browser's local storage under the name <code>f1-theme</code>, so that the page looks the same next time. It stays on your device, is never sent to anyone and is used for nothing else. Because you asked for it and it only changes how the site looks to you, it falls within the exemptions for storage that you request or that adapts a site to your preferences (Article 5(3) of the ePrivacy Directive and, in Italy, the Garante's guidance on technical cookies; in the United Kingdom, regulation 6 of the Privacy and Electronic Communications Regulations as amended in 2025). You can remove it at any time:
+  The site also stores nothing in your browser: it uses no local storage, no session storage and no other technique that saves or reads information on your device, so there is nothing to consent to and nothing to remove. This is why the consent rules for such storage (Article 5(3) of the ePrivacy Directive and, in the United Kingdom, regulation 6 of the Privacy and Electronic Communications Regulations) have nothing to apply to here.
 </p>
-<p><button type="button" id="forgetTheme">Forget my theme choice</button> <span id="forgetThemeResult" role="status"></span></p>
 <p>Your browser also keeps copies of the files it downloaded (the ratings, for example) so the site loads faster next time. That is the ordinary cache of your browser, controlled by its own settings, and it holds no information about you.</p>
 
 <h3>4. What the site does not do</h3>
@@ -45,15 +44,14 @@ export const PRIVACY_HTML = String.raw`
   <li>No profiling and no decisions made about you by automated means.</li>
   <li>Nothing is sold or shared.</li>
 </ul>
-<p>The <i>Share</i> button copies the address of the page you are looking at to your clipboard. Nothing is sent anywhere. The address records only which page and which options you chose.</p>
 
 <h3>5. Information about racing drivers</h3>
 <p>
-  The ratings, charts and findings are about named people: Formula 1 drivers, past and present. They are computed from published race results (which team a driver raced for, finishing positions, qualifying, lap times, retirements and, for one finding, ages worked out from public birth dates: shown as averages, and for a few named drivers as their rating against their age in each season) and are shown as statistical estimates with their uncertainty. The names and nationalities come from the same public data tables. I use no private information about any driver and nothing about health, beliefs or other sensitive matters, and I publish no full birth dates, addresses or contact details.
+  The ratings, charts and findings are about named people: Formula 1 drivers, past and present. They are computed from published race results (which team a driver raced for, finishing positions, qualifying, lap times, retirements and, for one finding, ages worked out from public birth dates: shown as averages, and for a few named drivers as their rating against their age in each season) and are shown as statistical estimates with their uncertainty. The names and nationalities come from the same public data tables. I use no private information about any driver and nothing about health, beliefs or other sensitive matters, and I publish no full birth dates, addresses or contact details (the card on a row of the ratings shows each driver's age, worked out from the year and month of birth, which is all that the files the site serves carry).
 </p>
 <ul>
   <li><b>Legal basis:</b> legitimate interests (GDPR Article 6(1)(f)) in analysing and discussing a public sport from public results. The estimates are labelled as estimates and can be wrong; they describe a driver's results in a car, not the person.</li>
-  <li><b>Where it comes from:</b> the public data tables credited on the <a href="#/about">About page</a>, not from the drivers themselves.</li>
+  <li><b>Where it comes from:</b> the public data tables credited on the <a href="#/about?v=1&slide=credits">About page</a>, not from the drivers themselves.</li>
   <li><b>How long:</b> the historical statistics are kept as long as the site exists, since the purpose is a lasting record of past seasons.</li>
   <li><b>If you are named here</b> and want something corrected or want to object, write to <a data-contact-email></a>; I will answer within one month.</li>
 </ul>
@@ -122,7 +120,7 @@ export const ABOUT_HTML = String.raw`
 
 <h3>Licence of what this site publishes</h3>
 <p>
-  The ratings, the findings, the charts, the downloadable CSV and the files the site loads (<code>model.json</code>, <code>export-rows.json</code>) are derived from the data above, so they are shared under the same terms: <a href="{{dataLicenceUrl}}" rel="noopener noreferrer">{{dataLicenceName}}</a>. In short, you may copy, share and adapt them if you give credit (the credit above, and a link to this site), say what you changed, do not use them commercially, and share what you make from them under the same licence.
+  The ratings, the findings, the charts and the data files the site publishes (<code>model-latest.json</code>, <code>model.json</code>, <code>export-rows.json</code> and the files of laps in <code>race-laps/</code>) are derived from the data above, so they are shared under the same terms: <a href="{{dataLicenceUrl}}" rel="noopener noreferrer">{{dataLicenceName}}</a>. In short, you may copy, share and adapt them if you give credit (the credit above, and a link to this site), say what you changed, do not use them commercially, and share what you make from them under the same licence.
 </p>
 <p>The text and the charts are shared under the same licence. The program code is open source under the MIT licence: <a href="{{repositoryUrl}}" rel="noopener noreferrer">the source code is on GitHub</a>. The third-party components listed below keep their own licences.</p>
 <p>To cite this site: {{operatorName}} (2026), <i>{{name}}: ratings of Formula 1 drivers and cars since 2000</i>, <span id="citationAddress"></span>.</p>
@@ -130,19 +128,20 @@ export const ABOUT_HTML = String.raw`
 <h3>Software and fonts that come with the site</h3>
 <p>These are served from this site's own address, so your browser contacts no one else. Each keeps its own licence, and the licence texts are published with the files.</p>
 <ul>
-  <li><b>Inter</b> and <b>Space Grotesk</b> (typefaces): SIL Open Font License 1.1. <a href="./vendor/licenses/inter-OFL-1.1.txt">Inter licence</a>, <a href="./vendor/licenses/space-grotesk-OFL-1.1.txt">Space Grotesk licence</a>.</li>
+  <li><b>Inter</b> and <b>Lexend Giga</b> (typefaces): SIL Open Font License 1.1. <a href="./vendor/licenses/inter-OFL-1.1.txt">Inter licence</a>, <a href="./vendor/licenses/lexend-giga-OFL-1.1.txt">Lexend Giga licence</a>.</li>
   <li><b>KaTeX</b> 0.16.9 (formulas): MIT licence. <a href="./vendor/licenses/katex-MIT.txt">Licence</a>.</li>
+  <li><b>Circuit outlines</b> (the track drawn on the front page): from <a href="https://github.com/bacinger/f1-circuits" rel="noopener noreferrer">bacinger/f1-circuits</a> by Tomislav Bacinger, MIT licence, Copyright (c) 2019-2025 Tomislav Bacinger. I projected and scaled them, and reversed the direction of two (Paul Ricard and Marina Bay) to match how they are raced. They are not official, and not approved or endorsed by Formula One Licensing B.V. <a href="./assets/tracks-licence.txt">Licence</a>.</li>
   <li><a href="./vendor/NOTICE.txt">Where each file came from</a>.</li>
 </ul>
 
 <h3>References</h3>
-<p>The methods behind the ratings and the findings, with full references, are listed in <a href="#/methodology">part 8 of the Methodology</a>.</p>
+<p>The methods behind the ratings and the findings, with full references, are listed in <a href="#/methodology?v=1&slide=method-references">part 8 of the Methodology</a>.</p>
 
 <h3>Corrections and feedback</h3>
 <p>If you find an error in the numbers, the text or the credits, please write to <a data-contact-email></a> or open an issue in <a href="{{repositoryUrl}}" rel="noopener noreferrer">the repository</a>.</p>
 
 <h3>Accessibility</h3>
 <p>
-  I aim to make this site usable with a keyboard and a screen reader and readable at different sizes and in light and dark themes. The controls are standard form elements, and the rows of the ratings chart can be reached and selected with the keyboard; the text colours are tested for contrast (at least 4.5 to 1) in both themes; the Ratings and History charts have a table view; and the layout works on phones. There are known gaps: only a few of the charts on the Insights page, and not the Head to head chart, have a table version, and the charts are drawn as images with tooltips. The site has not been audited by a third party, and I cannot promise conformance with any standard. If something stops you using the site, write to <a data-contact-email></a> and I will try to fix it.
+  I aim to make this site usable with a keyboard and a screen reader and readable at different sizes. The controls are standard form elements, and the rows of the ratings can be reached and selected with the keyboard; the colours of the text on the front page, in the ratings panel and beside the race are measured against the drawing behind them (3 to 1 for the large title, 4.5 to 1 for the rest); the History chart has a table view; the Insights, the Methodology, this page and the Privacy page are cards of slides that move with their Previous and Next buttons, the arrow keys, the list beside the card and, on a touch screen, a swipe; and the layout works on phones. There are known gaps: only a few of the charts on the Insights have a table version, and not the Head to head chart, the charts are drawn as images with tooltips, and I have not measured the contrast of the cards of slides and of the list beside them in the same way. The front page is a drawing: the car and the driver's hands are two buttons (reachable with Tab, opened with Enter), the drawing itself is decorative, and on a computer with a mouse the usual pointer is replaced by a square one that shakes slightly, with the box around the car or the hands wobbling; with reduced motion switched on in the system nothing shakes. Rows of the ratings list are read as a sentence (rank, name, rating, error bar, change), not as the bars drawn beside them. The site has not been audited by a third party, and I cannot promise conformance with any standard. If something stops you using the site, write to <a data-contact-email></a> and I will try to fix it.
 </p>
 `;

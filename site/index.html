@@ -3,31 +3,35 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Driver or Car — who is really fastest in Formula 1?</title>
+    <title>Car or Driver</title>
     <meta
       name="description"
-      content="Driver or Car separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 2000, head to head forecasts and twenty findings."
+      content="Car or Driver separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 2000, head to head forecasts and twenty findings."
     />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3efe6" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#080b15" />
-    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg" />
+    <meta name="theme-color" content="#d90a04" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='20' height='20' fill='%23fa1802'/%3E%3Crect x='12' y='12' width='20' height='20' fill='%23091a9c'/%3E%3C/svg%3E"
+    />
     <!-- CANONICAL_TAGS: replaced at deploy time by .github/workflows/deploy.yml with canonical + og:url for the Pages URL -->
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Driver or Car — who is really fastest in Formula 1?" />
+    <meta property="og:title" content="Car or Driver" />
     <meta
       property="og:description"
       content="Who is really fastest? Ratings that separate driver pace from car speed, with error bars, for every F1 weekend since 2000."
     />
-    <meta property="og:image" content="./assets/favicon.svg" />
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Driver or Car — who is really fastest in Formula 1?" />
+    <meta name="twitter:title" content="Car or Driver" />
     <meta
       name="twitter:description"
       content="Ratings that separate driver pace from car speed, with error bars, for every F1 weekend since 2000."
     />
     <link rel="stylesheet" href="./vendor/fonts/fonts.css" />
     <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/stage.css" />
+    <link rel="preload" href="./assets/art/red.webp" as="image" type="image/webp" />
     <link rel="preload" href="../data/model-latest.json" as="fetch" crossorigin />
     <link rel="modulepreload" href="js/app.js" />
     <link rel="modulepreload" href="js/dom.js" />
@@ -35,8 +39,8 @@
     <link rel="modulepreload" href="js/state.js" />
     <link rel="modulepreload" href="js/utils.js" />
     <link rel="modulepreload" href="js/ratings-view.js" />
+    <link rel="modulepreload" href="js/ratings-bars.js" />
     <link rel="modulepreload" href="../packages/core/src/math.js" />
-    <link rel="modulepreload" href="js/export.js" />
     <link rel="modulepreload" href="js/charts.js" />
     <link rel="modulepreload" href="js/chart-renderer.js" />
     <link rel="modulepreload" href="js/chart-math.js" />
@@ -44,7 +48,15 @@
     <link rel="modulepreload" href="../packages/core/src/weekend-histories.js" />
     <link rel="modulepreload" href="../packages/core/src/json-serialization.js" />
     <link rel="modulepreload" href="js/workspace.js" />
-    <link rel="modulepreload" href="js/theme.js" />
+    <link rel="modulepreload" href="js/stage-pages.js" />
+    <link rel="modulepreload" href="js/info-tip.js" />
+    <link rel="modulepreload" href="js/stage-view.js" />
+    <link rel="modulepreload" href="js/stage-geometry.js" />
+    <link rel="modulepreload" href="js/stage-noise.js" />
+    <link rel="modulepreload" href="js/track-view.js" />
+    <link rel="modulepreload" href="js/track-geometry.js" />
+    <link rel="modulepreload" href="js/race-replay.js" />
+    <link rel="modulepreload" href="js/speed-profile.js" />
     <link rel="modulepreload" href="js/history-view.js" />
     <link rel="modulepreload" href="../packages/core/src/lineage.js" />
     <link rel="modulepreload" href="js/head-to-head-view.js" />
@@ -59,7 +71,7 @@
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Driver or Car",
+        "name": "Car or Driver",
         "applicationCategory": "SportsApplication",
         "operatingSystem": "Web",
         "description": "Ratings that separate F1 driver pace from car speed, with uncertainty, since 2000."
@@ -69,200 +81,250 @@
   <body>
     <a class="skip-link" href="#/ratings">Skip to ratings</a>
 
-    <nav class="site-nav workspace-nav" aria-label="Main navigation">
-      <a class="brand" href="#/ratings" aria-label="Driver or Car home"
-        ><img src="./assets/favicon.svg" alt="" width="26" height="26" /><span class="brand-name"
-          >Driver <span class="brand-join">or</span> Car</span
-        ></a
-      >
-      <div class="nav-links" id="workspaceLinks">
-        <a href="#/ratings"
-          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></svg
-          ><span class="label-full">Ratings</span></a
-        >
-        <a href="#/history"
-          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-9" /></svg><span class="label-full">History</span></a
-        >
-        <a href="#/head-to-head"
-          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l-3-3M17 17H7l3 3" /></svg
-          ><span class="label-full">Head to head</span><span class="label-short" aria-hidden="true">Versus</span></a
-        >
-        <a href="#/insights"
-          ><svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0012 3z" /></svg
-          ><span class="label-full">Insights</span></a
-        >
-        <a href="#/methodology"
-          ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 21V5M9 8h6" /></svg
-          ><span class="label-full">Methodology</span><span class="label-short" aria-hidden="true">Method</span></a
-        >
-      </div>
-      <button id="shareView" type="button">Share</button>
-      <input id="shareURL" aria-label="Share URL" readonly hidden />
-      <span id="shareStatus" class="small" role="status"></span>
-    </nav>
-
-    <div id="veil" role="status" aria-live="polite">
-      <p class="veil-brand" aria-hidden="true">Driver <span class="brand-join">or</span> Car</p>
-      <div class="spinner" aria-hidden="true"></div>
-      <p>
-        <strong id="veilTitle">Loading race data…</strong><br /><span id="veilMsg">Fetching the ratings for every weekend since 2000.</span>
-      </p>
-      <p id="veilError" class="veil-error" hidden></p>
-    </div>
-
-    <header class="workspace-status" id="top">
-      <span class="status-pill" id="statusPill"
-        ><span class="dot" aria-hidden="true"></span><span id="status" class="status" role="status">Loading data…</span></span
-      >
-    </header>
+    <p class="start-error" id="startError" role="alert" hidden></p>
 
     <main id="workspace" class="workspace" hidden>
-      <section id="ratings" aria-label="Ratings">
-        <div class="hero">
-          <p class="hero-kicker">Formula 1, every weekend since 2000</p>
-          <h1 class="hero-title">Driver <em>or</em> Car?</h1>
-          <p class="hero-text">
-            Every result is part driver and part machine. These ratings pull the two apart, with error bars, so you can see who is really
-            fast and whose car did the work.
-          </p>
-          <div class="hero-split" aria-hidden="true"><span class="hero-driver">Driver</span><span class="hero-car">Car</span></div>
-          <p class="hero-links">
-            <a href="#/insights">Twenty findings</a><a href="#/head-to-head">Settle an argument</a><a href="#/methodology">How it works</a>
-          </p>
-        </div>
-        <div id="ratingsHost" hidden></div>
-      </section>
-
-      <section id="headToHead" aria-label="Head to head">
-        <figure class="frame" id="headToHeadPanel" hidden>
-          <header class="frame-head">
-            <h2 class="frame-title">Head to head</h2>
-            <p class="frame-sub">The chance that one driver finishes ahead of another in a race, from their ratings and recent form.</p>
-          </header>
-          <div class="head-to-head">
-            <div class="head-to-head-pick">
-              <div class="head-to-head-side" id="headToHeadSideA">
-                <label class="field">Driver A<select id="headToHeadA"></select></label>
-              </div>
-              <span class="vs" aria-hidden="true">vs</span>
-              <div class="head-to-head-side" id="headToHeadSideB">
-                <label class="field">Driver B<select id="headToHeadB"></select></label>
-              </div>
+      <section id="home" aria-label="Car or Driver">
+        <div class="stage" id="stage" data-state="idle" data-subject="" data-hover="" data-pointer="" data-layout="sheet">
+          <svg class="stage-filters" width="0" height="0" aria-hidden="true" focusable="false">
+            <!-- the title's smoky edges and the two horizontal smears behind it; stage-view.js sets their strengths from the size of the title -->
+            <filter id="titleSmoke" x="-8%" y="-20%" width="116%" height="140%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.006 0.05" numOctaves="2" seed="2" result="noise" />
+              <feDisplacementMap
+                id="titleSmokeDisplacement"
+                in="SourceGraphic"
+                in2="noise"
+                scale="5"
+                xChannelSelector="R"
+                yChannelSelector="G"
+                result="displaced"
+              />
+              <feGaussianBlur id="titleSmokeBlur" in="displaced" stdDeviation="0.9 0.35" />
+            </filter>
+            <filter id="titleSmearNear" x="-40%" y="-20%" width="180%" height="140%">
+              <feGaussianBlur id="titleSmearNearBlur" stdDeviation="26 0.6" />
+            </filter>
+            <filter id="titleSmearFar" x="-60%" y="-20%" width="220%" height="140%">
+              <feGaussianBlur id="titleSmearFarBlur" stdDeviation="70 1" />
+            </filter>
+          </svg>
+          <div class="stage-backdrop" aria-hidden="true"></div>
+          <div class="scene" id="stageScene" aria-hidden="true">
+            <img
+              class="layer layer-red"
+              src="./assets/art/red.webp"
+              alt=""
+              width="1536"
+              height="1024"
+              decoding="async"
+              fetchpriority="high"
+            />
+            <img class="layer layer-mono" src="./assets/art/mono.webp" alt="" width="1536" height="1024" decoding="async" />
+            <div class="blue-window">
+              <img class="layer layer-blue" src="./assets/art/blue.webp" alt="" width="1536" height="1024" decoding="async" />
             </div>
-            <div id="headToHeadOut" class="head-to-head-result" aria-live="polite"></div>
-            <details class="head-to-head-more">
-              <summary>Change the conditions</summary>
-              <div class="controls">
-                <label class="field"
-                  >Conditions<select id="headToHeadWet">
-                    <option value="dry">Dry</option>
-                    <option value="wet">Wet</option>
-                  </select></label
-                >
-                <label class="field" id="headToHeadSessionField">Forecast timing<select id="headToHeadSession"></select></label>
-                <label class="field"
-                  >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
-                /></label>
-                <label class="field">Circuit<select id="headToHeadCircuit"></select></label>
-                <span id="headToHeadGridFields" class="controls" hidden>
-                  <label class="field"
-                    >Grid slot, driver A<input id="headToHeadGridA" type="number" min="1" max="24" step="1" placeholder="1–24"
-                  /></label>
-                  <label class="field"
-                    >Grid slot, driver B<input id="headToHeadGridB" type="number" min="1" max="24" step="1" placeholder="1–24"
-                  /></label>
-                </span>
-              </div>
-            </details>
           </div>
-          <div id="headToHeadChartWrap" class="frame-body" hidden>
-            <svg id="headToHeadChart" class="chart" role="group"></svg>
-          </div>
-          <footer class="frame-foot"><p class="notes" id="headToHeadNote"></p></footer>
-        </figure>
-      </section>
 
-      <section id="charts" aria-label="Rating history">
-        <div id="chartsPanel" hidden></div>
-      </section>
-
-      <section id="insights" aria-label="Insights">
-        <figure class="frame">
-          <header class="frame-head">
-            <h2 class="frame-title">Insights</h2>
-            <p class="frame-sub">Twenty findings from every weekend since 2000, each with its chart and how it was computed.</p>
-          </header>
-          <div class="frame-body insights-body" id="insightsBody"></div>
-          <footer class="frame-foot">
-            <p class="notes">
-              The numbers are computed from the data through the latest race in the bundle and do not update live. How the ratings work,
-              with full references for the methods named in the notes: <a href="#/methodology">Methodology</a>. Data sources and licence:
-              <a href="#/about">About</a>.
-            </p>
-          </footer>
-        </figure>
-      </section>
-
-      <section id="methodology" aria-label="Methodology">
-        <figure class="frame">
-          <header class="frame-head">
-            <h2 class="frame-title">Methodology</h2>
-            <p class="frame-sub">
-              How the ratings and forecasts are computed, from first principles. It assumes university-level mathematics and nothing about
-              Formula 1 or rating systems.
-            </p>
-          </header>
-          <nav class="toc" aria-label="Parts of this page">
-            <a href="#" data-jump="method-overview">1 Overview</a>
-            <a href="#" data-jump="method-data">2 Data</a>
-            <a href="#" data-jump="method-ratings">3 Ratings</a>
-            <a href="#" data-jump="method-forecasts">4 Forecasts</a>
-            <a href="#" data-jump="method-backtesting">5 Backtesting</a>
-            <a href="#" data-jump="method-limits">6 Limits</a>
-            <a href="#" data-jump="method-settings">7 Settings</a>
-            <a href="#" data-jump="method-references">8 References</a>
+          <nav class="stage-bar stage-top stage-links" aria-label="Main navigation">
+            <a href="#/ratings">ratings</a><a href="#/history">history</a><a href="#/head-to-head">versus</a><a href="#/graph">graph</a
+            ><a href="#/insights">insights</a><a href="#/methodology">method</a>
           </nav>
-          <div class="frame-body prose method-body" id="methodologyBody"></div>
-          <footer class="frame-foot">
-            <p class="notes">
-              Data sources and licences: <a href="#/about">About</a>. This is an independent project and is not affiliated with Formula 1 or
-              the FIA.
+
+          <h1 class="stage-title" id="stageTitle" aria-label="Car or Driver">
+            <span class="title-scrim" aria-hidden="true"></span>
+            <span class="title-core">
+              <span class="title-line"><span class="word word-car" data-subject="car">CAR</span> <span class="word-or">OR</span></span>
+              <span class="title-line"><span class="word word-driver" data-subject="driver">DRIVER</span></span>
+            </span>
+          </h1>
+
+          <svg class="stage-connector" id="stageConnector" aria-hidden="true" focusable="false">
+            <polyline id="stageConnectorLine" pathLength="1" points="" />
+            <rect id="stageConnectorStart" width="7" height="7" />
+            <rect id="stageConnectorEnd" width="7" height="7" />
+          </svg>
+          <div class="stage-word-frame" id="stageWordFrame" aria-hidden="true"></div>
+
+          <button
+            type="button"
+            class="hotspot hotspot-car"
+            id="hotspotCar"
+            aria-label="Car: show the ratings of the cars"
+            aria-controls="stageLedger"
+            aria-pressed="false"
+          ></button>
+          <button
+            type="button"
+            class="hotspot hotspot-driver"
+            id="hotspotDriver"
+            aria-label="Driver: show the ratings of the drivers"
+            aria-controls="stageLedger"
+            aria-pressed="false"
+          ></button>
+
+          <div class="stage-frame" id="stageFrame" aria-hidden="true"><span class="stage-frame-hint">click to open</span></div>
+          <div class="stage-cursor" id="stageCursor" aria-hidden="true"></div>
+
+          <section class="ledger" id="stageLedger" aria-label="Ratings" hidden>
+            <button type="button" class="ledger-close" id="stageLedgerClose" aria-label="Close the ratings" hidden>×</button>
+            <div id="ratingsHost" hidden></div>
+            <section class="ledger-view" id="historyView" aria-label="Rating history">
+              <header class="ledger-view-head">
+                <button type="button" class="ledger-back">Ratings</button>
+                <h2 class="ledger-view-title">History</h2>
+              </header>
+              <div class="ledger-view-body" id="chartsPanel" hidden></div>
+            </section>
+            <section class="ledger-view" id="headToHeadView" aria-label="Head to head">
+              <header class="ledger-view-head">
+                <button type="button" class="ledger-back">Ratings</button>
+                <h2 class="ledger-view-title">Head to head</h2>
+              </header>
+              <div class="ledger-view-body">
+                <div class="head-to-head" id="headToHeadPanel" hidden>
+                  <p class="sr-only">The chance that one driver finishes ahead of another in a race, from their ratings and recent form.</p>
+                  <div class="head-to-head-pick">
+                    <div class="head-to-head-side" id="headToHeadSideA">
+                      <div class="head-to-head-label-row">
+                        <span class="head-to-head-label">Driver A</span>
+                        <button type="button" class="toggle head-to-head-prime" id="headToHeadPrimeA" aria-pressed="false">Prime</button>
+                      </div>
+                      <label class="field"
+                        ><span class="sr-only">Driver A</span
+                        ><select id="headToHeadA"></select
+                      ></label>
+                    </div>
+                    <span class="vs" aria-hidden="true">vs</span>
+                    <div class="head-to-head-side" id="headToHeadSideB">
+                      <div class="head-to-head-label-row">
+                        <span class="head-to-head-label">Driver B</span>
+                        <button type="button" class="toggle head-to-head-prime" id="headToHeadPrimeB" aria-pressed="false">Prime</button>
+                      </div>
+                      <label class="field"
+                        ><span class="sr-only">Driver B</span
+                        ><select id="headToHeadB"></select
+                      ></label>
+                    </div>
+                  </div>
+                  <div class="head-to-head-mode">
+                    <button type="button" class="toggle" id="headToHeadSameCar" aria-pressed="true">Same car</button>
+                    <span class="head-to-head-state" id="headToHeadCarName"></span>
+                  </div>
+                  <div id="headToHeadOut" class="head-to-head-result" aria-live="polite"></div>
+                  <div id="headToHeadChartWrap" class="head-to-head-chart" hidden>
+                    <svg id="headToHeadChart" class="chart" role="group"></svg>
+                  </div>
+                  <div class="head-to-head-foot">
+                    <details class="head-to-head-more">
+                      <summary>Conditions <span class="head-to-head-state" id="headToHeadState"></span></summary>
+                      <div class="controls">
+                        <label class="field"
+                          >Conditions<select id="headToHeadWet">
+                            <option value="dry">Dry</option>
+                            <option value="wet">Wet</option>
+                          </select></label
+                        >
+                        <label class="field" id="headToHeadSessionField">Forecast timing<select id="headToHeadSession"></select></label>
+                        <label class="field"
+                          >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
+                        /></label>
+                        <label class="field">Circuit<select id="headToHeadCircuit"></select></label>
+                        <span id="headToHeadGridFields" class="controls" hidden>
+                          <label class="field"
+                            >Grid slot, driver A<input id="headToHeadGridA" type="number" min="1" max="24" step="1" placeholder="1–24"
+                          /></label>
+                          <label class="field"
+                            >Grid slot, driver B<input id="headToHeadGridB" type="number" min="1" max="24" step="1" placeholder="1–24"
+                          /></label>
+                        </span>
+                      </div>
+                    </details>
+                    <button type="button" class="info" id="headToHeadNote" hidden>i</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </section>
+
+          <aside class="track" id="stageTrack" aria-label="The race on the circuit" hidden>
+            <p class="track-title"><span id="stageTrackName"></span><span id="stageTrackLap"></span></p>
+            <div class="track-body">
+              <svg class="track-map" id="stageTrackMap" viewBox="0 0 1000 1000" aria-hidden="true" focusable="false">
+                <path class="track-halo" id="stageTrackHalo" d="" />
+                <path class="track-line" id="stageTrackLine" d="" />
+                <line class="track-start" id="stageTrackStart" x1="0" y1="0" x2="0" y2="0" />
+                <g id="stageTrackDots"></g>
+              </svg>
+              <ol class="track-table" id="stageTrackTable" aria-hidden="true"></ol>
+            </div>
+            <p class="track-foot">
+              <span class="track-speeds" id="stageTrackSpeeds" role="group" aria-label="Race speed, times faster than the real race">
+                <span>speed</span>
+                <button type="button" data-speed="1" aria-pressed="false">1×</button>
+                <button type="button" data-speed="2" aria-pressed="false">2×</button>
+                <button type="button" data-speed="5" aria-pressed="false">5×</button>
+                <button type="button" data-speed="10" aria-pressed="true">10×</button>
+                <button type="button" data-speed="30" aria-pressed="false">30×</button>
+                <button type="button" data-speed="50" aria-pressed="false">50×</button>
+              </span>
+              <button type="button" class="track-pause" id="stageTrackPause">pause</button>
             </p>
+          </aside>
+
+          <section class="graph-page" id="graphPage" aria-label="The teammate graph" tabindex="-1" hidden>
+            <button type="button" class="graph-close" id="graphClose" aria-label="Close the teammate graph">×</button>
+            <header class="graph-head">
+              <h2>Driver network</h2>
+              <label class="graph-driver-select">
+                <span class="sr-only">Choose driver</span>
+                <select id="graphDriver">
+                  <option value="">Choose driver</option>
+                </select>
+              </label>
+            </header>
+            <p class="graph-intro">
+              Dots are drivers; lines link teammates. X: average year raced. Y: teammate-only score (higher is stronger).
+            </p>
+            <div class="graph-main">
+              <div class="graph-chart">
+                <div class="graph-plot-wrap">
+                  <canvas id="graphPlot" role="img" aria-label="Drivers positioned by average year raced and teammate-only score"></canvas>
+                </div>
+                <div class="graph-time">
+                  <label for="graphTimeline">Weekend <strong id="graphWeekend"></strong></label
+                  ><input id="graphTimeline" type="range" min="0" value="0" step="1" />
+                  <div class="graph-time-ends"><span id="graphFirst"></span><span id="graphLast"></span></div>
+                  <span class="graph-key"><i class="graph-key-grid"></i> On this grid <i class="graph-key-other"></i> Earlier driver</span>
+                </div>
+              </div>
+              <aside class="graph-detail" id="graphDetail" aria-live="polite">
+                <div class="graph-detail-empty">
+                  <strong>Explore a driver</strong>
+                  <p>
+                    Hover a dot or choose a name to see ratings and teammate results. Green links favor that driver; pink links favor the
+                    teammate.
+                  </p>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <footer class="stage-bar stage-bottom">
+            <p class="sr-only">
+              How much of a Formula 1 result is the driver, and how much is the car? Point at the car, or at the driver's hands (tap them on
+              a touch screen).
+            </p>
+            <p class="stage-tagline" role="status"></p>
+            <nav class="stage-links stage-footer-links" aria-label="About this site">
+              <a href="#/privacy">privacy</a><a href="#/about">about</a
+              ><a href="https://github.com/francescobraicovich/car-or-driver" rel="noopener noreferrer">source</a>
+            </nav>
           </footer>
-        </figure>
-      </section>
-
-      <section id="privacy" aria-label="Privacy and cookies">
-        <figure class="frame">
-          <header class="frame-head">
-            <h2 class="frame-title">Privacy and cookies</h2>
-            <p class="frame-sub">What this site collects (almost nothing), who is responsible, and your rights.</p>
-          </header>
-          <div class="frame-body prose legal-body" id="privacyBody"></div>
-        </figure>
-      </section>
-
-      <section id="about" aria-label="About, data and licences">
-        <figure class="frame">
-          <header class="frame-head">
-            <h2 class="frame-title">About, data and licences</h2>
-            <p class="frame-sub">Who runs the site, where the data comes from, how it may be used, and the terms of use.</p>
-          </header>
-          <div class="frame-body prose legal-body" id="aboutBody"></div>
-        </figure>
+        </div>
       </section>
     </main>
 
-    <footer class="workspace-footer">
-      <div class="footer-inner">
-        <span>Independent · Not affiliated with Formula 1 or the FIA.</span>
-        <nav class="footer-links" aria-label="About this site">
-          <a href="#/methodology">Methodology</a><a href="#/privacy">Privacy and cookies</a><a href="#/about">About, data and licences</a>
-        </nav>
-      </div>
-    </footer>
-    <noscript><p style="padding: 20px; text-align: center">Driver or Car needs JavaScript to show the ratings and charts.</p></noscript>
+    <noscript><p style="padding: 20px; text-align: center">Car or Driver needs JavaScript to show the ratings and charts.</p></noscript>
     <script type="module" src="./js/app.js"></script>
   </body>
 </html>

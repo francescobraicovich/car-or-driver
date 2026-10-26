@@ -1,9 +1,9 @@
 // Boot probe (plain script on purpose): runs even when ES modules are blocked
-// (e.g. opening index.html via file://) and explains a stuck loader.
+// (e.g. opening index.html via file://) and explains a site that does not start.
 window.__appBooted = false;
 (function () {
   function show(msg) {
-    var box = document.getElementById('veilError');
+    var box = document.getElementById('startError');
     if (box) {
       box.hidden = false;
       box.textContent = msg;
@@ -14,7 +14,11 @@ window.__appBooted = false;
     function (e) {
       if (window.__appBooted) return;
       var msg = (e && e.message) || 'a resource failed to load';
-      show('Something failed while starting: ' + msg + ' If you opened index.html directly, that is the cause — see below.');
+      show(
+        'Something failed while starting: ' +
+          msg +
+          ' If you opened index.html directly, that is the cause: ES modules need http, so serve the folder (for example with “python3 -m http.server”).',
+      );
     },
     true,
   );

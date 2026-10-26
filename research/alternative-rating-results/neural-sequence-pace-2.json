@@ -1,0 +1,54 @@
+{
+  "model": "dated-neural-lap-sequence",
+  "options": {
+    "lapWeight": 3,
+    "learningRate": 0.002,
+    "updatesPerWeekend": 1,
+    "weightDecay": 0.001,
+    "outputPenalty": 0.03,
+    "pacePoints": 150
+  },
+  "weekends": 503,
+  "allPair": {
+    "2008-11": {
+      "combined": 0.3788926158504726,
+      "race": 0.38194617761819455,
+      "qualifying": 0.35402831548481045
+    },
+    "2012-15": {
+      "combined": 0.36245161018718064,
+      "race": 0.36215115454627067,
+      "qualifying": 0.36501839242835593
+    },
+    "2016-25": {
+      "combined": 0.39781837020223815,
+      "race": 0.3967513409814682,
+      "qualifying": 0.40846821394231947
+    }
+  },
+  "movers": {
+    "2002-11": {
+      "teammateLoss": 0.6624458340005543,
+      "fieldLoss": 0.37552452570712896,
+      "accuracy": 0.6205678292449417,
+      "duels": 220
+    },
+    "2012-15": {
+      "teammateLoss": 0.7050168002317201,
+      "fieldLoss": 0.30113357411615416,
+      "accuracy": 0.6551274027871606,
+      "duels": 116
+    },
+    "2016-25": {
+      "teammateLoss": 0.6571274086040262,
+      "fieldLoss": 0.3564776987454227,
+      "accuracy": 0.6075622820188158,
+      "duels": 234
+    }
+  },
+  "calibration": {
+    "race": 0.9490505178874747,
+    "qualifying": 1.1487036727826605,
+    "field": 0.9289200345185206
+  }
+}

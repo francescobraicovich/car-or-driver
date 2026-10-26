@@ -393,21 +393,22 @@ def home_advantage(tables):
 
 def ageing(tables):
     birth = tables.people.assign(driverId=tables.people.driverId.astype(str)).set_index('driverId').dob
-    seasons = tables.drivers.groupby(['driverId', 'driver', 'year']).agg(rating=('driverRating', 'mean'), races=('index', 'size')).reset_index()
+    seasons = tables.drivers.groupby(['driverId', 'driver', 'year']).agg(rating=('driverRating', 'mean'), races=('index', 'size'), firstRace=('date', 'min')).reset_index()
     seasons = seasons[seasons.races >= 8]
-    seasons['age'] = [(pd.Timestamp(f'{y}-07-01') - pd.Timestamp(birth[i])).days / 365.25 for i, y in zip(seasons.driverId, seasons.year)]
+    seasons['age'] = [race.year - born.year - ((race.month, race.day) < (born.month, born.day))
+                      for race, born in zip(pd.to_datetime(seasons.firstRace), pd.to_datetime(seasons.driverId.map(birth)))]
     seasons = seasons.sort_values(['driverId', 'year'])
     for column in ['rating', 'year', 'age']:
         seasons['previous_' + column] = seasons.groupby('driverId')[column].shift()
     consecutive = seasons[seasons.year - seasons.previous_year == 1].copy()
     consecutive['change'] = consecutive.rating - consecutive.previous_rating
-    consecutive['startAge'] = np.floor(consecutive.previous_age).astype(int)
+    consecutive['startAge'] = consecutive.previous_age.astype(int)
     by_age = consecutive.groupby('startAge').change.agg(['mean', 'sem', 'size'])
     by_age = by_age[by_age['size'] >= 8]
     careers = ['Michael Schumacher', 'Fernando Alonso', 'Lewis Hamilton', 'Sebastian Vettel', 'Max Verstappen', 'Kimi Räikkönen']
     return dict(
         yearlyChange=[dict(age=int(age), mean=rounded(r['mean']), standardError=rounded(r['sem']), cases=int(r['size'])) for age, r in by_age.iterrows()],
-        careers={name: [dict(age=rounded(r.age), rating=rounded(r.rating), year=int(r.year)) for r in seasons[seasons.driver == name].itertuples()] for name in careers},
+        careers={name: [dict(age=int(r.age), rating=rounded(r.rating), year=int(r.year)) for r in seasons[seasons.driver == name].itertuples()] for name in careers},
     )
 
 

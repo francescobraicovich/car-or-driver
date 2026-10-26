@@ -1,22 +1,18 @@
-// Page shell: hash routing between the pages, the theme toggle, the share link, and the weekend and history state kept in the URL.
+// Page shell: hash routing between the pages, and the weekend and history state kept in the URL.
 import { state } from './state.js';
 import { setRace } from './ratings-view.js';
 import { createHistoryView } from './history-view.js';
-import { createThemeButton } from './theme.js';
+import { DECK_PAGES, panelView } from './stage-pages.js';
 
-// route -> the section that is the page.
-const PAGES = {
-  '/ratings': 'ratings',
-  '/history': 'charts',
-  '/head-to-head': 'headToHead',
-  '/insights': 'insights',
-  '/methodology': 'methodology',
-  '/privacy': 'privacy',
-  '/about': 'about',
-};
-const DEFAULT_ROUTE = '/ratings';
+// Every route is the front page: the ratings are the panel on it, kept open; the history and the head to head are views over the ratings, in the
+// panel; the insights, the methodology, the privacy notice and the about page are each a card of slides over it.
+const ROUTES = ['/', '/ratings', '/history', '/head-to-head', '/graph', '/insights', '/methodology', '/privacy', '/about'];
+const DEFAULT_ROUTE = '/';
 // Hashes from earlier versions of the site (and of the shared links in the wild).
 const ALIASES = {
+  '/home': '/',
+  '/geek/weekend': '/ratings',
+  '/geek/data': '/ratings',
   ratings: '/ratings',
   '/simple/ratings': '/ratings',
   '/simple/rankings': '/ratings',
@@ -32,25 +28,16 @@ const ALIASES = {
   backtest: '/methodology',
   '/geek/models': '/methodology',
 };
+const VIEW_IDS = { history: 'historyView', 'head-to-head': 'headToHeadView' };
 const $ = (id) => document.getElementById(id);
-const visible = (node, on) => {
-  node.hidden = !on;
-  node.style.display = on ? '' : 'none';
-};
 
 export function initWorkspace() {
   const root = $('workspace');
-  $('shareView').before(createThemeButton());
-
-  const pages = new Map(Object.entries(PAGES).map(([path, id]) => [path, $(id)]));
-  for (const [path, node] of pages) {
-    node.classList.add('workspace-page');
-    node.dataset.route = path;
-    node.tabIndex = -1;
-    visible(node, false);
-  }
+  const home = $('home');
+  home.tabIndex = -1;
   let route = DEFAULT_ROUTE;
   let raceId = null;
+  let deckSlide = null; // the id of the slide on the card of the page, if it is a card of slides (none: the contents)
   let raceDate = null;
   let restoring = false;
 
@@ -62,26 +49,31 @@ export function initWorkspace() {
   });
   root.hidden = false;
 
+  const pageName = () => (route === '/' ? 'home' : route.slice(1));
+
+  /** The page the body is on, and what the panel shows (the ratings, or a view over them). */
+  function setPage() {
+    document.body.dataset.page = pageName();
+    $('stageLedger').dataset.view = panelView(pageName());
+    if (panelView(pageName()) !== 'head-to-head') window.dispatchEvent(new CustomEvent('f1:versus-drivers', { detail: null })); // the two drivers lit in the race
+  }
+
   function display() {
-    document.body.dataset.page = route.slice(1);
-    for (const link of document.querySelectorAll('#workspaceLinks a')) {
-      if (link.getAttribute('href') === `#${route}`) link.setAttribute('aria-current', 'page');
-      else link.removeAttribute('aria-current');
-    }
-    for (const [path, node] of pages) visible(node, path === route);
+    setPage();
     $('chartValueTooltip')?.setAttribute('hidden', '');
     window.dispatchEvent(new CustomEvent('f1:workspace-changed', { detail: { page: route } }));
   }
 
   function parseURL() {
     const [path, search = ''] = location.hash.slice(1).split('?');
-    const nextRoute = pages.has(path) ? path : ALIASES[path] || DEFAULT_ROUTE;
+    const nextRoute = ROUTES.includes(path) ? path : ALIASES[path] || DEFAULT_ROUTE;
     const params = new URLSearchParams(search.length <= 16000 ? search : '');
     return { route: nextRoute, params: params.get('v') === '1' ? params : new URLSearchParams() };
   }
 
   function readURLState(params) {
     history.readURL(params);
+    deckSlide = /^[a-z0-9-]{1,48}$/.test(params.get('slide') || '') ? params.get('slide') : null;
     if (/^[A-Za-z0-9_-]{1,64}$/.test(params.get('race') || '')) {
       raceId = params.get('race');
       raceDate = null;
@@ -90,9 +82,14 @@ export function initWorkspace() {
 
   function saveURL() {
     if (restoring) return;
+    if (route === '/') {
+      window.history.replaceState(null, '', '#/'); // the front page has no options to remember
+      return;
+    }
     const params = new URLSearchParams({ v: '1' });
     history.writeURL(params);
     if (raceId) params.set('race', raceId);
+    if (DECK_PAGES.includes(pageName()) && deckSlide) params.set('slide', deckSlide);
     window.history.replaceState(null, '', `#${route}?${params}`);
   }
 
@@ -120,8 +117,34 @@ export function initWorkspace() {
     rememberRace();
   }
 
+  /** Where the focus goes on a new page: the button to go back, in a view over the ratings; the button that opened the view, when coming back from it. */
+  function focusPage(was) {
+    const now = panelView(pageName());
+    let target = home;
+    if (pageName() === 'graph') target = $('graphPage') ?? target;
+    else if (DECK_PAGES.includes(pageName()))
+      target = document.querySelector(`.deck-card[data-deck="${pageName()}"]`) ?? target; // (the card is made when its page is first shown, and takes the focus itself then)
+    else if (now !== 'ratings') target = $(VIEW_IDS[now]).querySelector('.ledger-back');
+    else if (was !== 'ratings') target = $(was === 'history' ? 'ratingsOpenHistory' : 'ratingsOpenHeadToHead') ?? target;
+    target.focus({ preventScroll: true });
+  }
+
+  /** Opens a view over the ratings from the ratings: a step forward in the browser's history, which Back then takes back. */
+  let openedFromRatings = false;
+  function openView(path) {
+    openedFromRatings = true;
+    location.hash = path;
+  }
+  /** Back to the ratings: one step back in the browser's history when the view was opened from them (so that its Back button does not make the browser's back button return to the view), otherwise to the ratings. */
+  function goBack() {
+    if (openedFromRatings) window.history.back();
+    else location.hash = '/ratings';
+  }
+
   function navigate() {
     const target = parseURL();
+    if (panelView(target.route.slice(1)) === 'ratings') openedFromRatings = false;
+    const was = panelView(pageName());
     restoring = true;
     try {
       route = target.route;
@@ -129,7 +152,7 @@ export function initWorkspace() {
       restoreRace();
       history.refresh();
       display();
-      pages.get(route).focus({ preventScroll: true });
+      focusPage(was);
       window.scrollTo(0, 0);
     } finally {
       restoring = false;
@@ -142,29 +165,41 @@ export function initWorkspace() {
     if (!['driver', 'car'].includes(entity) || !Array.isArray(ids)) return;
     const snap = state.model?.snaps[state.raceIndex];
     history.compare(event.detail, snap ? +snap.year : history.state.to);
-    location.hash = '/history';
+    openView('/history');
   });
   window.addEventListener('f1:compare-head-to-head', () => {
-    location.hash = '/head-to-head';
+    openView('/head-to-head');
+  });
+  window.addEventListener('f1:deck-slide', (event) => {
+    if (event.detail.page !== pageName()) return;
+    deckSlide = event.detail.id;
+    saveURL();
+  });
+  window.addEventListener('f1:open-view', (event) => {
+    const { view, entity } = event.detail;
+    if (view === 'history') history.show(entity);
+    openView(view === 'history' ? '/history' : '/head-to-head');
+  });
+  for (const button of document.querySelectorAll('.ledger-back')) button.addEventListener('click', goBack);
+  window.addEventListener('f1:ledger-back', goBack);
+  // keeping the ratings open on the front page is the Ratings page, and letting go of them is the front page: the address follows (a view over the
+  // ratings is open only while they are, so letting go of the panel there is the front page too)
+  window.addEventListener('f1:ratings-pinned', (event) => {
+    const next = event.detail.pinned ? (panelView(pageName()) === 'ratings' ? '/ratings' : route) : '/';
+    if (route === next || DECK_PAGES.includes(pageName())) return; // (a card of slides is not about the panel)
+    route = next;
+    setPage();
+    saveURL();
   });
   window.addEventListener('hashchange', navigate);
+  $('stage').addEventListener('pointerdown', (event) => {
+    if (!DECK_PAGES.includes(pageName())) return;
+    if (event.target.closest('.deck-card, .deck-list, .graph-page, .stage-top, .stage-bottom, .track')) return;
+    location.hash = '#/';
+  });
   window.addEventListener('f1:race-changed', () => {
     rememberRace();
     saveURL();
-  });
-  $('shareView').addEventListener('click', async () => {
-    saveURL();
-    try {
-      await navigator.clipboard.writeText(location.href);
-      $('shareStatus').textContent = 'Link copied';
-      $('shareURL').hidden = true;
-    } catch {
-      $('shareURL').hidden = false;
-      $('shareURL').value = location.href;
-      $('shareURL').focus();
-      $('shareURL').select();
-      $('shareStatus').textContent = 'Copy link';
-    }
   });
   window.addEventListener('f1:model-ready', () => {
     restoreRace();

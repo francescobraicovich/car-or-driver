@@ -1,9 +1,9 @@
 // The privacy notice is only true while the site behaves as it says. This checks the files, so the notice cannot drift from the site (the browser
-// smoke test checks the running site: no request to another origin, no cookie, one stored value after a click). What is checked, and why, is in
+// smoke test checks the running site: no request to another origin, no cookie, nothing stored in the browser after every page has been opened). What is checked, and why, is in
 // docs/compliance.md.
 //   1. Nothing the site loads comes from another origin: no absolute address in a stylesheet, script, image, font or import, in the page, the
 //      scripts or the stylesheet. (Links a visitor may follow are allowed; they leave the site only when clicked.)
-//   2. The browser's storage is used in one place, theme.js, which writes one key, and only when the visitor presses the button.
+//   2. No script uses the browser's storage: the site stores nothing on the visitor's device.
 //   3. The response headers forbid loading from another origin and send no referrer.
 //   4. The third-party files that are served carry their licences and a notice naming the source.
 //   5. Every citation in the Methodology has an entry, and every entry says who, when and where.
@@ -63,14 +63,7 @@ const storageUsers = [];
 for (const file of scripts)
   if (/\b(?:localStorage|sessionStorage|indexedDB|document\.cookie|caches\.open|navigator\.serviceWorker)\b/.test(await read(file)))
     storageUsers.push(relative('.', file));
-assert.deepEqual(storageUsers, ['site/js/theme.js'], 'only theme.js may use the browser storage');
-const theme = await read('site/js/theme.js');
-assert.equal((theme.match(/localStorage\.setItem/g) ?? []).length, 1, 'one write');
-assert.ok(
-  theme.indexOf('localStorage.setItem') > theme.indexOf("addEventListener('click'"),
-  'the write happens in the click handler, not at load',
-);
-assert.match(theme, /STORAGE_KEY = 'f1-theme'/);
+assert.deepEqual(storageUsers, [], 'no script uses the browser storage');
 
 // 3. headers
 const headers = (await readDeployHeaders())['/*'];
@@ -82,10 +75,10 @@ assert.equal(headers['Referrer-Policy'], 'no-referrer');
 assert.equal(headers['X-Content-Type-Options'], 'nosniff');
 
 // 4. third-party files and their licences
-for (const file of ['inter-OFL-1.1.txt', 'space-grotesk-OFL-1.1.txt', 'katex-MIT.txt'])
+for (const file of ['inter-OFL-1.1.txt', 'lexend-giga-OFL-1.1.txt', 'katex-MIT.txt'])
   assert.ok(existsSync(`site/vendor/licenses/${file}`), `licence ${file}`);
 const notice = await read('site/vendor/NOTICE.txt');
-for (const word of ['Inter', 'Space Grotesk', 'KaTeX', 'SIL Open Font License', 'MIT'])
+for (const word of ['Inter', 'Lexend Giga', 'KaTeX', 'SIL Open Font License', 'MIT'])
   assert.ok(notice.includes(word), `NOTICE.txt names ${word}`);
 for (const file of await walk('site/vendor')) {
   if (/\.(woff2|js|css|txt)$/.test(file)) continue;
@@ -120,17 +113,41 @@ for (const author of [
   assert.ok(insights.includes(author), `the Insights notes cite ${author}`);
 
 // 6. what is published
-for (const file of ['data/model.json', 'data/model-latest.json', 'data/export-rows.json']) {
+for (const file of ['data/model.json', 'data/model-latest.json', 'data/export-rows.json', 'data/teammate-graph.json']) {
   const { licence } = deserialize(await read(file));
   assert.equal(licence?.licence, 'CC BY-NC-SA 4.0', `${file} carries the licence`);
   assert.ok(licence.credit.includes('Jolpica') && licence.credit.includes('TracingInsights'), `${file} carries the credit`);
 }
+// the laps of each season carry the same licence and credit, and the outlines carry theirs: the credit, and the MIT licence text of their source
+for (const file of (await readdir('data/race-laps')).filter((name) => name.endsWith('.json'))) {
+  const { licence } = JSON.parse(await read(`data/race-laps/${file}`));
+  assert.equal(licence?.licence, 'CC BY-NC-SA 4.0', `data/race-laps/${file} carries the licence`);
+  assert.ok(licence.credit.includes('Jolpica') && licence.credit.includes('TracingInsights'), `data/race-laps/${file} carries the credit`);
+}
+const tracksCredit = JSON.parse(await read('site/assets/tracks.json')).credit;
+assert.ok(
+  /MIT/.test(tracksCredit) && /Bacinger/.test(tracksCredit) && /not approved or endorsed/i.test(tracksCredit),
+  'the outlines carry their credit and the disclaimer',
+);
+const tracksLicence = await read('site/assets/tracks-licence.txt');
+assert.ok(
+  /Copyright \(c\) 2019-2025 Tomislav Bacinger/.test(tracksLicence) && /Permission is hereby granted/.test(tracksLicence),
+  'the MIT licence text of the outlines is published with them',
+);
+assert.equal(tracksLicence, await read('data/source/f1-circuits/LICENSE.md'), "and is the source's own");
+assert.ok((await read('site/js/legal-content.js')).includes('bacinger/f1-circuits'), 'the About page credits the source of the outlines');
 try {
   const run = spawnSync(process.execPath, ['tools/build-pages.mjs', 'https://example.test/'], { encoding: 'utf8' });
   assert.equal(run.status, 0, run.stderr);
   const published = (await walk('dist')).map((file) => relative('dist', file));
   assert.ok(!published.some((file) => file.endsWith('.csv')), 'the source tables are not published');
   assert.ok(published.includes('_headers'), 'the headers file is published');
+  for (const file of ['site/assets/tracks.json', 'site/assets/tracks-licence.txt', 'data/race-laps/2026.json', 'data/teammate-graph.json'])
+    assert.ok(published.includes(file), `${file} is published`);
+  assert.ok(
+    !published.some((file) => file.startsWith('data/source/')),
+    'the source files of the outlines are not published (their outlines are, in tracks.json)',
+  );
   assert.ok(
     !published.some((file) => file.startsWith('docs/') || file.startsWith('research/') || file.startsWith('tests/')),
     'no internal documents are published',
@@ -145,5 +162,5 @@ try {
   await rm('dist', { recursive: true, force: true });
 }
 console.log(
-  'PASS compliance: no request to another origin, one stored value on a click, strict headers, licences shipped, citations complete, only intended files published',
+  'PASS compliance: no request to another origin, nothing stored in the browser, strict headers, licences shipped, citations complete, only intended files published',
 );
