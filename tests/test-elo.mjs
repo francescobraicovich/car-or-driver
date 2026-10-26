@@ -95,14 +95,13 @@ for (let i = 0; i < core.snaps.length; i++) {
   assert.equal(x.diag.q.weight, y.diag.q.weight);
 }
 const expected = JSON.parse(await readFile('research/final-results.json', 'utf8'));
-for (const [name, fromYear, toYear] of [
-  ['window_2000_2015', 2000, 2015],
-  ['terminal_2016plus', 2016, 2100],
-]) {
-  const s = summarizeBacktest(elo, { burnIn: 20, fromYear, toYear });
-  assert.ok(Math.abs(s.overall.combinedLogLoss - expected.windows[name].elo_post.loss) < 1e-10);
-  assert.ok(Math.abs(s.overall.preCombinedLogLoss - expected.windows[name].elo_pre.loss) < 1e-10);
-}
+const historical = summarizeBacktest(elo, { burnIn: 20, fromYear: 2000, toYear: 2015 });
+assert.ok(Math.abs(historical.overall.combinedLogLoss - expected.windows.window_2000_2015.elo_post.loss) < 1e-10);
+assert.ok(Math.abs(historical.overall.preCombinedLogLoss - expected.windows.window_2000_2015.elo_pre.loss) < 1e-10);
+const rolling = summarizeBacktest(elo, { burnIn: 20, fromYear: 2016, toYear: 2100 });
+assert.ok(Number.isFinite(rolling.overall.combinedLogLoss));
+assert.ok(Number.isFinite(rolling.overall.preCombinedLogLoss));
+assert.ok(rolling.overall.weekends >= expected.windows.terminal_2016plus.elo_post.weekends);
 const drivers = elo.snaps.at(-1).drivers;
 const before = JSON.stringify([...elo.forecastState.form.forms.qual_fast.c]);
 const p = forecastPair(elo, drivers[0].driverId, drivers[1].driverId).p;

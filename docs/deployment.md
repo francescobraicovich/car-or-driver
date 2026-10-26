@@ -89,9 +89,9 @@ First-visit download down 98% (2.53 MB to about 0.06 MB). The measured 0.4 s of 
 
 This costs no money, but it is the real ongoing price: about 24 race weekends a year, and each one changes the ratings.
 
-Per race, in order (from `data/README.md`): fetch the new data; rebuild the data files (`npm run build:data`, about 20 seconds: the ratings, the laps of each season for the racing dots, and the circuit outlines; a circuit that has never raced before also needs its outline, see the README); regenerate the findings (`npm run research:findings`, needs Python); run `npm test`; update the golden hashes on purpose; commit and deploy. Estimate: 15 to 30 minutes each, so 6 to 12 hours a year.
+The `Refresh Grand Prix data` GitHub Action checks the public mirrors daily at 10:17 UTC and can also be run manually. When a new completed race appears, it checks that the new race has enough entries to be complete and appends those records while preserving the published history. It then rebuilds the ratings, teammate graph, racing laps, circuit art and Insights, updates the data-dependent golden fingerprints, runs lint, every test and the publication gate, and commits to `main`. Cloudflare Pages rebuilds from that commit. A failed source or check stops before the push, so the last working site stays live. The workflow needs `contents: write` permission and a branch policy that allows its bot commit.
 
-It cannot be fully automated today, for two reasons I can see in the repository: the golden hashes are updated by a person deliberately, and the findings step needs Python with pinned packages. The pieces that can be automated are fetching the data and rebuilding the model; Those two could be automated first (a scheduled workflow that opens a pull request), leaving the golden update as the human step.
+The source mirrors can publish late or correct old rows. Older-row corrections are logged and ignored by the automatic update; review them separately before changing published history. A new circuit without an outline or a failed model/Insights check also requires investigation. The full manual sequence is in [data/README.md](../data/README.md).
 
 Note the `data/model.json` file is committed, so each refresh adds about 3 MB (compressed) to the repository history: about 70 MB a year. Not a problem for years; the repository is 52 MB today.
 

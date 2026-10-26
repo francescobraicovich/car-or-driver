@@ -94,9 +94,13 @@ def best_car_against_best_driver(tables):
     cars = cars[cars.races >= 8]
     cars['pace'] -= 1000
     rows = []
-    for year in range(2002, 2027):
-        car = cars[cars.year == year].sort_values('pace', ascending=False).iloc[0]
-        driver = entrants[entrants.year == year].sort_values('driverRating', ascending=False).iloc[0]
+    for year in range(2002, int(tables.drivers.year.max()) + 1):
+        cars_in_year = cars[cars.year == year].sort_values('pace', ascending=False)
+        drivers_in_year = entrants[entrants.year == year].sort_values('driverRating', ascending=False)
+        if cars_in_year.empty or drivers_in_year.empty:
+            continue  # The new season has not yet supplied eight races per entrant.
+        car = cars_in_year.iloc[0]
+        driver = drivers_in_year.iloc[0]
         rows.append(dict(year=year, carEdge=rounded(car.pace), carTeam=car.team, driverEdge=rounded(driver.driverRating), driverName=driver.driver))
     return rows
 
@@ -144,7 +148,7 @@ def explained_share(tables, pairs):
     cross_team = pairs[pairs.teammates == 0]
     between_teams = between_team_share(tables)
     rows = []
-    for year in range(2003, 2026):
+    for year in range(2003, int(tables.drivers.year.max())):
         window = cross_team[cross_team.year.between(year - 1, year + 1)]
         r2 = {name: mcfadden(window, columns)[0] for name, columns in [('driver', ['driverGap']), ('car', ['carGap']), ('both', ['driverGap', 'carGap'])]}
         driver = (r2['driver'] + (r2['both'] - r2['car'])) / 2
@@ -186,7 +190,7 @@ def exchange_rate(tables):
     finishers['carGap'] = finishers.carBefore - finishers.groupby('raceId').carBefore.transform('mean')
     entrants = season_entrants(tables)
     rows = []
-    for first, last in [(2002, 2009), (2010, 2017), (2018, 2026)]:
+    for first, last in [(2002, 2009), (2010, 2017), (2018, int(tables.drivers.year.max()))]:
         sample = finishers[finishers.year.between(first, last)]
         fit = sm.OLS(sample.placesAhead, sample[['driverGap', 'carGap']]).fit()
         era = entrants[entrants.year.between(first, last)]
@@ -203,7 +207,8 @@ def champions(tables):
     points = tables.results.groupby(['year', 'driverId']).points.sum().reset_index()
     leaders = points.sort_values('points', ascending=False).groupby('year').head(1)
     merged = entrants.merge(leaders[['year', 'driverId']], on=['year', 'driverId'])
-    return [dict(year=int(r.year), name=r.driver, team=r.team, driverRating=rounded(r.driverRating), carRating=rounded(r.carRating)) for r in merged.itertuples() if r.year <= 2025]
+    last_complete_year = int(tables.drivers.year.max()) - 1
+    return [dict(year=int(r.year), name=r.driver, team=r.team, driverRating=rounded(r.driverRating), carRating=rounded(r.carRating)) for r in merged.itertuples() if r.year <= last_complete_year]
 
 
 def equal_car_titles(tables):
@@ -213,7 +218,7 @@ def equal_car_titles(tables):
     points = tables.results.groupby(['year', 'driverId']).points.sum().reset_index()
     leaders = points.sort_values('points', ascending=False).groupby('year').head(1).set_index('year').driverId
     expected, seasons = {}, []
-    for year in range(2002, 2026):
+    for year in range(2002, int(tables.drivers.year.max())):
         field = entrants[entrants.year == year]
         field = field[field.races >= 0.5 * tables.drivers[tables.drivers.year == year]['round'].max()]
         draws = generator.normal(field.driverRating.values[:, None], field.uncertainty.values[:, None], size=(len(field), 6000))
@@ -222,7 +227,7 @@ def equal_car_titles(tables):
             expected[name] = expected.get(name, 0) + chance
         top = field.assign(chance=best_chance).sort_values('chance', ascending=False).iloc[0]
         seasons.append(dict(year=year, likeliestBest=top.driver, probability=rounded(top.chance, 2), champion=tables.driver_names[leaders[year]]))
-    actual = pd.Series([tables.driver_names[leaders[y]] for y in range(2002, 2026)]).value_counts().to_dict()
+    actual = pd.Series([tables.driver_names[leaders[y]] for y in range(2002, int(tables.drivers.year.max()))]).value_counts().to_dict()
     return dict(expected=sorted([[name, rounded(value, 2)] for name, value in expected.items() if value >= 0.25], key=lambda item: -item[1]), actual=actual, seasons=seasons)
 
 
@@ -262,7 +267,7 @@ def dominance(tables):
 def winter_order(tables):
     last_of_season = tables.cars.sort_values('index').groupby(['year', 'constructorId']).tail(1).set_index(['year', 'constructorId']).combined
     correlations, changes = [], []
-    for year in range(2001, 2026):
+    for year in range(2001, int(tables.drivers.year.max())):
         before, after = last_of_season.xs(year - 1, level=0), last_of_season.xs(year, level=0)
         shared = before.index.intersection(after.index)
         if len(shared) >= 6:
@@ -448,7 +453,7 @@ def grid_dependence(tables):
         correlation = np.mean([race.grid.rank().corr(race.positionOrder.rank()) for _, race in group.groupby('raceId')])
         circuits.append(dict(name=tables.circuits.loc[circuit, 'name'], correlation=rounded(correlation, 2)))
     poles = []
-    for first, last in [(2000, 2005), (2006, 2013), (2014, 2021), (2022, 2026)]:
+    for first, last in [(2000, 2005), (2006, 2013), (2014, 2021), (2022, int(tables.drivers.year.max()))]:
         sample = tables.results[tables.results.year.between(first, last) & (tables.results.grid == 1)]
         poles.append(dict(period=f'{first}–{last}', percent=rounded((sample.positionOrder == 1).mean() * 100, 0), poles=len(sample)))
     return dict(circuits=sorted(circuits, key=lambda row: -row['correlation']), poleToWin=poles)

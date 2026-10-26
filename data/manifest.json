@@ -1,19 +1,19 @@
 {
-  "version": "07396ffcac47b05d",
+  "version": "8019dfda05c831c6",
   "lastRace": {
     "year": 2026,
-    "round": 17,
-    "name": "Singapore Grand Prix",
-    "date": "2026-10-11"
+    "round": 18,
+    "name": "United States Grand Prix",
+    "date": "2026-10-25"
   },
   "files": {
     "results.csv": {
-      "bytes": 1674520,
-      "sha256": "ad8143a94b1551919839f02501e6b139c86b5ecbd69b8ed304120da82b1ece63"
+      "bytes": 1676108,
+      "sha256": "ecdc5d97a23770f51bc2cd069848ba869a00782c69c011a99ff60d0f15a3b44c"
     },
     "qualifying.csv": {
-      "bytes": 464240,
-      "sha256": "cd4a6fba7576f2b65ad0a945c7a5b2011e258aee594579136fe50660d6415426"
+      "bytes": 465237,
+      "sha256": "2ac3d8b61fb1f12c39772f2eb9dcd5cead639ec887731b740d9cbd38e3679175"
     },
     "races.csv": {
       "bytes": 173330,
@@ -32,8 +32,8 @@
       "sha256": "056ef28b4b09c65fb94a2ea1cc2ac485ad55837735c4144337ea7229091bfc31"
     },
     "lap_times.csv": {
-      "bytes": 24857604,
-      "sha256": "e8bcdcb9a436eb65328dbf25512db447f90f719529bb405bc6b7142ebe897c9a"
+      "bytes": 24892634,
+      "sha256": "cfedf712730dbb2d050c1d94535457663bb2328cd52691d75bbe7261fb700a75"
     },
     "circuits.csv": {
       "bytes": 10206,

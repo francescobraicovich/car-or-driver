@@ -1,6 +1,6 @@
 {
  "format": 2,
- "dataVersion": "07396ffcac47b05d",
+ "dataVersion": "8019dfda05c831c6",
  "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2006,
  "codes": {"2":"HEI","3":"ROS","4":"ALO","8":"RAI","9":"KUB","11":"SAT","13":"MAS","14":"COU","15":"TRU","17":"WEB","18":"BUT","21":"FIS","22":"BAR","23":"SCH","24":"LIU","26":"SPE","27":"ALB","29":"YAM","30":"MSC","31":"MON","32":"KLI","33":"TMO","34":"IDE","35":"VIL","36":"FMO","37":"DLR","38":"DOO"},

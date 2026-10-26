@@ -22,6 +22,8 @@ const TESTS = [
   'test-eval.mjs',
   'test-synthetic-v2.mjs',
   'test-data-manifest.mjs',
+  'test-gp-refresh.mjs',
+  'test-gp-build.mjs',
   'test-model-file.mjs',
   'test-race-laps.mjs',
   'test-compliance.mjs',

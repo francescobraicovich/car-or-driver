@@ -1,6 +1,6 @@
 {
  "format": 2,
- "dataVersion": "07396ffcac47b05d",
+ "dataVersion": "8019dfda05c831c6",
  "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 2021,
  "codes": {"1":"HAM","4":"ALO","8":"RAI","9":"KUB","20":"VET","815":"PER","817":"RIC","822":"BOT","830":"VER","832":"SAI","839":"OCO","840":"STR","841":"GIO","842":"GAS","844":"LEC","846":"NOR","847":"RUS","849":"LAT","852":"TSU","853":"MAZ","854":"MSC"},
