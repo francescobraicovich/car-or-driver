@@ -2,111 +2,139 @@
 
 **How much of a Formula 1 result is the driver, and how much is the car?**
 
-Car or Driver is a free, non-commercial website and the research code behind it. It rates every driver and every car at every race weekend since 1994, with an error bar on every number, and shows the ratings, their history, head-to-head forecasts and twenty-one findings about the split between driver and car.
+Car or Driver is a free, non-commercial research project and website that estimates driver and car performance independently. It publishes time-varying ratings for every driver and car after each Formula 1 weekend since 1994, with uncertainty attached to each estimate.
 
-It is an independent personal project. It is not affiliated with Formula 1, the FIA or any team or driver.
+The aim is not to declare a definitive “best driver” or “best car.” It is to make a difficult question explicit, quantify it carefully, and show what the available evidence can—and cannot—support.
 
-## What is on the site
+## The problem
 
-| Page | What it shows |
-| --- | --- |
-| **Front page and ratings** | A drawing of a car and a driver's hands under the title. Point at either (or at its word in the title) and a box opens, the picture turns black and white, the blue version shows inside the box and a panel opens on the left with the ratings of the cars or of the drivers: a ranking after any weekend since 1994, all rows at once, each with its error and a bar; a slider to play through the seasons as a bar-chart race (the rows glide to their new places and the bars grow); the rating to show; and a way to select entries and compare them. Press to keep the panel open (the address then is `#/ratings`). Where a circuit outline is available, the real race of the weekend is replayed at the bottom right, at 1 to 50 times the real speed (you choose), from the lap times of every car (overtakes, pit stops, safety cars and red flags included), with a live timing table of places and gaps; pointing at a driver highlights his dot and his row of the table. |
-| **History** | Rating lines for the drivers or cars you choose, over any range of seasons. It opens over the ratings, in the panel, with a button to go back (`#/history`). |
-| **Head to head** | The chance that one driver finishes ahead of another, from their ratings and recent form, with what-if options (another season, another car, wet weather). It opens over the ratings, in the panel (`#/head-to-head`): the same car for both drivers to begin with, a Prime button for each, and a date to drag along their rating history, which takes the race at the bottom right to that Grand Prix. |
-| **Graph** | Every driver in the data, positioned by mean year raced and a teammate-only graph score. Scrub to any weekend, inspect each driver's published rating, age and complete teammate record, and follow favorable and unfavorable links. On wide screens, selecting a driver also lights their dot in the mini GP (`#/graph`). |
-| **Insights** | Twenty findings, each with a chart and a note on how it was computed: how much of a race is the car, who the best teammates are, how the order survives a winter, and more. They are a slide show on a card over the front page (`#/insights`): the contents first, then a slide for each finding, reached from the contents, from the list of slides beside the card, with the arrow keys or a swipe. |
-| **Methodology** | How the numbers are computed, from first principles, written for readers with university mathematics and no knowledge of Formula 1; with references. |
+A race result is produced by a driver and a car together, in particular conditions. Strong results may reflect exceptional driving, an exceptional car, or both. Looking only at finishing positions makes those contributions hard to separate.
 
-## How it works, in one paragraph
+That matters whenever drivers change teams, teams develop at different rates, or we compare careers across seasons. A rating that follows results alone will often mistake machinery for driver ability, or driver performance for machinery.
 
-Each driver and each car has a hidden pace that changes over time. We see results, not that pace directly. Joint state-space filters estimate driver and car levels from race and qualifying comparisons; an online pair-ranking learner supplies a third portable driver estimate. The published hybrid blends these dated estimates after every weekend: driver 48% race filter, 32% qualifying filter, 20% online ranking; car 75% race filter, 25% qualifying filter. The driver–car fit stays inside the learners rather than the posted driver rating. Ratings are centred on **1,000** on a 75-point scale: a lead of 75 points gives 10:1 odds in the basic pair model. The displayed uncertainty is an approximation from the state-space filter and does not include the complete blend.
+## Why independent ratings are difficult
 
-It is judged by how well it forecasts each weekend from earlier weekends only (a coin flip scores 0.6931 on this measure; lower is better):
+We never observe a driver without a car, or a car without a driver. The data consists of pairings, not isolated performances.
 
-| Window | Coin flip | Previous published ratings | Hybrid ratings |
-| --- | --- | --- | --- |
-| Ratings alone, 2008–2011 | 0.6931 | 0.3846 | **0.3820** |
-| Ratings alone, 2012–2015 | 0.6931 | 0.3640 | **0.3601** |
-| Ratings alone, 2016–2025 (inspected during selection) | 0.6931 | 0.3989 | **0.3965** |
+Several things make the separation especially challenging:
 
-The hardest test is a driver in a new car, forecast from the rating before the move and nothing else: the hybrid improves this test but remains above 0.5 loss in every historical period (see [OPEN_PROBLEMS.md](OPEN_PROBLEMS.md)). The shipped method and its evidence are in [docs/hybrid.md](docs/hybrid.md); the filters it builds on are in [docs/state-space.md](docs/state-space.md). The historical metric definitions are in [docs/metrics.md](docs/metrics.md).
+- Drivers and cars are not assigned at random. The strongest drivers and teams often end up together.
+- Performance changes over time: cars develop, drivers improve or decline, and teams make operational gains or losses.
+- Results also reflect circuit characteristics, weather, strategy, reliability, safety cars, and incidents.
+- Teammates give useful comparisons because they share a team context, but they are still not perfect controlled experiments.
+- A driver moving to a new car is the most revealing test of portability—and one of the hardest predictions to make.
 
-## Run it
+There is no way to remove all ambiguity from historical race data. A useful model should acknowledge that ambiguity rather than hide it behind a single confident ranking.
 
-You need Node.js 24 or newer. Chrome or Chromium is needed only for the browser test.
+## Why this is interesting
+
+Separating driver and car performance makes familiar Formula 1 questions more concrete:
+
+- How much did a driver contribute beyond the machinery available to them?
+- How should we interpret a strong season in a weak car, or a quiet season in a dominant one?
+- What can a driver’s previous record tell us when they change teams?
+- How much of the grid’s order survives from one season to the next?
+
+It is also a useful modelling problem: the answer must be inferred from incomplete, changing, and highly confounded evidence. That makes uncertainty and out-of-sample testing as important as the rankings themselves.
+
+## The approach
+
+Car or Driver models driver and car pace jointly as hidden quantities that change over time. It uses race and qualifying comparisons, state-space filters, and an online pair-ranking learner to estimate dated driver and car levels.
+
+The published ratings combine these estimates and present them on a scale centred on 1,000. A rating is an estimate, not a fact about a person or a machine; the displayed uncertainty reflects how much the model can infer from the available results.
+
+This is a good attempt at the problem because it does not treat drivers or cars as fixed, isolated labels. It models both together, lets their estimates evolve, reports uncertainty, and evaluates forecasts using only information available before the weekend being predicted.
+
+The most demanding evaluation is a driver joining a new car. The model improves on simpler approaches in that setting, but this remains an open problem rather than a solved one. See [OPEN_PROBLEMS.md](OPEN_PROBLEMS.md) for the limitations and next questions.
+
+Further detail is available in:
+
+- [Hybrid model](docs/hybrid.md)
+- [State-space model](docs/state-space.md)
+- [Evaluation metrics](docs/metrics.md)
+- [Open problems](OPEN_PROBLEMS.md)
+
+## Run locally
+
+Node.js 24 or newer is required. Chrome or Chromium is needed only for browser tests.
 
 ```bash
-npm install        # development tools only (ESLint, Prettier); the site has no dependencies
-npm run serve      # http://localhost:8000/  (redirects to /site/)
+npm install
+npm run serve
 ```
+
+The site is available at `http://localhost:8000/` and redirects to `/site/`.
 
 ```bash
-npm test               # every Node test, including the golden-master hashes
-npm run lint           # ESLint and Prettier
-npm run test:browser   # drives the real site in headless Chrome
+npm test
+npm run lint
+npm run test:browser
 ```
 
-The server serves the repository root, so the page can import `packages/core/` and fetch `data/`. ES modules need `http`, not `file://`.
+The repository root is served so the site can import `packages/core/` and fetch `data/`. Use HTTP rather than `file://`.
 
-## How the site gets its numbers
+## Updating the published data
 
-The ratings are **computed once, when the site is published**, not in every visitor's browser. `node tools/build-model.mjs` builds the model from the CSV tables in `data/` and writes `data/model-latest.json` (the first screen), `data/model.json` (every weekend) and `data/export-rows.json` (the rows of every weekend, for anyone who wants them as a table; the site itself does not load it). The site downloads the other two. Each records a fingerprint of the data and of `packages/core/src`; `tests/test-model-file.mjs` fails if they are out of date, and it also checks that what a visitor sees equals a fresh build. After changing the data or the model, run `npm run build:data` and commit the result: it runs `tools/build-model.mjs`, `tools/build-teammate-graph.mjs` (the dated graph at `data/teammate-graph.json`), `tools/build-race-laps.mjs` (every driver's lap times for each season, `data/race-laps/`, behind the replay of the race), and `tools/build-tracks.mjs` (the circuit outlines, `site/assets/tracks.json`). A circuit that has not raced before needs an outline: add its file from `data/source/f1-circuits/` and a line in `SOURCE_FILES` in `tools/build-tracks.mjs` (the test fails until you do, or until you add the circuit to the few it lists as having none).
+The ratings are computed when the site is published, not in each visitor’s browser.
 
-The first screen needs about 0.06 MB; see [docs/deployment.md](docs/deployment.md) for the measurements.
+```bash
+npm run build:data
+```
+
+This rebuilds the rating files, teammate graph, race-lap data, and circuit assets from the source data and model code. After changing the model or data, commit the rebuilt output.
 
 ## Repository layout
 
-```
-site/                  The website: static files, no build step
-  index.html, css/, assets/
-  js/                  The pages (ratings, history, head-to-head, graph, insights, methodology, legal), routing, charts, the model loader
-  vendor/              Third-party fonts and KaTeX, served from the site itself, with their licences
-packages/
-  core/src/            The model: pure JavaScript with no DOM, runs in Node or the browser
-    state-space/         The joint state-space model: observations, filter, race-reads-qualifying link, build
-    hybrid/              The online ranking learner and fixed blend of driver/car levels
-    forecast/            Form trackers, head-to-head forecasts, what-if matchups
-    elo-*.js             A conventional Elo-style system, kept as a benchmark and for two small per-driver tracks
-    json-serialization.js  How the built model is written to and read from JSON
-  eval/src/            The evaluation harness: forecast scores, mover and teammate tests, synthetic worlds
-  research/            The scripts that produced the model: metric suite, calibration, simulations (Node); head fitting and the Insights numbers (Python)
-data/                  The race tables (CSV), their licence notice, and the built model files
-docs/                  Model notes (state-space, detach, diagnosis, metrics, evaluation, elo), design, compliance, deployment
-research/              Committed research results and the pre-registered acceptance rules
-tools/                 Local server, model and site builders, publication and live-site checks
-tests/                 Golden-master, regression, structure, compliance and browser tests
+```text
+site/             Static website and interface
+packages/core/    Rating models and forecasts
+packages/eval/    Evaluation harness
+packages/research/ Research scripts
+data/             Race data and published model files
+docs/             Methodology and operational documentation
+research/         Committed research results
+tools/            Local server and build tools
+tests/            Regression, compliance, and browser tests
 ```
 
-`packages/core` must never import from `site/` or touch browser globals; `tests/test-layering.mjs` enforces it.
+`packages/core` is independent of the browser and must not import from `site/`.
 
 ## Data and licences
 
 - **Code:** [MIT](LICENSE).
-- **Race data:** the tables in `data/` come from [TracingInsights/RaceData](https://github.com/TracingInsights/RaceData), which labels them CC0 but also credits [Jolpica-F1](https://github.com/jolpica/jolpica-f1) (CC BY-NC-SA 4.0) and Kaggle datasets that are reported to derive from the Ergast database. It does not say which table comes from which source, so this project follows the strictest licence involved.
-- **Ratings, findings, charts, text and the published data files:** [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/): credit, **non-commercial**, share-alike. The credit line and the full reasoning are in [data/NOTICE.md](data/NOTICE.md).
-- **Third-party files** in `site/vendor/` (Inter, Lexend Giga, KaTeX) keep their own licences, which are included.
-- **The circuit outlines** in `site/assets/tracks.json` come from [bacinger/f1-circuits](https://github.com/bacinger/f1-circuits) (MIT); their licence is in `site/assets/tracks-licence.txt` and the source files are in `data/source/f1-circuits/`.
-- **The drawing** in `site/assets/art/` is not covered by any of the licences above: all rights reserved unless its owner says otherwise (see the notice in that folder).
+- **Race data:** sourced from [TracingInsights/RaceData](https://github.com/TracingInsights/RaceData). See [data/NOTICE.md](data/NOTICE.md) for attribution and licensing context.
+- **Ratings, findings, charts, text, and published data files:** [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+- **Third-party files:** retain their own licences.
+- **Circuit outlines:** derived from [bacinger/f1-circuits](https://github.com/bacinger/f1-circuits) (MIT).
+- **Artwork:** see the notice in `site/assets/art/`.
 
-Because the data is non-commercial, so is this project: **no advertising, no affiliate links, no paid access.** [docs/compliance.md](docs/compliance.md), section 8, explains why and what would change it. Please do not use the ratings commercially.
+Because the underlying data is non-commercial, this project is non-commercial: no advertising, affiliate links, or paid access. Please do not use the ratings commercially.
 
 ## Privacy
 
-The site sets no cookies, has no analytics, and loads nothing from any other origin (fonts and formulas are served from the site itself, and a Content-Security-Policy makes the browser refuse anything else). It stores nothing on a visitor's device. These are properties that tests check, not only promises: `tests/test-compliance.mjs` checks the files, the browser test checks the running site, and `tools/check-live-site.mjs` checks the deployed one. [docs/compliance.md](docs/compliance.md) records the rules that were checked (GDPR, UK GDPR, ePrivacy and others), what was done, and what only the operator can do. It is a careful record, not legal advice.
-
-## Deploying
-
-The site is published on Cloudflare Pages. [docs/deployment.md](docs/deployment.md) has the costs (hosting is free; a domain is optional), the one-time setup, and how to keep the ratings current after each race.
+The site sets no cookies, has no analytics, and loads no resources from other origins. It stores nothing on a visitor’s device. See [docs/compliance.md](docs/compliance.md) for the implementation and checks.
 
 ## Contributing
 
-Issues and pull requests are welcome, within the non-commercial licence above.
+Issues and pull requests are welcome.
 
-- Read [CLAUDE.md](CLAUDE.md): the working guidelines, including how names are chosen (precise, professional, spelled out: `state-space`, not `ss`).
-- Run `npm run lint` and `npm test` before opening a pull request. If you change `packages/core/src` or the data, run `npm run build:data` too.
-- A change to the model's outputs changes the golden-master hashes in `tests/golden.json`; update them deliberately (`node tests/golden.mjs --update`) and say why.
-- If a change adds anything that loads, stores or collects data (a script, a font, an analytics call, a form), it needs to update the privacy notice and `docs/compliance.md` first.
+Before opening a pull request, run:
+
+```bash
+npm run lint
+npm test
+```
+
+If you change `packages/core/src` or `data/`, also run:
+
+```bash
+npm run build:data
+```
+
+Read [CLAUDE.md](CLAUDE.md) for repository conventions.
 
 ## Disclaimer
 
-The ratings are statistical estimates from past results, shown with their uncertainty. They are not facts about any person, not betting tips and not advice. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trademarks of Formula One Licensing B.V.
+These ratings are statistical estimates based on historical results. They are not facts about any person, not betting advice, and not professional advice.
+
+F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX, and related marks are trademarks of Formula One Licensing B.V.
