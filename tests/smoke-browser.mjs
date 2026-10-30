@@ -1675,11 +1675,11 @@ check(
   JSON.stringify({ insightsAtStart, insightsBox }),
 );
 check(
-  'the first slide is the contents: the twenty-one findings under five topics, and a slide for each after it, all drawn',
-  insightsAtStart.position === '1 / 22' &&
-    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents button[data-slide]').length")) === 21 &&
+  'the first slide is the contents: the twenty findings under five topics, and a slide for each after it, all drawn',
+  insightsAtStart.position === '1 / 21' &&
+    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents button[data-slide]').length")) === 20 &&
     (await evaluate("document.querySelectorAll('#insightsCard .deck-contents h3').length")) === 5 &&
-    (await evaluate("document.querySelectorAll('article.insight').length")) === 21 &&
+    (await evaluate("document.querySelectorAll('article.insight').length")) === 20 &&
     (await evaluate(
       "[...document.querySelectorAll('article.insight')].every((card) => card.querySelector('svg, table') && card.querySelector('.info'))",
     )) &&
@@ -1693,15 +1693,15 @@ check(
   })`),
 );
 // jumping from the contents, and sliding there
-await evaluate('document.querySelector(\'#insightsCard .deck-contents button[data-slide="13"]\').click()');
+await evaluate('document.querySelector(\'#insightsCard .deck-contents button[data-slide="12"]\').click()');
 await sleep(900);
 const jumped = JSON.parse(await insightsState());
 check(
   'a finding on the contents slide takes the card there (the track slides, the others are put out of reach, the address names it)',
-  jumped.position === '14 / 22' &&
-    jumped.open.join() === '13' &&
-    jumped.transform === 'translateX(-1300%)' &&
-    jumped.current.join() === '13,13' &&
+  jumped.position === '13 / 21' &&
+    jumped.open.join() === '12' &&
+    jumped.transform === 'translateX(-1200%)' &&
+    jumped.current.join() === '12,12' &&
     jumped.hash === '#/insights' &&
     jumped.slide === 'ageing',
   JSON.stringify(jumped),
@@ -1750,10 +1750,10 @@ await sleep(600);
 const atEnd = JSON.parse(await insightsState());
 check(
   'Next, the arrow keys, Home and End move along the slides',
-  afterNext.position === '15 / 22' &&
-    afterKeys.position === '13 / 22' &&
-    atHome.position === '1 / 22' &&
-    atEnd.position === '22 / 22' &&
+  afterNext.position === '14 / 21' &&
+    afterKeys.position === '12 / 21' &&
+    atHome.position === '1 / 21' &&
+    atEnd.position === '21 / 21' &&
     (await evaluate("document.getElementById('insightsNext').disabled")),
   JSON.stringify({ afterNext: afterNext.position, afterKeys: afterKeys.position, atHome: atHome.position, atEnd: atEnd.position }),
 );
@@ -1773,14 +1773,14 @@ await evaluate('document.querySelector(\'#insightsTicks button[data-slide="9"]\'
 await sleep(700);
 const fromTicks = JSON.parse(await insightsState());
 check(
-  'the list of slides beside the card (five topics, the contents and the twenty-one findings, clear of the card) and the ticks under its title move to a slide',
+  'the list of slides beside the card (five topics, the contents and the twenty findings, clear of the card) and the ticks under its title move to a slide',
   list.shown &&
-    list.buttons === 22 &&
+    list.buttons === 21 &&
     list.topics === 5 &&
     list.right < list.cardLeft &&
-    fromList.position === '6 / 22' &&
+    fromList.position === '6 / 21' &&
     fromList.current.join() === '5,5' &&
-    fromTicks.position === '10 / 22',
+    fromTicks.position === '10 / 21',
   JSON.stringify({ list, fromList: fromList.position, fromTicks: fromTicks.position }),
 );
 const topicHeads = JSON.parse(
@@ -1843,8 +1843,10 @@ check(
     (await evaluate("document.querySelectorAll('#methodologyTimelineChart polygon').length")) === 1,
 );
 check(
-  'the Methodology page does not mention Elo',
-  !(await evaluate("/\\bElo\\b/i.test(document.getElementById('methodologyCard').textContent)")),
+  'the published method does not use the teammate Elo comparison',
+  !(await evaluate(
+    "[...document.querySelectorAll('#methodologyCard .method-part:not(#method-other-studies):not(#method-references)')].some((part) => /\\bElo\\b/i.test(part.textContent))",
+  )),
 );
 check(
   'the methodology explains the published method without release history',
@@ -1867,16 +1869,16 @@ check(
   })()`),
 );
 check(
-  'methodology has its eight parts, the overview diagram, the settings tables and no unfilled placeholders',
-  (await evaluate("document.querySelectorAll('#methodologyCard .method-part').length")) === 8 &&
-    (await evaluate("document.querySelectorAll('#methodologyTrack .deck-slide').length")) === 9 &&
+  'methodology has its nine parts, the overview diagram, the settings tables and no unfilled placeholders',
+  (await evaluate("document.querySelectorAll('#methodologyCard .method-part').length")) === 9 &&
+    (await evaluate("document.querySelectorAll('#methodologyTrack .deck-slide').length")) === 10 &&
     (await evaluate("document.querySelectorAll('#methodologyCard .flow-stage').length")) >= 6 &&
     (await evaluate("document.querySelectorAll('#methodologyParams tbody tr').length")) >= 24 &&
     (await evaluate("document.querySelectorAll('#methodologyScoring tbody tr:not(.group)').length")) === 21 &&
     (await evaluate("document.querySelectorAll('#methodologyWindows tr').length")) === 4 &&
     !(await evaluate("/\\{\\{|undefined|NaN/.test(document.getElementById('methodologyCard').textContent)")),
 );
-// the Methodology is a card of slides: the contents and a slide for each of the eight parts; a link in the text that names a part (or a reference)
+// the Methodology is a card of slides: the contents and a slide for each part; a link in the text that names a part (or a reference)
 // leads to its slide, and the slide is in the address
 check(
   'the Methodology is a card of slides with a list of its parts, and the links in the text lead to the slide of the part or of the reference',
@@ -1902,16 +1904,30 @@ check(
       "JSON.stringify({ position: document.getElementById('methodologyPosition').textContent, shown: !document.getElementById('methodologyCard').querySelector('.deck-slide:not([inert]) .references') ? null : true })",
     );
     return (
-      first === '1 / 9' &&
-      third === '4 / 9' &&
+      first === '1 / 10' &&
+      third === '4 / 10' &&
       centered &&
       slide === 'method-ratings' &&
-      linked === '5 / 9' &&
-      JSON.parse(reference).position === '9 / 9' &&
+      linked === '5 / 10' &&
+      JSON.parse(reference).position === '10 / 10' &&
       JSON.parse(reference).shown === true &&
-      (await evaluate("document.querySelectorAll('#methodologyList button').length")) === 9
+      (await evaluate("document.querySelectorAll('#methodologyList button').length")) === 10
     );
   })(),
+);
+await evaluate('document.querySelector(\'#methodologyList button[data-slide="6"]\').click()');
+await sleep(500);
+check(
+  'the methodology comparison is reachable and distinguishes its four sources',
+  (await evaluate("document.querySelector('#methodologyCard .deck-slide:not([inert]) #method-other-studies') !== null")) &&
+    (await evaluate('document.querySelectorAll(\'#method-other-studies [data-jump^="ref-"]\').length')) === 4 &&
+    (await evaluate("document.querySelectorAll('#method-other-studies table').length")) === 2,
+);
+await evaluate('document.querySelector(\'#method-other-studies [data-jump="ref-20"]\').click()');
+await sleep(500);
+check(
+  'a comparison citation leads to the corresponding reference',
+  await evaluate("!!document.querySelector('#methodologyCard .deck-slide:not([inert]) #ref-20')"),
 );
 // Formulas are typeset by KaTeX, which the site serves itself.
 await sleep(3000);
@@ -2066,6 +2082,15 @@ check(
       && graph.scrollWidth <= graph.clientWidth + 1;
   })()`),
 );
+await evaluate('document.querySelector(\'#methodologyList button[data-slide="6"]\').click()');
+await sleep(450);
+check(
+  'the study comparison and its tables fit the methodology card on a phone',
+  await evaluate(`(() => {
+    const section = document.querySelector('#methodologyCard .deck-slide:not([inert]) #method-other-studies');
+    return !!section && [...section.querySelectorAll('.table-wrap')].every((wrap) => wrap.scrollWidth <= wrap.clientWidth + 1);
+  })()`),
+);
 // On a phone the Insights are a card across the screen, with no list beside it, and a swipe turns the slide
 await evaluate("location.hash = '#/insights'");
 await sleep(1200);
@@ -2081,7 +2106,7 @@ check(
     phoneCard.x + phoneCard.width <= 375 &&
     phoneCard.width > 300 &&
     (await evaluate("getComputedStyle(document.getElementById('insightsList')).display")) === 'none' &&
-    (await evaluate("document.getElementById('insightsPosition').textContent")) === '2 / 22',
+    (await evaluate("document.getElementById('insightsPosition').textContent")) === '2 / 21',
   JSON.stringify({ phoneCard, position: await evaluate("document.getElementById('insightsPosition').textContent") }),
 );
 // On a phone the ratings are a sheet: a tap on the car keeps it open, it stays clear of both pictures and above the text at the bottom
@@ -2134,7 +2159,7 @@ const linkedSlide = await evaluate(
 );
 check(
   'a link straight to a finding opens the card on that slide, drawn',
-  JSON.parse(linkedSlide).position === '21 / 22' && JSON.parse(linkedSlide).name === 'The biggest upsets' && JSON.parse(linkedSlide).drawn,
+  JSON.parse(linkedSlide).position === '20 / 21' && JSON.parse(linkedSlide).name === 'The biggest upsets' && JSON.parse(linkedSlide).drawn,
   linkedSlide,
 );
 for (const [view, ready] of [

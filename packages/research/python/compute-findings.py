@@ -236,48 +236,50 @@ def equal_car_titles(tables):
 
 
 def era_timing(tables):
-    """Move each driver's strongest five consecutive full seasons through the observed fields, holding their portable pace fixed."""
-    entrants = season_entrants(tables)
+    """Move each eligible career, including gaps, across complete historical seasons."""
     last_year = int(tables.drivers.year.max()) - 1
+    entrants = season_entrants(tables)
     entrants = entrants[entrants.year <= last_year].copy()
     season_rounds = tables.drivers.groupby('year')['round'].max()
     entrants = entrants[entrants.apply(lambda row: row.races >= 0.5 * season_rounds[row.year], axis=1)]
     fields = {year: group for year, group in entrants.groupby('year')}
-    years = list(range(tables.first_year, last_year + 1))
-    nodes, weights = hermgauss(24)
+    nodes, weights = hermgauss(48)
+    points = tables.results[tables.results.year.between(tables.first_year, last_year)].groupby(['year', 'driverId']).points.sum().reset_index()
+    champions = points.sort_values('points', ascending=False).groupby('year').head(1).driverId.value_counts().to_dict()
 
     def chance_against_field(pace, uncertainty, field):
-        # Integrate over the focal driver's uncertain rating; each rival's rating is Normal.
-        if field.empty:
-            return 1.0
-        rival_pace = field.driverRating.to_numpy()
-        rival_sd = np.maximum(field.uncertainty.to_numpy(), 0.1)
         samples = pace + np.sqrt(2) * max(uncertainty, 0.1) * nodes
-        win_given_sample = ndtr((samples[:, None] - rival_pace) / rival_sd).prod(axis=1)
-        return float(np.dot(weights, win_given_sample) / np.sqrt(np.pi))
+        rival_sd = np.maximum(field.uncertainty.to_numpy(), 0.1)
+        probabilities = ndtr((samples[:, None] - field.driverRating.to_numpy()) / rival_sd).prod(axis=1)
+        return float(np.dot(weights, probabilities) / np.sqrt(np.pi))
 
     rows = []
-    for name, career in entrants.groupby('driver'):
-        by_year = career.set_index('year')
-        windows = [start for start in years[:-4] if all(year in by_year.index for year in range(start, start + 5))]
-        if not windows:
+    for driver_id, career in entrants.groupby('driverId'):
+        career = career.sort_values('year')
+        if len(career) < 3:
             continue
-        prime_start = max(windows, key=lambda start: by_year.loc[start:start + 4, 'driverRating'].mean())
-        prime = by_year.loc[prime_start:prime_start + 4]
-        shifts = []
-        for start in years[:-4]:
+        first, last = int(career.year.iloc[0]), int(career.year.iloc[-1])
+        span = last - first + 1
+        placements = []
+        for start in range(tables.first_year, last_year - span + 2):
             total = 0.0
-            for offset, row in enumerate(prime.itertuples()):
-                field = fields[start + offset]
-                field = field[field.driver != name]
-                total += chance_against_field(row.driverRating, row.uncertainty, field)
-            shifts.append(dict(start=start, titles=rounded(total, 2)))
-        actual = next(row['titles'] for row in shifts if row['start'] == prime_start)
-        median = rounded(np.median([row['titles'] for row in shifts]), 2)
-        best = max(shifts, key=lambda row: row['titles'])
-        rows.append(dict(name=name, primeStart=prime_start, actual=actual, median=median,
-                         advantage=rounded(actual - median, 2), bestStart=best['start'], best=best['titles'], shifts=shifts))
-    return sorted(rows, key=lambda row: row['advantage'])
+            for season in career.itertuples():
+                field = fields[start + int(season.year) - first]
+                field = field[field.driverId != driver_id]
+                total += chance_against_field(season.driverRating, season.uncertainty, field)
+            placements.append((start, total))
+        alternatives = [value for start, value in placements if start != first]
+        if not alternatives:
+            continue
+        actual_titles = champions.get(driver_id, 0)
+        if max(alternatives) < 0.25 and not actual_titles:
+            continue
+        actual_era = next(value for start, value in placements if start == first)
+        rows.append(dict(name=career.driver.iloc[0], first=first, last=last, seasons=len(career), actualTitles=actual_titles,
+                         actualEra=rounded(actual_era, 2), median=rounded(np.median(alternatives), 2),
+                         minimum=rounded(min(alternatives), 2), maximum=rounded(max(alternatives), 2),
+                         alternatives=len(alternatives)))
+    return sorted(rows, key=lambda row: row['actualEra'] - row['median'])
 
 
 def career_driver_and_car(tables):

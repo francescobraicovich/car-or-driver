@@ -356,116 +356,68 @@ export const INSIGHT_CARDS = [
     id: 'equal-car-titles',
     topic: 'stars',
     kind: 'model',
-    title: 'The championships with equal cars',
+    title: 'Championships with equal cars, across eras',
     label: 'Titles with equal cars',
     lead: (data) => {
-      const actual = data.equalCarTitles.actual;
-      const leaders = data.equalCarTitles.expected.slice(0, 5);
-      const describe = ([name, expected]) => `${expected.toFixed(1)} ${surname(name)} (${actual[name] || 0})`;
-      const listed = leaders.map(describe);
-      const first = data.equalCarTitles.seasons[0].year;
-      const last = data.equalCarTitles.seasons.at(-1).year;
-      return `If every car were the same, ${first} to ${last} would have produced about ${listed.slice(0, -1).join(', ')} and ${listed.at(-1)} titles, with the titles each actually won in brackets.`;
+      const first = data.eraTiming[0];
+      return `${first.name} won ${first.actualTitles} titles in the rated period. With equal cars, the model estimates ${first.actualEra.toFixed(2)} in those years and a median of ${first.median.toFixed(2)} across ${first.alternatives} other career placements.`;
     },
     body: () =>
       legendHtml([
-        ['var(--s3)', 'Expected titles if cars were equal'],
-        ['var(--ink-3)', 'Titles actually won'],
-      ]) + '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="seasons"></div>',
-    how: () =>
-      'For each season the driver with the highest season-average portable rating wins, with the approximate filter uncertainty simulated (6,000 draws) so a close call is split between drivers instead of awarded to one. The hybrid blend adds uncertainty not included in these draws. "Expected" sums those probabilities. The first seasons have less rating history and incomplete qualifying records, so their estimates deserve extra caution. The table lists the seasons where the likeliest best driver was not the champion.',
+        ['var(--s1)', 'Actual titles'],
+        ['var(--s2)', 'Equal cars: actual years'],
+        ['var(--s3)', 'Equal cars: other eras, median'],
+      ]) +
+      '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="details"></div><div class="insight-extra" data-chart="seasons"></div>',
+    how: (data) => {
+      const seasons = data.equalCarTitles.seasons;
+      return `The bars compare actual titles with equal-car expectations in the driver's own years and the median over other eras. Each driver's eligible career seasons from ${seasons[0].year}–${seasons.at(-1).year} are moved as a sequence through every other placement that fits in those completed years, preserving gaps. For each season, we estimate the chance of having the highest season-average portable driver rating against that year's field in equal cars; these chances add to expected titles. The table shows the minimum and maximum across alternative placements. Rows are sorted by the equal-car estimate in actual years minus the alternative median, so the least favorable timing appears first. Drivers need at least three eligible seasons, at least one alternative placement, and either an actual title or at least 0.25 expected titles in some alternative. A season is eligible after at least eight races and half its rounds. Careers and titles before ${seasons[0].year} and the incomplete current season are excluded; long careers have fewer possible placements. A driver's own historical entry is removed from each comparison field. Ratings are relative to their original grids and eras are not perfectly comparable; the estimate does not simulate championships or how rivals might change. Rating uncertainty is approximate and omits the hybrid blend, and early seasons have less rating history and incomplete qualifying records. Differences from actual titles also reflect real cars and other factors, so they do not prove luck. The second table lists seasons where the likeliest best driver was not the champion, using 6,000 draws of approximate rating uncertainty.`;
+    },
     draw: (data, root) => {
-      const { expected, actual, seasons } = data.equalCarTitles;
-      const items = expected.slice(0, 9).map(([name, value]) => ({
-        label: name,
+      const rows = data.eraTiming;
+      const items = rows.map((row) => ({
+        label: row.name,
         bars: [
-          { value, color: 'var(--s3)', name: 'expected', text: value.toFixed(1) },
-          { value: actual[name] || 0, color: 'var(--ink-3)', name: 'actual', text: String(actual[name] || 0) },
+          { value: row.actualTitles, color: 'var(--s1)', name: 'actual titles', text: String(row.actualTitles) },
+          { value: row.actualEra, color: 'var(--s2)', name: 'equal cars in actual years', text: row.actualEra.toFixed(2) },
+          { value: row.median, color: 'var(--s3)', name: 'equal cars in other eras, median', text: row.median.toFixed(2) },
         ],
       }));
-      const maximum = Math.max(8, Math.ceil(Math.max(...items.flatMap((item) => item.bars.map((bar) => bar.value))) / 2) * 2);
+      const maximum = Math.max(2, Math.ceil(Math.max(...items.flatMap((item) => item.bars.map((bar) => bar.value))) / 2) * 2);
       mountChart(
         chartIn(root, 'main'),
         (svg, width) =>
           drawHorizontalBars(svg, width, items, {
-            marginLeft: 140,
-            rowHeight: 34,
+            marginLeft: Math.min(145, width * 0.38),
+            marginRight: 48,
+            rowHeight: 54,
             ticks: Array.from({ length: maximum / 2 + 1 }, (_, index) => index * 2),
             minimum: 0,
             maximum: maximum + 0.2,
           }),
-        () => horizontalBarsHeight(items.length, 34),
+        () => horizontalBarsHeight(items.length, 54),
       );
-      const differing = seasons.filter((row) => row.likeliestBest !== row.champion);
-      chartIn(root, 'seasons').innerHTML = tableHtml(
-        ['Season', 'Likeliest best driver', 'Chance', 'Champion'],
-        differing.map((row) => [row.year, row.likeliestBest, `${formatInteger(row.probability * 100)}%`, row.champion]),
-        [2],
-      );
-    },
-  },
-  {
-    id: 'era-timing',
-    topic: 'stars',
-    kind: 'model',
-    title: 'Were some drivers born at the wrong time?',
-    label: 'Lucky and unlucky eras',
-    lead: (data) => {
-      const eligible = data.eraTiming.filter((row) => row.best >= 0.2);
-      const unlucky = eligible[0];
-      const lucky = eligible.at(-1);
-      return `In this equal-car thought experiment, ${unlucky.name}'s strongest five seasons earn ${unlucky.actual.toFixed(2)} expected titles in their real years, against ${unlucky.median.toFixed(2)} in a typical five-year window. ${lucky.name} gained most from his timing: ${lucky.actual.toFixed(2)} against ${lucky.median.toFixed(2)}.`;
-    },
-    body: () =>
-      legendHtml([
-        ['var(--s2)', 'Fewer expected titles in actual years than a typical era'],
-        ['var(--s1)', 'More expected titles in actual years'],
-      ]) + '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="examples"></div>',
-    how: () =>
-      'Each dot is a driver with five consecutive full seasons and at least 0.2 expected equal-car titles in some placement. We take their strongest five-season stretch by average portable driver rating, keep each season’s rating and model uncertainty fixed, and move that sequence through every complete five-year window from 1994. Each year, we estimate the chance of being the highest-rated driver in an equal car against that year’s field; the five chances add to expected titles. Horizontal position is the median over possible windows; vertical position is actual years minus that median. A negative vertical value suggests an unlucky era, a positive one a fortunate era. This does not reconstruct real championships: ratings are relative to each year’s grid, eras are not perfectly comparable, drivers would affect their new rivals, and model uncertainty omits uncertainty in the hybrid blend.',
-    draw: (data, root) => {
-      const rows = data.eraTiming.filter((row) => row.best >= 0.2);
-      const maxX = Math.ceil(Math.max(...rows.map((row) => row.median)) * 2) / 2;
-      const minY = Math.floor(Math.min(...rows.map((row) => row.advantage)) * 4) / 4;
-      const maxY = Math.ceil(Math.max(...rows.map((row) => row.advantage)) * 4) / 4;
-      const points = rows.map((row) => ({
-        x: row.median,
-        y: row.advantage,
-        label: Math.abs(row.advantage) >= 0.3 || row === rows[0] ? surname(row.name) : '',
-        priority: Math.abs(row.advantage),
-        color: row.advantage < 0 ? 'var(--s2)' : 'var(--s1)',
-        radius: 5,
-        tooltip: `${row.name}: ${row.primeStart}–${row.primeStart + 4} prime; ${row.actual.toFixed(2)} expected titles then, ${row.median.toFixed(2)} in a typical era; best placement ${row.bestStart}–${row.bestStart + 4}: ${row.best.toFixed(2)}`,
-      }));
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width, height) =>
-          drawScatter(svg, width, height, {
-            xDomain: [0, maxX + 0.2],
-            yDomain: [minY - 0.1, maxY + 0.1],
-            xTicks: Array.from({ length: Math.floor(maxX / 0.5) + 1 }, (_, index) => index * 0.5),
-            yTicks: Array.from({ length: Math.round((maxY - minY) / 0.25) + 1 }, (_, index) => minY + index * 0.25),
-            xFormat: formatOneDecimal,
-            yFormat: formatOneDecimal,
-            xTitle: 'expected titles in a typical five-year era',
-            yTitle: 'actual years minus typical era',
-            guides: [[0, 0, maxX + 0.2, 0]],
-            points,
-          }),
-        (width) => Math.max(320, Math.min(450, width * 0.63)),
-      );
-      const examples = [rows[0], rows[1], rows.at(-2), rows.at(-1)];
-      chartIn(root, 'examples').innerHTML = tableHtml(
-        ['Driver', 'Prime', 'Real years', 'Typical era', 'Best placement'],
-        examples.map((row) => [
-          row.name,
-          `${row.primeStart}–${row.primeStart + 4}`,
-          row.actual.toFixed(2),
-          row.median.toFixed(2),
-          `${row.bestStart}–${row.bestStart + 4}: ${row.best.toFixed(2)}`,
-        ]),
-        [2, 3, 4],
-      );
+      chartIn(root, 'details').innerHTML =
+        '<h4>Career comparison</h4>' +
+        tableHtml(
+          ['Driver', 'Actual titles', 'Equal cars: actual years', 'Other eras: median', 'Other eras: range'],
+          rows.map((row) => [
+            row.name,
+            row.actualTitles,
+            row.actualEra.toFixed(2),
+            row.median.toFixed(2),
+            `${row.minimum.toFixed(2)}–${row.maximum.toFixed(2)}`,
+          ]),
+          [1, 2, 3, 4],
+        );
+      const differing = data.equalCarTitles.seasons.filter((row) => row.likeliestBest !== row.champion);
+      chartIn(root, 'seasons').innerHTML =
+        '<h4>Seasons where the likeliest best driver was not the champion</h4>' +
+        tableHtml(
+          ['Season', 'Likeliest best driver', 'Chance', 'Champion'],
+          differing.map((row) => [row.year, row.likeliestBest, `${formatInteger(row.probability * 100)}%`, row.champion]),
+          [2],
+        );
     },
   },
   {

@@ -30,6 +30,8 @@
     "research:suite": "node packages/research/node/suite.mjs",
     "research:diagnose": "node packages/research/node/diagnose.mjs",
     "research:heads-metrics": "node packages/research/node/heads-metrics.mjs",
+    "research:rane-benchmark": "node research/rane-benchmark.mjs",
+    "research:literature-benchmark": "node research/literature-benchmark.mjs",
     "research:findings": "node packages/research/node/export-ratings-table.mjs tmp/findings && python3 packages/research/python/compute-findings.py tmp/findings",
     "check:publication": "node tools/check-publication.mjs",
     "build:model": "node tools/build-model.mjs && node tools/build-teammate-graph.mjs",

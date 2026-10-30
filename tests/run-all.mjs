@@ -24,6 +24,8 @@ const TESTS = [
   'test-hybrid.mjs',
   'test-state-space-forecast.mjs',
   'test-eval.mjs',
+  'test-rane-benchmark.mjs',
+  'test-literature-benchmark.mjs',
   'test-synthetic-v2.mjs',
   'test-data-manifest.mjs',
   'test-gp-refresh.mjs',

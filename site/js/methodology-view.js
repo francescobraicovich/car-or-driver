@@ -1,4 +1,4 @@
-// The Methodology: a card of slides (slide-deck.js), one for each of the eight parts of the text (methodology-content.js), with its diagram
+// The Methodology: a card of slides (slide-deck.js), one for each part of the text (methodology-content.js), with its diagram
 // (methodology-diagram.js) and the settings filled in, the settings tables, and the accuracy figures and charts from the loaded model.
 import { state } from './state.js';
 import { renderPlot } from './chart-renderer.js';
@@ -256,7 +256,7 @@ function drawModelFigures() {
   const name = drawRatingThroughTime($('methodologyTimelineChart'), state.model);
   if (name)
     $('methodologyTimelineCaption').textContent =
-      `${name}: the published rating after each of their last 48 weekends, with the race filter’s approximate standard deviation either side. The band does not include uncertainty from the full hybrid blend.`;
+      `${name}: the published combined-pace rating after each of their last 48 weekends, with its approximate filter-derived standard deviation either side. The band omits uncertainty from the full hybrid blend.`;
 }
 
 function render() {
@@ -294,13 +294,14 @@ const LABELS = {
   'method-ratings': 'Ratings',
   'method-forecasts': 'Forecasts',
   'method-backtesting': 'Backtesting',
+  'method-other-studies': 'Other studies',
   'method-limits': 'Limits',
   'method-settings': 'Settings',
   'method-references': 'References',
 };
 
 export function initMethodology() {
-  // the eight parts of the text, one slide each (a link in the text that names a part leads to its slide: slide-deck.js)
+  // One slide per part; a link in the text that names a part leads to its slide (slide-deck.js).
   const text = document.createElement('div');
   text.innerHTML = filledText();
   const parts = [...text.querySelectorAll(':scope > .method-part')];

@@ -2,7 +2,7 @@
 
 **How much of a Formula 1 result is the driver, and how much is the car?**
 
-Car or Driver is a free, non-commercial website and the research code behind it. It rates every driver and every car at every race weekend since 1994, with an error bar on every number, and shows the ratings, their history, head-to-head forecasts and twenty-one findings about the split between driver and car.
+Car or Driver is a free, non-commercial website and the research code behind it. It rates every driver and every car at every race weekend since 1994, with an error bar on every number, and shows the ratings, their history, head-to-head forecasts and twenty findings about the split between driver and car.
 
 It is an independent personal project. It is not affiliated with Formula 1, the FIA or any team or driver.
 
@@ -30,6 +30,8 @@ It is judged by how well it forecasts each weekend from earlier weekends only (a
 | Ratings alone, 2016–2025 (inspected during selection) | 0.6931 | 0.3989 | **0.3965** |
 
 The hardest test is a driver in a new car, forecast from the rating before the move and nothing else: the hybrid improves this test but remains above 0.5 loss in every historical period (see [OPEN_PROBLEMS.md](OPEN_PROBLEMS.md)). The shipped method and its evidence are in [docs/hybrid.md](docs/hybrid.md); the filters it builds on are in [docs/state-space.md](docs/state-space.md). The historical metric definitions are in [docs/metrics.md](docs/metrics.md).
+
+The [Rane benchmark](research/rane-benchmark.md) scores pre-weekend hybrid ratings against the 2014–2024 race rankings using the paper's Kendall tau measure. The [literature comparison](research/literature-benchmark.md) also examines teammate and Bayesian models, with the limits of each comparison documented.
 
 ## Run it
 

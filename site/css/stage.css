@@ -2537,6 +2537,9 @@ body[data-page='graph'] .track-title {
   text-transform: none;
   white-space: normal;
 }
+.deck-text #method-other-studies .params tbody :is(td.left, th.left) {
+  min-width: 0;
+}
 .deck-text .params tbody th[scope='row'].left {
   font-family: var(--mono);
   font-weight: 650;
