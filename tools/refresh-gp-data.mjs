@@ -32,6 +32,41 @@ function indexed(rows, key, name) {
   return out;
 }
 
+// The upstream source can reassign numeric IDs. Preserve the IDs already published
+// here by matching driver references, and give new drivers unused local IDs.
+function driverIds(old, next) {
+  const references = (rows, name) => {
+    const byId = new Map();
+    const byRef = new Map();
+    for (const row of rows) {
+      if (!/^\d+$/.test(row.driverId) || !row.driverRef || row.driverRef === '\\N' || byId.has(row.driverId) || byRef.has(row.driverRef))
+        throw Error(`${name}: missing or ambiguous driver ID or reference`);
+      byId.set(row.driverId, row);
+      byRef.set(row.driverRef, row);
+    }
+    return { byId, byRef };
+  };
+  const previous = references(old.drivers, 'published drivers');
+  const candidate = references(next.drivers, 'fetched drivers');
+  const assigned = new Set(previous.byId.keys());
+  const mapping = new Map();
+  let lastId = Math.max(...[...assigned].map(Number));
+  for (const row of candidate.byId.values()) {
+    const existing = previous.byRef.get(row.driverRef);
+    if (existing) mapping.set(row.driverId, existing.driverId);
+    else {
+      let id = row.driverId;
+      if (assigned.has(id)) {
+        do id = String(++lastId);
+        while (assigned.has(id));
+      }
+      assigned.add(id);
+      mapping.set(row.driverId, id);
+    }
+  }
+  return mapping;
+}
+
 /** Validate a candidate snapshot against the committed one. No files are changed here. */
 export function assessGpRefresh(previous, candidate, now = new Date()) {
   const old = readTables(previous);
@@ -91,6 +126,7 @@ export function assessGpRefresh(previous, candidate, now = new Date()) {
   }
   if (!added.length) return { updated: false, latest: latestOld, added: [], historicalCorrections };
 
+  const mappedDrivers = driverIds(old, next);
   const last = added.at(-1);
   const scheduled = [...nextRaces.values()].filter((race) => raceOrder(race) > raceOrder(latestOld) && raceOrder(race) <= raceOrder(last));
   if (scheduled.some((race) => !newCompleted.has(race.raceId))) throw Error('a scheduled race was skipped in the fetched results');
@@ -100,6 +136,8 @@ export function assessGpRefresh(previous, candidate, now = new Date()) {
     const results = next.results.filter((row) => row.raceId === race.raceId);
     const qualifying = next.qualifying.filter((row) => row.raceId === race.raceId);
     const laps = next.lap_times.filter((row) => row.raceId === race.raceId);
+    if ([...results, ...qualifying, ...laps].some((row) => !mappedDrivers.has(row.driverId)))
+      throw Error(`${race.name}: a driver is missing from the fetched driver table`);
     if (
       results.length < 10 ||
       new Set(results.map((row) => row.driverId)).size < 10 ||
@@ -120,11 +158,15 @@ export function mergeGpRefresh(previous, candidate, assessment) {
   const old = readTables(previous);
   const next = readTables(candidate);
   const addedIds = new Set(assessment.added.map((race) => race.raceId));
+  const mappedDrivers = driverIds(old, next);
   return Object.fromEntries(
     MANIFEST_FILES.map((name) => {
       const table = name.slice(0, -4);
       const oldKeys = new Set(old[table].map(keyOf[table]));
-      const append = next[table].filter((row) => {
+      const candidateRows = ['drivers', 'results', 'qualifying', 'lap_times'].includes(table)
+        ? next[table].map((row) => ({ ...row, driverId: mappedDrivers.get(row.driverId) }))
+        : next[table];
+      const append = candidateRows.filter((row) => {
         if (oldKeys.has(keyOf[table](row))) return false;
         return ['results', 'qualifying', 'lap_times', 'races'].includes(table) ? addedIds.has(row.raceId) : true;
       });
