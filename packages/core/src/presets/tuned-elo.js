@@ -2,7 +2,7 @@
 // (presets/model-settings.js) and its own learning settings.
 //
 // Chosen on 2008-2011 walk-forward combined log-loss, with 2012-2015 held out as a pre-registered gate
-// (0.342687 -> 0.338212; see research/backbone/protocol-4.json and research/backbone/era-transfer.json).
+// (0.342687 -> 0.338212; see research/evaluation/backbone/protocol-4.json and research/evaluation/backbone/era-transfer.json).
 // packages/research/node/search-backbone.mjs and gate-backbone.mjs rerun that procedure.
 //
 // The weight-defining parameters (alpha, cap, tmBoost, qTmBoost, orderW, paceW, partialExp, qualOn) are the

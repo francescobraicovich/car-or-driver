@@ -41,8 +41,8 @@ The forecast-head architecture was kept and refitted on 259,211 dated hybrid-inp
 ## Reproduce and audit
 
 - Blend settings: `packages/core/src/presets/hybrid.js`; production learners: `packages/core/src/hybrid/`.
-- Candidate scorecards, confidence intervals, and prefix-invariance checks: `research/alternative-ratings.md` and `research/alternative-rating-results/`.
-- Refitted forecast report: `research/state-space/selection-report.json`; training rows: `packages/research/node/export-state-space-rows.mjs`.
+- Candidate scorecards, confidence intervals, and prefix-invariance checks: `research/hybrid/`.
+- Refitted forecast report: `research/forecast/selection-report.json`; training rows: `packages/research/node/export-state-space-rows.mjs`.
 - Build the site data with `npm run build:data`; `tests/test-model-file.mjs` compares the downloaded files to a fresh core build.
 
-The site does not currently use dated power-unit reports as rating inputs. A replacement report identifies a component change, but without a clean matched estimate of its pace effect it would confound the car and driver split. Raw lap times already contribute to the race filter's pair evidence. Experimental lap-sequence neural models and component reports are documented in `research/alternative-ratings.md`; they were not selected for publication.
+The site does not currently use dated power-unit reports as rating inputs. A replacement report identifies a component change, but without a clean matched estimate of its pace effect it would confound the car and driver split. Raw lap times already contribute to the race filter's pair evidence. The retired experimental models and their reports are available in Git history.

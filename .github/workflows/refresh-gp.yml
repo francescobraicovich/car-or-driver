@@ -28,7 +28,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Fetch the public race tables into a temporary directory
-        run: node packages/research/node/fetch-data.mjs tmp/gp-fetch
+        run: node tools/fetch-data.mjs tmp/gp-fetch
       - name: Validate new Grand Prix and preserve published history
         id: race
         run: node tools/refresh-gp-data.mjs tmp/gp-fetch
@@ -49,7 +49,7 @@ jobs:
         run: node tools/check-gp-build.mjs
       - name: Recompute Insights
         if: steps.race.outputs.updated == 'true'
-        run: npm run research:findings
+        run: npm run build:findings
       - name: Update data-dependent regression fingerprints
         if: steps.race.outputs.updated == 'true'
         run: node tests/golden.mjs --update
@@ -65,7 +65,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/*.csv data/manifest.json data/model*.json data/export-rows.json data/teammate-graph.json data/race-laps site/assets/tracks.json site/js/insights-data.js tests/golden.json
+          git add data/*.csv data/manifest.json data/model*.json data/teammate-graph.json data/race-laps site/assets/tracks.json site/js/insights-data.js tests/golden.json
           git diff --cached --check
           git commit -m "Update GP data"
           git push origin HEAD:main

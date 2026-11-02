@@ -1,4 +1,4 @@
-// The ratings the site downloads (data/model.json, data/export-rows.json) must be current, and must show a visitor what a fresh build of the model shows.
+// The ratings the site downloads (data/model.json, data/model-latest.json) must be current, and must show a visitor what a fresh build of the model shows.
 //   1. The fingerprint in the file matches the data and the model source now (otherwise: node tools/build-model.mjs).
 //   2. The serializer keeps integers, strings, Maps, Sets and non-finite numbers exactly, and other numbers to better than 1e-8.
 //   3. Against a fresh build, to a relative tolerance of 1e-5: every weekend's ratings and error bars, every history, the circuit and wet-weather
@@ -41,13 +41,8 @@ assert.throws(() => serialize({ $: 1 }), TypeError);
 // 1. the committed files
 const { sourceHash, lastRace } = await modelSourceHash();
 const file = deserialize(await readFile('data/model.json', 'utf8'));
-const exportFile = deserialize(await readFile('data/export-rows.json', 'utf8'));
 assert.equal(file.format, FILE_FORMAT);
-for (const [name, f] of [
-  ['model.json', file],
-  ['export-rows.json', exportFile],
-])
-  assert.equal(f.sourceHash, sourceHash, `data/${name} was built from other data or other model code: run node tools/build-model.mjs`);
+assert.equal(file.sourceHash, sourceHash, 'data/model.json was built from other data or other model code: run node tools/build-model.mjs');
 assert.deepEqual(file.lastRace, lastRace);
 const latestFile = deserialize(await readFile('data/model-latest.json', 'utf8'));
 assert.equal(latestFile.sourceHash, sourceHash, 'data/model-latest.json is out of date: run node tools/build-model.mjs');
@@ -124,7 +119,6 @@ function same(expected, actual, path) {
 }
 same(trimmedModel(fresh), shipped, 'model');
 assert.ok(compared > 100000, 'the comparison covered the whole model');
-same(fresh.exportRows, exportFile.rows, 'exportRows');
 for (const snap of shipped.snaps)
   assert.ok(!('audit' in snap) && !('eloDiag' in snap) && !('eloRace' in snap.drivers[0]), 'trimmed fields are absent');
 assert.ok(

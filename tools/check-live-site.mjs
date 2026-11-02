@@ -63,7 +63,6 @@ for (const extra of [
   '../data/model-latest.json',
   '../data/model.json',
   '../data/teammate-graph.json',
-  '../data/export-rows.json',
   '../data/race-laps/2026.json',
   './assets/tracks.json',
   './assets/tracks-licence.txt',

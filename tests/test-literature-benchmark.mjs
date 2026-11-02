@@ -7,7 +7,7 @@ import {
   scorePairs,
   seededRandom,
   simulateRanking,
-} from '../research/literature-metrics.mjs';
+} from '../research/benchmarks/literature-metrics.mjs';
 
 assert.equal(probability(0, 75), 0.5);
 assert.ok(Math.abs(probability(75, 75) - 10 / 11) < 1e-12);

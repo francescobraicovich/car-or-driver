@@ -5,7 +5,8 @@ node_modules/
 research/**/*.log
 research/*.log
 dist/
-research/state-space/pairs.jsonl
+research/forecast/pairs.jsonl
+research/forecast/heads-candidate.js
 
 .claude/launch.json
 tmp/

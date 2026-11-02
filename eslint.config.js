@@ -7,7 +7,7 @@ export default [
     ignores: [
       'node_modules/**',
       'data/**',
-      'research/**',
+      'research/forecast/heads-candidate.js',
       'dist/**',
       'site/vendor/**',
       'packages/core/src/elo-forecast-heads.js',
@@ -29,13 +29,5 @@ export default [
   {
     files: ['site/**/*.js'],
     languageOptions: { globals: { ...globals.browser } },
-  },
-  {
-    files: ['tests/worker-test-shim.mjs'],
-    languageOptions: { globals: { self: 'writable' } },
-  },
-  {
-    files: ['site/js/build-worker.js'],
-    languageOptions: { globals: { ...globals.worker } },
   },
 ];

@@ -1,18 +1,17 @@
 // Settings of the joint state-space ratings. See docs/state-space.md for how they were chosen.
 //
 // Chosen on data through 2011 at most (the race settings of the cross-session link: through 2011, with 2012-2015 as a gate; see
-// docs/detach.md and research/eval/ACCEPTANCE-detach.md). The 2016+ window was read once for the link, after every setting here was fixed.
+// docs/detach.md). The 2016+ window was read once for the link, after every setting here was fixed.
 // Qualifying is an independent filter. The race filter reads the qualifying filter's driver and car levels (`link`, state-space/qualifying-link.js).
 //
-//   race:  fitted on 2002-2007 (all-pairs loss), then the new-stint settings on 2002-2011. `varInfl`, added by the hill climb
-//          (docs/history/state-space-hill-climbing-1.md), only scales the reported error bars: the other settings are as they were before it.
-//   qual:  the same procedure, plus the rookie debut adjustment (fitted on 2002-2011 by state-space-rookies.mjs).
+//   race:  fitted on 2002-2007 (all-pairs loss), then the new-stint settings on 2002-2011. `varInfl` only scales the reported error bars.
+//   qual:  the same procedure, plus the rookie debut adjustment fitted on 2002-2011.
 export const STATE_SPACE = {
   // cross-session link (state-space/qualifying-link.js): the race filter's driver strength is beta * (qualifying driver level) + its own residual level, a car's is
   // gamma * (qualifying car level) + its own. beta = 0 and gamma = 0 is the independent race filter of before.
   link: { beta: 0.4, gamma: 0.3 },
   // arrival adaptation (state-space/qualifying-link.js `arrivalOffsets`): a known offset of -dip * rho^n points in a driver's n-th weekend at a new team (established drivers). OFF (dip 0):
-  // it passes the gates of research/eval/ACCEPTANCE-detach.md Amendment 8 and removes most of the first-weekend shortfall of movers, but it is a prior keyed to a team
+  // it passed the evaluation gates and removes most of the first-weekend shortfall of movers, but it is a prior keyed to a team
   // change, so adopting it is a project decision (docs/metrics.md). Reference setting: dip 20, rho 0.5.
   adapt: { dip: 0, rho: 0.5, minPrior: 10, span: 12 },
   race: {

@@ -120,7 +120,7 @@ export const ABOUT_HTML = String.raw`
 
 <h3>Licence of what this site publishes</h3>
 <p>
-  The ratings, the findings, the charts and the data files the site publishes (<code>model-latest.json</code>, <code>model.json</code>, <code>export-rows.json</code> and the files of laps in <code>race-laps/</code>) are derived from the data above, so they are shared under the same terms: <a href="{{dataLicenceUrl}}" rel="noopener noreferrer">{{dataLicenceName}}</a>. In short, you may copy, share and adapt them if you give credit (the credit above, and a link to this site), say what you changed, do not use them commercially, and share what you make from them under the same licence.
+  The ratings, the findings, the charts and the data files the site publishes (<code>model-latest.json</code>, <code>model.json</code> and the files of laps in <code>race-laps/</code>) are derived from the data above, so they are shared under the same terms: <a href="{{dataLicenceUrl}}" rel="noopener noreferrer">{{dataLicenceName}}</a>. In short, you may copy, share and adapt them if you give credit (the credit above, and a link to this site), say what you changed, do not use them commercially, and share what you make from them under the same licence.
 </p>
 <p>The text and the charts are shared under the same licence. The program code is open source under the MIT licence: <a href="{{repositoryUrl}}" rel="noopener noreferrer">the source code is on GitHub</a>. The third-party components listed below keep their own licences.</p>
 <p>To cite this site: {{operatorName}} (2026), <i>{{name}}: ratings of Formula 1 drivers and cars since 1994</i>, <span id="citationAddress"></span>.</p>

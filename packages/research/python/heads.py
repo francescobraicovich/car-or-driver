@@ -1,7 +1,7 @@
 """Fit, score and export the forecast heads: a regularised linear model or boosted trees over the rating
 inputs, the form trackers and the weekend's own evidence, one fit per forecast mode (post, pre, qual, grid).
 
-The designs in research/selection.json were chosen by chronological validation (data through 2007, scored on
+The designs in research/forecast/selection.json were chosen by chronological validation (data through 2007, scored on
 2008-2011; data through 2011, scored on 2012-2015) and are frozen. finalize-state-space.py refits them on the
 state-space rating inputs; the Elo heads in packages/core/src/elo-forecast-heads.js are an earlier fit of the same designs.
 
@@ -13,7 +13,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import HistGradientBoostingClassifier
 
 ROOT = Path(__file__).resolve().parents[3]
-OUT = ROOT / 'research'
+OUT = ROOT / 'research' / 'forecast'
 CONTEXT = ['same_team', 'refuel', 'early', 'q_missing', 'inexperienced']
 SIGNALS = ['race_driver', 'race_car', 'qual_driver', 'qual_car']
 FORMS = [f'{c}_{s}{suffix}' for c in ['qual', 'lap', 'order'] for s in ['fast', 'slow'] for suffix in ['', '_driver', '_track']]

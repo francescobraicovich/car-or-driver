@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { aggregateRaces, scoreRace } from '../research/rane-benchmark-metrics.mjs';
+import { aggregateRaces, scoreRace } from '../research/benchmarks/rane-benchmark-metrics.mjs';
 
 const ordered = [
   { strength: 3, position: 1 },

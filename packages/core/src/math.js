@@ -14,10 +14,6 @@ export function clamp(x, a, b) {
   return Math.max(a, Math.min(b, x));
 }
 
-export function pct(x) {
-  return `${(100 * x).toFixed(1)}%`;
-}
-
 /** Last element (avoids Array.prototype.at for older Safari). */
 export function last(a) {
   return a[a.length - 1];

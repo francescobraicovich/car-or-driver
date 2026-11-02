@@ -1,114 +1,68 @@
 # Car or Driver
 
-**How much of a Formula 1 result is the driver, and how much is the car?**
+How much of a Formula 1 result is the driver, and how much is the car? This static, non-commercial website separates their ratings after every race weekend since 1994. It includes rating histories, head-to-head forecasts, a teammate graph, race replays, twenty findings and the methodology behind them.
 
-Car or Driver is a free, non-commercial website and the research code behind it. It rates every driver and every car at every race weekend since 1994, with an error bar on every number, and shows the ratings, their history, head-to-head forecasts and twenty findings about the split between driver and car.
+## Run and verify
 
-It is an independent personal project. It is not affiliated with Formula 1, the FIA or any team or driver.
-
-## What is on the site
-
-| Page | What it shows |
-| --- | --- |
-| **Front page and ratings** | A drawing of a car and a driver's hands under the title. Point at either (or at its word in the title) and a box opens, the picture turns black and white, the blue version shows inside the box and a panel opens on the left with the ratings of the cars or of the drivers: a ranking after any weekend since 1994, all rows at once, each with its error and a bar; a slider to play through the seasons as a bar-chart race (the rows glide to their new places and the bars grow); the rating to show; and a way to select entries and compare them. Press to keep the panel open (the address then is `#/ratings`). Where a circuit outline is available, the real race of the weekend is replayed at the bottom right, at 1 to 50 times the real speed (you choose), from the lap times of every car (overtakes, pit stops, safety cars and red flags included), with a live timing table of places and gaps; pointing at a driver highlights his dot and his row of the table. |
-| **History** | Rating lines for the drivers or cars you choose, over any range of seasons. It opens over the ratings, in the panel, with a button to go back (`#/history`). |
-| **Head to head** | The chance that one driver finishes ahead of another, from their ratings and recent form, with what-if options (another season, another car, wet weather). It opens over the ratings, in the panel (`#/head-to-head`): the same car for both drivers to begin with, a Prime button for each, and a date to drag along their rating history, which takes the race at the bottom right to that Grand Prix. |
-| **Graph** | Every driver in the data, positioned by mean year raced and a teammate-only graph score. Scrub to any weekend, inspect each driver's published rating, age and complete teammate record, and follow favorable and unfavorable links. On wide screens, selecting a driver also lights their dot in the mini GP (`#/graph`). |
-| **Insights** | Twenty findings, each with a chart and a note on how it was computed: how much of a race is the car, who the best teammates are, how the order survives a winter, and more. They are a slide show on a card over the front page (`#/insights`): the contents first, then a slide for each finding, reached from the contents, from the list of slides beside the card, with the arrow keys or a swipe. |
-| **Methodology** | How the numbers are computed, from first principles, written for readers with university mathematics and no knowledge of Formula 1; with references. |
-
-## How it works, in one paragraph
-
-Each driver and each car has a hidden pace that changes over time. We see results, not that pace directly. Joint state-space filters estimate driver and car levels from race and qualifying comparisons; an online pair-ranking learner supplies a third portable driver estimate. The published hybrid blends these dated estimates after every weekend: driver 48% race filter, 32% qualifying filter, 20% online ranking; car 75% race filter, 25% qualifying filter. The driver–car fit stays inside the learners rather than the posted driver rating. Ratings are centred on **1,000** on a 75-point scale: a lead of 75 points gives 10:1 odds in the basic pair model. The displayed uncertainty is an approximation from the state-space filter and does not include the complete blend.
-
-It is judged by how well it forecasts each weekend from earlier weekends only (a coin flip scores 0.6931 on this measure; lower is better):
-
-| Window | Coin flip | Previous published ratings | Hybrid ratings |
-| --- | --- | --- | --- |
-| Ratings alone, 2008–2011 | 0.6931 | 0.3846 | **0.3820** |
-| Ratings alone, 2012–2015 | 0.6931 | 0.3640 | **0.3601** |
-| Ratings alone, 2016–2025 (inspected during selection) | 0.6931 | 0.3989 | **0.3965** |
-
-The hardest test is a driver in a new car, forecast from the rating before the move and nothing else: the hybrid improves this test but remains above 0.5 loss in every historical period (see [OPEN_PROBLEMS.md](OPEN_PROBLEMS.md)). The shipped method and its evidence are in [docs/hybrid.md](docs/hybrid.md); the filters it builds on are in [docs/state-space.md](docs/state-space.md). The historical metric definitions are in [docs/metrics.md](docs/metrics.md).
-
-The [Rane benchmark](research/rane-benchmark.md) scores pre-weekend hybrid ratings against the 2014–2024 race rankings using the paper's Kendall tau measure. The [literature comparison](research/literature-benchmark.md) also examines teammate and Bayesian models, with the limits of each comparison documented.
-
-## Run it
-
-You need Node.js 24 or newer. Chrome or Chromium is needed only for the browser test.
+Use Node.js 24 or newer. The website has no runtime dependencies; npm installs development tools.
 
 ```bash
-npm install        # development tools only (ESLint, Prettier); the site has no dependencies
-npm run serve      # http://localhost:8000/  (redirects to /site/)
-```
-
-```bash
-npm test               # every Node test, including the golden-master hashes
+npm ci
+npm run serve          # http://localhost:8000/ redirects to /site/
+npm test               # model, data, website and deployment regression tests
 npm run lint           # ESLint and Prettier
-npm run test:browser   # drives the real site in headless Chrome
+npm run test:browser    # complete website checks; requires Chrome/Chromium
+npm run build          # assemble the deployable static website in dist/
 ```
 
-The server serves the repository root, so the page can import `packages/core/` and fetch `data/`. ES modules need `http`, not `file://`.
+ES modules require HTTP. Serve the repository root so the website can load `packages/core/` and `data/` at their deployed paths.
 
-## How the site gets its numbers
+## Find your way around
 
-The ratings are **computed once, when the site is published**, not in every visitor's browser. `node tools/build-model.mjs` builds the model from the CSV tables in `data/` and writes `data/model-latest.json` (the first screen), `data/model.json` (every weekend) and `data/export-rows.json` (the rows of every weekend, for anyone who wants them as a table; the site itself does not load it). The site downloads the other two. Each records a fingerprint of the data and of `packages/core/src`; `tests/test-model-file.mjs` fails if they are out of date, and it also checks that what a visitor sees equals a fresh build. After changing the data or the model, run `npm run build:data` and commit the result: it runs `tools/build-model.mjs`, `tools/build-teammate-graph.mjs` (the dated graph at `data/teammate-graph.json`), `tools/build-race-laps.mjs` (every driver's lap times for each season, `data/race-laps/`, behind the replay of the race), and `tools/build-tracks.mjs` (the circuit outlines, `site/assets/tracks.json`). A circuit that has not raced before needs an outline: add its file from `data/source/f1-circuits/` and a line in `SOURCE_FILES` in `tools/build-tracks.mjs` (the test fails until you do, or until you add the circuit to the few it lists as having none).
+| Directory | Responsibility | Start here |
+| --- | --- | --- |
+| `site/` | Browser interface, styles, artwork and locally served vendor assets | [Interface and module map](docs/architecture.md) |
+| `packages/core/src/` | Published rating model, observations, forecasts and serialization | [Current model](docs/hybrid.md) |
+| `packages/eval/src/` | Evaluation library: dated scores, transfers and synthetic worlds | [Evaluation methods](docs/evaluation.md) |
+| `packages/research/` | Node and Python programs that reproduce the model, forecasts and findings | [Analysis programs](packages/research/README.md) |
+| `data/` | Source race tables, provenance, circuit sources and generated website data | [Data pipeline](data/README.md) |
+| `research/` | Supporting evidence and reproducible comparisons, grouped by purpose | [Evidence index](research/README.md) |
+| `tools/` | Data builders, local server, deployment assembly and publication checks | [Maintenance tasks](docs/architecture.md#maintenance-tasks) |
+| `tests/` | Model regressions, source integrity, browser behavior and publication checks | [Verification](docs/architecture.md#verification) |
+| `docs/` | Current technical and operational documentation | [Documentation index](docs/README.md) |
 
-The first screen needs about 0.06 MB; see [docs/deployment.md](docs/deployment.md) for the measurements.
+The checkout contains the website and the code, data and evidence needed to maintain or explain it. Retired model candidates, superseded experiment logs and earlier designs belong in Git history.
 
-## Repository layout
+## Update the website data
 
-```
-site/                  The website: static files, no build step
-  index.html, css/, assets/
-  js/                  The pages (ratings, history, head-to-head, graph, insights, methodology, legal), routing, charts, the model loader
-  vendor/              Third-party fonts and KaTeX, served from the site itself, with their licences
-packages/
-  core/src/            The model: pure JavaScript with no DOM, runs in Node or the browser
-    state-space/         The joint state-space model: observations, filter, race-reads-qualifying link, build
-    hybrid/              The online ranking learner and fixed blend of driver/car levels
-    forecast/            Form trackers, head-to-head forecasts, what-if matchups
-    elo-*.js             A conventional Elo-style system, kept as a benchmark and for two small per-driver tracks
-    json-serialization.js  How the built model is written to and read from JSON
-  eval/src/            The evaluation harness: forecast scores, mover and teammate tests, synthetic worlds
-  research/            The scripts that produced the model: metric suite, calibration, simulations (Node); head fitting and the Insights numbers (Python)
-data/                  The race tables (CSV), their licence notice, and the built model files
-docs/                  Model notes (state-space, detach, diagnosis, metrics, evaluation, elo), design, compliance, deployment
-research/              Committed research results and the pre-registered acceptance rules
-tools/                 Local server, model and site builders, publication and live-site checks
-tests/                 Golden-master, regression, structure, compliance and browser tests
+The browser downloads precomputed ratings. After changing model code or accepting new race data:
+
+```bash
+npm run build:data       # ratings, teammate graph, race laps and circuit outlines
+npm run build:findings   # Insights; requires the Python requirements below
+npm test
+npm run lint
 ```
 
-`packages/core` must never import from `site/` or touch browser globals; `tests/test-layering.mjs` enforces it.
+Install findings and forecast fitting dependencies with `python3 -m pip install -r requirements-research.txt`. Ordinary website development and the Node tests do not need Python.
 
-## Data and licences
+`model-latest.json` supplies the first screen; `model.json` supplies complete history and forecast state. `teammate-graph.json`, seasonal race-lap files and `site/assets/tracks.json` supply the graph and replay. Source fingerprints and regression tests prevent publication of stale generated files. Keep generated files committed. Update `tests/golden.json` deliberately only when the underlying data or model behavior changes.
 
-- **Code:** [MIT](LICENSE).
-- **Race data:** the tables in `data/` come from [TracingInsights/RaceData](https://github.com/TracingInsights/RaceData), which labels them CC0 but also credits [Jolpica-F1](https://github.com/jolpica/jolpica-f1) (CC BY-NC-SA 4.0) and Kaggle datasets that are reported to derive from the Ergast database. It does not say which table comes from which source, so this project follows the strictest licence involved.
-- **Ratings, findings, charts, text and the published data files:** [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/): credit, **non-commercial**, share-alike. The credit line and the full reasoning are in [data/NOTICE.md](data/NOTICE.md).
-- **Third-party files** in `site/vendor/` (Inter, Lexend Giga, KaTeX) keep their own licences, which are included.
-- **The circuit outlines** in `site/assets/tracks.json` come from [bacinger/f1-circuits](https://github.com/bacinger/f1-circuits) (MIT); their licence is in `site/assets/tracks-licence.txt` and the source files are in `data/source/f1-circuits/`.
-- **The drawing** in `site/assets/art/` is not covered by any of the licences above: all rights reserved unless its owner says otherwise (see the notice in that folder).
+The daily Grand Prix workflow validates complete new weekends, preserves published historical records, rebuilds website data and runs checks before committing an update. See [data/README.md](data/README.md). Deployment uses Cloudflare Pages; configuration and publication checks are in [docs/deployment.md](docs/deployment.md).
 
-Because the data is non-commercial, so is this project: **no advertising, no affiliate links, no paid access.** [docs/compliance.md](docs/compliance.md), section 8, explains why and what would change it. Please do not use the ratings commercially.
+## Read the methodology
 
-## Privacy
+The published driver rating blends the race filter (48%), qualifying filter (32%) and online ranking learner (20%). Car ratings blend race (75%) and qualifying (25%). Ratings are centred on 1,000; displayed uncertainty is an approximation from the race filter, not a calibrated interval for the complete blend.
 
-The site sets no cookies, has no analytics, and loads nothing from any other origin (fonts and formulas are served from the site itself, and a Content-Security-Policy makes the browser refuse anything else). It stores nothing on a visitor's device. These are properties that tests check, not only promises: `tests/test-compliance.mjs` checks the files, the browser test checks the running site, and `tools/check-live-site.mjs` checks the deployed one. [docs/compliance.md](docs/compliance.md) records the rules that were checked (GDPR, UK GDPR, ePrivacy and others), what was done, and what only the operator can do. It is a careful record, not legal advice.
+[The hybrid methodology](docs/hybrid.md) records the exact calculation, measured comparisons, selection caveats and reproduction commands. [Known limitations](docs/limitations.md) records unresolved model problems. The website's Methodology page gives the reader-facing explanation.
 
-## Deploying
+## Licences and privacy
 
-The site is published on Cloudflare Pages. [docs/deployment.md](docs/deployment.md) has the costs (hosting is free; a domain is optional), the one-time setup, and how to keep the ratings current after each race.
+- Program code: [MIT](LICENSE).
+- Race data, derived ratings, findings and published text: **non-commercial**, attribution and share-alike; see [data/NOTICE.md](data/NOTICE.md) for provenance and licence details.
+- Vendor fonts, KaTeX and circuit outlines retain their included licences. Artwork has [separate terms](site/assets/art/NOTICE.txt).
+- The website uses no cookies, analytics, third-party requests or browser storage. [The compliance record](docs/compliance.md) and automated checks document these properties.
 
-## Contributing
+Read [CLAUDE.md](CLAUDE.md) before contributing. Core modules must remain independent of the website interface; preserve model output during refactors and run the checks above.
 
-Issues and pull requests are welcome, within the non-commercial licence above.
-
-- Read [CLAUDE.md](CLAUDE.md): the working guidelines, including how names are chosen (precise, professional, spelled out: `state-space`, not `ss`).
-- Run `npm run lint` and `npm test` before opening a pull request. If you change `packages/core/src` or the data, run `npm run build:data` too.
-- A change to the model's outputs changes the golden-master hashes in `tests/golden.json`; update them deliberately (`node tests/golden.mjs --update`) and say why.
-- If a change adds anything that loads, stores or collects data (a script, a font, an analytics call, a form), it needs to update the privacy notice and `docs/compliance.md` first.
-
-## Disclaimer
-
-The ratings are statistical estimates from past results, shown with their uncertainty. They are not facts about any person, not betting tips and not advice. F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trademarks of Formula One Licensing B.V.
+This independent project is not affiliated with Formula 1, the FIA, teams or drivers. Ratings are statistical estimates, not facts about individuals or betting advice.

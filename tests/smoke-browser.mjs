@@ -70,8 +70,12 @@ const send = (method, params = {}) =>
     waiting.set(n, resolve);
     ws.send(JSON.stringify({ id: n, method, params }));
   });
-const evaluate = async (expression) =>
-  (await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result?.result?.value;
+const evaluate = async (expression) => {
+  const response = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
+  const exception = response.result?.exceptionDetails;
+  if (exception) throw Error(exception.exception?.description || exception.text);
+  return response.result?.result?.value;
+};
 
 await send('Runtime.enable');
 await send('Log.enable');
@@ -1712,7 +1716,7 @@ const interactiveDot = JSON.parse(
   dot.focus();
   const tooltip = dot.closest('[data-chart]').querySelector('.insight-point-tooltip');
   const focused = !tooltip.hidden && tooltip.textContent === dot.getAttribute('aria-label');
-  dot.click();
+  dot.dispatchEvent(new MouseEvent('click', { bubbles: true }));
   const tapped = tooltip.dataset.pinned === 'true' && !tooltip.hidden;
   dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   return JSON.stringify({ focused, tapped, escaped: tooltip.hidden });

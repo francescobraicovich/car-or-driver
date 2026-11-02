@@ -61,7 +61,7 @@ Teammate pairs are weighted 8: they are the hardest subset (loss about 0.52 agai
 
 ## Settings
 
-`packages/core/src/presets/tuned-elo.js` holds the settings, chosen on 2008–2011 walk-forward combined log-loss with 2012–2015 as a pre-registered gate (0.342687 → 0.338212; `research/backbone/protocol-4.json`). The tuning window matters more than the search budget: scoring 120 random parameter sets per era shows backbone quality correlates 0.96–0.98 between any two windows from 2008 and −0.16 to 0.00 between 2000–2007 and anything later (`research/backbone/era-transfer.json`), so the settings are tuned on the modern era only.
+`packages/core/src/presets/tuned-elo.js` holds the settings, chosen on 2008–2011 walk-forward combined log-loss with 2012–2015 as a pre-registered gate (0.342687 → 0.338212; `research/evaluation/backbone/protocol-4.json`). The tuning window matters more than the search budget: scoring 120 random parameter sets per era shows backbone quality correlates 0.96–0.98 between any two windows from 2008 and −0.16 to 0.00 between 2000–2007 and anything later (`research/evaluation/backbone/era-transfer.json`), so the settings are tuned on the modern era only.
 
 `npm run research:backbone` runs an annealed parallel search (8 chains; about 80 s on a 10-core laptop; `--evals 300` takes about 27 s) and `npm run research:gate` scores a candidate on the held-out window. The tool is fast because the pairwise hazard probability has a closed form (`headToHeadWithHazard`, checked against the per-lap loop to 1e-14), and because a lean build with a parameter-independent cache scores a candidate in about 67 ms.
 
@@ -75,7 +75,7 @@ Form trackers (`forecast/form.js`) keep fast and slow estimates of recent form f
 
 The heads (`forecast/inference.js`, `elo-forecast-heads.js`) are ensembles of a regularised logistic model and boosted trees, in four modes: **post** (after qualifying: adds the common-session gap, the Q1/Q2/Q3 gaps, team qualifying form and the grid), **pre** (Thursday: no current-weekend evidence), **qual** and **grid** (grid slots only). Driver reversal is enforced, so P(A beats B) + P(B beats A) = 1. Inputs use binary32 precision with magnitudes below 1e-7 set to zero, identically in Python and JavaScript, because JSON parsers differed by about 1e-15 and a boosted tree split on that noise.
 
-The designs (`research/selection.json`) were selected on two chronological folds (fit through 2007, validate 2008–2011; fit through 2011, validate 2012–2015), with no random pair split. They are refitted through 2007, 2011 and 2015 for forecasts from 2008, 2012 and 2016, and frozen after that.
+The designs (`research/forecast/selection.json`) were selected on two chronological folds (fit through 2007, validate 2008–2011; fit through 2011, validate 2012–2015), with no random pair split. They are refitted through 2007, 2011 and 2015 for forecasts from 2008, 2012 and 2016, and frozen after that.
 
 | Forecast | Selected design | Mean validation loss |
 |---|---|---:|
@@ -122,4 +122,4 @@ npm run research:gate                                 # score a candidate on the
 node tests/test-elo.mjs                               # head fixtures, no look-ahead, symmetry, backtest parity
 ```
 
-The heads' fixtures are in `research/inference-fixtures.json` and the frozen results in `research/final-results.json`. The head designs are refitted by `packages/research/python/finalize-state-space.py` (see [state-space.md](state-space.md)) using `packages/research/python/heads.py`.
+The heads' fixtures are in `tests/fixtures/elo-inference.json` and the frozen results in `tests/fixtures/elo-results.json`. The head designs are refitted by `packages/research/python/finalize-state-space.py` (see [state-space.md](state-space.md)) using `packages/research/python/heads.py`.

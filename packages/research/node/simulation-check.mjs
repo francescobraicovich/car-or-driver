@@ -5,7 +5,7 @@
 //
 // `--set` overrides a world parameter (`wetSpread=0.9`, `race.sdC=40`, `sigmaStint=0.2`, `numberOne.race=0`; JSON values allowed).
 // The window scored is 2008-2011 (the out-of-fit window available up to 2011); with --last 2015 it is 2008-2015, the window of
-// research/eval/baseline.txt. It reads the real CALENDAR of the weeks it covers and nothing of the real results beyond the
+// research/evaluation/baseline.txt. It reads the real CALENDAR of the weeks it covers and nothing of the real results beyond the
 // slices it prints for comparison.
 import { loadData } from './common.mjs';
 import { STATE_SPACE } from '../../core/src/presets/state-space.js';
