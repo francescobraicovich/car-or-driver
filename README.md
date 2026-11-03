@@ -52,6 +52,8 @@ The daily Grand Prix workflow validates complete new weekends, preserves publish
 
 ## Read the methodology
 
+[The project overview](docs/project-overview.md) explains the problem, motivation and approach.
+
 The published driver rating blends the race filter (48%), qualifying filter (32%) and online ranking learner (20%). Car ratings blend race (75%) and qualifying (25%). Ratings are centred on 1,000; displayed uncertainty is an approximation from the race filter, not a calibrated interval for the complete blend.
 
 [The hybrid methodology](docs/hybrid.md) records the exact calculation, measured comparisons, selection caveats and reproduction commands. [Known limitations](docs/limitations.md) records unresolved model problems. The website's Methodology page gives the reader-facing explanation.

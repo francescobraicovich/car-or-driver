@@ -2,6 +2,7 @@
 
 | Task | Read |
 | --- | --- |
+| Understand the project’s purpose | [Project overview](project-overview.md) |
 | Locate website modules or maintain the build | [Architecture and maintenance](architecture.md) |
 | Understand the published ratings | [Hybrid model](hybrid.md), then [state-space filters](state-space.md) |
 | Understand forecasts and their evaluation | [Evaluation](evaluation.md) and [metric definitions](metrics.md) |

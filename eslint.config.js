@@ -6,6 +6,7 @@ export default [
     // Generated data and research artefacts are not linted.
     ignores: [
       'node_modules/**',
+      'tmp/**',
       'data/**',
       'research/forecast/heads-candidate.js',
       'dist/**',

@@ -1,27 +1,27 @@
 {
-  "version": "8019dfda05c831c6",
+  "version": "491b695e2c2870e3",
   "lastRace": {
     "year": 2026,
-    "round": 18,
-    "name": "United States Grand Prix",
-    "date": "2026-10-25"
+    "round": 19,
+    "name": "Mexico City Grand Prix",
+    "date": "2026-11-01"
   },
   "files": {
     "results.csv": {
-      "bytes": 1676108,
-      "sha256": "ecdc5d97a23770f51bc2cd069848ba869a00782c69c011a99ff60d0f15a3b44c"
+      "bytes": 1677642,
+      "sha256": "71e55a06f9fb99e7366b0d6d958a881ca4fdbe0dc0a6ce52def18bbc0ab838f4"
     },
     "qualifying.csv": {
-      "bytes": 465237,
-      "sha256": "2ac3d8b61fb1f12c39772f2eb9dcd5cead639ec887731b740d9cbd38e3679175"
+      "bytes": 466233,
+      "sha256": "8b019ef6269ad51ba12377178a7be0981f5a1d3f33445a9a62708ab80b71165d"
     },
     "races.csv": {
       "bytes": 173330,
       "sha256": "15a272a3cba1a68ab509f71db277d923852ec2c97591c148a8bda425ff19d9a3"
     },
     "drivers.csv": {
-      "bytes": 95700,
-      "sha256": "9ec4ca4453fac2de58d44b12945b7a628ca4da8d7bbb61751f9e45edc89c5218"
+      "bytes": 95843,
+      "sha256": "358f4ce686b8f8cd5d0369802d4d3b01b88de29063ef114c696f8af3e33aab64"
     },
     "constructors.csv": {
       "bytes": 17648,
@@ -32,8 +32,8 @@
       "sha256": "056ef28b4b09c65fb94a2ea1cc2ac485ad55837735c4144337ea7229091bfc31"
     },
     "lap_times.csv": {
-      "bytes": 24892634,
-      "sha256": "cfedf712730dbb2d050c1d94535457663bb2328cd52691d75bbe7261fb700a75"
+      "bytes": 24932801,
+      "sha256": "456eb679656dafcbdffc28f4a8d7324bcd2d5419ed9d5daaf6fcf7f2c97d6b50"
     },
     "circuits.csv": {
       "bytes": 10206,
