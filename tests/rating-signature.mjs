@@ -3,7 +3,9 @@
 import { createHash } from 'node:crypto';
 
 export const CHUNK_SIZE = 256;
-export const RELATIVE_TOLERANCE = 1e-9;
+// Linux x64 Node 24 versus the original macOS fixture showed a maximum
+// scaled chunk-moment difference of 1.13e-8 in CI run 41862204539.
+export const RELATIVE_TOLERANCE = 2e-8;
 
 export function ratingSignature(value) {
   const shape = createHash('sha256');
@@ -82,12 +84,14 @@ export function compareRatingSignatures(actual, expected) {
     }
   }
   if (failures.length) {
+    const first = failures[0];
     failures.sort((a, b) => (b.scaledError || Infinity) - (a.scaledError || Infinity));
     return {
       equal: false,
       reason: 'numeric chunks differ',
       failedStatistics: failures.length,
       tolerance: RELATIVE_TOLERANCE,
+      first,
       worst: failures.slice(0, 12),
     };
   }

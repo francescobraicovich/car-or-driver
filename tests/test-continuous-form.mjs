@@ -84,7 +84,8 @@ assert.equal(
   '941ccb58a8b3a3d7a939c22c2fe0065a8085fe9b60228a44adeaa56a63604048',
   'fixture is anchored to the original reference',
 );
-const comparison = compareRatingSignatures(ratingSignature(ratingValues(referenceRuns)), fixture);
+const referenceValues = ratingValues(referenceRuns);
+const comparison = compareRatingSignatures(ratingSignature(referenceValues), fixture);
 assert.ok(comparison.equal, `long-term driver/car states and predictions match the frozen reference: ${JSON.stringify(comparison)}`);
 // A small real change in one rating must not hide in a full-build aggregate;
 // representable last-bit noise is allowed across engines and processors.
@@ -95,6 +96,22 @@ assert.ok(compareRatingSignatures(ratingSignature(noise), controlSignature).equa
 const changed = { rating: [...control.rating] };
 changed.rating[111] += 0.01;
 assert.equal(compareRatingSignatures(ratingSignature(changed), controlSignature).equal, false, 'a 0.01-point rating change is detected');
+for (const weekend of [30, 600]) {
+  const record = referenceValues.qual.post[weekend][0].map((entry) => entry[1]).find((driver) => Number.isFinite(driver.m));
+  assert.ok(record, `reference qualifying driver exists at weekend ${weekend}`);
+  const original = record.m;
+  try {
+    record.m += 0.01;
+    assert.equal(
+      compareRatingSignatures(ratingSignature(referenceValues), fixture).equal,
+      false,
+      `a 0.01-point change in a reference qualifying rating is detected at weekend ${weekend}`,
+    );
+  } finally {
+    record.m = original;
+  }
+}
+
 assert.equal(
   compareRatingSignatures(ratingSignature({ rating: control.rating.slice(1) }), controlSignature).equal,
   false,
