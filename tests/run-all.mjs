@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const TESTS = [
+  'test-continuous-form.mjs',
   'golden.mjs',
   'test-fast-paths.mjs',
   'test-qualifying-outliers.mjs',
@@ -20,7 +21,6 @@ const TESTS = [
   'test-form-shift.mjs',
   'test-form-state.mjs',
   'test-current-form-candidates.mjs',
-  'test-continuous-form.mjs',
   'test-scenario.mjs',
   'test-rookie-prior.mjs',
   'test-lineage.mjs',

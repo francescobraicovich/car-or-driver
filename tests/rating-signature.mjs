@@ -61,20 +61,35 @@ export function compareRatingSignatures(actual, expected) {
     actual.chunkSize !== expected.chunkSize ||
     actual.chunks.length !== expected.chunks.length
   )
-    return { equal: false, reason: 'rating structure or value count changed' };
+    return {
+      equal: false,
+      reason: 'rating structure or value count changed',
+      actual: { shape: actual.shape, count: actual.count, chunkSize: actual.chunkSize, chunks: actual.chunks.length },
+      expected: { shape: expected.shape, count: expected.count, chunkSize: expected.chunkSize, chunks: expected.chunks.length },
+    };
+  const failures = [];
   for (let i = 0; i < expected.chunks.length; i++) {
     const actualChunk = actual.chunks[i];
     const reference = expected.chunks[i];
     if (actualChunk.length !== 5 || reference.length !== 5) return { equal: false, reason: `invalid chunk ${i}` };
     const scales = [reference[0], reference[1], reference[0], reference[4], reference[4]];
     for (let j = 0; j < scales.length; j++) {
-      if (
-        !Number.isFinite(actualChunk[j]) ||
-        !Number.isFinite(reference[j]) ||
-        Math.abs(actualChunk[j] - reference[j]) > RELATIVE_TOLERANCE * Math.max(1, scales[j])
-      )
-        return { equal: false, reason: `numeric chunk ${i}, statistic ${j} changed` };
+      const scale = Math.max(1, scales[j]);
+      const absoluteError = Math.abs(actualChunk[j] - reference[j]);
+      const scaledError = absoluteError / scale;
+      if (!Number.isFinite(actualChunk[j]) || !Number.isFinite(reference[j]) || scaledError > RELATIVE_TOLERANCE)
+        failures.push({ chunk: i, statistic: j, actual: actualChunk[j], expected: reference[j], absoluteError, scale, scaledError });
     }
+  }
+  if (failures.length) {
+    failures.sort((a, b) => (b.scaledError || Infinity) - (a.scaledError || Infinity));
+    return {
+      equal: false,
+      reason: 'numeric chunks differ',
+      failedStatistics: failures.length,
+      tolerance: RELATIVE_TOLERANCE,
+      worst: failures.slice(0, 12),
+    };
   }
   return { equal: true };
 }

@@ -85,7 +85,7 @@ assert.equal(
   'fixture is anchored to the original reference',
 );
 const comparison = compareRatingSignatures(ratingSignature(ratingValues(referenceRuns)), fixture);
-assert.ok(comparison.equal, `long-term driver/car states and predictions match the frozen reference: ${comparison.reason}`);
+assert.ok(comparison.equal, `long-term driver/car states and predictions match the frozen reference: ${JSON.stringify(comparison)}`);
 // A small real change in one rating must not hide in a full-build aggregate;
 // representable last-bit noise is allowed across engines and processors.
 const control = { rating: Array.from({ length: 512 }, (_, i) => 900 + i / 10) };
