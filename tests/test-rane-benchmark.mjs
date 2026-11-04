@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-import { aggregateRaces, scoreRace } from '../research/rane-benchmark-metrics.mjs';
-import { benchmarkRatings as raneRatings } from '../research/rane-benchmark.mjs';
-import { benchmarkRatings as literatureRatings } from '../research/literature-benchmark.mjs';
+import { aggregateRaces, scoreRace } from '../research/benchmarks/rane-benchmark-metrics.mjs';
+import { benchmarkRatings as raneRatings } from '../research/benchmarks/rane-benchmark.mjs';
+import { benchmarkRatings as literatureRatings } from '../research/benchmarks/literature-benchmark.mjs';
 import { runPublishedRatings, runSession, carLineage } from '../packages/core/src/state-space/build.js';
 import { hybridRatings } from '../packages/core/src/hybrid/ratings.js';
 

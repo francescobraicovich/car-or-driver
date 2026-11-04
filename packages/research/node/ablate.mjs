@@ -1,4 +1,4 @@
-// Real-data ablation of the final model (strict mover scores): retune only, link only, both. Output: research/eval/ablation-strict.txt
+// Real-data ablation of the final model (strict mover scores): retune only, link only, both. Output: research/evaluation/ablation-strict.txt
 import { stateSpaceRun } from '../../eval/src/index.js';
 import { evalConfig, FINAL, load, SHIPPED } from './strict-eval.mjs';
 

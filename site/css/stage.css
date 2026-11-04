@@ -1352,9 +1352,8 @@ body {
   font-weight: 800;
   text-align: right;
 }
-/* the row under the pointer is inverted, as in the ratings (and so are the rows of the table below) */
-.head-to-head-steps li:hover,
-.head-to-head-parts tbody tr:hover {
+/* The row under the pointer is inverted, as in the ratings. */
+.head-to-head-steps li:hover {
   background: var(--ink);
   color: var(--surface);
 }
@@ -1365,13 +1364,11 @@ body {
 .head-to-head-steps li:hover .head-to-head-step-bar i {
   box-shadow: inset 0 0 0 1px rgb(238 240 243 / 0.75);
 }
-.ledger .head-to-head-steps li:hover .info,
-.ledger .head-to-head-parts tbody tr:hover .info {
+.ledger .head-to-head-steps li:hover .info {
   border-color: var(--surface);
   color: var(--surface);
 }
-.ledger .head-to-head-steps li:hover .info:hover,
-.ledger .head-to-head-parts tbody tr:hover .info:hover {
+.ledger .head-to-head-steps li:hover .info:hover {
   background: var(--surface);
   color: var(--ink);
 }
@@ -1426,45 +1423,6 @@ body {
 .head-to-head-pair i.b {
   margin-left: 8px;
   background: var(--s2);
-}
-.head-to-head-parts {
-  width: 100%;
-  margin-top: 8px;
-  border-collapse: collapse;
-  table-layout: fixed;
-  font-size: 11px;
-}
-.head-to-head-parts th:first-child {
-  width: 40%;
-}
-.head-to-head-parts th,
-.head-to-head-parts td {
-  padding: 4px 6px;
-  border-top: 1px solid var(--grid);
-  border-bottom: 0;
-  text-align: right;
-  vertical-align: middle;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
-.head-to-head-parts thead th {
-  border-top: 0;
-}
-.head-to-head-parts tbody th {
-  color: inherit;
-  font-family: var(--text);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0;
-  text-align: left;
-  text-transform: none;
-}
-.head-to-head-parts tbody th > .info {
-  vertical-align: middle;
-}
-.head-to-head-parts td {
-  font-family: var(--mono);
-  font-weight: 800;
 }
 .head-to-head-chart {
   flex: 1 1 120px;
@@ -3230,17 +3188,6 @@ body[data-page='graph'] .track-title {
   content: '›' / ''; /* it opens a view over the ratings (and is no part of the button's name) */
   margin-left: 4px;
   color: var(--ink-3);
-}
-.ledger .notes-more {
-  font-size: 10.5px;
-}
-.ledger .notes-more summary {
-  cursor: pointer;
-  color: var(--ink-3);
-  font-size: 10.5px;
-}
-.ledger .notes-more .notes {
-  margin-top: 4px;
 }
 
 /* ── the track ───────────────────────────────────────── */

@@ -2,7 +2,7 @@
 
 **Historical scorecard for the former filter-only publication.** The definitions and diagnostics remain useful, but the "Now" values below were computed before the hybrid became the published rating. See [hybrid.md](hybrid.md) for the current ratings-only, frozen-mover and refitted forecast-head scores. The hybrid blend was selected after inspecting the historical periods, so they no longer constitute untouched holdouts.
 
-The historical figures were computed by one suite (`packages/research/node/metric-suite.mjs`, run with `suite.mjs`; every candidate of that phase is in `research/eval/logs/suite-log.jsonl`). Real data through 2015 unless marked (timeline cut at 2015, which shortens the stints of moves in 2015 and moves the 2012–15 window of the movers' rows by up to 0.01 against the full-timeline numbers in [detach.md](detach.md)); 2016+ was a second look. "Before" = the filter before the detachment work (independent race filter, `research/eval/baseline.txt`); "Now" = the former filter-only publication (race filter reads qualifying, posted rating = its portable level, team-fit term internal with `sdA` 12).
+The historical figures were computed by one suite (`packages/research/node/metric-suite.mjs`, run with `suite.mjs`; every candidate of that phase is in `research/eval/logs/suite-log.jsonl` in Git history). Real data through 2015 unless marked (timeline cut at 2015, which shortens the stints of moves in 2015 and moves the 2012–15 window of the movers' rows by up to 0.01 against the full-timeline numbers in [detach.md](detach.md)); 2016+ was a second look. "Before" = the filter before the detachment work (independent race filter, `research/evaluation/baseline.txt`); "Now" = the former filter-only publication (race filter reads qualifying, posted rating = its portable level, team-fit term internal with `sdA` 12).
 
 Three kinds of "best possible" appear, and they are not the same thing:
 
@@ -24,7 +24,7 @@ Three kinds of "best possible" appear, and they are not the same thing:
 
 ### The forecast heads, tracked on the same metrics
 
-The heads (Thursday: before qualifying; race-day: with the grid; and the qualifying head) are fitted on top of the shipped ratings (`finalize-state-space.py`) and then tracked by `heads-metrics.mjs` (`research/eval/heads-metrics.txt`, `npm run research:heads-metrics`), per observation, on the same windows and on drivers in a new car. Through 2015, race observations:
+The heads (Thursday: before qualifying; race-day: with the grid; and the qualifying head) are fitted on top of the shipped ratings (`finalize-state-space.py`) and then tracked by `heads-metrics.mjs` (`research/evaluation/heads-metrics.txt`, `npm run research:heads-metrics`), per observation, on the same windows and on drivers in a new car. Through 2015, race observations:
 
 | Forecast | Loss 2008–11 all / teammates / other cars | Loss 2012–15 all / teammates / other cars | Calibration slope (ECE) | Movers' slope ÷ stayers' (online) | First-weekend residual of movers |
 | --- | --- | --- | --- | --- | --- |
@@ -32,7 +32,7 @@ The heads (Thursday: before qualifying; race-day: with the grid; and the qualify
 | Thursday head | 0.3856 / 0.6087 / 0.3149 | 0.3595 / 0.6269 / 0.2804 | **1.02 (0.007)** | **0.85** | −0.070 |
 | Race-day head (sees the grid) | 0.3357 / 0.5415 / 0.2705 | 0.3211 / 0.5658 / 0.2488 | 0.96 (0.010) | 0.86 | **−0.024** |
 
-The qualifying head: 0.3563 → 0.3495 (2008–11) and 0.3732 → 0.3622 (2012–15). For movers' duels the online loss is 0.630 (ratings alone), 0.624 (Thursday) and 0.594 (race-day), against 0.615 / 0.614 / 0.564 for stayers. Reading: the Thursday head improves on the ratings alone everywhere, is better calibrated and narrows the gap between movers and stayers a little; the race-day head removes most of the first-weekend shortfall of movers because the grid reveals how a mover's new car performs. The heads are accepted only if race-day, Thursday and qualifying are each within +0.001 of the previous version (`research/state-space/ACCEPTANCE.md`); they were refitted for the shipped ratings and accepted.
+The qualifying head: 0.3563 → 0.3495 (2008–11) and 0.3732 → 0.3622 (2012–15). For movers' duels the online loss is 0.630 (ratings alone), 0.624 (Thursday) and 0.594 (race-day), against 0.615 / 0.614 / 0.564 for stayers. Reading: the Thursday head improves on the ratings alone everywhere, is better calibrated and narrows the gap between movers and stayers a little; the race-day head removes most of the first-weekend shortfall of movers because the grid reveals how a mover's new car performs. The heads are accepted only if race-day, Thursday and qualifying are each within +0.001 of the previous version (`research/forecast/ACCEPTANCE.md`); they were refitted for the shipped ratings and accepted.
 
 ## 2. Drivers in a new car, forecast from the rating posted before the move (the objective)
 
@@ -58,7 +58,7 @@ Movers pooled over 2002–2015 (47 moves with 10 weekends; "late" = 2012–15). 
 
 Not a target: the movers-versus-stayers slope difference tests (z −2.2 before, −0.9 now, 47 moves) and the per-window numbers, which are too noisy to optimise on.
 
-## 4. The earlier scorecard and truth-free guards ([history/state-space-hill-climbing-2.md](history/state-space-hill-climbing-2.md))
+## 4. The earlier scorecard and truth-free guards (the earlier hill-climbing record in Git history)
 
 | # | Metric | What it measures | Before | Now | Best possible |
 | --- | --- | --- | --- | --- | --- |

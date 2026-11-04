@@ -36,7 +36,7 @@ function sourceFingerprint() {
   };
   for (const directory of ['packages/core/src', 'packages/eval/src', 'packages/research/node', 'data']) collect(directory);
   paths.push(
-    'research/joint_duel_factor_model.mjs',
+    'research/simplification/joint-duel-factor-model.mjs',
     'research/simplification/candidates.mjs',
     'research/simplification/candidates-joint.mjs',
     'research/simplification/candidates-ranking.mjs',

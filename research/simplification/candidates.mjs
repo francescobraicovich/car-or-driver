@@ -3,7 +3,7 @@
 import { stateSpaceRun } from '../../packages/eval/src/adapters.js';
 import { qualLink } from '../../packages/core/src/state-space/qualifying-link.js';
 import { ORIGINAL_FILTER } from './candidates-ranking.mjs';
-import { jointDuelFactorModel } from '../joint_duel_factor_model.mjs';
+import { jointDuelFactorModel } from './joint-duel-factor-model.mjs';
 import { jointGaussian } from './candidates-joint.mjs';
 
 function filters(env, linked, fit) {

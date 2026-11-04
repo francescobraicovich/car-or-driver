@@ -7,9 +7,8 @@ import { INFORMATION_FRACTION } from './learning.js';
 // in research/simplification/protocol.md; later eras are not untouched holdouts.
 // Qualifying is an independent filter. The race filter reads the qualifying filter's driver levels (`link`, state-space/qualifying-link.js).
 //
-//   race:  fitted on 2002-2007 (all-pairs loss), then the new-stint settings on 2002-2011. `varInfl`, added by the hill climb
-//          (docs/history/state-space-hill-climbing-1.md), only scales the reported error bars: the other settings are as they were before it.
-//   qual:  the same procedure, plus the rookie debut adjustment (fitted on 2002-2011 by state-space-rookies.mjs).
+//   race:  fitted on 2002-2007 (all-pairs loss), then the new-stint settings on 2002-2011. `varInfl` only scales the reported error bars.
+//   qual:  the same procedure, plus the rookie debut adjustment fitted on 2002-2011.
 export const STATE_SPACE = {
   // The race driver's strength includes beta times the qualifying driver level.
   link: { beta: 0.4 },

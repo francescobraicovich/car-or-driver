@@ -1,8 +1,8 @@
 // Score a search candidate against the shipped backbone on a held-out window.
 //
-//   node packages/research/node/gate-backbone.mjs research/backbone/search-2008_2011.json [--from 2012] [--to 2015]
+//   node packages/research/node/gate-backbone.mjs research/evaluation/backbone/search-2008_2011.json [--from 2012] [--to 2015]
 //
-// Read the pre-registered protocol (research/backbone/protocol-*.json) BEFORE
+// Read the pre-registered protocol (research/evaluation/backbone/protocol-*.json) BEFORE
 // running this: the gate window is spent by looking at it. Windows reaching
 // 2016+ are the terminal window and need --terminal.
 import { readFile } from 'node:fs/promises';

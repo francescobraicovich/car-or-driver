@@ -6,8 +6,15 @@ export default [
     // Generated data and research artefacts are not linted.
     ignores: [
       'node_modules/**',
+      'tmp/**',
       'data/**',
-      'research/**',
+      'research/forecast/heads-candidate.js',
+      // Archived experiments retain the exact source used by their fit reports.
+      'research/current-form/**',
+      'research/simplification/**',
+      'research/stable-ratings/**',
+      'research/temporal-graph/**',
+      'research/prediction-markets/**',
       'dist/**',
       'site/vendor/**',
       'packages/core/src/elo-forecast-heads.js',
@@ -29,13 +36,5 @@ export default [
   {
     files: ['site/**/*.js'],
     languageOptions: { globals: { ...globals.browser } },
-  },
-  {
-    files: ['tests/worker-test-shim.mjs'],
-    languageOptions: { globals: { self: 'writable' } },
-  },
-  {
-    files: ['site/js/build-worker.js'],
-    languageOptions: { globals: { ...globals.worker } },
   },
 ];

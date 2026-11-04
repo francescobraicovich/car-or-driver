@@ -1,5 +1,5 @@
 // Why is a mover's prior rating a worse forecast than a stayer's? Real-data diagnosis (docs/diagnosis.md).
-//   node packages/research/node/diagnose.mjs [--K 10] > research/eval/diagnosis-real.txt
+//   node packages/research/node/diagnose.mjs [--K 10] > research/evaluation/diagnosis-real.txt
 // Hypotheses are formed on moves of 2002-2011 and verified on 2012-2015 and 2016+ (windows printed side by side).
 import { loadData } from './common.mjs';
 import { indexTimeline, stateSpaceRun } from '../../eval/src/index.js';

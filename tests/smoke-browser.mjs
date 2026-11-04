@@ -71,8 +71,12 @@ const send = (method, params = {}) =>
     waiting.set(n, resolve);
     ws.send(JSON.stringify({ id: n, method, params }));
   });
-const evaluate = async (expression) =>
-  (await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result?.result?.value;
+const evaluate = async (expression) => {
+  const response = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
+  const exception = response.result?.exceptionDetails;
+  if (exception) throw Error(exception.exception?.description || exception.text);
+  return response.result?.result?.value;
+};
 
 await send('Runtime.enable');
 await send('Log.enable');

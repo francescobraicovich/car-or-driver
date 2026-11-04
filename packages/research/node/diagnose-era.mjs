@@ -1,5 +1,5 @@
 // Is the race rating a weaker predictor of race duels in later seasons, for everyone? Per-season weights of the race gap and the qualifying gap
-// in teammate duels with ratings frozen at 10-weekend block starts (stayers), the strict reading. Output: research/eval/diagnosis-era.txt
+// in teammate duels with ratings frozen at 10-weekend block starts (stayers), the strict reading. Output: research/evaluation/diagnosis-era.txt
 import { loadData } from './common.mjs';
 import { indexTimeline, stateSpaceRun } from '../../eval/src/index.js';
 import { prepareReal } from '../../eval/src/pipeline.js';

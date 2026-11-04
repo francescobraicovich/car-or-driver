@@ -3546,7 +3546,7 @@
       }
     }
   },
-  "publishedSourceHash": "af50be13b2dc0b29",
+  "publishedSourceHash": "8e521e710b2a8da1",
   "fittedPublicationSourceHash": "9eda03dd6d88facd",
   "monitoring2026Through": {
     "year": 2026,
@@ -3566,5 +3566,13 @@
     "forecastHeadsUnchanged": true,
     "trainingThrough": 2025,
     "note": "Publication source updated after an append-only Mexico refresh; fitted historical guards and the earlier 2026 monitoring snapshot are unchanged. Current monitoring is available in the rebuilt model diagnostics."
+  },
+  "repositoryIntegration": {
+    "verification": "research/current-form/production-integration-verification.json",
+    "previousPublicationSourceHash": "af50be13b2dc0b29",
+    "all620RatingHistoriesUnchanged": true,
+    "forecastHeadsUnchanged": true,
+    "modelParametersUnchanged": true,
+    "note": "Production layout and publication packaging integrated without model changes."
   }
 }

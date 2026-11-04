@@ -1,6 +1,6 @@
 // How the forecast heads behave on the metric suite (docs/metrics.md, section "forecast layer"): the ratings-alone probability, the Thursday head and the race-day
 // head (and the qualifying head) of the SHIPPED model, per observation, scored by window and pair type, calibrated, and on drivers in a new car.
-//   node packages/research/node/heads-metrics.mjs [--holdout]   > research/eval/heads-metrics.txt
+//   node packages/research/node/heads-metrics.mjs [--holdout]   > research/evaluation/heads-metrics.txt
 // Windows through 2015 only unless --holdout (2016+ is then a labelled second look).
 import { writeFileSync } from 'node:fs';
 import { loadData } from './common.mjs';
@@ -179,7 +179,7 @@ for (const [a, b] of [
   console.log(`weekend ${a}-${b}`.padEnd(14) + ` ${f(res('base'), 3)} | ${f(res('thu'), 3)} | ${f(res('raceDay'), 3)}   (n ${rs.length})`);
 }
 
-// ---- machine-readable figures for the methodology page (tools/make-metrics-snapshot.mjs)
+// ---- machine-readable evaluation figures
 if (process.argv.includes('--json')) {
   const w0 = rows.filter((r) => r.session === 'race' && r.year >= 2008 && r.year <= 2011);
   const slopeOf = (key) =>

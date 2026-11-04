@@ -1,7 +1,7 @@
 // Training rows for the forecast heads on the state-space ratings: one row per observation, with the form,
 // grid, qualifying and context columns of the Elo path and the rating inputs (baseline*, race_driver/car,
 // qual_driver/car) from the state-space levels as forecast before each weekend. Written to
-// research/state-space/pairs.jsonl; nothing under research/ else is touched.
+// research/forecast/pairs.jsonl; nothing under research/ else is touched.
 //
 // It also runs the Elo feature path beside the new one and checks the shared non-form context
 // row for row. The published driver/car form now has its own observation-based update. The Elo heads'
@@ -98,6 +98,6 @@ replayForecastLayer(
   },
 );
 if (seq !== old.length) throw Error(`row counts differ: ${seq} vs ${old.length}`);
-await mkdir('research/state-space', { recursive: true });
-await writeFile('research/state-space/pairs.jsonl', out.map((r) => JSON.stringify(r)).join('\n') + '\n');
+await mkdir('research/forecast', { recursive: true });
+await writeFile('research/forecast/pairs.jsonl', out.map((r) => JSON.stringify(r)).join('\n') + '\n');
 console.log(`Exported ${out.length} rows from ${weekends.length} weekends; shared context aligned with the Elo feature path.`);

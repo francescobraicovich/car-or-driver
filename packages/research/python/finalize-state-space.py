@@ -1,11 +1,11 @@
-"""Refit the shipped head designs on state-space rating inputs (research/state-space/pairs.jsonl) and compare with the Elo heads.
+"""Refit the shipped head designs on state-space rating inputs (research/forecast/pairs.jsonl) and compare with the Elo heads.
 
-python finalize-state-space.py            fit, score the selection years only (<= 2015), apply research/state-space/ACCEPTANCE.md, write
-                                 research/state-space/heads-candidate.js and research/state-space/selection-report.json
+python finalize-state-space.py            fit, score the selection years only (<= 2015), apply research/forecast/ACCEPTANCE.md, write
+                                 research/forecast/heads-candidate.js and research/forecast/selection-report.json
 python finalize-state-space.py --ship     also write packages/core/src/state-space/forecast-heads.js and the inference fixtures (only if accepted)
 python finalize-state-space.py --second-look   additionally score 2016 onward (read last, once, reported as a second look)
 
-Nothing under research/ other than research/state-space/ is written. The Elo heads are never modified: their
+Nothing under research/ other than research/forecast/ is written. The Elo heads are never modified: their
 predictions on the same observations are in the rows as elo_post / elo_pre / elo_qual.
 """
 import importlib.util, json, sys, hashlib
@@ -15,7 +15,7 @@ import pandas as pd
 
 P = Path(__file__).resolve().parent
 ROOT = P.parents[2]
-SS_OUT = ROOT / 'research' / 'state-space'
+SS_OUT = ROOT / 'research' / 'forecast'
 
 
 def load(name, file):
@@ -136,11 +136,11 @@ def main():
                     row = part.iloc[ix].to_dict()
                     row = {k: (None if isinstance(v, float) and np.isnan(v) else v) for k, v in row.items()}
                     fixtures.append({'year': start, 'mode': mode, 'features': row, 'expected': float(pp[ix])})
-        (SS_OUT / 'inference-fixtures.json').write_text(json.dumps(fixtures, separators=(',', ':')) + '\n')
+        (ROOT / 'tests/fixtures/state-space-inference.json').write_text(json.dumps(fixtures, separators=(',', ':')) + '\n')
         (SS_OUT / 'frozen-protocol.json').write_text(json.dumps({
-            'designs': 'research/selection.json (unchanged)', 'fit_through': [2007, 2011, 2015],
+            'designs': 'research/forecast/selection.json (unchanged)', 'fit_through': [2007, 2011, 2015],
             'export_sha256': hashlib.sha256(text.encode()).hexdigest(),
-            'acceptance': 'research/state-space/ACCEPTANCE.md', 'report': 'research/state-space/selection-report.json'}, indent=2) + '\n')
+            'acceptance': 'research/forecast/ACCEPTANCE.md', 'report': 'research/forecast/selection-report.json'}, indent=2) + '\n')
         print('Shipped packages/core/src/state-space/forecast-heads.js')
 
 

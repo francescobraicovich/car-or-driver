@@ -1,0 +1,15 @@
+{
+  "previousSourceHash": "af50be13b2dc0b29",
+  "publishedSourceHash": "8e521e710b2a8da1",
+  "dataThrough": {
+    "year": 2026,
+    "round": 19,
+    "name": "Mexico City Grand Prix",
+    "date": "2026-11-01"
+  },
+  "weekends": 620,
+  "allRatingHistoriesUnchanged": true,
+  "forecastHeadsUnchanged": true,
+  "modelParametersUnchanged": true,
+  "reason": "Integrated production repository layout, browser-only publication package, comments and fixture locations."
+}

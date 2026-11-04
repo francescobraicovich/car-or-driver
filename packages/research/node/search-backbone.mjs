@@ -3,7 +3,7 @@
 // docs/elo.md for the measurements behind every default.
 //
 //   node packages/research/node/search-backbone.mjs [--space full|reduced] [--chains 8]
-//        [--evals 1000] [--from 2008] [--to 2011] [--seed 1] [--out research/backbone/search.json]
+//        [--evals 1000] [--from 2008] [--to 2011] [--seed 1] [--out research/evaluation/backbone/search.json]
 //
 // Each chain is an independent annealed local search over the unit cube (moves
 // touch 1-4 parameters with a shrinking Gaussian radius), so wall time is one
@@ -137,7 +137,7 @@ async function main() {
     to: +arg('to', 2011),
     seed: +arg('seed', 1),
   };
-  const out = arg('out', 'research/backbone/search.json');
+  const out = arg('out', 'research/evaluation/backbone/search.json');
   const dims = spaceFor(opts.space);
   console.log(
     `searching ${dims.length} parameters (${opts.space}), ${opts.chains} chains x ${opts.evals} evals, window ${opts.from}-${opts.to}`,
@@ -164,7 +164,7 @@ async function main() {
   const summary = {
     config: opts,
     seconds: Math.round(seconds),
-    incumbent: 'see research/backbone/protocol-4.json',
+    incumbent: 'see research/evaluation/backbone/protocol-4.json',
     best: { score: best.score, warm: best.warm, chain: best.chain, params: best.params },
     chains: results.map(({ params: _params, ...rest }) => rest),
   };

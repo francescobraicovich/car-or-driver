@@ -75,6 +75,8 @@ const TESTS = [
   'test-layering.mjs',
   'test-teammate-graph.mjs',
   'test-site-imports.mjs',
+  'test-repository-structure.mjs',
+  'test-build-pages.mjs',
 ];
 
 for (const t of TESTS) {

@@ -11,7 +11,7 @@
 import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { readdir, readFile, rm } from 'node:fs/promises';
-import { join, relative } from 'node:path';
+import { dirname, join, relative, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { readDeployHeaders } from '../tools/deploy-headers.mjs';
 import { deserialize } from '../packages/core/src/json-serialization.js';
@@ -113,7 +113,7 @@ for (const author of [
   assert.ok(insights.includes(author), `the Insights notes cite ${author}`);
 
 // 6. what is published
-for (const file of ['data/model.json', 'data/model-latest.json', 'data/export-rows.json', 'data/teammate-graph.json']) {
+for (const file of ['data/model.json', 'data/model-latest.json', 'data/teammate-graph.json']) {
   const { licence } = deserialize(await read(file));
   assert.equal(licence?.licence, 'CC BY-NC-SA 4.0', `${file} carries the licence`);
   assert.ok(licence.credit.includes('Jolpica') && licence.credit.includes('TracingInsights'), `${file} carries the credit`);
@@ -142,6 +142,15 @@ try {
   const published = (await walk('dist')).map((file) => relative('dist', file));
   assert.ok(!published.some((file) => file.endsWith('.csv')), 'the source tables are not published');
   assert.ok(published.includes('_headers'), 'the headers file is published');
+  assert.ok(published.includes('packages/core/src/forecast/scenario.js'), 'the lazy forecast dependency is published');
+  assert.ok(!published.includes('packages/core/src/dataset.js'), 'model-building code is not published');
+  // Inspect the assembled JavaScript independently of the builder's traversal, including lazy imports and re-exports.
+  for (const file of published.filter((name) => /^(?:site\/js|packages\/core)\/.*\.js$/.test(name))) {
+    const source = await read(join('dist', file));
+    const references = source.matchAll(/(?:\bfrom\s*|\bimport\s*(?:\(\s*)?)["'](\.[^"']+)["']/g);
+    for (const [, reference] of references)
+      assert.ok(existsSync(resolve('dist', dirname(file), reference)), `${file} imports missing ${reference}`);
+  }
   for (const file of ['site/assets/tracks.json', 'site/assets/tracks-licence.txt', 'data/race-laps/2026.json', 'data/teammate-graph.json'])
     assert.ok(published.includes(file), `${file} is published`);
   assert.ok(

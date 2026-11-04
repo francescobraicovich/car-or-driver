@@ -54,7 +54,7 @@ export const FREE_SPACE = [
 export { EXAM_KEYS as FROZEN_KEYS };
 // Tuning window is a CLI argument because it turned out to be the decisive
 // choice: backbone quality is ~0.97 correlated across 2008->2026 but ~0
-// correlated with 2000-2007 (research/backbone/era-transfer.json). A window
+// correlated with 2000-2007 (research/evaluation/backbone/era-transfer.json). A window
 // spanning both regimes optimises a mixture and lands nowhere.
 export const windowFor = (lo, hi) => ({ fromYear: +lo, toYear: +hi, burnIn: 20, objective: 'full' });
 
@@ -107,7 +107,7 @@ const arg = (k, dflt) => {
   const i = process.argv.indexOf(`--${k}`);
   return i < 0 ? dflt : process.argv[i + 1];
 };
-const OUT = 'research/backbone';
+const OUT = 'research/evaluation/backbone';
 
 async function main() {
   const phase = arg('phase', 'uniform');

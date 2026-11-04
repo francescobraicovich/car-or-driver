@@ -2,7 +2,6 @@
 //   data/model-latest.json the first screen: the latest weekend's ratings and the small lists around them
 //   data/model.json        every weekend's ratings and the forecast state (what every page reads); the histories are rebuilt from the weekends on load,
 //                          and the names and months of birth of the drivers rated (driverProfiles) for the card on a row of the ratings
-//   data/export-rows.json  the rows of every weekend, as a table; the site no longer loads it (nothing links to it), it is published for anyone who wants it
 // All carry a fingerprint of the data and the model source; tests/test-model-file.mjs fails if any changed since. Run after refreshing data/
 // or changing packages/core:
 //   node tools/build-model.mjs
@@ -119,7 +118,6 @@ if (import.meta.url === new URL(process.argv[1], 'file://').href) {
     driverProfiles: driverProfiles(data.raw.drivers, ratedIn(model.snaps)),
     model: shippedModel(model),
   });
-  const exportText = serialize({ ...header, rows: model.exportRows });
   const latestText = serialize({
     ...header,
     driverProfiles: driverProfiles(data.raw.drivers, ratedIn(model.snaps.slice(-1))),
@@ -127,8 +125,7 @@ if (import.meta.url === new URL(process.argv[1], 'file://').href) {
   });
   await writeFile('data/model-latest.json', latestText);
   await writeFile('data/model.json', modelText);
-  await writeFile('data/export-rows.json', exportText);
   console.log(
-    `data/model-latest.json ${(latestText.length / 1e3).toFixed(0)} kB, data/model.json ${(modelText.length / 1e6).toFixed(1)} MB, data/export-rows.json ${(exportText.length / 1e6).toFixed(1)} MB (source ${sourceHash})`,
+    `data/model-latest.json ${(latestText.length / 1e3).toFixed(0)} kB, data/model.json ${(modelText.length / 1e6).toFixed(1)} MB (source ${sourceHash})`,
   );
 }

@@ -10,7 +10,7 @@ import { scoreHead, selectHeads } from '../packages/core/src/forecast/inference.
 import { summarizeBacktest } from '../packages/core/src/backtest.js';
 import { forecastPair } from '../packages/core/src/forecast/prepare.js';
 
-const fixtures = JSON.parse(await readFile('research/inference-fixtures.json', 'utf8'));
+const fixtures = JSON.parse(await readFile('tests/fixtures/elo-inference.json', 'utf8'));
 for (const f of fixtures)
   assert.ok(Math.abs(scoreHead(ELO_HEADS[f.year][f.mode], f.features) - f.expected) < 1e-11, 'Python/JS inference parity');
 console.log(`PASS ${fixtures.length} Python/JS inference fixtures`);
@@ -96,7 +96,7 @@ for (let i = 0; i < core.snaps.length; i++) {
 }
 // The research report records the old 2000-start model; these are the 1994-start
 // replay values for the same 2000–2015 evaluation window.
-const expected = JSON.parse(await readFile('research/final-results.json', 'utf8'));
+const expected = JSON.parse(await readFile('tests/fixtures/elo-results.json', 'utf8'));
 const historical = summarizeBacktest(elo, { burnIn: 20, fromYear: 2000, toYear: 2015 });
 assert.ok(Math.abs(historical.overall.combinedLogLoss - 0.3415651699535121) < 1e-10);
 assert.ok(Math.abs(historical.overall.preCombinedLogLoss - 0.38388415073458854) < 1e-10);

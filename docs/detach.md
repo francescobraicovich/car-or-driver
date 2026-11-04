@@ -1,6 +1,6 @@
 # Detaching drivers from cars
 
-The point of the ratings is to tell a driver's strength from his car's. The test that matters most is the hardest one: **a driver in a new car, forecast from the rating he had before the move, and nothing else.** This note records the model that came out of working on that test, why each part is there, what it fixed, what it did not, and every way it could be wrong. The rules were written and committed before the candidates ran ([research/eval/ACCEPTANCE-detach.md](../research/eval/ACCEPTANCE-detach.md), nine dated amendments); every candidate, accepted or not, is in `research/eval/logs`. The whole list of metrics is in [metrics.md](metrics.md), the study of what is still wrong in [diagnosis.md](diagnosis.md), and the same explanation, written for readers of the site, is the *Methodology* page.
+The point of the ratings is to tell a driver's strength from his car's. The test that matters most is the hardest one: **a driver in a new car, forecast from the rating he had before the move, and nothing else.** This note records the model that came out of working on that test, why each part is there, what it fixed, what it did not, and every way it could be wrong. The rules were written and committed before the candidates ran ([research/evaluation/ACCEPTANCE-detach.md](../research/evaluation/ACCEPTANCE-detach.md), nine dated amendments); every candidate, accepted or not, is in `research/eval/logs` in Git history. The whole list of metrics is in [metrics.md](metrics.md), the study of what is still wrong in [diagnosis.md](diagnosis.md), and the same explanation, written for readers of the site, is the *Methodology* page.
 
 ## The plain answer
 
@@ -19,7 +19,7 @@ A later study found a second flaw in the evidence: `syntheticWorld(…, 'race', 
 
 ## What was wrong
 
-Race and qualifying were two independent filters. Qualifying movers keep their rating (strict frozen slope 0.8 or better); race movers did not (0.43): a race rating built from finishing order, retirements and lap pace attributes part of the car to the driver. Two earlier hill climbs of the filter's own settings ([history](history/README.md)) found that the settings cannot buy this. Teammate differences within one car contain no car, and over the same car the slope of a driver's race gap to his teammate on his qualifying gap is 0.5–0.9 by season (correlation 0.6–0.9; `loading.mjs`, `research/eval/detach-loading.txt`). That is the information the independent race filter was throwing away.
+Race and qualifying were two independent filters. Qualifying movers keep their rating (strict frozen slope 0.8 or better); race movers did not (0.43): a race rating built from finishing order, retirements and lap pace attributes part of the car to the driver. Two earlier hill climbs of the filter's own settings (recorded in Git history) found that the settings cannot buy this. Teammate differences within one car contain no car, and over the same car the slope of a driver's race gap to his teammate on his qualifying gap is 0.5–0.9 by season (correlation 0.6–0.9; `loading.mjs`, `research/evaluation/detach-loading.txt`). That is the information the independent race filter was throwing away.
 
 ## The model
 
@@ -40,9 +40,9 @@ published car rating:                  C_c + gamma * Cq_c
 
 ## How it was chosen
 
-- **First phase** (`research/eval/logs/detach-log.jsonl`, 106 candidates): gates on ratings-alone loss in every window and pair type, on calibration and on no-freezing guards, with 2012–2015 as a gate (not an objective) after the first search drifted to lower `tau` as both earlier climbs had. This fixed the link, the persistent `A` and the retuned settings.
-- **Second phase** (`research/eval/logs/strict-log.jsonl`): objective = the strict prior-rating loss of movers against the new teammate and against the field, selection on moves of 2002–2011, gates as before. Settings turned out to be exhausted as a lever (one step accepted, inside the noise).
-- **Third phase** (`research/eval/logs/suite-log.jsonl`; Amendments 8 and 9): after the diagnosis, the targets became the diagnostics of [metrics.md](metrics.md) with a pre-registered grid of candidates; `sdA` 8 → 12 was the only one to pass every gate.
+- **First phase** (`research/eval/logs/detach-log.jsonl` in Git history, 106 candidates): gates on ratings-alone loss in every window and pair type, on calibration and on no-freezing guards, with 2012–2015 as a gate (not an objective) after the first search drifted to lower `tau` as both earlier climbs had. This fixed the link, the persistent `A` and the retuned settings.
+- **Second phase** (`research/eval/logs/strict-log.jsonl` in Git history): objective = the strict prior-rating loss of movers against the new teammate and against the field, selection on moves of 2002–2011, gates as before. Settings turned out to be exhausted as a lever (one step accepted, inside the noise).
+- **Third phase** (`research/eval/logs/suite-log.jsonl` in Git history; Amendments 8 and 9): after the diagnosis, the targets became the diagnostics of [metrics.md](metrics.md) with a pre-registered grid of candidates; `sdA` 8 → 12 was the only one to pass every gate.
 - **What did not work**: lower `tau`/`winterC` alone (better in the years seen, worse in 2012–2015); the same-weekend qualifying (a leak); a walk-forward estimated `beta`; a persistent team-fit in qualifying; variants of the qualifying filter as the source; no team-fit term at all; career curves; variance-aware forecasts; a lower weight of the race-specific level in the published rating (`lambdaD`); larger `sdA` or `beta` than shipped (each breached a gate).
 
 ## Results
@@ -77,7 +77,7 @@ Ten weekends: teammates −0.016 [−0.054, +0.028] (2002–11), −0.068 [−0.
 | 2012–2015                 | all / teammates | 0.3656 / 0.6329 | **0.3639 / 0.6310** |
 | 2016 onward (second look; data through 2026 round 17) | all / teammates | 0.4007 / 0.6022 | **0.3977 / 0.5981** |
 
-**Separation scorecard** (`state-space-hill-climbing-2.md` definition, in [history](history/state-space-hill-climbing-2.md); race, lower is better; the published rating is the portable level; qualifying unchanged at 0.486), through 2015: D2 0.633 → 0.485 (race 0.780 → 0.484); T1 mover swing 0.79 → 0.60, T2 stayer swing 0.58 → 0.47, T3 stayer leak 0.70 → 0.33, T4 frozen transfer 1.05 → 0.54. The floors a filter that is exactly right on a world with no car in the driver reads (T3 ≈ 0.08, T4 ≈ 0.17 for the old dynamics, indicative only) are still well below T3 and T4. D2 is a diagnostic, not a target: it improved once when the strict forecasts got worse.
+**Separation scorecard** (definition in the earlier hill-climbing record in Git history; race, lower is better; the published rating is the portable level; qualifying unchanged at 0.486), through 2015: D2 0.633 → 0.485 (race 0.780 → 0.484); T1 mover swing 0.79 → 0.60, T2 stayer swing 0.58 → 0.47, T3 stayer leak 0.70 → 0.33, T4 frozen transfer 1.05 → 0.54. The floors a filter that is exactly right on a world with no car in the driver reads (T3 ≈ 0.08, T4 ≈ 0.17 for the old dynamics, indicative only) are still well below T3 and T4. D2 is a diagnostic, not a target: it improved once when the strict forecasts got worse.
 
 **Truth recovery on Simulator v2** (both sessions simulated, 4 seeds, race, to 2015; [diagnosis.md](diagnosis.md) explains why the first version of this table was invalid): rmse of the driver levels 21.2 → 16.8, of the car levels 32.9 → 33.2, teammate gap 29.0 → 27.7, leak against the true car swing 0.164 → 0.165. The retuned priors, not the link, improve the driver levels in that world; cars do not improve. The simulator lacks the real data's regulation and tyre effects, and gives race and qualifying skills a correlation (0.7 for drivers) that the real data may not.
 
@@ -98,7 +98,7 @@ Ten weekends: teammates −0.016 [−0.054, +0.028] (2002–11), −0.068 [−0.
 - **Few moves.** 83 moves with enough history. Single moves dominate a window. The pooled interval excludes zero; individual windows' intervals often do not. The remaining finding that movers' calibration slope is 0.30–0.84 (stayers about 1.0) is the honest size of what is not detached: a driver in a new car is forecast less well than one in his old car, partly real driver–car interaction, partly selection (drivers move to improving or declining teams), partly chance.
 - **The settings are a local optimum under a rule.** `sdA` 12 passed the gates; larger values improved the movers' diagnostics and breached the gates on overall loss or on the guards. Two guards are at their limits.
 - **Combined rating spread understated.** The race rating reads qualifying; the combined bar treats them as independent. Race car bars remain too narrow (squared standardised revision 2.7).
-- **The learned filters did not help** ([history](history/neural-filter.md)). The link is a two-parameter version of what they tried to learn.
+- **The learned filters did not help** (recorded in Git history). The link is a two-parameter version of what they tried to learn.
 
 ## Reproduce
 
@@ -109,7 +109,7 @@ node packages/research/node/strict-paired.mjs --holdout                     # pa
 node packages/research/node/ablate.mjs                                      # retune only / link only / both
 node packages/research/node/simulation-optimum.mjs                                 # truth recovery and oracle losses on Simulator v2 (both sessions)
 npm run evaluate -- --model state-space --full --null 4 --boot 300                   # the full harness on the shipped model
-bash research/eval/regenerate.sh                                            # all of the above, and the methodology page's figures
+bash research/evaluation/regenerate.sh                                            # the evaluation outputs above
 ```
 
 The ratings on the site are the shipped model, built once by `tools/build-model.mjs` (qualifying first, then the race filter reading it) and downloaded by the site as `data/model.json`.

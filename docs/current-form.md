@@ -10,6 +10,8 @@ The local model now includes the Mexico City Grand Prix on 1 November 2026, roun
 
 The current model includes Mexico in its live data and monitoring. The 2026 monitoring figures in the frozen component report below are the earlier pre-Mexico sample, through Austin; they were not recomputed for this refresh. The original trial and its selection criteria remain unchanged.
 
+Production integration subsequently moved research and fixtures into the current repository layout and reduced the publication package to browser dependencies. The publication source is `8e521e710b2a8da1`; [the integration verification](../research/current-form/production-integration-verification.json) confirms identical ratings at all 620 weekends, forecast heads and model parameters relative to the Mexico refresh.
+
 ## First comparison
 
 The fixed-family protocol compared the published forecast, a legacy refit, continuous form, rating-innovation form, and both new forms together. Historical folds cover 2008–2011, 2012–2015, 2016–2020, and 2021–2025; each head and its scaling use only earlier data. The final four years of each training prefix choose the ridge strength. All these periods had already informed development, so this is retrospective model selection, not an independent test. The 2026 season is monitoring only.

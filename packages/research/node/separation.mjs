@@ -12,7 +12,7 @@
 //   T4 frozen transfer  mean over k = 5, 10 of |ln r|, r = calibration slope of a mover's frozen pre-move rating against his new teammate /
 //                       the same slope for teammates who stayed (r = 1: a move costs a rating no predictive power); r is floored at 0.1
 //
-// D2 = mean over the two sessions of (T1 + T2 + T3 + T4) / 4. Everything is a pure function of the harness output and the events (docs/history/state-space-hill-climbing-2.md).
+// D2 = mean over the two sessions of (T1 + T2 + T3 + T4) / 4. Everything is a pure function of the harness output and the events (the earlier hill-climbing record in Git history).
 // None of it needs a synthetic world.
 import { catalogue, driverPost, makeControls, mean, ols, indexTimeline } from '../../eval/src/index.js';
 

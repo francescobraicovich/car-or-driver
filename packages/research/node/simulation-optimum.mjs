@@ -1,6 +1,6 @@
 // Reference values on Simulator v2 (both sessions simulated, 4 seeds, race, through 2015): the loss an ORACLE with the true levels reaches, next to the filter's, per pair type
 // and window, and the truth metrics of the filter. The oracle is the best any rating-based forecast can do in that world (it still faces weekend-level noise).
-//   node packages/research/node/simulation-optimum.mjs > research/eval/simulation-optimum.txt
+//   node packages/research/node/simulation-optimum.mjs > research/evaluation/simulation-optimum.txt
 import {
   fitSlope,
   indexTimeline,

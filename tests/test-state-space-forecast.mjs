@@ -16,7 +16,7 @@ import { STATE_SPACE_HEADS } from '../packages/core/src/state-space/forecast-hea
 import { scoreHead } from '../packages/core/src/forecast/inference.js';
 import { forecastPair } from '../packages/core/src/forecast/prepare.js';
 
-const fixtures = JSON.parse(await readFile('research/state-space/inference-fixtures.json', 'utf8'));
+const fixtures = JSON.parse(await readFile('tests/fixtures/state-space-inference.json', 'utf8'));
 for (const f of fixtures)
   assert.ok(
     Math.abs(scoreHead(STATE_SPACE_HEADS[f.year][f.mode], f.features) - f.expected) < 1e-9,

@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { loadData } from '../packages/research/node/common.mjs';
 import { collectExam } from '../packages/core/src/state-space/exam.js';
 import { runPublishedRatings } from '../packages/core/src/state-space/build.js';
 import { ContinuousFormFeatures as ProductionForm } from '../packages/core/src/forecast/continuous-form.js';
 import { ContinuousFormFeatures as ResearchForm } from '../research/current-form/form-candidates.mjs';
-import { ratingDigest } from '../research/current-form/rating-digest.mjs';
+import { ratingDigest, ratingValues } from '../research/current-form/rating-digest.mjs';
+import { compareRatingSignatures, ratingSignature } from './rating-signature.mjs';
 import { createFormFeatures } from '../packages/core/src/forecast/form-method.js';
 import { FormFeatures } from '../packages/core/src/forecast/form.js';
 import { forecastPair } from '../packages/core/src/forecast/prepare.js';
@@ -72,12 +74,32 @@ const data = await loadData();
 const { model, weekends } = collectExam(data.raw, data.lapSnapshots, data.maps, {}, data.lapPace);
 const runs = runPublishedRatings(weekends, model.params.tmBoost);
 const originalDigest = ratingDigest(runs);
-const expectedDigest = '941ccb58a8b3a3d7a939c22c2fe0065a8085fe9b60228a44adeaa56a63604048';
 // Future data refreshes can append weekends without changing the archived test.
 const referenceWeekends = weekends.slice(0, 619);
 assert.equal(String(referenceWeekends.at(-1)?.info.raceId), '1186', 'the archived calendar is intact');
 const referenceRuns = weekends.length === 619 ? runs : runPublishedRatings(referenceWeekends, model.params.tmBoost);
-assert.equal(ratingDigest(referenceRuns), expectedDigest, 'long-term driver/car states and predictions match the frozen reference');
+const fixture = JSON.parse(await readFile('tests/fixtures/long-term-rating-signature.json', 'utf8'));
+assert.equal(
+  fixture.referenceDigest,
+  '941ccb58a8b3a3d7a939c22c2fe0065a8085fe9b60228a44adeaa56a63604048',
+  'fixture is anchored to the original reference',
+);
+const comparison = compareRatingSignatures(ratingSignature(ratingValues(referenceRuns)), fixture);
+assert.ok(comparison.equal, `long-term driver/car states and predictions match the frozen reference: ${comparison.reason}`);
+// A small real change in one rating must not hide in a full-build aggregate;
+// representable last-bit noise is allowed across engines and processors.
+const control = { rating: Array.from({ length: 512 }, (_, i) => 900 + i / 10) };
+const controlSignature = ratingSignature(control);
+const noise = { rating: control.rating.map((value) => value * (1 + 1e-12)) };
+assert.ok(compareRatingSignatures(ratingSignature(noise), controlSignature).equal, 'small floating-point noise is tolerated');
+const changed = { rating: [...control.rating] };
+changed.rating[111] += 0.01;
+assert.equal(compareRatingSignatures(ratingSignature(changed), controlSignature).equal, false, 'a 0.01-point rating change is detected');
+assert.equal(
+  compareRatingSignatures(ratingSignature({ rating: control.rating.slice(1) }), controlSignature).equal,
+  false,
+  'shape changes are detected',
+);
 const actual = new ProductionForm(data.lapPace);
 const expected = new ResearchForm(data.lapPace);
 let compared = 0;
