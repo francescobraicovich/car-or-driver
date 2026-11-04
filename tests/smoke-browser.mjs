@@ -6,12 +6,13 @@
 // Needs Chrome/Chromium (not part of `npm test`, which is Node-only). Starts its
 // own static server, so nothing else needs to be running.
 import { spawn } from 'node:child_process';
-import { mkdtemp } from 'node:fs/promises';
+import { mkdtemp, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
+const latestRace = JSON.parse(await readFile(join(ROOT, 'data/manifest.json'), 'utf8')).lastRace;
 const CHROME = process.argv[2] || process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const HTTP_PORT = 8765;
 const CDP_PORT = 9333;
@@ -520,6 +521,12 @@ await sleep(900);
 await evaluate("location.hash = '#/ratings'");
 await sleep(1000);
 check('ratings list has a row per driver', (await evaluate("document.querySelectorAll('#ratingsList .ledger-row').length")) > 10);
+check(
+  'driver ratings default to race pace and have no Combined choice',
+  await evaluate(
+    "document.getElementById('ratingsMetric').value === 'race' && ![...document.getElementById('ratingsMetric').options].some((option) => option.value === 'combined')",
+  ),
+);
 const listFits = await evaluate(
   "(() => { const list = document.getElementById('ratingsList'); const panel = document.getElementById('stageLedger'); return [list.scrollHeight <= list.clientHeight + 1, panel.scrollHeight <= panel.clientHeight + 1]; })()",
 );
@@ -528,7 +535,7 @@ check(
   listFits.every(Boolean),
   JSON.stringify(listFits),
 );
-// the most that has been rated at one weekend (24) on a laptop 600 high: still every row, still no scrolling
+// The largest historical field stays accessible within a short laptop viewport.
 await evaluate(
   "import('/site/js/state.js').then(({ state }) => { const sizes = state.model.snaps.map((snap) => snap.drivers.length); window.__crowded = sizes.indexOf(Math.max(...sizes)); })",
 );
@@ -540,11 +547,12 @@ await evaluate(
   `(() => { const slider = document.getElementById('ratingsScrub'); slider.value = ${crowded}; slider.dispatchEvent(new Event('input', { bubbles: true })); })()`,
 );
 await sleep(500);
+await mouse('mouseMoved', 8, 300);
 const crowdedFits = await evaluate(
-  "(() => { const list = document.getElementById('ratingsList'); const panel = document.getElementById('stageLedger'); return [list.querySelectorAll('.ledger-row').length, list.scrollHeight <= list.clientHeight + 1, panel.scrollHeight <= panel.clientHeight + 1]; })()",
+  "(() => { const list = document.getElementById('ratingsList'); const panel = document.getElementById('stageLedger'); list.scrollTop = list.scrollHeight; const row = list.lastElementChild.getBoundingClientRect(); const box = list.getBoundingClientRect(); const accessible = row.bottom <= box.bottom + 1 && row.top >= box.top - 1; list.scrollTop = 0; return [list.querySelectorAll('.ledger-row').length, accessible, panel.scrollHeight <= panel.clientHeight + 1]; })()",
 );
 check(
-  'even the fullest weekend (24 drivers) shows every row without scrolling on a laptop 600 high',
+  'the fullest historical weekend keeps every row accessible inside a laptop viewport 600 high',
   crowdedFits[0] >= 24 && crowdedFits[1] && crowdedFits[2],
   JSON.stringify(crowdedFits),
 );
@@ -571,17 +579,28 @@ const card = await evaluate(
       blur: style.backdropFilter, left: box.left, panelRight: panel.right, tooltip: !!document.getElementById('chartValueTooltip') && !document.getElementById('chartValueTooltip').hidden }; })()`,
 );
 check(
-  'the row under the pointer opens a card with the name, surname, team, age, rank, pace, quali pace and pace with form',
+  'the row under the pointer opens a card with the name, surname, team, age, rank, race pace, qualifying and race form',
   card.hidden === false &&
     card.forename === 'Max' &&
     card.surname === 'Verstappen' &&
     /^Red Bull · age \d\d$/.test(card.facts) &&
-    JSON.stringify(card.labels) === JSON.stringify(['Rank', 'Pace', 'Quali pace', 'Pace with form']) &&
+    JSON.stringify(card.labels) === JSON.stringify(['Rank', 'Race pace', 'Quali pace', 'Race with form']) &&
     card.values.every((value) => /\d/.test(value)) &&
     /blur/.test(card.blur) &&
     card.left >= card.panelRight &&
     !card.tooltip,
   JSON.stringify(card),
+);
+const cardPace = await evaluate(`import('/site/js/state.js').then(({ state }) => {
+  const id = document.querySelector('#ratingsList .ledger-row').dataset.id;
+  const row = state.model.snaps.at(-1).drivers.find((driver) => String(driver.driverId) === id);
+  const displayed = [...document.querySelectorAll('#ratingCard dd')].map((cell) => Number.parseFloat(cell.firstChild.textContent.replaceAll(',', '')));
+  return { pace: displayed[1], form: displayed[3], expectedPace: row.race, expectedForm: row.race + state.model.formShifts.get(id) };
+})`);
+check(
+  'card pace and form totals use the race rating',
+  Math.abs(cardPace.pace - cardPace.expectedPace) <= 0.51 && Math.abs(cardPace.form - cardPace.expectedForm) <= 0.51,
+  JSON.stringify(cardPace),
 );
 // the race at the bottom right: the circuit of the weekend, the real race replayed on it at ten times the pace (a dot for each driver), the lap counter and
 // the live timing table
@@ -606,8 +625,8 @@ const raceOne = await trackState();
 check(
   'the race of the weekend is at the bottom right, with its name and the lap counter, a dot for each driver and a row of the timing table for each',
   !raceOne.hidden &&
-    raceOne.name === 'Singapore GP · 2026' &&
-    /^lap \d+ \/ 62$/.test(raceOne.lap) &&
+    raceOne.name === `${latestRace.name.replace('Grand Prix', 'GP')} · ${latestRace.year}` &&
+    /^lap \d+ \/ [1-9]\d*$/.test(raceOne.lap) &&
     raceOne.path > 500 &&
     JSON.stringify(raceOne.ids) === JSON.stringify(raceOne.rows) &&
     raceOne.order.length === raceOne.ids.length &&
@@ -820,11 +839,11 @@ const teamCard = await evaluate(
     return { hidden: card.hidden, name: card.querySelector('.card-surname')?.textContent, facts: card.querySelector('.card-facts')?.textContent ?? null, labels: [...card.querySelectorAll('dt')].map((dt) => dt.textContent) }; })()`,
 );
 check(
-  'the card of a team has its name and its paces, no age and no pace with form',
+  'the card of a team has its name, its race pace and recent car form, without a driver age',
   !teamCard.hidden &&
     teamCard.name === 'Mercedes' &&
     teamCard.facts === null &&
-    JSON.stringify(teamCard.labels) === JSON.stringify(['Rank', 'Pace', 'Quali pace']),
+    JSON.stringify(teamCard.labels) === JSON.stringify(['Rank', 'Race pace', 'Quali pace', 'Race with form']),
   JSON.stringify(teamCard),
 );
 await evaluate("document.querySelector('#ratingsList .ledger-row').dispatchEvent(new Event('pointerleave'))");
@@ -948,6 +967,24 @@ await evaluate("document.getElementById('ratingsCars').click()");
 await sleep(300);
 check('Cars view retitles the chart', /^Car ratings/.test((await evaluate("document.getElementById('ratingsTitle').textContent")) || ''));
 check(
+  'car ratings default to race pace, omit Combined and offer form',
+  await evaluate(
+    "document.getElementById('ratingsMetric').value === 'race' && ![...document.getElementById('ratingsMetric').options].some((option) => option.value === 'combined') && !document.getElementById('ratingsLayerForm').disabled",
+  ),
+);
+const carRatingsOff = await evaluate("[...document.querySelectorAll('#ratingsList .ledger-row .rating')].map((cell) => cell.textContent)");
+await evaluate("document.getElementById('ratingsLayerForm').click()");
+await sleep(300);
+const carRatingsOn = await evaluate("[...document.querySelectorAll('#ratingsList .ledger-row .rating')].map((cell) => cell.textContent)");
+check(
+  'car form changes latest car ratings',
+  (await evaluate("document.getElementById('ratingsLayerForm').getAttribute('aria-pressed')")) === 'true' &&
+    carRatingsOn.length === carRatingsOff.length &&
+    JSON.stringify(carRatingsOn) !== JSON.stringify(carRatingsOff),
+);
+await evaluate("document.getElementById('ratingsLayerForm').click()");
+
+check(
   'the panel has no Download CSV, Copy link or About these numbers',
   (await evaluate("['ratingsExport', 'ratingsShare', 'ratingsNote'].every((id) => !document.getElementById(id))")) &&
     !/Download|Copy link|About these numbers/.test(await evaluate("document.getElementById('stageLedger').textContent")),
@@ -1029,23 +1066,27 @@ check(
 );
 const barsGrow = await evaluate(
   `(async () => {
-    const widths = () => [...document.querySelectorAll('#ratingsList .bar-base')].map((bar) => bar.getBoundingClientRect().width);
+    // Rows change document order after settling; match observations by driver.
+    const bars = () => [...document.querySelectorAll('#ratingsList .bar-base')];
+    const idOf = (bar) => bar.closest('.ledger-row').dataset.id;
+    const widths = () => new Map(bars().map((bar) => [idOf(bar), bar.getBoundingClientRect().width]));
     const before = widths();
     const slider = document.getElementById('ratingsScrub');
     slider.value = 299;
     slider.dispatchEvent(new Event('input', { bubbles: true }));
     const start = widths();
+    const transitioning = new Set(bars().filter((bar) => bar.getAnimations().some((animation) => animation.transitionProperty === 'width')).map(idOf));
     await new Promise((resolve) => setTimeout(resolve, 150));
     const middle = widths();
     await new Promise((resolve) => setTimeout(resolve, 500));
     const end = widths();
-    const index = start.map((_, i) => i).filter((i) => Math.abs(end[i] - before[i]) > 8);
-    return { moved: index.length, started: index.every((i) => Math.abs(start[i] - before[i]) < 2), halfway: index.filter((i) => Math.min(before[i], end[i]) + 1 < middle[i] && middle[i] < Math.max(before[i], end[i]) - 1).length };
+    const ids = [...before.keys()].filter((id) => start.has(id) && end.has(id) && Math.abs(end.get(id) - before.get(id)) > 8);
+    return { moved: ids.length, transitioning: ids.every((id) => transitioning.has(id)), halfway: ids.filter((id) => Math.min(before.get(id), end.get(id)) + 1 < middle.get(id) && middle.get(id) < Math.max(before.get(id), end.get(id)) - 1).length };
   })()`,
 );
 check(
   'the bars grow to their new lengths rather than jumping',
-  barsGrow.moved === 0 || (barsGrow.started && barsGrow.halfway >= 1),
+  barsGrow.moved === 0 || (barsGrow.transitioning && barsGrow.halfway >= 1),
   JSON.stringify(barsGrow),
 );
 await slideTo(0);
@@ -1144,7 +1185,7 @@ check(
 // nothing glides under reduced motion, and the document is in order at once
 await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
 await sleep(100);
-await changeMetric('combined');
+await changeMetric('race');
 const steady = await evaluate(
   "(() => { const items = [...document.querySelectorAll('#ratingsList > li')]; return { gliding: items.filter((item) => getComputedStyle(item).transform !== 'none').length, ordered: items.every((item, i) => Number(item.style.order) === i) }; })()",
 );
@@ -1350,7 +1391,7 @@ check(
       await sleep(300);
       const without = await evaluate('document.querySelectorAll(\'#driverChart line[stroke="var(--ink)"]\').length');
       await evaluate(
-        "(() => { const select = document.getElementById('historyMetric'); select.value = 'combined'; select.dispatchEvent(new Event('change', { bubbles: true })); })()",
+        "(() => { const select = document.getElementById('historyMetric'); select.value = 'race'; select.dispatchEvent(new Event('change', { bubbles: true })); })()",
       );
       await sleep(300);
       return without === 0;
@@ -1461,7 +1502,7 @@ const headToHeadState = () =>
     lines: document.querySelectorAll('#headToHeadChart polyline[stroke^="var("]').length, // (not the dark edges under them)
     markers: [document.querySelectorAll('#headToHeadChart line[stroke="var(--s1)"]').length, document.querySelectorAll('#headToHeadChart line[stroke="var(--s2)"]').length],
     steps: [...document.querySelectorAll('.head-to-head-steps li > span:first-child')].map((label) => label.firstChild.textContent),
-    lit: [...document.querySelectorAll('#stageTrackDots circle')].filter((dot) => dot.classList.contains('versus-a') || dot.classList.contains('versus-b')).map((dot) => getComputedStyle(dot).fill),
+    lit: ['versus-a', 'versus-b'].map((name) => { const dot = document.querySelector('#stageTrackDots circle.' + name); return dot ? getComputedStyle(dot).fill : null; }),
     litRows: document.querySelectorAll('#stageTrackTable li.versus-a, #stageTrackTable li.versus-b').length,
     prime: [document.getElementById('headToHeadPrimeA').getAttribute('aria-pressed'), document.getElementById('headToHeadPrimeB').getAttribute('aria-pressed')],
     carFields: [...document.querySelectorAll('#headToHeadView [id^="headToHeadCarField"]')].map((field) => field.hidden),
@@ -1706,21 +1747,28 @@ check(
     jumped.slide === 'ageing',
   JSON.stringify(jumped),
 );
+for (let attempt = 0; attempt < 50 && !(await evaluate("!!document.querySelector('#insight-ageing .insight-point')")); attempt++)
+  await sleep(100);
 const interactiveDot = JSON.parse(
   await evaluate(`(() => {
   const dot = document.querySelector('#insight-ageing .insight-point');
+  if (!dot) return JSON.stringify({ focused: false, tapped: false, escaped: false, missing: true });
   dot.focus();
   const tooltip = dot.closest('[data-chart]').querySelector('.insight-point-tooltip');
   const focused = !tooltip.hidden && tooltip.textContent === dot.getAttribute('aria-label');
-  dot.click();
+  dot.dispatchEvent(new MouseEvent('click', { bubbles: true }));
   const tapped = tooltip.dataset.pinned === 'true' && !tooltip.hidden;
   dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-  return JSON.stringify({ focused, tapped, escaped: tooltip.hidden });
+  dot.focus();
+  dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+  const keyboard = tooltip.dataset.pinned === 'true' && !tooltip.hidden;
+  dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  return JSON.stringify({ focused, tapped, keyboard, escaped: tooltip.hidden });
 })()`),
 );
 check(
   'insight dots reveal exact values on focus and tap, and Escape dismisses them',
-  interactiveDot.focused && interactiveDot.tapped && interactiveDot.escaped,
+  interactiveDot.focused && interactiveDot.tapped && interactiveDot.keyboard && interactiveDot.escaped,
 );
 check(
   'slides slide (an animation, not a cut), and the same under reduced motion is a cut',
@@ -1873,7 +1921,7 @@ check(
   (await evaluate("document.querySelectorAll('#methodologyCard .method-part').length")) === 9 &&
     (await evaluate("document.querySelectorAll('#methodologyTrack .deck-slide').length")) === 10 &&
     (await evaluate("document.querySelectorAll('#methodologyCard .flow-stage').length")) >= 6 &&
-    (await evaluate("document.querySelectorAll('#methodologyParams tbody tr').length")) >= 24 &&
+    (await evaluate("document.querySelectorAll('#methodologyParams tbody tr').length")) === 20 &&
     (await evaluate("document.querySelectorAll('#methodologyScoring tbody tr:not(.group)').length")) === 21 &&
     (await evaluate("document.querySelectorAll('#methodologyWindows tr').length")) === 4 &&
     !(await evaluate("/\\{\\{|undefined|NaN/.test(document.getElementById('methodologyCard').textContent)")),
@@ -2183,6 +2231,18 @@ const linkedGraph = await evaluate(
   "(() => ({ shown: !document.getElementById('graphPage').hidden, drawn: document.getElementById('graphPlot').width > 0, drivers: document.getElementById('graphDriver').options.length, selected: document.getElementById('graphDriver').value, detail: document.getElementById('graphDetail').textContent, track: !document.getElementById('stageTrack').hidden, table: !document.getElementById('stageTrackTable').hidden, hot: document.querySelector('#stageTrackDots circle[data-id=\"830\"]')?.classList.contains('hot') }))()",
 );
 check(
+  'the graph labels strength seasons and keeps comparison years visible',
+  await evaluate(`(() => {
+    const periods = [...document.querySelectorAll('#graphDetail .graph-rival small')];
+    return /Graph only · \\d{4}/.test(document.getElementById('graphDetail').textContent) && periods.length > 0 && periods.every((period) => {
+      const box = period.getBoundingClientRect();
+      const parent = period.parentElement.getBoundingClientRect();
+      return /^\\d{4}(–\\d{4})?$/.test(period.textContent) && getComputedStyle(period).display === 'block' &&
+        box.left >= parent.left - 1 && box.right <= parent.right + 1 && box.bottom <= parent.bottom + 1;
+    });
+  })()`),
+);
+check(
   'a link straight to the graph defaults to Max and lights him in the mini GP',
   linkedGraph.shown &&
     linkedGraph.drawn &&
@@ -2205,13 +2265,16 @@ check(
 const graphLayout = JSON.parse(
   await evaluate(`(() => {
   const box = (selector) => { const { x, y, width, height, right, bottom } = document.querySelector(selector).getBoundingClientRect(); return { x, y, width, height, right, bottom }; };
-  return JSON.stringify({ card: box('#graphPage'), title: box('.graph-head h2'), picker: box('#graphDriver'), plot: box('#graphPlot'), detail: box('#graphDetail'), timeline: box('#graphTimeline'), key: box('.graph-key') });
+  return JSON.stringify({ card: box('#graphPage'), header: box('.graph-head'), intro: box('.graph-intro'), guide: box('.graph-guide'), title: box('.graph-head h2'), picker: box('#graphDriver'), plot: box('#graphPlot'), detail: box('#graphDetail'), timeline: box('#graphTimeline'), key: box('.graph-key') });
 })()`),
 );
 check(
   'the graph has a compact header, a taller plot beside the driver card, and a timeline below',
   graphLayout.picker.x > graphLayout.title.right &&
-    graphLayout.plot.y - graphLayout.card.y < 110 &&
+    graphLayout.header.height < 60 &&
+    graphLayout.guide.y >= graphLayout.intro.bottom &&
+    graphLayout.plot.y >= graphLayout.guide.bottom &&
+    graphLayout.plot.y - graphLayout.guide.bottom < 24 &&
     graphLayout.plot.height > 500 &&
     graphLayout.plot.width / graphLayout.plot.height < 1.5 &&
     graphLayout.detail.x > graphLayout.plot.right &&
@@ -2286,6 +2349,21 @@ const graphStage = await rectangleOfSelector('#stage');
 await click(graphStage.x + 8, graphStage.y + graphStage.height / 2);
 await sleep(300);
 check('clicking outside the graph card closes it', (await evaluate('location.hash')) === '#/');
+await evaluate("location.hash = '#/history?v=1&h=driver&dm=combined&cm=combined&drivers=863%2C847&from=2025&to=2026'");
+await sleep(700);
+check(
+  'old Combined history links open the same drivers on Race pace',
+  await evaluate(
+    "document.getElementById('historyMetric').value === 'race' && ![...document.getElementById('historyMetric').options].some((option) => option.value === 'combined') && document.querySelectorAll('#historyChips .series-chip').length === 2",
+  ),
+);
+await evaluate("document.getElementById('historyMetric').dispatchEvent(new Event('change', { bubbles: true }))");
+check(
+  'history writes Race choices into the URL after opening an old Combined link',
+  await evaluate(
+    "(() => { const params = new URLSearchParams(location.hash.split('?')[1]); return params.get('dm') === 'race' && params.get('cm') === 'race'; })()",
+  ),
+);
 await send('Emulation.clearDeviceMetricsOverride');
 
 for (const c of checks) console.log(`${c.pass ? 'ok  ' : 'FAIL'} ${c.name}${c.detail ? ` (${c.detail})` : ''}`);

@@ -67,7 +67,7 @@ function latestGridIds() {
 function optionGroups(selected) {
   const model = state.model;
   const latest = model.snaps[model.snaps.length - 1];
-  const current = latest.drivers.slice().sort((a, b) => b.combined - a.combined);
+  const current = latest.drivers.slice().sort((a, b) => b.race - a.race);
   const option = (id, label) => `<option value="${esc(id)}"${id === selected ? ' selected' : ''}>${esc(label)}</option>`;
   const now = current.map((d) => option(String(d.driverId), `${d.name} · ${d.car}`)).join('');
   const active = latestGridIds();
@@ -209,7 +209,7 @@ function stepsHtml(r, nameA, nameB, teammates, own) {
           stepRow(
             'Calibrated',
             r.breakdown.calibrated,
-            'Adds retirement risk and adjusts to how often gaps of this size have held up, before any recent form.',
+            'Calibrates the rating gaps against historical pairwise performance, before recent form.',
           ),
         ]
       : []),
@@ -217,7 +217,7 @@ function stepsHtml(r, nameA, nameB, teammates, own) {
       'With recent form',
       full,
       own
-        ? 'Adds how each driver and car has done over the last few races, and the grid and circuit when known. This is the forecast.'
+        ? 'Adds recent driver and car performance, and the grid when known. Forecasts the pairwise performance benchmark; retirement risks are shown separately.'
         : 'Adds how each driver and car has done over the last few races. This is the forecast.',
     ),
   ];

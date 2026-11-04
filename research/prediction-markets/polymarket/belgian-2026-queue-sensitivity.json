@@ -1,0 +1,222 @@
+{
+  "classification": "hypothetical queue and event-order sensitivity; no actual fill observed",
+  "coverageComplete": false,
+  "source": "PMXT v2, https://archive.pmxt.dev/Polymarket/v2, CC BY 4.0",
+  "sourceFiles": [
+    {
+      "url": "https://r2v2.pmxt.dev/polymarket_orderbook_2026-07-16T10.parquet",
+      "sha256": "7b6fb054149f636ffa6313413bf2020cec71264464668c4cae1edb99717c24ff"
+    },
+    {
+      "url": "https://r2v2.pmxt.dev/polymarket_orderbook_2026-07-16T11.parquet",
+      "sha256": "5cc1441d76b93b904635e6e37a4038147b52b45ef71bb6c89aaacd4f2061f23e"
+    }
+  ],
+  "pair": [
+    "Norris",
+    "Piastri"
+  ],
+  "selectedOutcome": "Norris",
+  "snapshotReceived": 1784200264244,
+  "snapshotSource": 1784200264125,
+  "activation": 1784200265244,
+  "quotedBid": 0.4,
+  "initialAsk": 0.6,
+  "displayedSharesInSnapshot": 63.32,
+  "preactivationPrint": {
+    "source": 1784200264290,
+    "received": 1784200264428,
+    "shares": 33.333332,
+    "transaction": "0xe4efd622aa6f60270e6902ccf09794bfdf831174071e9c49a0d88a8b55d3e71e"
+  },
+  "recordedBidRemoval": 1784200516126,
+  "postactivationPrints": [
+    {
+      "source": 1784200276805,
+      "received": 1784200276878,
+      "shares": 16.666665,
+      "transaction": "0x17ba94b0f4dc90ffa2fb74187b686c3b35c25bab6f3d4e3a18f493dee25f087b"
+    },
+    {
+      "source": 1784200420569,
+      "received": 1784200420630,
+      "shares": 20.0,
+      "transaction": "0x99a23f2bda796b40ec67de31e9b326b5ebc40bbf76dd8b156f33d87d8a777e12"
+    },
+    {
+      "source": 1784200516208,
+      "received": 1784200516328,
+      "shares": 26.65,
+      "transaction": "0xdd6e0edd77eecb63e93d8b7f1cd72a9954d5d40e4869aefd5f8d3fad1d32e0dd"
+    }
+  ],
+  "assumedSettlementPayout": 0,
+  "scenarios": [
+    {
+      "activationQueueAssumption": "snapshot_already_reflects_preactivation_print",
+      "percentAheadRetained": 100,
+      "removalTimingAssumption": "cancel_on_received_removal",
+      "filledShares": 0.0,
+      "queueRemaining": 26.653335,
+      "fills": [],
+      "conditionalGrossProfitAssumingZeroPayout": -0.0
+    },
+    {
+      "activationQueueAssumption": "snapshot_already_reflects_preactivation_print",
+      "percentAheadRetained": 100,
+      "removalTimingAssumption": "last_trade_reaches_before_cancel",
+      "filledShares": 0.0,
+      "queueRemaining": 0.003335,
+      "fills": [],
+      "conditionalGrossProfitAssumingZeroPayout": -0.0
+    },
+    {
+      "activationQueueAssumption": "snapshot_already_reflects_preactivation_print",
+      "percentAheadRetained": 50,
+      "removalTimingAssumption": "cancel_on_received_removal",
+      "filledShares": 5.0,
+      "queueRemaining": 0.0,
+      "fills": [
+        {
+          "transaction": "0x99a23f2bda796b40ec67de31e9b326b5ebc40bbf76dd8b156f33d87d8a777e12",
+          "shares": 5.0
+        }
+      ],
+      "conditionalGrossProfitAssumingZeroPayout": -2.0
+    },
+    {
+      "activationQueueAssumption": "snapshot_already_reflects_preactivation_print",
+      "percentAheadRetained": 50,
+      "removalTimingAssumption": "last_trade_reaches_before_cancel",
+      "filledShares": 5.0,
+      "queueRemaining": 0.0,
+      "fills": [
+        {
+          "transaction": "0x99a23f2bda796b40ec67de31e9b326b5ebc40bbf76dd8b156f33d87d8a777e12",
+          "shares": 5.0
+        }
+      ],
+      "conditionalGrossProfitAssumingZeroPayout": -2.0
+    },
+    {
+      "activationQueueAssumption": "snapshot_already_reflects_preactivation_print",
+      "percentAheadRetained": 0,
+      "removalTimingAssumption": "cancel_on_received_removal",
+      "filledShares": 5.0,
+      "queueRemaining": 0.0,
+      "fills": [
+        {
+          "transaction": "0x17ba94b0f4dc90ffa2fb74187b686c3b35c25bab6f3d4e3a18f493dee25f087b",
+          "shares": 5.0
+        }
+      ],
+      "conditionalGrossProfitAssumingZeroPayout": -2.0
+    },
+    {
+      "activationQueueAssumption": "snapshot_already_reflects_preactivation_print",
+      "percentAheadRetained": 0,
+      "removalTimingAssumption": "last_trade_reaches_before_cancel",
+      "filledShares": 5.0,
+      "queueRemaining": 0.0,
+      "fills": [
+        {
+          "transaction": "0x17ba94b0f4dc90ffa2fb74187b686c3b35c25bab6f3d4e3a18f493dee25f087b",
+          "shares": 5.0
+        }
+      ],
+      "conditionalGrossProfitAssumingZeroPayout": -2.0
+    },
+    {
+      "activationQueueAssumption": "preactivation_print_consumes_additional_displayed_queue",
+      "percentAheadRetained": 100,
+      "removalTimingAssumption": "cancel_on_received_removal",
+      "filledShares": 5.0,
+      "queueRemaining": 0.0,
+      "fills": [
+        {
+          "transaction": "0x99a23f2bda796b40ec67de31e9b326b5ebc40bbf76dd8b156f33d87d8a777e12",
+          "shares": 5.0
+        }
+      ],
+      "conditionalGrossProfitAssumingZeroPayout": -2.0
+    },
+    {
+      "activationQueueAssumption": "preactivation_print_consumes_additional_displayed_queue",
+      "percentAheadRetained": 100,
+      "removalTimingAssumption": "last_trade_reaches_before_cancel",
+      "filledShares": 5.0,
+      "queueRemaining": 0.0,
+      "fills": [
+        {
+          "transaction": "0x99a23f2bda796b40ec67de31e9b326b5ebc40bbf76dd8b156f33d87d8a777e12",
+          "shares": 5.0
+        }
+      ],
+      "conditionalGrossProfitAssumingZeroPayout": -2.0
+    },
+    {
+      "activationQueueAssumption": "preactivation_print_consumes_additional_displayed_queue",
+      "percentAheadRetained": 50,
+      "removalTimingAssumption": "cancel_on_received_removal",
+      "filledShares": 5.0,
+      "queueRemaining": 0.0,
+      "fills": [
+        {
+          "transaction": "0x17ba94b0f4dc90ffa2fb74187b686c3b35c25bab6f3d4e3a18f493dee25f087b",
+          "shares": 1.673331
+        },
+        {
+          "transaction": "0x99a23f2bda796b40ec67de31e9b326b5ebc40bbf76dd8b156f33d87d8a777e12",
+          "shares": 3.326669
+        }
+      ],
+      "conditionalGrossProfitAssumingZeroPayout": -2.0
+    },
+    {
+      "activationQueueAssumption": "preactivation_print_consumes_additional_displayed_queue",
+      "percentAheadRetained": 50,
+      "removalTimingAssumption": "last_trade_reaches_before_cancel",
+      "filledShares": 5.0,
+      "queueRemaining": 0.0,
+      "fills": [
+        {
+          "transaction": "0x17ba94b0f4dc90ffa2fb74187b686c3b35c25bab6f3d4e3a18f493dee25f087b",
+          "shares": 1.673331
+        },
+        {
+          "transaction": "0x99a23f2bda796b40ec67de31e9b326b5ebc40bbf76dd8b156f33d87d8a777e12",
+          "shares": 3.326669
+        }
+      ],
+      "conditionalGrossProfitAssumingZeroPayout": -2.0
+    },
+    {
+      "activationQueueAssumption": "preactivation_print_consumes_additional_displayed_queue",
+      "percentAheadRetained": 0,
+      "removalTimingAssumption": "cancel_on_received_removal",
+      "filledShares": 5.0,
+      "queueRemaining": 0.0,
+      "fills": [
+        {
+          "transaction": "0x17ba94b0f4dc90ffa2fb74187b686c3b35c25bab6f3d4e3a18f493dee25f087b",
+          "shares": 5.0
+        }
+      ],
+      "conditionalGrossProfitAssumingZeroPayout": -2.0
+    },
+    {
+      "activationQueueAssumption": "preactivation_print_consumes_additional_displayed_queue",
+      "percentAheadRetained": 0,
+      "removalTimingAssumption": "last_trade_reaches_before_cancel",
+      "filledShares": 5.0,
+      "queueRemaining": 0.0,
+      "fills": [
+        {
+          "transaction": "0x17ba94b0f4dc90ffa2fb74187b686c3b35c25bab6f3d4e3a18f493dee25f087b",
+          "shares": 5.0
+        }
+      ],
+      "conditionalGrossProfitAssumingZeroPayout": -2.0
+    }
+  ]
+}

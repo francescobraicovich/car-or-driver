@@ -1,0 +1,45 @@
+{
+  "classification": "hypothetical single-print sensitivity; no actual fill observed",
+  "coverageComplete": false,
+  "source": "PMXT v2, https://archive.pmxt.dev/Polymarket/v2, CC BY 4.0",
+  "sourceFiles": [
+    {
+      "url": "https://r2v2.pmxt.dev/polymarket_orderbook_2026-06-24T17.parquet",
+      "sha256": "290fd8a424d3d5aa086bb62474aaca974dd9f2cf22553089b940e43d9f09a0cd"
+    },
+    {
+      "url": "https://r2v2.pmxt.dev/polymarket_orderbook_2026-06-24T18.parquet",
+      "sha256": "dd1fcf2ee5554270f1a4b4e9f579c8173d2c5d42cc523fba93d40e567aa544f1"
+    }
+  ],
+  "assumedSettlementPayout": 0,
+  "result": {
+    "drivers": [
+      "Leclerc",
+      "Hamilton"
+    ],
+    "selectedOutcome": "Leclerc",
+    "snapshotReceived": 1782321731903,
+    "snapshotSource": 1782321512908,
+    "bidPrice": 0.37,
+    "askPrice": 0.86,
+    "orderSide": "buy",
+    "quotedPrice": 0.37,
+    "displayedSharesAhead": 25.23,
+    "tradeSource": 1782325485474,
+    "tradeReceived": 1782325485855,
+    "transaction": "0x783c88f6d39044eb2d91e6880e480430c5b2686bcb8b74fbc9df8ecc12ac081b",
+    "printShares": 1.5873,
+    "orderShares": 5.0,
+    "fillsByPercentOfSnapshotQueueRemainingAhead": {
+      "100": 0.0,
+      "50": 0.0,
+      "0": 1.5873
+    },
+    "conditionalGrossProfitAssumingZeroPayoutByPercent": {
+      "100": -0.0,
+      "50": -0.0,
+      "0": -0.587301
+    }
+  }
+}

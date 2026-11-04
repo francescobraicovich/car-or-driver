@@ -1,0 +1,181 @@
+{
+  "classification": "post-observation longer-window feasibility, not an independent test",
+  "note": "Italy and Singapore were evaluated independently; the full pseudo-holdout cannot be assessed if either rejects.",
+  "initialCapital": 107.05,
+  "weights": {
+    "formWeight": 1,
+    "teammateWeight": -1,
+    "headWeight": 0,
+    "minimumEdgeTicks": 1,
+    "inventorySkewTicks": 0.1
+  },
+  "fixed": {
+    "initialCapital": 107.05,
+    "orderSize": 5,
+    "minimumOrderSize": 5,
+    "maxInventory": 10,
+    "tickSize": 0.01,
+    "latencyMs": 1000,
+    "cancelLatencyMs": 1000,
+    "maxBookAgeMs": 60000,
+    "maxSourceAgeMs": 120000,
+    "minimumEdgeTicks": 1,
+    "inventorySkewTicks": 0.1,
+    "allowUnverifiedData": true,
+    "allowSourceTimestampDisorder": true
+  },
+  "outcomes": [
+    {
+      "race": "italian",
+      "boundaryBooksExcluded": 4,
+      "rejection": "Source timestamps are invalid or too old"
+    },
+    {
+      "race": "singapore",
+      "boundaryBooksExcluded": 4,
+      "firstSnapshots": [
+        {
+          "driver": "Lando Norris",
+          "at": "2026-10-08T00:23:44.375Z"
+        },
+        {
+          "driver": "Oscar Piastri",
+          "at": "2026-10-08T03:29:37.890Z"
+        },
+        {
+          "driver": "Lewis Hamilton",
+          "at": "2026-10-08T01:02:06.849Z"
+        },
+        {
+          "driver": "Charles Leclerc",
+          "at": "2026-10-08T05:50:55.015Z"
+        }
+      ],
+      "sourceHashes": [
+        {
+          "file": "singapore-2026-10-08-norris-l2.parquet",
+          "sha256": "85c4c7c9693a0e2999d46b98ca26578633370acd13768a25d81fc65343d2d670"
+        },
+        {
+          "file": "singapore-2026-10-08-norris-trades.parquet",
+          "sha256": "e13cedae67db8377092cc2d4dba457666394a7f8a681f877e62ea875112690ea"
+        },
+        {
+          "file": "singapore-2026-10-08-norris-onchain_fills.parquet",
+          "sha256": "44ee54dc496665ee0499bf793de39444c16e0c52b05c6800506b0a17659e479c"
+        },
+        {
+          "file": "singapore-2026-10-08-piastri-l2.parquet",
+          "sha256": "822af7516af3c62b64b16baff8f7128de8ca97db1507c2426e5edcec2c8170b3"
+        },
+        {
+          "file": "singapore-2026-10-08-piastri-trades.parquet",
+          "sha256": "ccaaf7939d2e2f2737dcdb53eabe7948af94edf0c7c1462eb0e3020adf54708c"
+        },
+        {
+          "file": "singapore-2026-10-08-piastri-onchain_fills.parquet",
+          "sha256": "2f3957d0b82c9bd182ec539fc2e12780be593de90078d90a17a356a180ab67bb"
+        },
+        {
+          "file": "singapore-2026-10-08-hamilton-l2.parquet",
+          "sha256": "7be1f72151206c031eee212f95179356621d7ce248f41fcd0f14f5d818a8ef07"
+        },
+        {
+          "file": "singapore-2026-10-08-hamilton-trades.parquet",
+          "sha256": "3de04da2fc75cf1c61b360cec7a929d8d4b0c06a1c7bb8416452199998fbe96e"
+        },
+        {
+          "file": "singapore-2026-10-08-hamilton-onchain_fills.parquet",
+          "sha256": "90e3b21646c72767b50d2da743fc55f0b55b07dea40b1bea7998152c282b0ebc"
+        },
+        {
+          "file": "singapore-2026-10-08-leclerc-l2.parquet",
+          "sha256": "30a7653d7962a77c3e8aadca55006f745f7ff9572b479666f468a0a66dd83ebd"
+        },
+        {
+          "file": "singapore-2026-10-08-leclerc-trades.parquet",
+          "sha256": "d6b288cfcfc01c147daf0028cbc10c39c0327fe9cf46d85cbb22fc8403fb07aa"
+        },
+        {
+          "file": "singapore-2026-10-08-leclerc-onchain_fills.parquet",
+          "sha256": "3fc5e4085b2ffa3f1f52835ae6741a1373b2b8fb0b931bd468d08baa76836183"
+        }
+      ],
+      "roundedVwapAssumptions": [
+        {
+          "condition": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+          "transactionHash": "0x0416a5efef7a05da31c9326b781dccfd4c1606245ac2b05de9f9fea7155ad3e8",
+          "reportedPrice": 0.05500000000000005,
+          "weightedPrice": 0.0546879880690959
+        }
+      ],
+      "settlement": {
+        "profit": 0.12999999999999545,
+        "fills": [
+          {
+            "market": "0x0db778ef36653053b8434e4d934dcafcf4c2a9aed6f1e9786baeccf2c4e2feb1",
+            "timestamp": 1791433928832.085,
+            "side": "sell",
+            "price": 0.13,
+            "quantity": 1,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf86a58eac9cc7c2d86090e147d4a11d3b2e8e06e4b292c32f521810bc1f8f471|BUY|0.1300",
+            "transactionHash": "0xf86a58eac9cc7c2d86090e147d4a11d3b2e8e06e4b292c32f521810bc1f8f471"
+          }
+        ],
+        "markets": [
+          {
+            "id": "0x0db778ef36653053b8434e4d934dcafcf4c2a9aed6f1e9786baeccf2c4e2feb1",
+            "driver": "Lando Norris",
+            "yes": 4,
+            "no": 5,
+            "inventory": -1
+          },
+          {
+            "id": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "driver": "Oscar Piastri",
+            "yes": 5,
+            "no": 5,
+            "inventory": 0
+          },
+          {
+            "id": "0xbd329c1f994d55ec7f73ffbb8a501a746bbc2e870ec8f9db7d96d1809858f900",
+            "driver": "Lewis Hamilton",
+            "yes": 5,
+            "no": 5,
+            "inventory": 0
+          },
+          {
+            "id": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "driver": "Charles Leclerc",
+            "yes": 5,
+            "no": 5,
+            "inventory": 0
+          }
+        ],
+        "cashBeforeSettlement": 87.17999999999999,
+        "crossedBookIntervals": [],
+        "sourceTimestampReversals": 0
+      },
+      "independentLiquidation": {
+        "complete": false,
+        "profit": null,
+        "fills": [
+          {
+            "market": "0x0db778ef36653053b8434e4d934dcafcf4c2a9aed6f1e9786baeccf2c4e2feb1",
+            "timestamp": 1791433928832.085,
+            "side": "sell",
+            "price": 0.13,
+            "quantity": 1,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf86a58eac9cc7c2d86090e147d4a11d3b2e8e06e4b292c32f521810bc1f8f471|BUY|0.1300",
+            "transactionHash": "0xf86a58eac9cc7c2d86090e147d4a11d3b2e8e06e4b292c32f521810bc1f8f471"
+          }
+        ],
+        "fees": 0
+      }
+    }
+  ]
+}

@@ -13,12 +13,8 @@ const centerRatings = (values) => {
   return new Map([...values].map(([id, value]) => [id, { ...value, m: value.m - mean }]));
 };
 
-export function hybridRatings(weekends, snapshots, race, qualifying, carOf) {
-  const ranking = rankingRatings(
-    weekends,
-    carOf,
-    snapshots.map((snapshot) => !!snapshot.diag.wet),
-  );
+export function hybridRatings(weekends, race, qualifying, carOf) {
+  const ranking = rankingRatings(weekends, carOf);
   const pre = [];
   const ratings = [];
   const predictions = [];

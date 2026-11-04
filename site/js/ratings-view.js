@@ -9,8 +9,7 @@ import { barScale, barShare } from './ratings-bars.js';
 import { DESCRIPTIONS, NAMES, isProbability } from './metric-text.js';
 
 // Recent form adjusts the race-pace ratings only.
-const FORM_METRICS = ['combined', 'race'];
-const PACE_METRICS = ['combined', 'race', 'qual'];
+const PACE_METRICS = ['race', 'qual'];
 const GUIDE_TEXT = {
   pace: 'Estimated pace after this weekend · higher is faster · 1,000 is the average of this grid',
   effective: 'Effective pace after this weekend · higher is better · includes finishing risk',
@@ -21,8 +20,8 @@ const GUIDE_TEXT = {
 };
 
 const preferences = {
-  driver: { metric: 'combined', selected: new Set() },
-  car: { metric: 'combined', selected: new Set() },
+  driver: { metric: 'race', selected: new Set() },
+  car: { metric: 'race', selected: new Set() },
 };
 let entity = 'driver';
 let formOn = false;
@@ -30,7 +29,7 @@ let showSd = true;
 let ratingDecimals = 1;
 // Approximate standard deviations from the state-space filters. The hybrid
 // blend does not propagate uncertainty from its qualifying and online signals.
-const SD_FIELD = { race: 'raceSd', qual: 'qualSd', combined: 'combinedSd' };
+const SD_FIELD = { race: 'raceSd', qual: 'qualSd' };
 const sdOf = (row, metric) => {
   const v = row[SD_FIELD[metric]];
   return Number.isFinite(v) ? v : NaN;
@@ -299,15 +298,14 @@ function lastColumn(row, probability, showForm) {
 }
 
 /**
- * Whether recent form is on. "With recent form" adds the forecast model's form shift to the pace rating, which only exists for drivers, for
- * combined or race pace, on the latest weekend; otherwise it is unavailable and the rating is shown.
+ * Whether recent form is on. "With recent form" adds the forecast model's form shift to the pace rating, for drivers or cars, for
+ * race pace, on the latest weekend; otherwise it is unavailable and the rating is shown.
  */
 function layerState(pref) {
   let reason = '';
-  if (entity !== 'driver') reason = 'Recent form is only shown for drivers.';
-  else if (!FORM_METRICS.includes(pref.metric)) reason = 'Recent form applies to Combined and Race pace.';
+  if (pref.metric !== 'race') reason = 'Recent form applies to Race pace.';
   else if (currentIndex() !== state.model.snaps.length - 1) reason = 'Recent form is only shown for the latest weekend.';
-  const shifts = reason ? null : state.model.formShifts;
+  const shifts = reason ? null : entity === 'driver' ? state.model.formShifts : state.model.carFormShifts;
   if (!reason && !shifts) reason = 'Recent form is not available for this model.';
   return { shifts, reason, showForm: formOn && !reason, sd: false };
 }
@@ -454,7 +452,6 @@ function drawList(rows, snap, metric, probability, st) {
   const longest = { name: Math.max(...names.map((name) => name.length), 4), team: Math.max(...teams.map((team) => team.length), 4) };
   widest = busy() ? { name: Math.max(widest?.name ?? 0, longest.name), team: Math.max(widest?.team ?? 0, longest.team) } : null;
   const columns = widest ?? longest;
-  list.style.setProperty('--rows', String(rows.length));
   list.style.setProperty('--name', `${Math.min(columns.name, width >= 560 ? 22 : 18)}ch`);
   list.style.setProperty('--team', `${Math.min(columns.team, 16)}ch`);
   list.style.setProperty('--mean', share(mean));
@@ -584,11 +581,12 @@ function showCard(row, target, snap) {
   };
   const sd = (value) => (Number.isFinite(value) ? { text: ` ±${Math.round(value)}` } : null);
   add('Rank', String(row.rank));
-  add('Pace', fmt(row.combined, false), sd(row.combinedSd));
+  add('Race pace', fmt(row.race, false), sd(row.raceSd));
   add('Quali pace', fmt(row.qual, false), sd(row.qualSd));
-  const shift = isDriver && currentIndex() === state.model.snaps.length - 1 ? state.model.formShifts?.get(row.id) : undefined;
-  if (Number.isFinite(shift) && Number.isFinite(row.combined))
-    add('Pace with form', fmt(row.combined + shift, false), {
+  const shifts = isDriver ? state.model.formShifts : state.model.carFormShifts;
+  const shift = currentIndex() === state.model.snaps.length - 1 ? shifts?.get(row.id) : undefined;
+  if (Number.isFinite(shift) && Number.isFinite(row.race))
+    add('Race with form', fmt(row.race + shift, false), {
       text: ` ${shift >= 0 ? '▲' : '▼'}${Math.abs(shift).toFixed(1)}`,
       tone: shift >= 0 ? 'up' : 'down',
     });
@@ -660,7 +658,7 @@ export function renderRatings() {
   if (!el.ratingsHost) return;
   ensurePanel();
   const pref = preferences[entity];
-  const metrics = ['combined', 'race', 'qual', 'effective', entity === 'driver' ? 'clean' : 'survival'];
+  const metrics = ['race', 'qual', 'effective', entity === 'driver' ? 'clean' : 'survival'];
   controls.ratingsMetric.innerHTML = metrics
     .map((m) => `<option value="${m}"${m === pref.metric ? ' selected' : ''}>${esc(NAMES[m])}</option>`)
     .join('');
@@ -689,7 +687,8 @@ export function renderRatings() {
   const probability = isProbability(pref.metric);
   controls.ratingsLayerForm.setAttribute('aria-pressed', String(st.showForm));
   controls.ratingsLayerForm.toggleAttribute('disabled', Boolean(st.reason));
-  controls.ratingsLayerForm.title = st.reason || 'Add the recent form of each driver to the rating';
+  controls.ratingsLayerForm.title =
+    st.reason || `Add recent race form for each ${entity}; an approximate contribution to the race forecast`;
   controls.ratingsMetric.title = DESCRIPTIONS[pref.metric];
   controls.ratingsGuideLine.textContent = PACE_METRICS.includes(pref.metric) ? GUIDE_TEXT.pace : GUIDE_TEXT[pref.metric];
   const paceMeaning =

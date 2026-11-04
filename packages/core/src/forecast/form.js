@@ -30,7 +30,35 @@ function pairTargets(pairs) {
  */
 export function withoutForm(features) {
   const out = { ...features };
-  for (const name of Object.keys(out)) if (/^(qual|lap|order)_(fast|slow)/.test(name)) out[name] = 0;
+  for (const name of Object.keys(out)) if (/^(innovation_)?(qual|lap|order)_(fast|slow)/.test(name)) out[name] = 0;
+  return out;
+}
+
+/** Remove driver-specific form while retaining each car component. */
+export function withoutDriverForm(features) {
+  const out = { ...features };
+  for (const name of Object.keys(features)) {
+    if (/^(innovation_)?(qual|lap|order)_(fast|slow)_driver$/.test(name)) {
+      const packageName = name.slice(0, -7);
+      if (Object.hasOwn(features, packageName)) out[packageName] = features[packageName] - features[name];
+      out[name] = 0;
+    } else if (/^(innovation_)?(qual|lap|order)_(fast|slow)_track$/.test(name)) out[name] = 0;
+  }
+  return out;
+}
+
+/** Remove car form while preserving driver-specific and track components. */
+export function withoutCarForm(features) {
+  const out = { ...features };
+  for (const name of Object.keys(features)) {
+    if (/^(innovation_)?(qual|lap|order)_(fast|slow)_car$/.test(name)) out[name] = 0;
+    if (/^(innovation_)?(qual|lap|order)_(fast|slow)$/.test(name)) {
+      const driverName = `${name}_driver`;
+      const carName = `${name}_car`;
+      if (Object.hasOwn(features, carName)) out[name] = features[name] - features[carName];
+      else if (Object.hasOwn(features, driverName)) out[name] = features[driverName];
+    }
+  }
   return out;
 }
 
@@ -45,15 +73,15 @@ export function qualTargets(qrows) {
 }
 
 class Form {
-  constructor(rate) {
+  constructor(rate, track) {
     this.rate = rate;
     this.d = new Map();
     this.c = new Map();
-    this.track = new Map();
+    this.track = track ? new Map() : null;
   }
   winter() {
     for (const [k, v] of this.c) this.c.set(k, v * 0.65);
-    for (const [k, v] of this.track) this.track.set(k, v * 0.65);
+    if (this.track) for (const [k, v] of this.track) this.track.set(k, v * 0.65);
   }
   package(r) {
     return (this.d.get(r.driverId) || 0) + (this.c.get(r.constructorId) || 0);
@@ -73,34 +101,38 @@ class Form {
         // Teammate contrast identifies persistent driver talent; only a small
         // share of a common team innovation is allocated to the driver.
         this.d.set(r.driverId, (this.d.get(r.driverId) || 0) + this.rate * 0.4 * (err.get(r.driverId) - 0.85 * teamErr));
-        const key = `${r.driverId}|${circuit}`;
-        this.track.set(key, 0.75 * (this.track.get(key) || 0) + 0.25 * clip(err.get(r.driverId), -2, 2));
+        if (this.track) {
+          const key = `${r.driverId}|${circuit}`;
+          this.track.set(key, 0.75 * (this.track.get(key) || 0) + 0.25 * clip(err.get(r.driverId), -2, 2));
+        }
       }
     }
   }
 }
 
 export class FormFeatures {
-  constructor(lapPace) {
+  constructor(lapPace, { track = true } = {}) {
     this.lapPace = lapPace;
     this.forms = {};
     this.weekend = -1;
     this.year = null;
     for (const channel of ['qual', 'lap', 'order'])
-      for (const speed of ['fast', 'slow']) this.forms[`${channel}_${speed}`] = new Form(speed === 'fast' ? 0.6 : 0.2);
+      for (const speed of ['fast', 'slow']) this.forms[`${channel}_${speed}`] = new Form(speed === 'fast' ? 0.6 : 0.2, track);
   }
   exportState() {
     return {
       year: this.year,
       weekend: this.weekend,
-      forms: Object.fromEntries(Object.entries(this.forms).map(([k, v]) => [k, { rate: v.rate, d: v.d, c: v.c, track: v.track }])),
+      forms: Object.fromEntries(
+        Object.entries(this.forms).map(([k, v]) => [k, { rate: v.rate, d: v.d, c: v.c, ...(v.track ? { track: v.track } : {}) }]),
+      ),
     };
   }
   importState(saved) {
     this.year = saved.year;
     this.weekend = saved.weekend;
     for (const [k, v] of Object.entries(saved.forms))
-      Object.assign(this.forms[k], { ...v, d: new Map(v.d), c: new Map(v.c), track: new Map(v.track) });
+      Object.assign(this.forms[k], { ...v, d: new Map(v.d), c: new Map(v.c), track: v.track ? new Map(v.track) : null });
   }
   beforeWeekend(w) {
     // The core mutates qualifying maps before race scoring. Copy here so the
@@ -138,7 +170,7 @@ export class FormFeatures {
     for (const [key, form] of Object.entries(this.forms)) {
       f[key] = form.package(x) - form.package(y);
       f[`${key}_driver`] = difference(form.d, x.driverId, y.driverId);
-      f[`${key}_track`] = difference(form.track, `${x.driverId}|${info.circuitId}`, `${y.driverId}|${info.circuitId}`);
+      if (form.track) f[`${key}_track`] = difference(form.track, `${x.driverId}|${info.circuitId}`, `${y.driverId}|${info.circuitId}`);
     }
     const grid = (r) => (+r.grid > 0 ? +r.grid : rows.length);
     const gridDiff = (grid(y) - grid(x)) / 10;

@@ -1,0 +1,27 @@
+{
+  "dataThrough": {
+    "year": 2026,
+    "round": 19,
+    "name": "Mexico City Grand Prix",
+    "date": "2026-11-01"
+  },
+  "manifestVersion": "491b695e2c2870e3",
+  "sourceHash": "af50be13b2dc0b29",
+  "previousSourceHash": "9eda03dd6d88facd",
+  "previousWeekends": 619,
+  "currentWeekends": 620,
+  "previousRatingHistoriesUnchanged": true,
+  "forecastHeadsUnchanged": true,
+  "modelParametersUnchanged": true,
+  "historicalRatingsSha256": "e4fea5930304ae4d0404c6f657667651187f6df60617b02b8eea2ed7dca748a3",
+  "appended": {
+    "results": 22,
+    "qualifying": 22,
+    "lapTimes": 1364
+  },
+  "sources": {
+    "raceTables": "https://github.com/TracingInsights/RaceData",
+    "raceClassification": "https://www.formula1.com/en/results/2026/races/1298/mexico/race-result",
+    "qualifying": "https://www.formula1.com/en/results/2026/races/1298/mexico/qualifying"
+  }
+}

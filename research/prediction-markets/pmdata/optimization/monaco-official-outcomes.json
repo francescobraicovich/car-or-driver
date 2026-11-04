@@ -1,0 +1,141 @@
+{
+  "source": "Polymarket Gamma API",
+  "requestUrl": "https://gamma-api.polymarket.com/events/slug/f1-monaco-grand-prix-winner-2026-06-07",
+  "retrievedAt": "2026-11-02T18:24:00.543873+00:00",
+  "originalResponseSha256": "ff8396bea3596a756b456de29b6b450a80952ab9f7d55e9e7697accedf2e5c42",
+  "note": "Retrospective settlement metadata; historical tick and minimum not verified.",
+  "event": {
+    "id": "466429",
+    "slug": "f1-monaco-grand-prix-winner-2026-06-07",
+    "closed": true,
+    "updatedAt": "2026-08-13T15:52:22.400792Z",
+    "negRisk": true
+  },
+  "markets": [
+    {
+      "slug": "f1-monaco-grand-prix-winner-leclerc-2026-06-07",
+      "conditionId": "0x46208f52175f84673b68e5ab0eb0a923dd3f2b91906510e6f41998432d486950",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "72242299304338713759627574297802907602981462406295518815797559127101294681792",
+        "27721378004896096657377769974479266040216487404845752005883374544782840408663"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-06-07 20:57:57+00",
+      "creationTime": "2026-05-09T11:30:02.177548Z",
+      "startDate": "2026-05-09T13:12:47.26137Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-monaco-grand-prix-winner-norris-2026-06-07",
+      "conditionId": "0x83b602301cd7e5b717b50e2c055d94433df638db563556209493fbc074ff8a4a",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "57675532514190197377823258775443578797292899515149396025799339207033680551158",
+        "94594108643827152550558567656383835789403483587762281612971261449356667158681"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-06-07 20:57:58+00",
+      "creationTime": "2026-05-09T11:30:02.408475Z",
+      "startDate": "2026-05-09T13:12:54.301716Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-monaco-grand-prix-winner-antonelli-2026-06-07",
+      "conditionId": "0x427a6b47590aab053b2e03423fffb5b757b8e879d639b10af496b0e76c65f62e",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "1",
+        "0"
+      ],
+      "clobTokenIds": [
+        "66393489832207840268871489816986495954171777084600153701153761050390173773230",
+        "99389334035240379979200553248995577646220038160040748621365491867817132558883"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-06-07 20:58:28+00",
+      "creationTime": "2026-05-09T11:30:02.514247Z",
+      "startDate": "2026-05-09T13:13:02.561798Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-monaco-grand-prix-winner-hamilton-2026-06-07",
+      "conditionId": "0x480e352167e241afcd36df63fce8bb3a6af5308e47b13262b1b437d797b86db1",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "59257537591670038179620140177120720107300978199987127646173806081836051514975",
+        "51139647279433150695856019221083451512639497682795395774675407526592495046515"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-06-07 20:56:21+00",
+      "creationTime": "2026-05-09T11:30:03.175835Z",
+      "startDate": "2026-05-09T13:13:18.461935Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-monaco-grand-prix-winner-piastri-2026-06-07",
+      "conditionId": "0xd13688433cdaf55b125f65398f194f7123f981f81b9df69b966518ed918b187d",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "578826477558082662775668641120279207527058361091668662574424635920058858635",
+        "62113108027168421259106730376001952380807289992810776029981396282828839993382"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-06-07 20:59:30+00",
+      "creationTime": "2026-05-09T11:30:03.384471Z",
+      "startDate": "2026-05-09T13:13:25.296413Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    }
+  ]
+}

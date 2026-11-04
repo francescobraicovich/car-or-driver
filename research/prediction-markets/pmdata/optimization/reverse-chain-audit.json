@@ -1,0 +1,631 @@
+{
+  "description": "Same-provider PMData chain-to-websocket hash comparison; block time is not exchange match time, so unmatched rows are potential gaps rather than proof of a fill at that time. \u00b160 seconds buffer; no coverage completeness claimed.",
+  "reports": [
+    {
+      "race": "canadian",
+      "day": "2026-05-21",
+      "driver": "norris",
+      "windowStartUtc": "2026-05-21T14:00:00Z",
+      "windowEndUtcExclusive": "2026-05-21T16:00:00Z",
+      "windowTradeHashes": 4,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 4,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "canadian",
+      "day": "2026-05-21",
+      "driver": "piastri",
+      "windowStartUtc": "2026-05-21T14:00:00Z",
+      "windowEndUtcExclusive": "2026-05-21T16:00:00Z",
+      "windowTradeHashes": 1,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 1,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "canadian",
+      "day": "2026-05-21",
+      "driver": "hamilton",
+      "windowStartUtc": "2026-05-21T14:00:00Z",
+      "windowEndUtcExclusive": "2026-05-21T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "canadian",
+      "day": "2026-05-21",
+      "driver": "leclerc",
+      "windowStartUtc": "2026-05-21T14:00:00Z",
+      "windowEndUtcExclusive": "2026-05-21T16:00:00Z",
+      "windowTradeHashes": 1,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 1,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "monaco",
+      "day": "2026-06-04",
+      "driver": "norris",
+      "windowStartUtc": "2026-06-04T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-04T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "monaco",
+      "day": "2026-06-04",
+      "driver": "piastri",
+      "windowStartUtc": "2026-06-04T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-04T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "monaco",
+      "day": "2026-06-04",
+      "driver": "hamilton",
+      "windowStartUtc": "2026-06-04T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-04T16:00:00Z",
+      "windowTradeHashes": 4,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 4,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "monaco",
+      "day": "2026-06-04",
+      "driver": "leclerc",
+      "windowStartUtc": "2026-06-04T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-04T16:00:00Z",
+      "windowTradeHashes": 2,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 2,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "barcelona",
+      "day": "2026-06-11",
+      "driver": "norris",
+      "windowStartUtc": "2026-06-11T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-11T16:00:00Z",
+      "windowTradeHashes": 8,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 9,
+      "matchedPrintOutsideWindow": [
+        {
+          "transactionHash": "0x7837ba30a4755ad80b6c0bacbdb562a6d978a6259a79d9f60205ae92578f09dc",
+          "blockTimeUtc": "2026-06-11T16:00:36Z",
+          "matchingPrintReceiptTimesUtc": [
+            "2026-06-11T16:00:34.048000Z"
+          ],
+          "makerLegs": [
+            {
+              "outcome": "yes",
+              "makerSide": "BUY",
+              "price": 0.06999999999999999,
+              "shares": 35.32
+            }
+          ]
+        }
+      ],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "barcelona",
+      "day": "2026-06-11",
+      "driver": "piastri",
+      "windowStartUtc": "2026-06-11T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-11T16:00:00Z",
+      "windowTradeHashes": 4,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 5,
+      "matchedPrintOutsideWindow": [
+        {
+          "transactionHash": "0x8709ff08d6fd4592a79c8645b32e80bf9d81528a8dc8a535dc9d18aebb6feae9",
+          "blockTimeUtc": "2026-06-11T16:00:37Z",
+          "matchingPrintReceiptTimesUtc": [
+            "2026-06-11T16:00:34.126000Z"
+          ],
+          "makerLegs": [
+            {
+              "outcome": "yes",
+              "makerSide": "BUY",
+              "price": 0.057999999999999996,
+              "shares": 5.32
+            },
+            {
+              "outcome": "yes",
+              "makerSide": "BUY",
+              "price": 0.058,
+              "shares": 30.0
+            }
+          ]
+        }
+      ],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "barcelona",
+      "day": "2026-06-11",
+      "driver": "hamilton",
+      "windowStartUtc": "2026-06-11T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-11T16:00:00Z",
+      "windowTradeHashes": 5,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 6,
+      "matchedPrintOutsideWindow": [
+        {
+          "transactionHash": "0x94142f5a8618f1496e0df478fe354a1157a393bc617d5db558313766444ae589",
+          "blockTimeUtc": "2026-06-11T16:00:36Z",
+          "matchingPrintReceiptTimesUtc": [
+            "2026-06-11T16:00:34.131000Z"
+          ],
+          "makerLegs": [
+            {
+              "outcome": "yes",
+              "makerSide": "BUY",
+              "price": 0.05,
+              "shares": 35.32
+            }
+          ]
+        }
+      ],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "barcelona",
+      "day": "2026-06-11",
+      "driver": "leclerc",
+      "windowStartUtc": "2026-06-11T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-11T16:00:00Z",
+      "windowTradeHashes": 5,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 7,
+      "matchedPrintOutsideWindow": [
+        {
+          "transactionHash": "0x79034a7f3dd790d2c8dbc3b74c160d559f76c16fa16a611298dfa1420b0cad06",
+          "blockTimeUtc": "2026-06-11T16:00:36Z",
+          "matchingPrintReceiptTimesUtc": [
+            "2026-06-11T16:00:34.168000Z"
+          ],
+          "makerLegs": [
+            {
+              "outcome": "yes",
+              "makerSide": "BUY",
+              "price": 0.054000000000000006,
+              "shares": 12.44
+            },
+            {
+              "outcome": "yes",
+              "makerSide": "BUY",
+              "price": 0.054,
+              "shares": 22.88
+            }
+          ]
+        }
+      ],
+      "unexplainedWithinWindow": [
+        {
+          "transactionHash": "0xddeb30cb46300623be6c2e83a0f7f812d40f05942da1777170c7a9be5817d05c",
+          "blockTimeUtc": "2026-06-11T15:05:51Z",
+          "matchingPrintReceiptTimesUtc": [],
+          "makerLegs": [
+            {
+              "outcome": "yes",
+              "makerSide": "BUY",
+              "price": 0.03100000013263076,
+              "shares": 37.698645
+            }
+          ]
+        }
+      ],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "austrian",
+      "day": "2026-06-25",
+      "driver": "norris",
+      "windowStartUtc": "2026-06-25T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-25T16:00:00Z",
+      "windowTradeHashes": 18,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 18,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "austrian",
+      "day": "2026-06-25",
+      "driver": "piastri",
+      "windowStartUtc": "2026-06-25T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-25T16:00:00Z",
+      "windowTradeHashes": 8,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 8,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "austrian",
+      "day": "2026-06-25",
+      "driver": "hamilton",
+      "windowStartUtc": "2026-06-25T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-25T16:00:00Z",
+      "windowTradeHashes": 20,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 20,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "austrian",
+      "day": "2026-06-25",
+      "driver": "leclerc",
+      "windowStartUtc": "2026-06-25T14:00:00Z",
+      "windowEndUtcExclusive": "2026-06-25T16:00:00Z",
+      "windowTradeHashes": 8,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 8,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "british",
+      "day": "2026-07-02",
+      "driver": "norris",
+      "windowStartUtc": "2026-07-02T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-02T16:00:00Z",
+      "windowTradeHashes": 4,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 4,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "british",
+      "day": "2026-07-02",
+      "driver": "piastri",
+      "windowStartUtc": "2026-07-02T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-02T16:00:00Z",
+      "windowTradeHashes": 7,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 7,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "british",
+      "day": "2026-07-02",
+      "driver": "hamilton",
+      "windowStartUtc": "2026-07-02T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-02T16:00:00Z",
+      "windowTradeHashes": 4,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 4,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "british",
+      "day": "2026-07-02",
+      "driver": "leclerc",
+      "windowStartUtc": "2026-07-02T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-02T16:00:00Z",
+      "windowTradeHashes": 9,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 9,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "belgian",
+      "day": "2026-07-16",
+      "driver": "norris",
+      "windowStartUtc": "2026-07-16T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-16T16:00:00Z",
+      "windowTradeHashes": 1,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 1,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "belgian",
+      "day": "2026-07-16",
+      "driver": "piastri",
+      "windowStartUtc": "2026-07-16T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-16T16:00:00Z",
+      "windowTradeHashes": 1,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 1,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "belgian",
+      "day": "2026-07-16",
+      "driver": "hamilton",
+      "windowStartUtc": "2026-07-16T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-16T16:00:00Z",
+      "windowTradeHashes": 3,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 3,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "belgian",
+      "day": "2026-07-16",
+      "driver": "leclerc",
+      "windowStartUtc": "2026-07-16T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-16T16:00:00Z",
+      "windowTradeHashes": 2,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 2,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "hungarian",
+      "day": "2026-07-23",
+      "driver": "norris",
+      "windowStartUtc": "2026-07-23T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-23T16:00:00Z",
+      "windowTradeHashes": 1,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 1,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "hungarian",
+      "day": "2026-07-23",
+      "driver": "piastri",
+      "windowStartUtc": "2026-07-23T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-23T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "hungarian",
+      "day": "2026-07-23",
+      "driver": "hamilton",
+      "windowStartUtc": "2026-07-23T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-23T16:00:00Z",
+      "windowTradeHashes": 1,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 2,
+      "matchedPrintOutsideWindow": [
+        {
+          "transactionHash": "0xdf78a604badc0099ec6d73449e6c9ff36c8703b030875ad80eceb6ca0e9fc8c4",
+          "blockTimeUtc": "2026-07-23T13:59:09Z",
+          "matchingPrintReceiptTimesUtc": [
+            "2026-07-23T13:59:06.712000Z"
+          ],
+          "makerLegs": [
+            {
+              "outcome": "yes",
+              "makerSide": "SELL",
+              "price": 0.2,
+              "shares": 300.0
+            }
+          ]
+        }
+      ],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "hungarian",
+      "day": "2026-07-23",
+      "driver": "leclerc",
+      "windowStartUtc": "2026-07-23T14:00:00Z",
+      "windowEndUtcExclusive": "2026-07-23T16:00:00Z",
+      "windowTradeHashes": 2,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 2,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "dutch",
+      "day": "2026-08-20",
+      "driver": "norris",
+      "windowStartUtc": "2026-08-20T14:00:00Z",
+      "windowEndUtcExclusive": "2026-08-20T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "dutch",
+      "day": "2026-08-20",
+      "driver": "piastri",
+      "windowStartUtc": "2026-08-20T14:00:00Z",
+      "windowEndUtcExclusive": "2026-08-20T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "dutch",
+      "day": "2026-08-20",
+      "driver": "hamilton",
+      "windowStartUtc": "2026-08-20T14:00:00Z",
+      "windowEndUtcExclusive": "2026-08-20T16:00:00Z",
+      "windowTradeHashes": 1,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 1,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "dutch",
+      "day": "2026-08-20",
+      "driver": "leclerc",
+      "windowStartUtc": "2026-08-20T14:00:00Z",
+      "windowEndUtcExclusive": "2026-08-20T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "italian",
+      "day": "2026-09-03",
+      "driver": "norris",
+      "windowStartUtc": "2026-09-03T14:00:00Z",
+      "windowEndUtcExclusive": "2026-09-03T16:00:00Z",
+      "windowTradeHashes": 2,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 2,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "italian",
+      "day": "2026-09-03",
+      "driver": "piastri",
+      "windowStartUtc": "2026-09-03T14:00:00Z",
+      "windowEndUtcExclusive": "2026-09-03T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "italian",
+      "day": "2026-09-03",
+      "driver": "hamilton",
+      "windowStartUtc": "2026-09-03T14:00:00Z",
+      "windowEndUtcExclusive": "2026-09-03T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "italian",
+      "day": "2026-09-03",
+      "driver": "leclerc",
+      "windowStartUtc": "2026-09-03T14:00:00Z",
+      "windowEndUtcExclusive": "2026-09-03T16:00:00Z",
+      "windowTradeHashes": 2,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 2,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "singapore",
+      "day": "2026-10-08",
+      "driver": "norris",
+      "windowStartUtc": "2026-10-08T14:00:00Z",
+      "windowEndUtcExclusive": "2026-10-08T16:00:00Z",
+      "windowTradeHashes": 1,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 1,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "singapore",
+      "day": "2026-10-08",
+      "driver": "piastri",
+      "windowStartUtc": "2026-10-08T14:00:00Z",
+      "windowEndUtcExclusive": "2026-10-08T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "singapore",
+      "day": "2026-10-08",
+      "driver": "hamilton",
+      "windowStartUtc": "2026-10-08T14:00:00Z",
+      "windowEndUtcExclusive": "2026-10-08T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    },
+    {
+      "race": "singapore",
+      "day": "2026-10-08",
+      "driver": "leclerc",
+      "windowStartUtc": "2026-10-08T14:00:00Z",
+      "windowEndUtcExclusive": "2026-10-08T16:00:00Z",
+      "windowTradeHashes": 0,
+      "windowTradesWithoutId": 0,
+      "makerHashesBuffered": 0,
+      "matchedPrintOutsideWindow": [],
+      "unexplainedWithinWindow": [],
+      "unexplainedInBufferOnly": []
+    }
+  ]
+}

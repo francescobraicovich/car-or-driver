@@ -1,20 +1,22 @@
-// Compare pre-weekend production hybrid strengths with Rane's 2014–2024 ranking exam.
+// Compare pre-weekend production rating strengths with Rane's 2014–2024 ranking exam.
 // Usage: node research/rane-benchmark.mjs [output.json]
 import { writeFile } from 'node:fs/promises';
 import { loadData } from '../packages/research/node/common.mjs';
 import { truncateDataset } from '../packages/core/src/dataset.js';
 import { isFinishStatusName } from '../packages/core/src/status.js';
 import { collectExam } from '../packages/core/src/state-space/exam.js';
-import { carLineage, runSession } from '../packages/core/src/state-space/build.js';
-import { hybridRatings } from '../packages/core/src/hybrid/ratings.js';
+import { runPublishedRatings } from '../packages/core/src/state-space/build.js';
+import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import { aggregateRaces, scoreRace } from './rane-benchmark-metrics.mjs';
 import { modelSourceHash } from '../tools/model-source-hash.mjs';
 
+export const benchmarkRatings = runPublishedRatings;
+
+async function main() {
 const data = truncateDataset(await loadData(), 2024);
 const exam = collectExam(data.raw, data.lapSnapshots, data.maps, {}, data.lapPace);
-const qualifying = runSession(exam.weekends, 'qual', exam.model.params.tmBoost);
-const race = runSession(exam.weekends, 'race', exam.model.params.tmBoost, qualifying);
-const hybrid = hybridRatings(exam.weekends, exam.model.snaps, race, qualifying, carLineage);
+const { race: hybrid } = benchmarkRatings(exam.weekends, exam.model.params.tmBoost);
 const results = [];
 
 for (const [index, weekend] of exam.weekends.entries()) {
@@ -43,7 +45,7 @@ const output = {
   paper: 'https://arxiv.org/abs/2508.00200',
   period: '2014–2024',
   modelSource: await modelSourceHash(),
-  method: 'Production hybrid portable pre-weekend driver rating plus pre-weekend car rating; finishers include Finished and +N Lap(s).',
+  method: 'Production portable pre-weekend driver rating plus pre-weekend car rating; finishers include Finished and +N Lap(s).',
   caveat: 'Finisher and ranking conventions, entrant eligibility, historical data and MAE aggregation may differ from the paper; its per-race predictions were not available.',
   finishers: aggregateRaces(results.map((result) => result.finishers)),
   allEntrants: aggregateRaces(results.map((result) => result.allEntrants)),
@@ -57,3 +59,7 @@ const output = {
 const json = `${JSON.stringify(output, null, 2)}\n`;
 if (process.argv[2]) await writeFile(process.argv[2], json);
 else process.stdout.write(json);
+
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();

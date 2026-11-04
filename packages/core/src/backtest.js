@@ -1,12 +1,5 @@
-// Walk-forward backtesting.
-//
-// Every weekend's diag already stores *pre-update* prediction quality
-// (log-loss, Brier, accuracy over that weekend's pairwise observations, using
-// only ratings learned from earlier weekends). This module aggregates those
-// into per-season and overall summaries, with naive (p = 0.5) baselines.
-//
-// No rebuild is needed: summarizing is O(weekends).
-export const NAIVE_LOGLOSS = Math.LN2; // -ln(0.5) ≈ 0.6931
+// Walk-forward backtesting: aggregate each weekend's pre-update forecast diagnostics.
+export const NAIVE_LOGLOSS = Math.LN2;
 
 function emptyAcc() {
   return {
@@ -29,66 +22,92 @@ function emptyAcc() {
 }
 
 function finalize(a) {
-  const raceLL = a.raceW ? a.raceLoss / a.raceW : NaN;
-  const qualLL = a.qualW ? a.qualLoss / a.qualW : NaN;
-  const totW = a.raceW + a.qualW;
-  const preRaceLL = a.preRaceW ? a.preRaceLoss / a.preRaceW : NaN;
-  // Pre-weekend: Thursday knowledge only — no grid slots, no wet flag.
-  // (Qualifying predictions already use pre-weekend ratings only.)
-  const preW = a.preRaceW + a.qualW;
+  const raceLogLoss = a.raceW ? a.raceLoss / a.raceW : NaN;
+  const qualLogLoss = a.qualW ? a.qualLoss / a.qualW : NaN;
+  const preRaceLogLoss = a.preRaceW ? a.preRaceLoss / a.preRaceW : NaN;
+  const totalWeight = a.raceW + a.qualW;
+  const preWeight = a.preRaceW + a.qualW;
   return {
     ...a,
-    raceLogLoss: raceLL,
+    raceLogLoss,
     raceBrier: a.raceW ? a.raceBrier / a.raceW : NaN,
     raceAcc: a.raceW ? a.raceHits / a.raceW : NaN,
-    qualLogLoss: qualLL,
+    qualLogLoss,
     qualBrier: a.qualW ? a.qualBrier / a.qualW : NaN,
     qualAcc: a.qualW ? a.qualHits / a.qualW : NaN,
-    // Combined objective used for parameter tuning (weight = observation weight).
-    combinedLogLoss: totW ? (a.raceLoss + a.qualLoss) / totW : NaN,
-    preCombinedLogLoss: preW ? (a.preRaceLoss + a.qualLoss) / preW : NaN,
-    preRaceLogLoss: preRaceLL,
-    raceSkill: Number.isFinite(raceLL) ? 1 - raceLL / NAIVE_LOGLOSS : NaN,
-    qualSkill: Number.isFinite(qualLL) ? 1 - qualLL / NAIVE_LOGLOSS : NaN,
-    totalWeight: totW,
+    combinedLogLoss: totalWeight ? (a.raceLoss + a.qualLoss) / totalWeight : NaN,
+    preCombinedLogLoss: preWeight ? (a.preRaceLoss + a.qualLoss) / preWeight : NaN,
+    preRaceLogLoss,
+    raceSkill: Number.isFinite(raceLogLoss) ? 1 - raceLogLoss / NAIVE_LOGLOSS : NaN,
+    qualSkill: Number.isFinite(qualLogLoss) ? 1 - qualLogLoss / NAIVE_LOGLOSS : NaN,
+    totalWeight,
   };
 }
 
-/**
- * `diag` picks which per-weekend diagnostics to aggregate: 'diag' is the model's own forecast (ratings, form,
- * grid), 'ssDiag' and 'eloDiag' (state-space model) are the ratings alone, state-space and Elo, on the same observations.
- */
-export function summarizeBacktest(model, { burnIn = 20, fromYear = -Infinity, toYear = Infinity, diag = 'diag' } = {}) {
+function addScore(a, d, prefix, countKey, label) {
+  if (!d || typeof d !== 'object' || Array.isArray(d)) throw new TypeError(`${label} must be an object`);
+  if (!Number.isSafeInteger(d.obsCount) || d.obsCount < 0) throw new RangeError(`${label}.obsCount must be a nonnegative integer`);
+  // Legacy no-qualifying weekends omit weight altogether.
+  if (d.obsCount === 0 && d.weight === undefined) return;
+  if (!Number.isFinite(d.weight) || d.weight < 0) throw new RangeError(`${label}.weight must be finite and nonnegative`);
+  if (d.weight === 0) return;
+  if (d.obsCount === 0) throw new RangeError(`${label} has positive weight but no observations`);
+  for (const [name, value, max] of [
+    ['logLoss', d.logLoss, Infinity],
+    ['brier', d.brier, 1],
+    ['acc', d.acc, 1],
+  ])
+    if (!Number.isFinite(value) || value < 0 || value > max) throw new RangeError(`${label}.${name} must be finite and in range`);
+  if (countKey) a[countKey] += d.obsCount;
+  a[`${prefix}W`] += d.weight;
+  a[`${prefix}Loss`] += d.logLoss * d.weight;
+  a[`${prefix}Brier`] += d.brier * d.weight;
+  a[`${prefix}Hits`] += d.acc * d.weight;
+}
+
+const validYear = (year, side) =>
+  (side === 'from' && year === -Infinity) || (side === 'to' && year === Infinity) || Number.isSafeInteger(year);
+
+/** `diag` selects a diagnostic family; absent optional families are skipped. */
+export function summarizeBacktest(model, options = {}) {
+  if (!options || typeof options !== 'object' || Array.isArray(options)) throw new TypeError('options must be an object');
+  const { burnIn = 20, fromYear = -Infinity, toYear = Infinity, diag = 'diag' } = options;
+  if (!Number.isSafeInteger(burnIn) || burnIn < 0) throw new RangeError('burnIn must be a nonnegative integer');
+  if (!validYear(fromYear, 'from')) throw new RangeError('fromYear must be an integer or -Infinity');
+  if (!validYear(toYear, 'to')) throw new RangeError('toYear must be an integer or Infinity');
+  if (fromYear > toYear) throw new RangeError('fromYear must not exceed toYear');
+  if (typeof diag !== 'string' || !diag.trim()) throw new TypeError('diag must be a nonempty string');
+  const sourceSnaps = model?.snaps ?? [];
+  if (!Array.isArray(sourceSnaps)) throw new TypeError('model.snaps must be an array');
+  const snaps = [];
+  for (const snap of sourceSnaps.slice(burnIn)) {
+    if (!snap || typeof snap !== 'object' || !Number.isSafeInteger(snap.year))
+      throw new TypeError('each selected snapshot must have an integer year');
+    if (snap.year < fromYear || snap.year > toYear || snap[diag] === undefined) continue;
+    if (!snap[diag] || typeof snap[diag] !== 'object' || Array.isArray(snap[diag]))
+      throw new TypeError(`snapshot ${snap.year} ${diag} must be an object`);
+    snaps.push(snap);
+  }
   const perYear = new Map();
   const overall = emptyAcc();
-  const snaps = (model?.snaps || []).slice(Math.max(0, burnIn)).filter((s) => s.year >= fromYear && s.year <= toYear && s[diag]);
-  for (const s of snaps) {
-    const d = s[diag];
-    if (!perYear.has(s.year)) perYear.set(s.year, { year: s.year, ...emptyAcc() });
-    const y = perYear.get(s.year);
-    for (const acc of [y, overall]) {
-      acc.weekends++;
-      if (Number.isFinite(d.logLoss) && d.weight > 0) {
-        acc.raceObs += d.obsCount;
-        acc.raceW += d.weight;
-        acc.raceLoss += d.logLoss * d.weight;
-        acc.raceBrier += d.brier * d.weight;
-        acc.raceHits += d.acc * d.weight;
-      }
-      if (Number.isFinite(d.preLogLoss) && (d.preWeight || 0) > 0) {
-        acc.preRaceW += d.preWeight;
-        acc.preRaceLoss += d.preLogLoss * d.preWeight;
-        acc.preRaceBrier += d.preBrier * d.preWeight;
-        acc.preRaceHits += d.preAcc * d.preWeight;
-      }
-      if (Number.isFinite(d.q?.logLoss) && (d.q.weight || 0) > 0) {
-        const qw = d.q.weight;
-        acc.qualObs += d.q.obsCount;
-        acc.qualW += qw;
-        acc.qualLoss += d.q.logLoss * qw;
-        acc.qualBrier += d.q.brier * qw;
-        acc.qualHits += d.q.acc * qw;
-      }
+  for (const snap of snaps) {
+    const d = snap[diag];
+    if (d.preWeight === undefined && [d.preLogLoss, d.preBrier, d.preAcc].some((value) => value !== undefined))
+      throw new TypeError(`snapshot ${snap.year} ${diag} has pre-weekend metrics without preWeight`);
+    if (!perYear.has(snap.year)) perYear.set(snap.year, { year: snap.year, ...emptyAcc() });
+    const y = perYear.get(snap.year);
+    for (const a of [y, overall]) {
+      a.weekends++;
+      addScore(a, d, 'race', 'raceObs', `snapshot ${snap.year} ${diag}`);
+      if (d.preWeight !== undefined)
+        addScore(
+          a,
+          { obsCount: d.obsCount, weight: d.preWeight, logLoss: d.preLogLoss, brier: d.preBrier, acc: d.preAcc },
+          'preRace',
+          null,
+          `snapshot ${snap.year} ${diag} pre-weekend`,
+        );
+      if (d.q !== undefined) addScore(a, d.q, 'qual', 'qualObs', `snapshot ${snap.year} ${diag} qualifying`);
     }
   }
   return {
@@ -101,12 +120,10 @@ export function summarizeBacktest(model, { burnIn = 20, fromYear = -Infinity, to
   };
 }
 
-/** Single scalar for tuning: lower is better. */
 export function backtestObjective(summary) {
   return summary.overall.combinedLogLoss;
 }
 
-/** Pre-weekend (Thursday) scalar: no grid, no wet flag. Lower is better. */
 export function preWeekendObjective(summary) {
   return summary.overall.preCombinedLogLoss;
 }

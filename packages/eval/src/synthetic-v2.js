@@ -315,6 +315,7 @@ function simulateRace({ w, parts, p, r, state, covered, wetFlag, year }) {
       w: gw * (same ? ELO_EXAM.tmBoost : 1),
       same,
       src: ob.source,
+      base: ob.base,
     };
   });
 }
@@ -373,6 +374,9 @@ function simulateQual({ parts, p, r, state, year }) {
       w: gw * (same ? ELO_EXAM.qTmBoost : 1),
       same,
       src: 'qual',
+      seg: ob.seg,
+      tx: ob.tx,
+      ty: ob.ty,
     };
   });
 }

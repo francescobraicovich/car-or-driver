@@ -10,6 +10,8 @@ import { TUNED_ELO } from '../../packages/core/src/presets/tuned-elo.js';
 import { MODEL_SETTINGS } from '../../packages/core/src/presets/model-settings.js';
 import { STATE_SPACE } from '../../packages/core/src/presets/state-space.js';
 import { HYBRID } from '../../packages/core/src/presets/hybrid.js';
+import { GRAPH_RATINGS } from '../../packages/core/src/presets/graph-ratings.js';
+import { INFORMATION_FRACTION } from '../../packages/core/src/presets/learning.js';
 import { STATE_SPACE_FIT } from '../../packages/core/src/presets/state-space-fit.js';
 import { STATE_SPACE_DEFAULTS, STATE_SPACE_WINDOW } from '../../packages/core/src/state-space/filter.js';
 import { CONTENT_HTML } from './methodology-content.js';
@@ -27,8 +29,8 @@ const PARAMETERS = [
     'Scale and combination',
     [
       ['scale', 'Rating points for a tenfold change in the odds. Smaller means fewer points per unit of probability.'],
-      ['qualWeight', 'Share of qualifying in combined pace.'],
-      ['qualOn', 'Whether qualifying is part of combined pace.'],
+      ['qualWeight', 'Share of qualifying in the retained legacy combined measure.'],
+      ['qualOn', 'Whether qualifying is part of the retained legacy combined measure.'],
       ['homeAdv', 'Bonus for racing at home (0 = none).'],
     ],
   ],
@@ -75,7 +77,6 @@ const STATE_SPACE_PARAMETERS = [
     from: 'link',
     text: 'Weight of a driver’s qualifying level in their race strength (the race model reads qualifying).',
   },
-  { key: 'gamma', where: 'race', from: 'link', text: 'The same for a car’s qualifying level.' },
   { key: 'sdD', text: 'Prior spread of a driver’s level (points).' },
   { key: 'sdNew', text: 'Prior spread of a driver at their first appearance.' },
   { key: 'sdC', text: 'Prior spread of a car’s level.' },
@@ -88,21 +89,12 @@ const STATE_SPACE_PARAMETERS = [
   { key: 'mPace', text: 'Learning weight of lap-pace pairs, against finishing order.' },
   { key: 'mPart', text: 'Learning weight of retirement pairs.' },
   { key: 's', text: 'Rating points for a tenfold change in the odds.' },
-  { key: 'sdJ', text: 'Jump in a driver’s level at a team change (standard deviation).' },
   { key: 'sdA', text: 'Starting spread of the driver’s fit with their car, zero when they arrive at a team.' },
   { key: 'rhoA', text: 'Share of that fit kept each weekend (race: close to 1, so it lasts while they stay).' },
   { key: 'rateA', text: 'Whether the fit is part of the published rating (off: the published rating is the portable level).' },
-  { key: 'shrinkM', text: 'Pull of a driver’s level towards average at a team change (1 = none).' },
   { key: 'dipR', text: 'Starting penalty of a new driver’s temporary debut adjustment (points).' },
   { key: 'sdR', text: 'Starting spread of that adjustment.' },
   { key: 'rhoR', text: 'Share of the debut adjustment kept each weekend.' },
-  {
-    key: 'dip',
-    where: 'race',
-    from: 'adapt',
-    text: 'Option, off: points a driver is expected to lose in their first weekend at a new team (0 = off).',
-  },
-  { key: 'rho', label: 'adapt rho', where: 'race', from: 'adapt', text: 'Option: share of that loss kept each following weekend.' },
   {
     key: 'varInfl',
     text: 'Multiplier on the displayed race-filter variance, calibrated from dated rating revisions; the complete blend has no separately calibrated covariance.',
@@ -113,6 +105,11 @@ const STATE_SPACE_PARAMETERS = [
 const P = { ...MODEL_SETTINGS, circK: TUNED_ELO.circK, circCarry: TUNED_ELO.circCarry, wetK: TUNED_ELO.wetK };
 const derived = {
   scale2: 2 * MODEL_SETTINGS.scale,
+  informationFraction: INFORMATION_FRACTION,
+  'graph.share': GRAPH_RATINGS.share,
+  'graph.otherShare': 1 - GRAPH_RATINGS.share,
+  'graph.halfLifeYears': GRAPH_RATINGS.halfLifeYears,
+  'graph.annualDriftPoints': GRAPH_RATINGS.annualDriftPoints,
   window: STATE_SPACE_WINDOW,
   slopeRace: STATE_SPACE_FIT.slopes.race.toFixed(2),
   slopeQual: STATE_SPACE_FIT.slopes.qual.toFixed(2),
@@ -123,10 +120,6 @@ const derived = {
   ...Object.fromEntries(Object.entries(STATE_SPACE.race).map(([k, v]) => [`r.${k}`, +(+v).toPrecision(3)])),
   ...Object.fromEntries(Object.entries(STATE_SPACE.qual).map(([k, v]) => [`q.${k}`, +(+v).toPrecision(3)])),
   'link.beta': +(+STATE_SPACE.link.beta).toPrecision(2),
-  'link.gamma': +(+STATE_SPACE.link.gamma).toPrecision(2),
-  'adapt.dip': STATE_SPACE.adapt?.dip || 20,
-  'adapt.rho': STATE_SPACE.adapt?.rho ?? 0.5,
-  'adapt.state': STATE_SPACE.adapt?.dip ? 'on' : 'off',
   ...Object.fromEntries(
     Object.entries(HYBRID)
       .filter(([, value]) => typeof value === 'number')
@@ -177,9 +170,7 @@ function fillTables() {
     const v =
       row.from === 'link'
         ? STATE_SPACE.link[row.key]
-        : row.from === 'adapt'
-          ? STATE_SPACE.adapt?.[row.key]
-          : { ...STATE_SPACE_DEFAULTS, ...STATE_SPACE[session === 'r' ? 'race' : 'qual'] }[row.key];
+        : { ...STATE_SPACE_DEFAULTS, ...STATE_SPACE[session === 'r' ? 'race' : 'qual'] }[row.key];
     return show(typeof v === 'boolean' ? v : +(+v).toPrecision(3));
   };
   const ssRows = STATE_SPACE_PARAMETERS.map(
@@ -238,7 +229,7 @@ function renderRatings() {
   });
   renderPlot($('methodologyRatingsChart'), {
     series: [
-      line('ratings', 'These ratings', 'var(--s1)', (s) => s.combinedLogLoss),
+      line('ratings', 'Race and qualifying aggregate', 'var(--s1)', (s) => s.combinedLogLoss),
       line('naive', 'Coin flip', 'var(--ink-3)', () => NAIVE_LOGLOSS),
     ],
     type: 'backtest',
@@ -256,7 +247,7 @@ function drawModelFigures() {
   const name = drawRatingThroughTime($('methodologyTimelineChart'), state.model);
   if (name)
     $('methodologyTimelineCaption').textContent =
-      `${name}: the published combined-pace rating after each of their last 48 weekends, with its approximate filter-derived standard deviation either side. The band omits uncertainty from the full hybrid blend.`;
+      `${name}: the published race rating after each of their last 48 weekends, with its approximate filter-derived standard deviation either side. The band omits uncertainty from the full hybrid blend.`;
 }
 
 function render() {

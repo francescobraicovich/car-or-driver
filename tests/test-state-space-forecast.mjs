@@ -9,9 +9,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { loadData } from '../packages/research/node/common.mjs';
-import { buildStateSpace, runSession } from '../packages/core/src/state-space/build.js';
-import { carIdentity } from '../packages/core/src/lineage.js';
-import { hybridRatings } from '../packages/core/src/hybrid/ratings.js';
+import { buildStateSpace, runPublishedRatings } from '../packages/core/src/state-space/build.js';
 import { collectExam } from '../packages/core/src/state-space/exam.js';
 import { replayForecastLayer } from '../packages/core/src/state-space/replay.js';
 import { STATE_SPACE_HEADS } from '../packages/core/src/state-space/forecast-heads.js';
@@ -35,17 +33,16 @@ const before = (r) => +r.year < YEAR || (+r.year === YEAR && +r.round < ROUND);
 // training path
 const { model: full, weekends } = collectExam(ctx.raw, ctx.lapSnapshots, ctx.maps, {}, ctx.lapPace);
 const tm = full.params.tmBoost;
-const qualRun = runSession(weekends, 'qual', tm);
-const raceRun = runSession(weekends, 'race', tm, qualRun);
-const hybrid = hybridRatings(weekends, full.snaps, raceRun, qualRun, carIdentity);
+const published = runPublishedRatings(weekends, tm);
 const recorded = [];
 replayForecastLayer(
   weekends,
-  { race: hybrid.pre, qual: qualRun.pre },
+  { race: published.race.pre, qual: published.qual.pre },
   {
     lapPace: ctx.lapPace,
     params: full.params,
     heads: STATE_SPACE_HEADS,
+    formOptions: { track: false },
     onRow: ({ info, session, ob, predicted }) => {
       if (String(info.raceId) !== String(race.raceId) || session !== 'race' || recorded.length >= 40) return;
       recorded.push({ a: ob.x.driverId, b: ob.y.driverId, pre: predicted.pre });
@@ -88,16 +85,28 @@ console.log(
 );
 assert.ok(total / pairs.length < 0.006, 'serving reproduces the training path (mean difference under 0.6 points)');
 assert.ok(worst < 0.03, 'and no pair is far off (under 3 points)');
-// negative control: serving with a different baseline (here no hazard mix) must be caught by the same comparison
+// Negative control: a train/serve mismatch in rating units must be caught.
+const wrongUnits = {
+  ...model,
+  ss: {
+    ...model.ss,
+    latest: Object.fromEntries(
+      Object.entries(model.ss.latest).map(([session, latest]) => [
+        session,
+        { ...latest, mean: Float64Array.from(latest.mean, (value) => value * 1.5) },
+      ]),
+    ),
+  },
+};
 let controlTotal = 0;
 for (const r of pairs) {
-  const s = forecastPair({ ...model, params: { ...model.params, hazardW: 0 } }, String(r.a), String(r.b), {
+  const s = forecastPair(wrongUnits, String(r.a), String(r.b), {
     L: 60,
     year: YEAR,
     round: ROUND,
   });
   controlTotal += Math.abs(s.p - r.pre);
 }
-console.log(`control, no hazard mix: mean |diff| ${((100 * controlTotal) / pairs.length).toFixed(2)} pp`);
-assert.ok(controlTotal / pairs.length > 3 * Math.max(total / pairs.length, 1e-4), 'the test would have caught a different baseline');
+console.log(`control, wrong rating units: mean |diff| ${((100 * controlTotal) / pairs.length).toFixed(2)} pp`);
+assert.ok(controlTotal / pairs.length > 3 * Math.max(total / pairs.length, 1e-4), 'the test catches inconsistent rating inputs');
 console.log('PASS state-space forecast parity: serving matches the training path');

@@ -341,13 +341,16 @@ console.log(`state-space build ${((performance.now() - t0) / 1000).toFixed(1)} s
 assert.equal(ssModel.params.modelKind, 'state-space');
 assert.equal(ssModel.snaps.length, eloModel.snaps.length);
 
-// the forecast layer: the form trackers do not read ratings, so they are exactly the Elo model's; its rating inputs are the
-// state-space levels, so its probabilities differ from eloModel's and stay symmetric
-assert.equal(
-  JSON.stringify(ssModel.forecastState.form),
-  JSON.stringify(eloModel.forecastState.form),
-  'form trackers do not depend on the rating system',
-);
+// Production uses observation-based continuous form; the historical Elo
+// benchmark retains its original form algorithm. Full-calendar numerical
+// parity with the evaluated prototype is checked in test-continuous-form.mjs.
+assert.equal(ssModel.forecastState.form.method, 'continuous');
+assert.equal(eloModel.forecastState.form.method, undefined, 'the historical benchmark retains legacy form');
+for (const form of Object.values(ssModel.forecastState.form.forms)) {
+  assert.ok(form.d instanceof Map && form.c instanceof Map, 'both driver and car form are saved');
+  assert.ok([...form.d.values(), ...form.c.values()].every(Number.isFinite), 'saved form is finite');
+  assert.equal(form.track, undefined, 'production does not persist unused circuit form');
+}
 const grid = eloModel.snaps
   .at(-1)
   .drivers.slice(0, 6)
@@ -362,7 +365,7 @@ for (const a of grid)
   }
 assert.ok(differs > 0, 'state-space forecasts read the state-space ratings, not the Elo ones');
 {
-  // the pieces the pages build on: form switched off is symmetric too, and the form shifts are finite and team-centred
+  // the pieces the pages build on: form-off forecasts are symmetric and shifts are finite and globally centred
   const r = forecastPair(ssModel, grid[0], grid[1]);
   const back = forecastPair(ssModel, grid[1], grid[0]);
   assert.ok(Math.abs(r.breakdown.calibrated + back.breakdown.calibrated - 1) < 1e-9, 'form-off forecast is symmetric');
@@ -468,7 +471,7 @@ assert.ok(Math.abs(s1.p + s2.p - 1) < 1e-9, 'what-if is symmetric on the state-s
 assert.ok(scenarioForecast(ssModel, now(x), now(y), { wet: true }).p > 0, 'wet what-if works');
 
 // the state-space settings are the preset's
-assert.deepEqual(Object.keys(STATE_SPACE).sort(), ['adapt', 'link', 'qual', 'race']);
+assert.deepEqual(Object.keys(STATE_SPACE).sort(), ['link', 'qual', 'race']);
 console.log(
   'PASS state-space: forecast layer on the state-space ratings, ratings centred with uncertainty, ratings alone beat Elo in every window, pair forecasts symmetric',
 );

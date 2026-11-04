@@ -1,10 +1,65 @@
+import { teammateGraphExam } from '../packages/core/src/teammate-graph-exam.js';
+import { GRAPH_RATINGS } from '../packages/core/src/presets/graph-ratings.js';
+
+// The display graph is the same dated evidence stream as the published model.
+export function buildTeammateGraph(weekends, driverRows = [], options = {}) {
+  const halfLifeYears = options.halfLifeYears ?? GRAPH_RATINGS.halfLifeYears;
+  const graph = teammateGraphExam(weekends, { halfLifeYears });
+  const dates = new Map(driverRows.map((row) => [String(row.driverId), row.dob]));
+  const drivers = new Map();
+  return weekends.map((weekend, index) => {
+    const snapshot = graph[index];
+    const year = Number(weekend.info.year) + (Number(weekend.info.round) - 0.5) / 25;
+    for (const id of new Set(weekend.rows.map((row) => String(row.driverId)))) {
+      const record = drivers.get(id) ?? { starts: 0, years: 0 };
+      record.starts++;
+      record.years += year;
+      record.lastYear = Number(weekend.info.year);
+      drivers.set(id, record);
+    }
+    const ageAt = (id) => {
+      const born = dates.get(id),
+        date = weekend.info.date;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(born ?? '') || !/^\d{4}-\d{2}-\d{2}$/.test(date ?? '')) return null;
+      const [by, bm, bd] = born.split('-').map(Number);
+      const [y, m, d] = date.split('-').map(Number);
+      return y - by - (m < bm || (m === bm && d < bd) ? 1 : 0);
+    };
+    const duels = new Map();
+    for (const observation of snapshot.observations) {
+      const key = JSON.stringify([observation.a, observation.b]);
+      const pair = duels.get(key) ?? [observation.a, observation.b, 0, 0, 0, null];
+      if (observation.source === 'qual') pair[2] = observation.outcome;
+      else {
+        pair[3] = observation.outcome;
+        pair[4] = observation.weight;
+        pair[5] = observation.source;
+      }
+      duels.set(key, pair);
+    }
+    return {
+      raceId: snapshot.raceId,
+      nodes: [...snapshot.post.levels].map(([id, level]) => [
+        id,
+        Math.round((1000 + level) * 10) / 10,
+        Math.round((drivers.get(id).years / drivers.get(id).starts) * 100) / 100,
+        drivers.get(id).starts,
+        ageAt(id),
+        drivers.get(id).lastYear,
+      ]),
+      duels: [...duels.values()],
+      edges: snapshot.post.evidence.map(({ a, b, wins, losses }) => [a, b, wins, losses]),
+    };
+  });
+}
+
 // A dated, teammate-only graph. Every snapshot is built from evidence observed
 // through that weekend; the same rule applies to every driver and every move.
 import { censoredQualifyingIds, censoredQualifyingSegments, qualifyingEvidenceTime } from '../packages/core/src/qualifying.js';
 const finitePosition = (value) => (/^\d+$/.test(String(value ?? '')) ? Number(value) : null);
 const keyOf = (a, b) => [a, b].sort((x, y) => Number(x) - Number(y)).join(':');
 
-export function buildTeammateGraph(snaps, results, qualifying, driverRows = [], options = {}) {
+export function buildLegacyTeammateGraph(snaps, results, qualifying, driverRows = [], options = {}) {
   const halfLifeYears = options.halfLifeYears ?? Infinity;
   const birthDates = new Map(driverRows.map((row) => [String(row.driverId), row.dob]));
   const ageAt = (id, date) => {

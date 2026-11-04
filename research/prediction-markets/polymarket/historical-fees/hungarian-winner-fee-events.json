@@ -1,0 +1,22 @@
+[
+  {
+    "timestamp": 1784680348,
+    "transactionHash": "0x288cf3db451dcb2a0b5b34c1c8bc75c3104266d2f5404caf2e57aa586f7f7003",
+    "logIndex": 842,
+    "side": 0,
+    "tokenId": "47661325742680339397689993484717514781417824472586299267255052250797111797474",
+    "makerAmountFilled": "10000000",
+    "takerAmountFilled": "100000000",
+    "fee": "450000"
+  },
+  {
+    "timestamp": 1784683708,
+    "transactionHash": "0xf61fac4051a8f14ff81d23207d89b9a9a9b58795c592de50060baadfdc89045b",
+    "logIndex": 778,
+    "side": 1,
+    "tokenId": "29182557482930894926551444457441091281627059242568302863019387202603296788240",
+    "makerAmountFilled": "10000000",
+    "takerAmountFilled": "1800000",
+    "fee": "73800"
+  }
+]

@@ -1,0 +1,137 @@
+{
+  "source": "https://public-data.pmdata.dev/v1/polymarket/markets.parquet",
+  "retrieved_at_utc": "2026-11-02T17:45:36.357511+00:00",
+  "catalog_sha256": "337a9c3eab34403e9d92f4deea9db62ea026a8ab399a47e84e43a5d8330bef99",
+  "catalog_size_bytes": 32067050,
+  "warning": "Date ranges alone do not establish a file exists for a particular day, event continuity, actual trade coverage or feasible fills. Free trial API account required to download protected data.",
+  "markets": [
+    {
+      "event_slug": "f1-austrian-grand-prix-winner-2026-06-28",
+      "market_slug": "f1-austrian-grand-prix-winner-norris-2026-06-28",
+      "record_start_utc": "2026-05-30 00:00:00+00",
+      "record_end_utc": "2026-06-28 00:00:00+00",
+      "pre_fp1_date": "2026-06-25",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-austrian-grand-prix-winner-2026-06-28",
+      "market_slug": "f1-austrian-grand-prix-winner-hamilton-2026-06-28",
+      "record_start_utc": "2026-05-30 00:00:00+00",
+      "record_end_utc": "2026-06-28 00:00:00+00",
+      "pre_fp1_date": "2026-06-25",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-british-grand-prix-winner-2026-07-05",
+      "market_slug": "f1-british-grand-prix-winner-norris-2026-07-05",
+      "record_start_utc": "2026-06-06 00:00:00+00",
+      "record_end_utc": "2026-07-05 00:00:00+00",
+      "pre_fp1_date": "2026-07-02",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-british-grand-prix-winner-2026-07-05",
+      "market_slug": "f1-british-grand-prix-winner-hamilton-2026-07-05",
+      "record_start_utc": "2026-06-06 00:00:00+00",
+      "record_end_utc": "2026-07-05 00:00:00+00",
+      "pre_fp1_date": "2026-07-02",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-belgian-grand-prix-winner-2026-07-19",
+      "market_slug": "f1-belgian-grand-prix-winner-norris-2026-07-19",
+      "record_start_utc": "2026-06-20 00:00:00+00",
+      "record_end_utc": "2026-07-19 00:00:00+00",
+      "pre_fp1_date": "2026-07-16",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-belgian-grand-prix-winner-2026-07-19",
+      "market_slug": "f1-belgian-grand-prix-winner-hamilton-2026-07-19",
+      "record_start_utc": "2026-06-20 00:00:00+00",
+      "record_end_utc": "2026-07-19 00:00:00+00",
+      "pre_fp1_date": "2026-07-16",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-hungarian-grand-prix-winner-2026-07-26",
+      "market_slug": "f1-hungarian-grand-prix-winner-norris-2026-07-26",
+      "record_start_utc": "2026-06-27 00:00:00+00",
+      "record_end_utc": "2026-07-26 00:00:00+00",
+      "pre_fp1_date": "2026-07-23",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-hungarian-grand-prix-winner-2026-07-26",
+      "market_slug": "f1-hungarian-grand-prix-winner-hamilton-2026-07-26",
+      "record_start_utc": "2026-06-27 00:00:00+00",
+      "record_end_utc": "2026-07-26 00:00:00+00",
+      "pre_fp1_date": "2026-07-23",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-dutch-grand-prix-winner-2026-08-23",
+      "market_slug": "f1-dutch-grand-prix-winner-norris-2026-08-23",
+      "record_start_utc": "2026-08-18 00:00:00+00",
+      "record_end_utc": "2026-08-24 00:00:00+00",
+      "pre_fp1_date": "2026-08-20",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-dutch-grand-prix-winner-2026-08-23",
+      "market_slug": "f1-dutch-grand-prix-winner-hamilton-2026-08-23",
+      "record_start_utc": "2026-08-18 00:00:00+00",
+      "record_end_utc": "2026-08-24 00:00:00+00",
+      "pre_fp1_date": "2026-08-20",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-italian-grand-prix-winner-2026-09-06",
+      "market_slug": "f1-italian-grand-prix-winner-norris-2026-09-06",
+      "record_start_utc": "2026-08-08 00:00:00+00",
+      "record_end_utc": "2026-09-06 00:00:00+00",
+      "pre_fp1_date": "2026-09-03",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-italian-grand-prix-winner-2026-09-06",
+      "market_slug": "f1-italian-grand-prix-winner-hamilton-2026-09-06",
+      "record_start_utc": "2026-08-08 00:00:00+00",
+      "record_end_utc": "2026-09-06 00:00:00+00",
+      "pre_fp1_date": "2026-09-03",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-singapore-grand-prix-winner-2026-10-11",
+      "market_slug": "f1-singapore-grand-prix-winner-norris-2026-10-11",
+      "record_start_utc": "2026-10-03 00:00:00+00",
+      "record_end_utc": "2026-10-11 00:00:00+00",
+      "pre_fp1_date": "2026-10-08",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-singapore-grand-prix-winner-2026-10-11",
+      "market_slug": "f1-singapore-grand-prix-winner-hamilton-2026-10-11",
+      "record_start_utc": "2026-10-03 00:00:00+00",
+      "record_end_utc": "2026-10-11 00:00:00+00",
+      "pre_fp1_date": "2026-10-08",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-united-states-grand-prix-winner-2026-10-25",
+      "market_slug": "f1-united-states-grand-prix-winner-norris-2026-10-25",
+      "record_start_utc": "2026-10-03 00:00:00+00",
+      "record_end_utc": "2026-10-26 00:00:00+00",
+      "pre_fp1_date": "2026-10-22",
+      "date_within_advertised_range": true
+    },
+    {
+      "event_slug": "f1-united-states-grand-prix-winner-2026-10-25",
+      "market_slug": "f1-united-states-grand-prix-winner-hamilton-2026-10-25",
+      "record_start_utc": "2026-10-03 00:00:00+00",
+      "record_end_utc": "2026-10-26 00:00:00+00",
+      "pre_fp1_date": "2026-10-22",
+      "date_within_advertised_range": true
+    }
+  ]
+}

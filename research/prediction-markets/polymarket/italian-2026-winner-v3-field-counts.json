@@ -1,0 +1,373 @@
+{
+  "source": "PendulumFlow v3 CC BY-NC 4.0",
+  "hour": "2026-09-03/14",
+  "sha256": "aeda1ba9d75a28e4c82e8440e8d5ffdb5988dd17f8f8c6b2a4804defd13a7886",
+  "coverageComplete": false,
+  "note": "All official event conditions, including placeholders; no data completeness claim.",
+  "rows": [
+    {
+      "conditionId": "0x07019b287b2ede5dd128e15339fdc472881ee9eb0e97c5cc7133d8dda89f3797",
+      "slug": "f1-italian-grand-prix-winner-hadjar-2026-09-06",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x07019b287b2ede5dd128e15339fdc472881ee9eb0e97c5cc7133d8dda89f3797",
+      "slug": "f1-italian-grand-prix-winner-hadjar-2026-09-06",
+      "eventType": "price_change",
+      "count": 158,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x1aef67a31b26856c1215133a3bd8a18c65dd17b10c55d09698623fe15172e96a",
+      "slug": "f1-italian-grand-prix-winner-lindblad-2026-09-06",
+      "eventType": "book",
+      "count": 8,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x1aef67a31b26856c1215133a3bd8a18c65dd17b10c55d09698623fe15172e96a",
+      "slug": "f1-italian-grand-prix-winner-lindblad-2026-09-06",
+      "eventType": "price_change",
+      "count": 404,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x1ef558aa81917e1c53fec05c45996e621beb029ec31385f68aa7673f8ba65ff3",
+      "slug": "f1-italian-grand-prix-winner-hulkenberg-2026-09-06",
+      "eventType": "book",
+      "count": 6,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x1ef558aa81917e1c53fec05c45996e621beb029ec31385f68aa7673f8ba65ff3",
+      "slug": "f1-italian-grand-prix-winner-hulkenberg-2026-09-06",
+      "eventType": "price_change",
+      "count": 278,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x20a8f886a0500fce5fb39e967d597f1cf65db1c16c3ea46e895fdd892ddcda15",
+      "slug": "f1-italian-grand-prix-winner-russell-2026-09-06",
+      "eventType": "best_bid_ask",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x20a8f886a0500fce5fb39e967d597f1cf65db1c16c3ea46e895fdd892ddcda15",
+      "slug": "f1-italian-grand-prix-winner-russell-2026-09-06",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x20a8f886a0500fce5fb39e967d597f1cf65db1c16c3ea46e895fdd892ddcda15",
+      "slug": "f1-italian-grand-prix-winner-russell-2026-09-06",
+      "eventType": "last_trade_price",
+      "count": 2,
+      "distinctTransactionHashes": 2
+    },
+    {
+      "conditionId": "0x20a8f886a0500fce5fb39e967d597f1cf65db1c16c3ea46e895fdd892ddcda15",
+      "slug": "f1-italian-grand-prix-winner-russell-2026-09-06",
+      "eventType": "price_change",
+      "count": 706,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x210b8e687e593e27ddea5be88c4b7654da6f7efca268b46de100732af2302f93",
+      "slug": "f1-italian-grand-prix-winner-bottas-2026-09-06",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x210b8e687e593e27ddea5be88c4b7654da6f7efca268b46de100732af2302f93",
+      "slug": "f1-italian-grand-prix-winner-bottas-2026-09-06",
+      "eventType": "price_change",
+      "count": 386,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x21f90d3461d31d27b9917ae1498621f3eae91eee6aa9ad9b02b635636f558e42",
+      "slug": "f1-italian-grand-prix-winner-colapinto-2026-09-06",
+      "eventType": "book",
+      "count": 6,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x21f90d3461d31d27b9917ae1498621f3eae91eee6aa9ad9b02b635636f558e42",
+      "slug": "f1-italian-grand-prix-winner-colapinto-2026-09-06",
+      "eventType": "price_change",
+      "count": 302,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x2ae424e704717c1039ae6be57d35bf4036b0a923d12c933ff536c384bb01b033",
+      "slug": "f1-italian-grand-prix-winner-lawson-2026-09-06",
+      "eventType": "book",
+      "count": 6,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x2ae424e704717c1039ae6be57d35bf4036b0a923d12c933ff536c384bb01b033",
+      "slug": "f1-italian-grand-prix-winner-lawson-2026-09-06",
+      "eventType": "price_change",
+      "count": 480,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x35396580742ee98bfae3d37640e0fe58d4de06cef3faeec0e12c4b8e8ebbcac7",
+      "slug": "f1-italian-grand-prix-winner-stroll-2026-09-06",
+      "eventType": "book",
+      "count": 4,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x35396580742ee98bfae3d37640e0fe58d4de06cef3faeec0e12c4b8e8ebbcac7",
+      "slug": "f1-italian-grand-prix-winner-stroll-2026-09-06",
+      "eventType": "price_change",
+      "count": 128,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x3dc897741740894b00ce4d087a003aaa6a4fac9ea8c5b0694c14299085e6c848",
+      "slug": "f1-italian-grand-prix-winner-perez-2026-09-06",
+      "eventType": "book",
+      "count": 6,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x3dc897741740894b00ce4d087a003aaa6a4fac9ea8c5b0694c14299085e6c848",
+      "slug": "f1-italian-grand-prix-winner-perez-2026-09-06",
+      "eventType": "price_change",
+      "count": 152,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x48ac674a9a0eb610610b43c049aae1c21921f081de2c790e9ecd28e0f520ee28",
+      "slug": "f1-italian-grand-prix-winner-jr-2026-09-06",
+      "eventType": "book",
+      "count": 6,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x48ac674a9a0eb610610b43c049aae1c21921f081de2c790e9ecd28e0f520ee28",
+      "slug": "f1-italian-grand-prix-winner-jr-2026-09-06",
+      "eventType": "price_change",
+      "count": 368,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x4bc6b8a524440e27a517660c2e834211ca0a83de753b3ecaab5c44061ed392ac",
+      "slug": "f1-italian-grand-prix-winner-leclerc-2026-09-06",
+      "eventType": "best_bid_ask",
+      "count": 4,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x4bc6b8a524440e27a517660c2e834211ca0a83de753b3ecaab5c44061ed392ac",
+      "slug": "f1-italian-grand-prix-winner-leclerc-2026-09-06",
+      "eventType": "book",
+      "count": 8,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x4bc6b8a524440e27a517660c2e834211ca0a83de753b3ecaab5c44061ed392ac",
+      "slug": "f1-italian-grand-prix-winner-leclerc-2026-09-06",
+      "eventType": "last_trade_price",
+      "count": 2,
+      "distinctTransactionHashes": 2
+    },
+    {
+      "conditionId": "0x4bc6b8a524440e27a517660c2e834211ca0a83de753b3ecaab5c44061ed392ac",
+      "slug": "f1-italian-grand-prix-winner-leclerc-2026-09-06",
+      "eventType": "price_change",
+      "count": 580,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x55f9afa1e69ff4dac67a21b99eb1c56b2c4d389f18508dfababad40673312068",
+      "slug": "f1-italian-grand-prix-winner-bortoleto-2026-09-06",
+      "eventType": "book",
+      "count": 8,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x55f9afa1e69ff4dac67a21b99eb1c56b2c4d389f18508dfababad40673312068",
+      "slug": "f1-italian-grand-prix-winner-bortoleto-2026-09-06",
+      "eventType": "price_change",
+      "count": 334,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x5710312e3c74666b4bb414abd3a24a8ebc7578795b385cfb0d05fabb5b07630a",
+      "slug": "f1-italian-grand-prix-winner-alonso-2026-09-06",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x5710312e3c74666b4bb414abd3a24a8ebc7578795b385cfb0d05fabb5b07630a",
+      "slug": "f1-italian-grand-prix-winner-alonso-2026-09-06",
+      "eventType": "price_change",
+      "count": 300,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x5d4800331dd1f8d3e89b302c6e67227b19e4ae4804f3546f24c9b841ba01a7eb",
+      "slug": "f1-italian-grand-prix-winner-ocon-2026-09-06",
+      "eventType": "book",
+      "count": 6,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x5d4800331dd1f8d3e89b302c6e67227b19e4ae4804f3546f24c9b841ba01a7eb",
+      "slug": "f1-italian-grand-prix-winner-ocon-2026-09-06",
+      "eventType": "price_change",
+      "count": 302,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x6ac627890b75eba843332f5e0bf0c9be3be2fcee95220e89c9599e33ade99ba5",
+      "slug": "f1-italian-grand-prix-winner-bearman-2026-09-06",
+      "eventType": "book",
+      "count": 4,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x6ac627890b75eba843332f5e0bf0c9be3be2fcee95220e89c9599e33ade99ba5",
+      "slug": "f1-italian-grand-prix-winner-bearman-2026-09-06",
+      "eventType": "price_change",
+      "count": 296,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x6ad3cb9f9dd06a87d46403190389851e0678b17ddcae52a9de9abb06c582487e",
+      "slug": "f1-italian-grand-prix-winner-norris-2026-09-06",
+      "eventType": "book",
+      "count": 4,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x6ad3cb9f9dd06a87d46403190389851e0678b17ddcae52a9de9abb06c582487e",
+      "slug": "f1-italian-grand-prix-winner-norris-2026-09-06",
+      "eventType": "price_change",
+      "count": 632,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x8bb2a10cc4e0aeb73788c30650e58c427bf1a8ae657801dd548c72c169172e64",
+      "slug": "f1-italian-grand-prix-winner-piastri-2026-09-06",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x8bb2a10cc4e0aeb73788c30650e58c427bf1a8ae657801dd548c72c169172e64",
+      "slug": "f1-italian-grand-prix-winner-piastri-2026-09-06",
+      "eventType": "price_change",
+      "count": 390,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x8c1a7abedd819b1c6d11af1cca61362640c1199d951c00343c255f97032854a7",
+      "slug": "f1-italian-grand-prix-winner-verstappen-2026-09-06",
+      "eventType": "best_bid_ask",
+      "count": 6,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x8c1a7abedd819b1c6d11af1cca61362640c1199d951c00343c255f97032854a7",
+      "slug": "f1-italian-grand-prix-winner-verstappen-2026-09-06",
+      "eventType": "book",
+      "count": 8,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x8c1a7abedd819b1c6d11af1cca61362640c1199d951c00343c255f97032854a7",
+      "slug": "f1-italian-grand-prix-winner-verstappen-2026-09-06",
+      "eventType": "price_change",
+      "count": 702,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x98148d673d391c2b57abfa1cedb43054cb1e8955ff16cff086c6a09257602af2",
+      "slug": "f1-italian-grand-prix-winner-gasly-2026-09-06",
+      "eventType": "book",
+      "count": 8,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x98148d673d391c2b57abfa1cedb43054cb1e8955ff16cff086c6a09257602af2",
+      "slug": "f1-italian-grand-prix-winner-gasly-2026-09-06",
+      "eventType": "price_change",
+      "count": 330,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xaa7e960fcdc7d685330e0f1f032516fe4b1726764f27667e7343bf946a080969",
+      "slug": "f1-italian-grand-prix-winner-albon-2026-09-06",
+      "eventType": "book",
+      "count": 6,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xaa7e960fcdc7d685330e0f1f032516fe4b1726764f27667e7343bf946a080969",
+      "slug": "f1-italian-grand-prix-winner-albon-2026-09-06",
+      "eventType": "price_change",
+      "count": 102,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xb2c8b4274891b01f801f71803f6aa3028c20f22d4fc11e23ee0cc9b0e8d380b5",
+      "slug": "f1-italian-grand-prix-winner-hamilton-2026-09-06",
+      "eventType": "best_bid_ask",
+      "count": 4,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xb2c8b4274891b01f801f71803f6aa3028c20f22d4fc11e23ee0cc9b0e8d380b5",
+      "slug": "f1-italian-grand-prix-winner-hamilton-2026-09-06",
+      "eventType": "book",
+      "count": 6,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xb2c8b4274891b01f801f71803f6aa3028c20f22d4fc11e23ee0cc9b0e8d380b5",
+      "slug": "f1-italian-grand-prix-winner-hamilton-2026-09-06",
+      "eventType": "price_change",
+      "count": 564,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xc58d77cf0fef939ca08d984b5b8670828712a2442193f2f740a9c7cc61ca4b7d",
+      "slug": "f1-italian-grand-prix-winner-antonelli-2026-09-06",
+      "eventType": "best_bid_ask",
+      "count": 14,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xc58d77cf0fef939ca08d984b5b8670828712a2442193f2f740a9c7cc61ca4b7d",
+      "slug": "f1-italian-grand-prix-winner-antonelli-2026-09-06",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xc58d77cf0fef939ca08d984b5b8670828712a2442193f2f740a9c7cc61ca4b7d",
+      "slug": "f1-italian-grand-prix-winner-antonelli-2026-09-06",
+      "eventType": "last_trade_price",
+      "count": 2,
+      "distinctTransactionHashes": 2
+    },
+    {
+      "conditionId": "0xc58d77cf0fef939ca08d984b5b8670828712a2442193f2f740a9c7cc61ca4b7d",
+      "slug": "f1-italian-grand-prix-winner-antonelli-2026-09-06",
+      "eventType": "price_change",
+      "count": 602,
+      "distinctTransactionHashes": 0
+    }
+  ]
+}

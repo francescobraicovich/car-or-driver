@@ -23,12 +23,17 @@ const second = {
   qualObs: [],
 };
 const carOf = (id) => id;
-const short = rankingRatings([first], carOf, [false]);
-const full = rankingRatings([first, second], carOf, [false, false]);
+const short = rankingRatings([first], carOf);
+const full = rankingRatings([first, second], carOf);
 assert.deepEqual(full.pre[0], short.pre[0], 'future weekends cannot change pre-weekend ranking levels');
 assert.deepEqual(full.post[0], short.post[0], 'future weekends cannot change posted ranking levels');
 assert.equal(full.pre[1].rated.get('a'), full.post[0].drivers.get('a').m, 'moving teams does not change the portable ranking level');
 assert.ok(full.post[0].drivers.get('a').m > 0, 'the learner responds to teammate evidence');
+assert.ok(
+  [...full.levels.keys()].every((key) => /^(driver|car):/.test(key)),
+  'ranking retains only driver and car levels',
+);
+assert.deepEqual(Object.keys(HYBRID.ranking).sort(), ['learningRate', 'teammateWeight', 'winterRetention']);
 
 const row = (m, sd = 5) => ({ m, sd });
 const filterPre = (a, b, car, fit = 0) => ({
@@ -62,7 +67,7 @@ const race = {
   latest: null,
 };
 const qualifying = { pre: [filterPre(30, -30, 40)], ratings: [filterPost(32, -32, 42)] };
-const blended = hybridRatings([first], [{ diag: { wet: false } }], race, qualifying, carOf);
+const blended = hybridRatings([first], race, qualifying, carOf);
 const rankedPre = blended.ranking.pre[0];
 const rankedPost = blended.ranking.post[0];
 const driver = (r, q, o) =>

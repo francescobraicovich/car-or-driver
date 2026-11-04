@@ -1,0 +1,17 @@
+{
+  "source": "Polymarket public Data API",
+  "requestUrl": "https://data-api.polymarket.com/trades?market=0xc7bf80a13d95230833ed5fe12398197aa68441bcfcd729d6a153fb0a3129414d&limit=1000",
+  "retrievedAt": "2026-11-02T16:50:29Z",
+  "originalResponseSha256": "85aa9974d434105c6494ba2c9ade9a84d6c6af772d01e426bc1008e77bfd7cda",
+  "selectedRecord": {
+    "asset": "68070681267453227644979843063596962102048622706439430091863269060786263117307",
+    "side": "BUY",
+    "conditionId": "0xc7bf80a13d95230833ed5fe12398197aa68441bcfcd729d6a153fb0a3129414d",
+    "size": 8.473683,
+    "price": 0.1899999091,
+    "timestamp": 1787236459,
+    "outcome": "Yes",
+    "transactionHash": "0x4febc9d59d1a9b156d8647942bfc78a460c8e441bb090db2504d04e205b157f6"
+  },
+  "note": "Its trade timestamp falls within the v3 file hour; its transaction hash has no last_trade_price row in that file. API/chain timestamp and exchange match/receipt time can differ, so this comparison alone does not establish a dropped event."
+}

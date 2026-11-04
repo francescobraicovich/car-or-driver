@@ -1,0 +1,369 @@
+{
+  "description": "Trade source before midnight with receipt at or after the two-second pre-midnight cancellation boundary, across both downloaded day files. Unrequested files and source completeness remain unknown.",
+  "races": [
+    {
+      "race": "monaco",
+      "midnightUtc": "2026-06-07T00:00:00Z",
+      "drivers": [
+        {
+          "name": "Andrea Kimi Antonelli",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lewis Hamilton",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Max Verstappen",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Charles Leclerc",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Isack Hadjar",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Franco Colapinto",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Liam Lawson",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Pierre Gasly",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Carlos Sainz",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Oliver Bearman",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Oscar Piastri",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Nico H\u00fclkenberg",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Gabriel Bortoleto",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Esteban Ocon",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lance Stroll",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Valtteri Bottas",
+          "files": {
+            "2026-06-06": "available",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Sergio P\u00e9rez",
+          "files": {
+            "2026-06-06": "not_requested_quota_cap",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lando Norris",
+          "files": {
+            "2026-06-06": "not_requested_quota_cap",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "George Russell",
+          "files": {
+            "2026-06-06": "not_requested_quota_cap",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Fernando Alonso",
+          "files": {
+            "2026-06-06": "not_requested_quota_cap",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Alexander Albon",
+          "files": {
+            "2026-06-06": "not_requested_quota_cap",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Arvid Lindblad",
+          "files": {
+            "2026-06-06": "not_requested_quota_cap",
+            "2026-06-07": "available"
+          },
+          "boundaryPrints": []
+        }
+      ]
+    },
+    {
+      "race": "singapore",
+      "midnightUtc": "2026-10-11T00:00:00Z",
+      "drivers": [
+        {
+          "name": "Max Verstappen",
+          "files": {
+            "2026-10-10": "available",
+            "2026-10-11": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Andrea Kimi Antonelli",
+          "files": {
+            "2026-10-10": "available",
+            "2026-10-11": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lewis Hamilton",
+          "files": {
+            "2026-10-10": "available",
+            "2026-10-11": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Charles Leclerc",
+          "files": {
+            "2026-10-10": "available",
+            "2026-10-11": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Isack Hadjar",
+          "files": {
+            "2026-10-10": "available",
+            "2026-10-11": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Oscar Piastri",
+          "files": {
+            "2026-10-10": "available",
+            "2026-10-11": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Liam Lawson",
+          "files": {
+            "2026-10-10": "available",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Fernando Alonso",
+          "files": {
+            "2026-10-10": "available",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lando Norris",
+          "files": {
+            "2026-10-10": "available",
+            "2026-10-11": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Arvid Lindblad",
+          "files": {
+            "2026-10-10": "not_found",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Nico H\u00fclkenberg",
+          "files": {
+            "2026-10-10": "not_found",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lance Stroll",
+          "files": {
+            "2026-10-10": "not_found",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Franco Colapinto",
+          "files": {
+            "2026-10-10": "not_found",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Oliver Bearman",
+          "files": {
+            "2026-10-10": "available",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Esteban Ocon",
+          "files": {
+            "2026-10-10": "not_found",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Pierre Gasly",
+          "files": {
+            "2026-10-10": "not_requested_quota_cap",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Carlos Sainz",
+          "files": {
+            "2026-10-10": "not_requested_quota_cap",
+            "2026-10-11": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Gabriel Bortoleto",
+          "files": {
+            "2026-10-10": "not_requested_quota_cap",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Sergio P\u00e9rez",
+          "files": {
+            "2026-10-10": "not_requested_quota_cap",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "George Russell",
+          "files": {
+            "2026-10-10": "not_requested_quota_cap",
+            "2026-10-11": "available"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Alexander Albon",
+          "files": {
+            "2026-10-10": "not_requested_quota_cap",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        },
+        {
+          "name": "Valtteri Bottas",
+          "files": {
+            "2026-10-10": "not_requested_quota_cap",
+            "2026-10-11": "not_found"
+          },
+          "boundaryPrints": []
+        }
+      ]
+    }
+  ]
+}

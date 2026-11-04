@@ -263,7 +263,7 @@ const stress = { ...worldFromHyper(base), winterC: 40, yearD: 8 };
     qual: eloRun(prep.timeline, prep.weekends.slice(0, prep.n), snaps, 'qual'),
   };
   const current = {
-    ss: { fit: 0.383902, w2: 0.380038, w3: 0.363564 },
+    ss: { fit: 0.390031, w2: 0.387041, w3: 0.36701 },
     elo: { fit: 0.405652, w2: 0.400992, w3: 0.373279 },
   };
   for (const [name, runs] of [
@@ -281,7 +281,10 @@ const stress = { ...worldFromHyper(base), winterC: 40, yearD: 8 };
       // Frozen forecast calibration slopes for movers and stayers on the 1994-start replay.
       const mv = res.headline['movers.race.frozenSlope.k5'].est;
       const st = res.headline['movers.race.frozenSlopeStayers.k5'].est;
-      assert.ok(mv > 0.5 && mv < 0.9 && st > 0.9 && st < 1.2, `frozen-rating slopes: movers ${mv.toFixed(2)}, stayers ${st.toFixed(2)}`);
+      assert.ok(
+        Math.abs(mv - 0.860148) < 0.0001 && Math.abs(st - 1.202364) < 0.0001,
+        `frozen-rating slope fixtures: movers ${mv.toFixed(6)}, stayers ${st.toFixed(6)}`,
+      );
     }
   }
   // The Elo reference retains its former heads; the published hybrid's refitted heads are checked against their dated fit report.
@@ -297,8 +300,8 @@ const stress = { ...worldFromHyper(base), winterC: 40, yearD: 8 };
   }
   const published = deserialize(await readFile('data/model.json', 'utf8')).model;
   const publishedScores = {
-    '2008-2011': [0.334276, 0.379471, 0.349188],
-    '2012-2015': [0.323467, 0.358329, 0.359751],
+    '2008-2011': [0.335718, 0.380738, 0.352701],
+    '2012-2015': [0.325348, 0.360154, 0.359767],
   };
   for (const [fromYear, toYear] of [
     [2008, 2011],

@@ -1,0 +1,237 @@
+{
+  "description": "Trade source before qualifying, local receipt at or after two seconds before qualifying, and receipt delay over one second. Unrequested files and source completeness remain unknown.",
+  "races": [
+    {
+      "race": "monaco",
+      "qualifyingStartUtc": "2026-06-06T14:00:00Z",
+      "drivers": [
+        {
+          "name": "Andrea Kimi Antonelli",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lewis Hamilton",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Max Verstappen",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Charles Leclerc",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Isack Hadjar",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Franco Colapinto",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Liam Lawson",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Pierre Gasly",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Carlos Sainz",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Oliver Bearman",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Oscar Piastri",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Nico H\u00fclkenberg",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Gabriel Bortoleto",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Esteban Ocon",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lance Stroll",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Valtteri Bottas",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Sergio P\u00e9rez",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lando Norris",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "George Russell",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Fernando Alonso",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Alexander Albon",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Arvid Lindblad",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        }
+      ]
+    },
+    {
+      "race": "singapore",
+      "qualifyingStartUtc": "2026-10-10T13:00:00Z",
+      "drivers": [
+        {
+          "name": "Max Verstappen",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Andrea Kimi Antonelli",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lewis Hamilton",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Charles Leclerc",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Isack Hadjar",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Oscar Piastri",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Liam Lawson",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Fernando Alonso",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lando Norris",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Arvid Lindblad",
+          "status": "not_found",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Nico H\u00fclkenberg",
+          "status": "not_found",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Lance Stroll",
+          "status": "not_found",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Franco Colapinto",
+          "status": "not_found",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Oliver Bearman",
+          "status": "available",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Esteban Ocon",
+          "status": "not_found",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Pierre Gasly",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Carlos Sainz",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Gabriel Bortoleto",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Sergio P\u00e9rez",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "George Russell",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Alexander Albon",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        },
+        {
+          "name": "Valtteri Bottas",
+          "status": "not_requested_quota_cap",
+          "boundaryPrints": []
+        }
+      ]
+    }
+  ]
+}

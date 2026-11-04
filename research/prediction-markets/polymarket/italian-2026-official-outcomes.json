@@ -1,0 +1,91 @@
+{
+  "source": "Polymarket Gamma public event API",
+  "requestUrl": "https://gamma-api.polymarket.com/events?slug=f1-italian-grand-prix-winner-2026-09-06",
+  "retrievedAt": "2026-11-02T16:48:54Z",
+  "originalResponseSha256": "2c1e2eee13468b00480807257c4a3486f6e20022d79a397a87717bf5d62c32cd",
+  "note": "Current tick, minimum size and fees do not establish historical values; resolved prices are not independent on-chain oracle evidence.",
+  "event": {
+    "id": "815310",
+    "slug": "f1-italian-grand-prix-winner-2026-09-06",
+    "closed": true,
+    "updatedAt": "2026-09-28T20:09:22.637685Z",
+    "negRisk": true
+  },
+  "markets": [
+    {
+      "slug": "f1-italian-grand-prix-winner-norris-2026-09-06",
+      "conditionId": "0x6ad3cb9f9dd06a87d46403190389851e0678b17ddcae52a9de9abb06c582487e",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "61876817411061358862545241841060260771671969137139281940198951229665042365235",
+        "111708658294949279346965234028415476642629417449698228791274500085972421970394"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-09-06 21:33:01+00",
+      "creationTime": "2026-08-08T11:30:04.052638Z",
+      "startDate": "2026-08-08T11:30:31Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-italian-grand-prix-winner-antonelli-2026-09-06",
+      "conditionId": "0xc58d77cf0fef939ca08d984b5b8670828712a2442193f2f740a9c7cc61ca4b7d",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "1",
+        "0"
+      ],
+      "clobTokenIds": [
+        "59048326431484503336574279566029895875652363910420592067247863558648565541981",
+        "42250624069823130597080027272812584121870834603274871261677479406007385466823"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-09-06 21:33:01+00",
+      "creationTime": "2026-08-08T11:30:04.258928Z",
+      "startDate": "2026-08-08T11:30:31Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-italian-grand-prix-winner-hamilton-2026-09-06",
+      "conditionId": "0xb2c8b4274891b01f801f71803f6aa3028c20f22d4fc11e23ee0cc9b0e8d380b5",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "2146736570076516372182386500284470034560383164275054776960432208390387589510",
+        "5225989722126352456779907370534532582417458408612741911030415229232681494224"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-09-06 21:33:01+00",
+      "creationTime": "2026-08-08T11:30:07.35122Z",
+      "startDate": "2026-08-08T11:30:31Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    }
+  ]
+}

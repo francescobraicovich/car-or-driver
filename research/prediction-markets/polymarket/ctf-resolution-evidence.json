@@ -1,0 +1,218 @@
+{
+  "verifiedAt": "2026-11-02T17:05:13Z",
+  "chainId": 137,
+  "rpc": "https://polygon.drpc.org",
+  "conditionalTokens": "0x4d97dcd97ec945f40cf65f87097ace5ea0476045",
+  "resolutionEventTopic": "0xb44d84d3289691f71497564b85d4233648d9dbae8cbdbb4329f301c3a0185894",
+  "interpretation": "CTF payout was recorded in this successful block. This is not evidence of a particular holder redemption, claim latency, gas cost or operational ability to reuse funds.",
+  "records": [
+    {
+      "race": "austrian",
+      "driver": "norris",
+      "conditionId": "0x4660332081e4aca6fe2456ceb6370f49366257ee43ed138cdb14ced55158a3b5",
+      "blockNumber": 89312053,
+      "blockHash": "0xff75afd9fa025b375b15df7380ec20632067aee88e08cdfa6860424ed7919643",
+      "blockTime": "2026-06-28T18:57:55Z",
+      "transactionHash": "0xedfc70ab241cdb80b514994201caa8cfad831233de985ac1f798d28d061dd21d",
+      "logIndex": 246,
+      "oracle": "0xd91e80cf2e7be2e162c6513ced06f1dd0da35296",
+      "payoutNumerators": [
+        0,
+        1
+      ],
+      "payoutDenominatorBeforeBlock": 0,
+      "payoutDenominatorAtBlock": 1,
+      "gammaClosedTime": "2026-06-28 18:57:55+00",
+      "gammaReportedPrices": [
+        "0",
+        "1"
+      ],
+      "searchWindow": [
+        89312042,
+        89312062
+      ]
+    },
+    {
+      "race": "austrian",
+      "driver": "hamilton",
+      "conditionId": "0xecb91145f7ed41128c538bd4828072c8e3f47f11253f80b252123c6890a3a94f",
+      "blockNumber": 89312053,
+      "blockHash": "0xff75afd9fa025b375b15df7380ec20632067aee88e08cdfa6860424ed7919643",
+      "blockTime": "2026-06-28T18:57:55Z",
+      "transactionHash": "0xedfc70ab241cdb80b514994201caa8cfad831233de985ac1f798d28d061dd21d",
+      "logIndex": 222,
+      "oracle": "0xd91e80cf2e7be2e162c6513ced06f1dd0da35296",
+      "payoutNumerators": [
+        0,
+        1
+      ],
+      "payoutDenominatorBeforeBlock": 0,
+      "payoutDenominatorAtBlock": 1,
+      "gammaClosedTime": "2026-06-28 18:57:55+00",
+      "gammaReportedPrices": [
+        "0",
+        "1"
+      ],
+      "searchWindow": [
+        89312042,
+        89312062
+      ]
+    },
+    {
+      "race": "british",
+      "driver": "norris",
+      "conditionId": "0x1db5a5491de96ac6ca50275331426e6df630aed16a54757a2d8ea46c07a4cf66",
+      "blockNumber": 89721933,
+      "blockHash": "0xef182538206a444f6871f0ac427aa44a48b58088edb716cd8cd81b31cd69117d",
+      "blockTime": "2026-07-05T21:44:55Z",
+      "transactionHash": "0xab3b6a4c2837f359696e0b004daaee6f94385c49e7d467e312a7530e57b24161",
+      "logIndex": 322,
+      "oracle": "0xd91e80cf2e7be2e162c6513ced06f1dd0da35296",
+      "payoutNumerators": [
+        0,
+        1
+      ],
+      "payoutDenominatorBeforeBlock": 0,
+      "payoutDenominatorAtBlock": 1,
+      "gammaClosedTime": "2026-07-05 21:44:55+00",
+      "gammaReportedPrices": [
+        "0",
+        "1"
+      ],
+      "searchWindow": [
+        89721923,
+        89721943
+      ]
+    },
+    {
+      "race": "british",
+      "driver": "hamilton",
+      "conditionId": "0x83edde07b222f24d64b6afb1009c3982835294a3f349ae8c07c784b9ebfeeb93",
+      "blockNumber": 89721933,
+      "blockHash": "0xef182538206a444f6871f0ac427aa44a48b58088edb716cd8cd81b31cd69117d",
+      "blockTime": "2026-07-05T21:44:55Z",
+      "transactionHash": "0xab3b6a4c2837f359696e0b004daaee6f94385c49e7d467e312a7530e57b24161",
+      "logIndex": 294,
+      "oracle": "0xd91e80cf2e7be2e162c6513ced06f1dd0da35296",
+      "payoutNumerators": [
+        0,
+        1
+      ],
+      "payoutDenominatorBeforeBlock": 0,
+      "payoutDenominatorAtBlock": 1,
+      "gammaClosedTime": "2026-07-05 21:44:55+00",
+      "gammaReportedPrices": [
+        "0",
+        "1"
+      ],
+      "searchWindow": [
+        89721923,
+        89721943
+      ]
+    },
+    {
+      "race": "dutch",
+      "driver": "norris",
+      "conditionId": "0xa927be9f2b123bc602c336738ea2fbf4730a6a8ef2d2676f50d967e12d0c163c",
+      "blockNumber": 92553382,
+      "blockHash": "0xf514986369952f2d8f9e0471a920ead9c8994d11a8a47e40a8d0364979b656a4",
+      "blockTime": "2026-08-24T01:31:40Z",
+      "transactionHash": "0xdcb9f713bb0ff844c10e46587513b7daa974112729aed7000d0b34b3c82c0719",
+      "logIndex": 1922,
+      "oracle": "0xd91e80cf2e7be2e162c6513ced06f1dd0da35296",
+      "payoutNumerators": [
+        1,
+        0
+      ],
+      "payoutDenominatorBeforeBlock": 0,
+      "payoutDenominatorAtBlock": 1,
+      "gammaClosedTime": "2026-08-24 01:31:40+00",
+      "gammaReportedPrices": [
+        "1",
+        "0"
+      ],
+      "searchWindow": [
+        92553372,
+        92553392
+      ]
+    },
+    {
+      "race": "dutch",
+      "driver": "hamilton",
+      "conditionId": "0xc7bf80a13d95230833ed5fe12398197aa68441bcfcd729d6a153fb0a3129414d",
+      "blockNumber": 92553244,
+      "blockHash": "0x4b3ece6cb0578c9ec0c1a128de31b2561f3b6939150cb3a64200216353b5d5d5",
+      "blockTime": "2026-08-24T01:28:13Z",
+      "transactionHash": "0xf2ba90189a86d37184b60a3c8a9fa267d112b5bb94d4028123e17ee6cdd6feed",
+      "logIndex": 991,
+      "oracle": "0xd91e80cf2e7be2e162c6513ced06f1dd0da35296",
+      "payoutNumerators": [
+        0,
+        1
+      ],
+      "payoutDenominatorBeforeBlock": 0,
+      "payoutDenominatorAtBlock": 1,
+      "gammaClosedTime": "2026-08-24 01:28:13+00",
+      "gammaReportedPrices": [
+        "0",
+        "1"
+      ],
+      "searchWindow": [
+        92553235,
+        92553255
+      ]
+    },
+    {
+      "race": "italian",
+      "driver": "norris",
+      "conditionId": "0x6ad3cb9f9dd06a87d46403190389851e0678b17ddcae52a9de9abb06c582487e",
+      "blockNumber": 93350232,
+      "blockHash": "0x4de6ebf1bd63244548812d2c69fdd7255cd8912f77382fc224fde8eb84e381e9",
+      "blockTime": "2026-09-06T21:33:01Z",
+      "transactionHash": "0x6ea3a6017a304eb66a14e9d45aabf4c0704eae7e26748b71cc27fde8ff452897",
+      "logIndex": 188,
+      "oracle": "0xd91e80cf2e7be2e162c6513ced06f1dd0da35296",
+      "payoutNumerators": [
+        0,
+        1
+      ],
+      "payoutDenominatorBeforeBlock": 0,
+      "payoutDenominatorAtBlock": 1,
+      "gammaClosedTime": "2026-09-06 21:33:01+00",
+      "gammaReportedPrices": [
+        "0",
+        "1"
+      ],
+      "searchWindow": [
+        93350222,
+        93350242
+      ]
+    },
+    {
+      "race": "italian",
+      "driver": "hamilton",
+      "conditionId": "0xb2c8b4274891b01f801f71803f6aa3028c20f22d4fc11e23ee0cc9b0e8d380b5",
+      "blockNumber": 93350232,
+      "blockHash": "0x4de6ebf1bd63244548812d2c69fdd7255cd8912f77382fc224fde8eb84e381e9",
+      "blockTime": "2026-09-06T21:33:01Z",
+      "transactionHash": "0x6ea3a6017a304eb66a14e9d45aabf4c0704eae7e26748b71cc27fde8ff452897",
+      "logIndex": 184,
+      "oracle": "0xd91e80cf2e7be2e162c6513ced06f1dd0da35296",
+      "payoutNumerators": [
+        0,
+        1
+      ],
+      "payoutDenominatorBeforeBlock": 0,
+      "payoutDenominatorAtBlock": 1,
+      "gammaClosedTime": "2026-09-06 21:33:01+00",
+      "gammaReportedPrices": [
+        "0",
+        "1"
+      ],
+      "searchWindow": [
+        93350222,
+        93350242
+      ]
+    }
+  ]
+}

@@ -1,0 +1,539 @@
+{
+  "races": {
+    "austrian": {
+      "makerEvents": 756,
+      "transactions": 420,
+      "collateralMicroUnits": 24174578978
+    },
+    "belgian": {
+      "makerEvents": 312,
+      "transactions": 211,
+      "collateralMicroUnits": 5084325924
+    },
+    "british": {
+      "makerEvents": 1386,
+      "transactions": 826,
+      "collateralMicroUnits": 31559300184
+    },
+    "hungarian": {
+      "makerEvents": 544,
+      "transactions": 306,
+      "collateralMicroUnits": 20298531244
+    }
+  },
+  "markets": [
+    {
+      "race": "austrian",
+      "marketSlug": "f1-austrian-grand-prix-winner-antonelli-2026-06-28",
+      "makerEvents": 107,
+      "transactions": 51,
+      "collateralMicroUnits": 4399634370,
+      "yesEvents": 61,
+      "noEvents": 46
+    },
+    {
+      "race": "austrian",
+      "marketSlug": "f1-austrian-grand-prix-winner-gasly-2026-06-28",
+      "makerEvents": 21,
+      "transactions": 15,
+      "collateralMicroUnits": 935499,
+      "yesEvents": 21,
+      "noEvents": 0
+    },
+    {
+      "race": "austrian",
+      "marketSlug": "f1-austrian-grand-prix-winner-hadjar-2026-06-28",
+      "makerEvents": 22,
+      "transactions": 17,
+      "collateralMicroUnits": 1762771,
+      "yesEvents": 22,
+      "noEvents": 0
+    },
+    {
+      "race": "austrian",
+      "marketSlug": "f1-austrian-grand-prix-winner-hamilton-2026-06-28",
+      "makerEvents": 231,
+      "transactions": 137,
+      "collateralMicroUnits": 7846384447,
+      "yesEvents": 57,
+      "noEvents": 174
+    },
+    {
+      "race": "austrian",
+      "marketSlug": "f1-austrian-grand-prix-winner-leclerc-2026-06-28",
+      "makerEvents": 57,
+      "transactions": 41,
+      "collateralMicroUnits": 2345346495,
+      "yesEvents": 30,
+      "noEvents": 27
+    },
+    {
+      "race": "austrian",
+      "marketSlug": "f1-austrian-grand-prix-winner-norris-2026-06-28",
+      "makerEvents": 83,
+      "transactions": 54,
+      "collateralMicroUnits": 3407984560,
+      "yesEvents": 53,
+      "noEvents": 30
+    },
+    {
+      "race": "austrian",
+      "marketSlug": "f1-austrian-grand-prix-winner-piastri-2026-06-28",
+      "makerEvents": 68,
+      "transactions": 24,
+      "collateralMicroUnits": 674688942,
+      "yesEvents": 48,
+      "noEvents": 20
+    },
+    {
+      "race": "austrian",
+      "marketSlug": "f1-austrian-grand-prix-winner-russell-2026-06-28",
+      "makerEvents": 61,
+      "transactions": 31,
+      "collateralMicroUnits": 655753479,
+      "yesEvents": 40,
+      "noEvents": 21
+    },
+    {
+      "race": "austrian",
+      "marketSlug": "f1-austrian-grand-prix-winner-stroll-2026-06-28",
+      "makerEvents": 3,
+      "transactions": 3,
+      "collateralMicroUnits": 230450,
+      "yesEvents": 3,
+      "noEvents": 0
+    },
+    {
+      "race": "austrian",
+      "marketSlug": "f1-austrian-grand-prix-winner-verstappen-2026-06-28",
+      "makerEvents": 103,
+      "transactions": 47,
+      "collateralMicroUnits": 4841857965,
+      "yesEvents": 37,
+      "noEvents": 66
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-albon-2026-07-19",
+      "makerEvents": 1,
+      "transactions": 1,
+      "collateralMicroUnits": 38000,
+      "yesEvents": 1,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-alonso-2026-07-19",
+      "makerEvents": 1,
+      "transactions": 1,
+      "collateralMicroUnits": 38000,
+      "yesEvents": 1,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-antonelli-2026-07-19",
+      "makerEvents": 67,
+      "transactions": 53,
+      "collateralMicroUnits": 1719035723,
+      "yesEvents": 17,
+      "noEvents": 50
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-bearman-2026-07-19",
+      "makerEvents": 3,
+      "transactions": 3,
+      "collateralMicroUnits": 1036001,
+      "yesEvents": 2,
+      "noEvents": 1
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-colapinto-2026-07-19",
+      "makerEvents": 2,
+      "transactions": 2,
+      "collateralMicroUnits": 238000,
+      "yesEvents": 2,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-gasly-2026-07-19",
+      "makerEvents": 1,
+      "transactions": 1,
+      "collateralMicroUnits": 114000,
+      "yesEvents": 1,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-hadjar-2026-07-19",
+      "makerEvents": 8,
+      "transactions": 6,
+      "collateralMicroUnits": 1985000,
+      "yesEvents": 8,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-hamilton-2026-07-19",
+      "makerEvents": 55,
+      "transactions": 38,
+      "collateralMicroUnits": 1187796072,
+      "yesEvents": 35,
+      "noEvents": 20
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-hulkenberg-2026-07-19",
+      "makerEvents": 2,
+      "transactions": 2,
+      "collateralMicroUnits": 238000,
+      "yesEvents": 2,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-lawson-2026-07-19",
+      "makerEvents": 1,
+      "transactions": 1,
+      "collateralMicroUnits": 38000,
+      "yesEvents": 1,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-leclerc-2026-07-19",
+      "makerEvents": 45,
+      "transactions": 26,
+      "collateralMicroUnits": 1348252657,
+      "yesEvents": 17,
+      "noEvents": 28
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-lindblad-2026-07-19",
+      "makerEvents": 2,
+      "transactions": 2,
+      "collateralMicroUnits": 238000,
+      "yesEvents": 2,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-norris-2026-07-19",
+      "makerEvents": 30,
+      "transactions": 20,
+      "collateralMicroUnits": 56749259,
+      "yesEvents": 28,
+      "noEvents": 2
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-ocon-2026-07-19",
+      "makerEvents": 2,
+      "transactions": 2,
+      "collateralMicroUnits": 238000,
+      "yesEvents": 2,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-perez-2026-07-19",
+      "makerEvents": 4,
+      "transactions": 3,
+      "collateralMicroUnits": 83006,
+      "yesEvents": 4,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-piastri-2026-07-19",
+      "makerEvents": 24,
+      "transactions": 11,
+      "collateralMicroUnits": 160619466,
+      "yesEvents": 14,
+      "noEvents": 10
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-russell-2026-07-19",
+      "makerEvents": 30,
+      "transactions": 20,
+      "collateralMicroUnits": 505493089,
+      "yesEvents": 20,
+      "noEvents": 10
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-stroll-2026-07-19",
+      "makerEvents": 4,
+      "transactions": 4,
+      "collateralMicroUnits": 269006,
+      "yesEvents": 4,
+      "noEvents": 0
+    },
+    {
+      "race": "belgian",
+      "marketSlug": "f1-belgian-grand-prix-winner-verstappen-2026-07-19",
+      "makerEvents": 30,
+      "transactions": 15,
+      "collateralMicroUnits": 101826645,
+      "yesEvents": 25,
+      "noEvents": 5
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-antonelli-2026-07-05",
+      "makerEvents": 187,
+      "transactions": 97,
+      "collateralMicroUnits": 2562012918,
+      "yesEvents": 105,
+      "noEvents": 82
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-bearman-2026-07-05",
+      "makerEvents": 8,
+      "transactions": 7,
+      "collateralMicroUnits": 92610,
+      "yesEvents": 8,
+      "noEvents": 0
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-bortoleto-2026-07-05",
+      "makerEvents": 4,
+      "transactions": 2,
+      "collateralMicroUnits": 48340,
+      "yesEvents": 4,
+      "noEvents": 0
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-colapinto-2026-07-05",
+      "makerEvents": 2,
+      "transactions": 2,
+      "collateralMicroUnits": 13900,
+      "yesEvents": 2,
+      "noEvents": 0
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-gasly-2026-07-05",
+      "makerEvents": 11,
+      "transactions": 3,
+      "collateralMicroUnits": 1150000,
+      "yesEvents": 11,
+      "noEvents": 0
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-hadjar-2026-07-05",
+      "makerEvents": 85,
+      "transactions": 59,
+      "collateralMicroUnits": 31869691,
+      "yesEvents": 82,
+      "noEvents": 3
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-hamilton-2026-07-05",
+      "makerEvents": 167,
+      "transactions": 96,
+      "collateralMicroUnits": 8437204673,
+      "yesEvents": 84,
+      "noEvents": 83
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-hulkenberg-2026-07-05",
+      "makerEvents": 3,
+      "transactions": 2,
+      "collateralMicroUnits": 34340,
+      "yesEvents": 3,
+      "noEvents": 0
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-lawson-2026-07-05",
+      "makerEvents": 4,
+      "transactions": 2,
+      "collateralMicroUnits": 42340,
+      "yesEvents": 4,
+      "noEvents": 0
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-leclerc-2026-07-05",
+      "makerEvents": 223,
+      "transactions": 118,
+      "collateralMicroUnits": 3908506092,
+      "yesEvents": 168,
+      "noEvents": 55
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-lindblad-2026-07-05",
+      "makerEvents": 6,
+      "transactions": 5,
+      "collateralMicroUnits": 59580,
+      "yesEvents": 6,
+      "noEvents": 0
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-norris-2026-07-05",
+      "makerEvents": 126,
+      "transactions": 78,
+      "collateralMicroUnits": 5363160646,
+      "yesEvents": 87,
+      "noEvents": 39
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-perez-2026-07-05",
+      "makerEvents": 16,
+      "transactions": 8,
+      "collateralMicroUnits": 1095469,
+      "yesEvents": 16,
+      "noEvents": 0
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-piastri-2026-07-05",
+      "makerEvents": 172,
+      "transactions": 92,
+      "collateralMicroUnits": 4389481735,
+      "yesEvents": 128,
+      "noEvents": 44
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-russell-2026-07-05",
+      "makerEvents": 150,
+      "transactions": 104,
+      "collateralMicroUnits": 1023779073,
+      "yesEvents": 116,
+      "noEvents": 34
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-stroll-2026-07-05",
+      "makerEvents": 42,
+      "transactions": 37,
+      "collateralMicroUnits": 1662690,
+      "yesEvents": 42,
+      "noEvents": 0
+    },
+    {
+      "race": "british",
+      "marketSlug": "f1-british-grand-prix-winner-verstappen-2026-07-05",
+      "makerEvents": 180,
+      "transactions": 114,
+      "collateralMicroUnits": 5839086087,
+      "yesEvents": 103,
+      "noEvents": 77
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-alonso-2026-07-26",
+      "makerEvents": 13,
+      "transactions": 6,
+      "collateralMicroUnits": 49486069,
+      "yesEvents": 11,
+      "noEvents": 2
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-antonelli-2026-07-26",
+      "makerEvents": 76,
+      "transactions": 49,
+      "collateralMicroUnits": 2298049357,
+      "yesEvents": 33,
+      "noEvents": 43
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-hadjar-2026-07-26",
+      "makerEvents": 12,
+      "transactions": 10,
+      "collateralMicroUnits": 179197011,
+      "yesEvents": 7,
+      "noEvents": 5
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-hamilton-2026-07-26",
+      "makerEvents": 78,
+      "transactions": 45,
+      "collateralMicroUnits": 3809670513,
+      "yesEvents": 36,
+      "noEvents": 42
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-lawson-2026-07-26",
+      "makerEvents": 12,
+      "transactions": 5,
+      "collateralMicroUnits": 41173730,
+      "yesEvents": 11,
+      "noEvents": 1
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-leclerc-2026-07-26",
+      "makerEvents": 76,
+      "transactions": 38,
+      "collateralMicroUnits": 6754625179,
+      "yesEvents": 30,
+      "noEvents": 46
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-norris-2026-07-26",
+      "makerEvents": 98,
+      "transactions": 54,
+      "collateralMicroUnits": 2280672350,
+      "yesEvents": 53,
+      "noEvents": 45
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-piastri-2026-07-26",
+      "makerEvents": 63,
+      "transactions": 32,
+      "collateralMicroUnits": 892450240,
+      "yesEvents": 38,
+      "noEvents": 25
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-russell-2026-07-26",
+      "makerEvents": 67,
+      "transactions": 31,
+      "collateralMicroUnits": 2525518826,
+      "yesEvents": 30,
+      "noEvents": 37
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-stroll-2026-07-26",
+      "makerEvents": 11,
+      "transactions": 4,
+      "collateralMicroUnits": 25858520,
+      "yesEvents": 9,
+      "noEvents": 2
+    },
+    {
+      "race": "hungarian",
+      "marketSlug": "f1-hungarian-grand-prix-winner-verstappen-2026-07-26",
+      "makerEvents": 38,
+      "transactions": 32,
+      "collateralMicroUnits": 1441829449,
+      "yesEvents": 17,
+      "noEvents": 21
+    }
+  ]
+}

@@ -11,10 +11,10 @@ import { loadData } from '../packages/research/node/common.mjs';
 import { buildStateSpace } from '../packages/core/src/state-space/build.js';
 import { eloBenchmark } from '../packages/core/src/elo-benchmark.js';
 import { serialize } from '../packages/core/src/json-serialization.js';
-import { formShifts } from '../packages/core/src/forecast/form-shift.js';
+import { carFormShifts, formShifts } from '../packages/core/src/forecast/form-shift.js';
 import { modelSourceHash } from './model-source-hash.mjs';
 
-export const FILE_FORMAT = 1;
+export const FILE_FORMAT = 2; // forecast definitions travel with the model
 
 // Travels inside every published data file, so the terms are with the data wherever it is copied (see the About page of the site and data/NOTICE.md).
 export const LICENCE_NOTICE = {
@@ -47,6 +47,7 @@ const OMITTED_FROM_WEEKENDS = ['audit', 'qualAudit', 'eloDiag'];
 export function trimmedModel(model) {
   return {
     ...omit(model, ['exportRows']),
+    carFormShifts: carFormShifts(model),
     formShifts: formShifts(model), // the Ratings page's recent-form column, computed here so the browser needs no forecasting code to show it
     snaps: model.snaps.map((snap) => ({
       ...omit(snap, OMITTED_FROM_WEEKENDS),

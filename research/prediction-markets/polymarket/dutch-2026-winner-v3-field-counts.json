@@ -1,0 +1,366 @@
+{
+  "source": "PendulumFlow v3 CC BY-NC 4.0",
+  "hour": "2026-08-20/14",
+  "sha256": "afea89fea49601fe9756fa83ab910ca64eea28d82180700cb9fbbc79be76af48",
+  "coverageComplete": false,
+  "note": "All official event conditions, including placeholders; no data completeness claim.",
+  "rows": [
+    {
+      "conditionId": "0x06252f2b0f8185c518542a90a41c546e8ef3c6326533eeef74fd6f24c9a063b6",
+      "slug": "f1-dutch-grand-prix-winner-jr-2026-08-23",
+      "eventType": "best_bid_ask",
+      "count": 16,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x06252f2b0f8185c518542a90a41c546e8ef3c6326533eeef74fd6f24c9a063b6",
+      "slug": "f1-dutch-grand-prix-winner-jr-2026-08-23",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x06252f2b0f8185c518542a90a41c546e8ef3c6326533eeef74fd6f24c9a063b6",
+      "slug": "f1-dutch-grand-prix-winner-jr-2026-08-23",
+      "eventType": "price_change",
+      "count": 594,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x108c9e9654d6473ab2b302bc9d9a9fa1d01322277decf6e0694df765642dfc43",
+      "slug": "f1-dutch-grand-prix-winner-russell-2026-08-23",
+      "eventType": "best_bid_ask",
+      "count": 2,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x108c9e9654d6473ab2b302bc9d9a9fa1d01322277decf6e0694df765642dfc43",
+      "slug": "f1-dutch-grand-prix-winner-russell-2026-08-23",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x108c9e9654d6473ab2b302bc9d9a9fa1d01322277decf6e0694df765642dfc43",
+      "slug": "f1-dutch-grand-prix-winner-russell-2026-08-23",
+      "eventType": "price_change",
+      "count": 440,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x16565351a660f644b16ce7dab1965d66404f6b8875dfbfc3479432455828a1de",
+      "slug": "f1-dutch-grand-prix-winner-hadjar-2026-08-23",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x16565351a660f644b16ce7dab1965d66404f6b8875dfbfc3479432455828a1de",
+      "slug": "f1-dutch-grand-prix-winner-hadjar-2026-08-23",
+      "eventType": "price_change",
+      "count": 518,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x19fb20654780f2b07754753dab2134a7f47759c4712dce13a345df72da4d9438",
+      "slug": "f1-dutch-grand-prix-winner-lindblad-2026-08-23",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x19fb20654780f2b07754753dab2134a7f47759c4712dce13a345df72da4d9438",
+      "slug": "f1-dutch-grand-prix-winner-lindblad-2026-08-23",
+      "eventType": "price_change",
+      "count": 518,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x378ce14270cecac6bad6016abd615868de19a42aa6a1624435e0cbcb09bde320",
+      "slug": "f1-dutch-grand-prix-winner-lawson-2026-08-23",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x378ce14270cecac6bad6016abd615868de19a42aa6a1624435e0cbcb09bde320",
+      "slug": "f1-dutch-grand-prix-winner-lawson-2026-08-23",
+      "eventType": "price_change",
+      "count": 456,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x47fc94dee2882e97b9965c4dfea3e60c257b8aae5165a93786782687763519b1",
+      "slug": "f1-dutch-grand-prix-winner-alonso-2026-08-23",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x47fc94dee2882e97b9965c4dfea3e60c257b8aae5165a93786782687763519b1",
+      "slug": "f1-dutch-grand-prix-winner-alonso-2026-08-23",
+      "eventType": "price_change",
+      "count": 396,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x4face88ac93c15df1036e3709d52b7d1ffec391ff5940ed7a09417019fa8248e",
+      "slug": "f1-dutch-grand-prix-winner-leclerc-2026-08-23",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x4face88ac93c15df1036e3709d52b7d1ffec391ff5940ed7a09417019fa8248e",
+      "slug": "f1-dutch-grand-prix-winner-leclerc-2026-08-23",
+      "eventType": "price_change",
+      "count": 332,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x51ee5318c0603f554df96e1f2889f4e24a7835bd2d22363d2c57c42451e5fecb",
+      "slug": "f1-dutch-grand-prix-winner-piastri-2026-08-23",
+      "eventType": "book",
+      "count": 10,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x51ee5318c0603f554df96e1f2889f4e24a7835bd2d22363d2c57c42451e5fecb",
+      "slug": "f1-dutch-grand-prix-winner-piastri-2026-08-23",
+      "eventType": "price_change",
+      "count": 390,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x776beb9b0128d55521bbd659a9896fcb036f3d479b07cb7db79cdaef96e1d021",
+      "slug": "f1-dutch-grand-prix-winner-gasly-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x776beb9b0128d55521bbd659a9896fcb036f3d479b07cb7db79cdaef96e1d021",
+      "slug": "f1-dutch-grand-prix-winner-gasly-2026-08-23",
+      "eventType": "price_change",
+      "count": 366,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x7819f603cb2bff30587bdbceae72da6a661720090984ecee62b8405393eb0a9e",
+      "slug": "f1-dutch-grand-prix-winner-hulkenberg-2026-08-23",
+      "eventType": "best_bid_ask",
+      "count": 4,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x7819f603cb2bff30587bdbceae72da6a661720090984ecee62b8405393eb0a9e",
+      "slug": "f1-dutch-grand-prix-winner-hulkenberg-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x7819f603cb2bff30587bdbceae72da6a661720090984ecee62b8405393eb0a9e",
+      "slug": "f1-dutch-grand-prix-winner-hulkenberg-2026-08-23",
+      "eventType": "price_change",
+      "count": 376,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x81208b756e5def31d6900b5e5d4c62bb542d40fb683609e9b9f4c7a31cf39b9e",
+      "slug": "f1-dutch-grand-prix-winner-antonelli-2026-08-23",
+      "eventType": "best_bid_ask",
+      "count": 2,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x81208b756e5def31d6900b5e5d4c62bb542d40fb683609e9b9f4c7a31cf39b9e",
+      "slug": "f1-dutch-grand-prix-winner-antonelli-2026-08-23",
+      "eventType": "book",
+      "count": 14,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x81208b756e5def31d6900b5e5d4c62bb542d40fb683609e9b9f4c7a31cf39b9e",
+      "slug": "f1-dutch-grand-prix-winner-antonelli-2026-08-23",
+      "eventType": "last_trade_price",
+      "count": 1,
+      "distinctTransactionHashes": 1
+    },
+    {
+      "conditionId": "0x81208b756e5def31d6900b5e5d4c62bb542d40fb683609e9b9f4c7a31cf39b9e",
+      "slug": "f1-dutch-grand-prix-winner-antonelli-2026-08-23",
+      "eventType": "price_change",
+      "count": 354,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x869a497f276ef536f19dec2f34a4d66558431ecdc0b62ad82dbded4e46f6a74d",
+      "slug": "f1-dutch-grand-prix-winner-bortoleto-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x869a497f276ef536f19dec2f34a4d66558431ecdc0b62ad82dbded4e46f6a74d",
+      "slug": "f1-dutch-grand-prix-winner-bortoleto-2026-08-23",
+      "eventType": "price_change",
+      "count": 322,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x90f0313f9b7c291d54dc3e2d684111288ac364510a90521eabbb2605ef17a51d",
+      "slug": "f1-dutch-grand-prix-winner-albon-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x90f0313f9b7c291d54dc3e2d684111288ac364510a90521eabbb2605ef17a51d",
+      "slug": "f1-dutch-grand-prix-winner-albon-2026-08-23",
+      "eventType": "price_change",
+      "count": 366,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x913215b8b8b5bc5a542af0fbd36880e0b8cf5513940aad0aabc5bcd2570688f2",
+      "slug": "f1-dutch-grand-prix-winner-verstappen-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x913215b8b8b5bc5a542af0fbd36880e0b8cf5513940aad0aabc5bcd2570688f2",
+      "slug": "f1-dutch-grand-prix-winner-verstappen-2026-08-23",
+      "eventType": "price_change",
+      "count": 326,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x919c64d752c9f9a423325c13afc4da5653584a21ec96e5fc77be41f422bcdca7",
+      "slug": "f1-dutch-grand-prix-winner-colapinto-2026-08-23",
+      "eventType": "best_bid_ask",
+      "count": 4,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x919c64d752c9f9a423325c13afc4da5653584a21ec96e5fc77be41f422bcdca7",
+      "slug": "f1-dutch-grand-prix-winner-colapinto-2026-08-23",
+      "eventType": "book",
+      "count": 14,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0x919c64d752c9f9a423325c13afc4da5653584a21ec96e5fc77be41f422bcdca7",
+      "slug": "f1-dutch-grand-prix-winner-colapinto-2026-08-23",
+      "eventType": "price_change",
+      "count": 344,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xa927be9f2b123bc602c336738ea2fbf4730a6a8ef2d2676f50d967e12d0c163c",
+      "slug": "f1-dutch-grand-prix-winner-norris-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xa927be9f2b123bc602c336738ea2fbf4730a6a8ef2d2676f50d967e12d0c163c",
+      "slug": "f1-dutch-grand-prix-winner-norris-2026-08-23",
+      "eventType": "price_change",
+      "count": 296,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xc0f0d6a17836cf81495546f9e3cdf131be6cd3d7b2ebc5e50c0065ff64642388",
+      "slug": "f1-dutch-grand-prix-winner-ocon-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xc0f0d6a17836cf81495546f9e3cdf131be6cd3d7b2ebc5e50c0065ff64642388",
+      "slug": "f1-dutch-grand-prix-winner-ocon-2026-08-23",
+      "eventType": "price_change",
+      "count": 336,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xc7bf80a13d95230833ed5fe12398197aa68441bcfcd729d6a153fb0a3129414d",
+      "slug": "f1-dutch-grand-prix-winner-hamilton-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xc7bf80a13d95230833ed5fe12398197aa68441bcfcd729d6a153fb0a3129414d",
+      "slug": "f1-dutch-grand-prix-winner-hamilton-2026-08-23",
+      "eventType": "price_change",
+      "count": 312,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xcddf46b0b72b9d6bf68ce3a138af4855b67b37ad7f495e299105cda5012dc768",
+      "slug": "f1-dutch-grand-prix-winner-stroll-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xcddf46b0b72b9d6bf68ce3a138af4855b67b37ad7f495e299105cda5012dc768",
+      "slug": "f1-dutch-grand-prix-winner-stroll-2026-08-23",
+      "eventType": "price_change",
+      "count": 382,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xd6b97ccb9f2ac4bb7f8568d13adf24716173ad6457e10b14e9eb48aab6eea40e",
+      "slug": "f1-dutch-grand-prix-winner-perez-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xd6b97ccb9f2ac4bb7f8568d13adf24716173ad6457e10b14e9eb48aab6eea40e",
+      "slug": "f1-dutch-grand-prix-winner-perez-2026-08-23",
+      "eventType": "price_change",
+      "count": 360,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xe3541d441f4f93bdf5711bcd3ce7cbec7a558d384dd18802b5e222af64b01424",
+      "slug": "f1-dutch-grand-prix-winner-bottas-2026-08-23",
+      "eventType": "book",
+      "count": 12,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xe3541d441f4f93bdf5711bcd3ce7cbec7a558d384dd18802b5e222af64b01424",
+      "slug": "f1-dutch-grand-prix-winner-bottas-2026-08-23",
+      "eventType": "price_change",
+      "count": 258,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xfcd1c3aa0370a90c265daa7bcb9a0f46268e4deaa849245c651f367b1a0324a9",
+      "slug": "f1-dutch-grand-prix-winner-bearman-2026-08-23",
+      "eventType": "best_bid_ask",
+      "count": 20,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xfcd1c3aa0370a90c265daa7bcb9a0f46268e4deaa849245c651f367b1a0324a9",
+      "slug": "f1-dutch-grand-prix-winner-bearman-2026-08-23",
+      "eventType": "book",
+      "count": 8,
+      "distinctTransactionHashes": 0
+    },
+    {
+      "conditionId": "0xfcd1c3aa0370a90c265daa7bcb9a0f46268e4deaa849245c651f367b1a0324a9",
+      "slug": "f1-dutch-grand-prix-winner-bearman-2026-08-23",
+      "eventType": "price_change",
+      "count": 548,
+      "distinctTransactionHashes": 0
+    }
+  ]
+}

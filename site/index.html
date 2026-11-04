@@ -64,6 +64,7 @@
     <link rel="modulepreload" href="../packages/core/src/presets/tuned-elo.js" />
     <link rel="modulepreload" href="../packages/core/src/presets/model-settings.js" />
     <link rel="modulepreload" href="../packages/core/src/presets/state-space.js" />
+    <link rel="modulepreload" href="../packages/core/src/presets/learning.js" />
     <link rel="modulepreload" href="../packages/core/src/presets/state-space-fit.js" />
     <link rel="modulepreload" href="../packages/core/src/state-space/filter.js" />
     <script src="./js/boot-probe.js"></script>
@@ -182,7 +183,9 @@
               </header>
               <div class="ledger-view-body">
                 <div class="head-to-head" id="headToHeadPanel" hidden>
-                  <p class="sr-only">The chance that one driver finishes ahead of another in a race, from their ratings and recent form.</p>
+                  <p class="sr-only">
+                    Pairwise performance forecasts from ratings and recent form, with retirement risks shown separately.
+                  </p>
                   <div class="head-to-head-pick">
                     <div class="head-to-head-side" id="headToHeadSideA">
                       <div class="head-to-head-label-row">

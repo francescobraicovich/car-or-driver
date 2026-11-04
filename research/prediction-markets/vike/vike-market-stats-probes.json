@@ -1,0 +1,168 @@
+[
+  {
+    "source": "https://data.vike.io/v1/polymarket/market_stats",
+    "fileWrittenAtUtc": "2026-11-02T17:29:14.383251+00:00",
+    "timeNote": "File write time after sequential requests; exact response times were not recorded.",
+    "results": {
+      "dutch-norris": {
+        "status": 200,
+        "body": [
+          {
+            "first_ms": 1787493874631,
+            "last_ms": 1787535471310,
+            "snapshots": 791,
+            "total_events": 191207,
+            "trade_volume": 35764.557242,
+            "trades": 209
+          }
+        ],
+        "tokenId": "61632483259791156388118428310258844217648412995334767231217680481104935845277"
+      },
+      "dutch-hamilton": {
+        "status": 200,
+        "body": [
+          {
+            "first_ms": 1787496610796,
+            "last_ms": 1787535104088,
+            "snapshots": 200,
+            "total_events": 9829,
+            "trade_volume": 8404.8,
+            "trades": 23
+          }
+        ],
+        "tokenId": "68070681267453227644979843063596962102048622706439430091863269060786263117307"
+      },
+      "italian-norris": {
+        "status": 200,
+        "body": [
+          {
+            "first_ms": 1788703929473,
+            "last_ms": 1788730390413,
+            "snapshots": 196,
+            "total_events": 4894,
+            "trade_volume": 3243.977141,
+            "trades": 17
+          }
+        ],
+        "tokenId": "61876817411061358862545241841060260771671969137139281940198951229665042365235"
+      },
+      "italian-hamilton": {
+        "status": 200,
+        "body": [
+          {
+            "first_ms": 0,
+            "last_ms": 0,
+            "snapshots": 0,
+            "total_events": 0,
+            "trade_volume": 0.0,
+            "trades": 0
+          }
+        ],
+        "tokenId": "2146736570076516372182386500284470034560383164275054776960432208390387589510"
+      }
+    }
+  },
+  {
+    "source": "https://data.vike.io/v1/polymarket/market_stats",
+    "fileWrittenAtUtc": "2026-11-02T17:29:56.610453+00:00",
+    "timeNote": "File write time after sequential requests; exact response times were not recorded.",
+    "results": {
+      "singapore-norris": {
+        "status": 200,
+        "body": [
+          {
+            "first_ms": 1791719843282,
+            "last_ms": 1791743306611,
+            "snapshots": 186,
+            "total_events": 7599,
+            "trade_volume": 4332.26,
+            "trades": 26,
+            "first_ms_utc": "2026-10-11T11:57:23.282000+00:00",
+            "last_ms_utc": "2026-10-11T18:28:26.611000+00:00"
+          }
+        ],
+        "tokenId": "50434279802004157692776355100568844573677746234993201217816404234694902233906"
+      },
+      "singapore-hamilton": {
+        "status": 200,
+        "body": [
+          {
+            "first_ms": 1791721683344,
+            "last_ms": 1791743306617,
+            "snapshots": 220,
+            "total_events": 21567,
+            "trade_volume": 15891.42711,
+            "trades": 59,
+            "first_ms_utc": "2026-10-11T12:28:03.344000+00:00",
+            "last_ms_utc": "2026-10-11T18:28:26.617000+00:00"
+          }
+        ],
+        "tokenId": "9518453683994039663103190001640433279731056992400699084747973794695685716810"
+      },
+      "usa-norris": {
+        "status": 200,
+        "body": [
+          {
+            "first_ms": 0,
+            "last_ms": 0,
+            "snapshots": 0,
+            "total_events": 0,
+            "trade_volume": 0.0,
+            "trades": 0,
+            "first_ms_utc": null,
+            "last_ms_utc": null
+          }
+        ],
+        "tokenId": "112238491397922928846710301197732689010526377523840955416670810796827739098012"
+      },
+      "usa-hamilton": {
+        "status": 200,
+        "body": [
+          {
+            "first_ms": 0,
+            "last_ms": 0,
+            "snapshots": 0,
+            "total_events": 0,
+            "trade_volume": 0.0,
+            "trades": 0,
+            "first_ms_utc": null,
+            "last_ms_utc": null
+          }
+        ],
+        "tokenId": "95503243557920264561377159109447496483038940076424255641160925157685987932222"
+      },
+      "mexico-norris": {
+        "status": 200,
+        "body": [
+          {
+            "first_ms": 0,
+            "last_ms": 0,
+            "snapshots": 0,
+            "total_events": 0,
+            "trade_volume": 0.0,
+            "trades": 0,
+            "first_ms_utc": null,
+            "last_ms_utc": null
+          }
+        ],
+        "tokenId": "100599780073112619874674778036144882568350492943751011311973420301082884205383"
+      },
+      "mexico-hamilton": {
+        "status": 200,
+        "body": [
+          {
+            "first_ms": 1793571050606,
+            "last_ms": 1793592052165,
+            "snapshots": 181,
+            "total_events": 15725,
+            "trade_volume": 4598.504973,
+            "trades": 49,
+            "first_ms_utc": "2026-11-01T22:10:50.606000+00:00",
+            "last_ms_utc": "2026-11-02T04:00:52.165000+00:00"
+          }
+        ],
+        "tokenId": "15315871754281315165984164126099961791443229151639252403586642396600366512525"
+      }
+    }
+  }
+]

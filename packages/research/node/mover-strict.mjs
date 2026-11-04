@@ -42,21 +42,26 @@ export const lossOf = (items, f) => {
 /** Duel items of movers for K first weekends: { year, t0, driverId, tm: {z,o,w}[], fd: {z,o,w}[] } flattened with a `kind` field. */
 export function strictItems(idx, run, moves, K, adapt = null) {
   const out = [];
+  out.omitted = [];
   const k = run.k;
   const ad = (t, id) => (adapt?.[t] ? (adapt[t].get(String(id)) ?? 0) : 0); // known arrival adaptation, points (<= 0)
   for (const ev of moves) {
     if (!ev.valid) continue;
     const d = ev.driverId;
     const preE = run.pre[ev.ell];
-    if (!preE?.rated?.has(d)) continue;
-    const mE = meanOf(preE.rated);
-    const dM = preE.rated.get(d) - mE;
+    const mE = preE?.rated ? meanOf(preE.rated) : NaN;
+    const dM = preE?.rated?.get(d) - mE;
     ev.apps.slice(0, K).forEach((app) => {
       const t = app.i;
       const preT = run.pre[t];
       const mT = meanOf(preT.rated);
-      idx.timeline[t].obs[run.session].forEach((ob) => {
+      idx.timeline[t].obs[run.session].forEach((ob, observationIndex) => {
         if (ob.x !== d && ob.y !== d) return;
+        const identity = `${d}:${ev.t0}:${t}:${observationIndex}`;
+        if (!Number.isFinite(dM)) {
+          out.omitted.push(identity);
+          return;
+        }
         const sign = ob.x === d ? 1 : -1;
         const other = sign > 0 ? ob.y : ob.x;
         const cM = sign > 0 ? ob.cx : ob.cy;
@@ -64,16 +69,38 @@ export function strictItems(idx, run, moves, K, adapt = null) {
         const o = sign > 0 ? ob.o : 1 - ob.o;
         if (ob.same) {
           const oE = preE.rated.get(other);
-          if (!Number.isFinite(oE)) return;
-          out.push({ kind: 'tm', year: ev.year, driverId: d, t0: ev.t0, z: k * (dM - (oE - mE) + ad(t, d) - ad(t, other)), o, w: ob.w });
+          if (!Number.isFinite(oE)) {
+            out.omitted.push(identity);
+            return;
+          }
+          out.push({
+            kind: 'tm',
+            year: ev.year,
+            observationYear: idx.timeline[t].year,
+            weekendIndex: t,
+            observationIndex,
+            eligibilityYear: idx.timeline[ev.apps[2].i].year,
+            driverId: d,
+            t0: ev.t0,
+            z: k * (dM - (oE - mE) + ad(t, d) - ad(t, other)),
+            o,
+            w: ob.w,
+          });
         } else {
           const oT = preT.rated.get(other);
           const carM = preT.cars.get(cM);
           const carO = preT.cars.get(cO);
-          if (![oT, carM, carO].every(Number.isFinite)) return;
+          if (![oT, carM, carO].every(Number.isFinite)) {
+            out.omitted.push(identity);
+            return;
+          }
           out.push({
             kind: 'fd',
             year: ev.year,
+            observationYear: idx.timeline[t].year,
+            weekendIndex: t,
+            observationIndex,
+            eligibilityYear: idx.timeline[ev.apps[2].i].year,
             driverId: d,
             t0: ev.t0,
             z: k * (dM + carM - (oT - mT) - carO + ad(t, d) - ad(t, other)),

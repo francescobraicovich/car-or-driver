@@ -17,7 +17,7 @@
 // Any model that can fill this shape plugs into every metric of the harness.
 import { runStateSpace, STATE_SPACE_DEFAULTS } from '../../core/src/state-space/filter.js';
 import { STATE_SPACE } from '../../core/src/presets/state-space.js';
-import { arrivalOffsets, qualLink } from '../../core/src/state-space/qualifying-link.js';
+import { qualLink } from '../../core/src/state-space/qualifying-link.js';
 
 const logit = (p) => Math.log(Math.min(1 - 1e-12, Math.max(1e-12, p)) / (1 - Math.min(1 - 1e-12, Math.max(1e-12, p))));
 
@@ -35,11 +35,10 @@ export function stateSpaceRun(timeline, session, ctx, hyper = {}, name = 'state-
   // Without it (the default) the filter runs alone, which is what the earlier climbs and the baseline of `separation-report.mjs` mean.
   if (ctx.linkShipped && session === 'race' && !ctx.offsets) {
     const link = STATE_SPACE.link ?? {};
-    if (link.beta || link.gamma) {
+    if (link.beta) {
       const q = runStateSpace(weekends('qual'), { ...STATE_SPACE_DEFAULTS, ...STATE_SPACE.qual }, ctx);
-      ctx = { ...ctx, ...qualLink(q, link.beta, link.gamma) };
+      ctx = { ...ctx, ...qualLink(q, link.beta) };
     }
-    if (STATE_SPACE.adapt?.dip) ctx = { ...ctx, adapt: arrivalOffsets(timeline, ctx.canon, STATE_SPACE.adapt) };
   }
   const out = runStateSpace(weekends(session), h, ctx);
   const k = Math.LN10 / h.s;

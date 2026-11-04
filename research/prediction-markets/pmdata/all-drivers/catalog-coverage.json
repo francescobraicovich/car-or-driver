@@ -1,0 +1,2283 @@
+{
+  "source": "https://public-data.pmdata.dev/v1/polymarket/markets.parquet",
+  "documentation": "https://pmdata.dev/docs/schemas/markets-catalog",
+  "sha256": "337a9c3eab34403e9d92f4deea9db62ea026a8ab399a47e84e43a5d8330bef99",
+  "caveat": "The first and last recorded dates do not prove data exists on every intervening day.",
+  "markets": [
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "863",
+      "marketSlug": "f1-canadian-grand-prix-winner-antonelli-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:42:37+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "846",
+      "marketSlug": "f1-canadian-grand-prix-winner-norris-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:42:21+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "857",
+      "marketSlug": "f1-canadian-grand-prix-winner-piastri-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:43:22+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "847",
+      "marketSlug": "f1-canadian-grand-prix-winner-russell-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:43:26+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "830",
+      "marketSlug": "f1-canadian-grand-prix-winner-verstappen-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:42:39+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "1",
+      "marketSlug": "f1-canadian-grand-prix-winner-hamilton-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:43:10+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "861",
+      "marketSlug": "f1-canadian-grand-prix-winner-colapinto-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:42:45+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "844",
+      "marketSlug": "f1-canadian-grand-prix-winner-leclerc-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:42:11+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "832",
+      "marketSlug": "f1-canadian-grand-prix-winner-jr-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:42:51+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "848",
+      "marketSlug": "f1-canadian-grand-prix-winner-albon-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:41:53+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "860",
+      "marketSlug": "f1-canadian-grand-prix-winner-bearman-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:43:16+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "864",
+      "marketSlug": "f1-canadian-grand-prix-winner-bortoleto-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:41:57+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "839",
+      "marketSlug": "f1-canadian-grand-prix-winner-ocon-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:42:16+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "866",
+      "marketSlug": "f1-canadian-grand-prix-winner-lindblad-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:43:33+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "4",
+      "marketSlug": "f1-canadian-grand-prix-winner-alonso-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:41:51+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "815",
+      "marketSlug": "f1-canadian-grand-prix-winner-perez-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:42:03+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "840",
+      "marketSlug": "f1-canadian-grand-prix-winner-stroll-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:43:51+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "822",
+      "marketSlug": "f1-canadian-grand-prix-winner-bottas-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:43:04+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "807",
+      "marketSlug": "f1-canadian-grand-prix-winner-hulkenberg-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:42:56+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "859",
+      "marketSlug": "f1-canadian-grand-prix-winner-lawson-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:43:43+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "842",
+      "marketSlug": "f1-canadian-grand-prix-winner-gasly-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:41:43+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "canadian",
+      "date": "2026-05-21",
+      "driverId": "865",
+      "marketSlug": "f1-canadian-grand-prix-winner-hadjar-2026-05-24",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-01 01:00:00+01",
+        "2026-05-25 01:00:00+01",
+        "2026-04-25 12:43:39+01",
+        "2026-05-31 21:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "863",
+      "marketSlug": "f1-monaco-grand-prix-winner-antonelli-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:02+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "1",
+      "marketSlug": "f1-monaco-grand-prix-winner-hamilton-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:18+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "830",
+      "marketSlug": "f1-monaco-grand-prix-winner-verstappen-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:02+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "844",
+      "marketSlug": "f1-monaco-grand-prix-winner-leclerc-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:12:47+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "865",
+      "marketSlug": "f1-monaco-grand-prix-winner-hadjar-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:46+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "861",
+      "marketSlug": "f1-monaco-grand-prix-winner-colapinto-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:04+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "859",
+      "marketSlug": "f1-monaco-grand-prix-winner-lawson-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:52+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "842",
+      "marketSlug": "f1-monaco-grand-prix-winner-gasly-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:12:34+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "832",
+      "marketSlug": "f1-monaco-grand-prix-winner-jr-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:08+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "860",
+      "marketSlug": "f1-monaco-grand-prix-winner-bearman-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:14:26+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "857",
+      "marketSlug": "f1-monaco-grand-prix-winner-piastri-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:25+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "807",
+      "marketSlug": "f1-monaco-grand-prix-winner-hulkenberg-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:11+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "864",
+      "marketSlug": "f1-monaco-grand-prix-winner-bortoleto-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:31+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "839",
+      "marketSlug": "f1-monaco-grand-prix-winner-ocon-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:12:50+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "840",
+      "marketSlug": "f1-monaco-grand-prix-winner-stroll-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:14:03+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "822",
+      "marketSlug": "f1-monaco-grand-prix-winner-bottas-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:15+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "815",
+      "marketSlug": "f1-monaco-grand-prix-winner-perez-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:12:41+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "846",
+      "marketSlug": "f1-monaco-grand-prix-winner-norris-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:12:54+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "847",
+      "marketSlug": "f1-monaco-grand-prix-winner-russell-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:14:54+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "4",
+      "marketSlug": "f1-monaco-grand-prix-winner-alonso-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:14:32+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "848",
+      "marketSlug": "f1-monaco-grand-prix-winner-albon-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:12:38+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "monaco",
+      "date": "2026-06-04",
+      "driverId": "866",
+      "marketSlug": "f1-monaco-grand-prix-winner-lindblad-2026-06-07",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-09 01:00:00+01",
+        "2026-06-07 01:00:00+01",
+        "2026-05-09 14:13:41+01",
+        "2026-06-14 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "863",
+      "marketSlug": "f1-catalunya-grand-prix-winner-antonelli-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:05:54+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "1",
+      "marketSlug": "f1-catalunya-grand-prix-winner-hamilton-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:06:34+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "865",
+      "marketSlug": "f1-catalunya-grand-prix-winner-hadjar-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:07:13+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "857",
+      "marketSlug": "f1-catalunya-grand-prix-winner-piastri-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:06:35+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "859",
+      "marketSlug": "f1-catalunya-grand-prix-winner-lawson-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:07:11+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "866",
+      "marketSlug": "f1-catalunya-grand-prix-winner-lindblad-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:07:09+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "842",
+      "marketSlug": "f1-catalunya-grand-prix-winner-gasly-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:05:13+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "848",
+      "marketSlug": "f1-catalunya-grand-prix-winner-albon-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:05:18+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "839",
+      "marketSlug": "f1-catalunya-grand-prix-winner-ocon-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:05:47+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "4",
+      "marketSlug": "f1-catalunya-grand-prix-winner-alonso-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:05:16+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "864",
+      "marketSlug": "f1-catalunya-grand-prix-winner-bortoleto-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:05:20+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "847",
+      "marketSlug": "f1-catalunya-grand-prix-winner-russell-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:06:42+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "807",
+      "marketSlug": "f1-catalunya-grand-prix-winner-hulkenberg-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:06:29+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "861",
+      "marketSlug": "f1-catalunya-grand-prix-winner-colapinto-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:06:04+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "815",
+      "marketSlug": "f1-catalunya-grand-prix-winner-perez-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:05:21+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "832",
+      "marketSlug": "f1-catalunya-grand-prix-winner-jr-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:06:04+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "844",
+      "marketSlug": "f1-catalunya-grand-prix-winner-leclerc-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:05:49+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "840",
+      "marketSlug": "f1-catalunya-grand-prix-winner-stroll-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:07:13+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "846",
+      "marketSlug": "f1-catalunya-grand-prix-winner-norris-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:05:56+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "860",
+      "marketSlug": "f1-catalunya-grand-prix-winner-bearman-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:06:32+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "822",
+      "marketSlug": "f1-catalunya-grand-prix-winner-bottas-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:06:32+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "barcelona",
+      "date": "2026-06-11",
+      "driverId": "830",
+      "marketSlug": "f1-catalunya-grand-prix-winner-verstappen-2026-06-14",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-16 01:00:00+01",
+        "2026-06-14 01:00:00+01",
+        "2026-05-16 14:06:00+01",
+        "2026-06-21 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "1",
+      "marketSlug": "f1-austrian-grand-prix-winner-hamilton-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:16+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "847",
+      "marketSlug": "f1-austrian-grand-prix-winner-russell-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:35+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "846",
+      "marketSlug": "f1-austrian-grand-prix-winner-norris-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:34:51+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "830",
+      "marketSlug": "f1-austrian-grand-prix-winner-verstappen-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:34:55+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "857",
+      "marketSlug": "f1-austrian-grand-prix-winner-piastri-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:33+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "865",
+      "marketSlug": "f1-austrian-grand-prix-winner-hadjar-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:44+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "842",
+      "marketSlug": "f1-austrian-grand-prix-winner-gasly-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:34:26+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "859",
+      "marketSlug": "f1-austrian-grand-prix-winner-lawson-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:46+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "866",
+      "marketSlug": "f1-austrian-grand-prix-winner-lindblad-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:42+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "861",
+      "marketSlug": "f1-austrian-grand-prix-winner-colapinto-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:02+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "864",
+      "marketSlug": "f1-austrian-grand-prix-winner-bortoleto-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:34:39+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "832",
+      "marketSlug": "f1-austrian-grand-prix-winner-jr-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:04+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "839",
+      "marketSlug": "f1-austrian-grand-prix-winner-ocon-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:34:51+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "815",
+      "marketSlug": "f1-austrian-grand-prix-winner-perez-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:34:41+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "844",
+      "marketSlug": "f1-austrian-grand-prix-winner-leclerc-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:34:41+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "863",
+      "marketSlug": "f1-austrian-grand-prix-winner-antonelli-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:34:53+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "860",
+      "marketSlug": "f1-austrian-grand-prix-winner-bearman-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:20+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "848",
+      "marketSlug": "f1-austrian-grand-prix-winner-albon-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:34:37+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "4",
+      "marketSlug": "f1-austrian-grand-prix-winner-alonso-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:34:28+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "807",
+      "marketSlug": "f1-austrian-grand-prix-winner-hulkenberg-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:22+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "822",
+      "marketSlug": "f1-austrian-grand-prix-winner-bottas-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:07+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "austrian",
+      "date": "2026-06-25",
+      "driverId": "840",
+      "marketSlug": "f1-austrian-grand-prix-winner-stroll-2026-06-28",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-05-30 01:00:00+01",
+        "2026-06-28 01:00:00+01",
+        "2026-05-30 12:35:46+01",
+        "2026-07-05 14:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "847",
+      "marketSlug": "f1-british-grand-prix-winner-russell-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:51+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "830",
+      "marketSlug": "f1-british-grand-prix-winner-verstappen-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:21+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "863",
+      "marketSlug": "f1-british-grand-prix-winner-antonelli-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:19+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "857",
+      "marketSlug": "f1-british-grand-prix-winner-piastri-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:42+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "1",
+      "marketSlug": "f1-british-grand-prix-winner-hamilton-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:37+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "865",
+      "marketSlug": "f1-british-grand-prix-winner-hadjar-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:54+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "846",
+      "marketSlug": "f1-british-grand-prix-winner-norris-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:18+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "844",
+      "marketSlug": "f1-british-grand-prix-winner-leclerc-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:09+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "859",
+      "marketSlug": "f1-british-grand-prix-winner-lawson-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:55+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "866",
+      "marketSlug": "f1-british-grand-prix-winner-lindblad-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:53+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "864",
+      "marketSlug": "f1-british-grand-prix-winner-bortoleto-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:07+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "807",
+      "marketSlug": "f1-british-grand-prix-winner-hulkenberg-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:33+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "842",
+      "marketSlug": "f1-british-grand-prix-winner-gasly-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:33:51+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "860",
+      "marketSlug": "f1-british-grand-prix-winner-bearman-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:40+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "861",
+      "marketSlug": "f1-british-grand-prix-winner-colapinto-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:22+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "839",
+      "marketSlug": "f1-british-grand-prix-winner-ocon-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:10+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "848",
+      "marketSlug": "f1-british-grand-prix-winner-albon-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:06+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "4",
+      "marketSlug": "f1-british-grand-prix-winner-alonso-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:33:55+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "840",
+      "marketSlug": "f1-british-grand-prix-winner-stroll-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:57+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "832",
+      "marketSlug": "f1-british-grand-prix-winner-jr-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:24+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "815",
+      "marketSlug": "f1-british-grand-prix-winner-perez-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:07+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "british",
+      "date": "2026-07-02",
+      "driverId": "822",
+      "marketSlug": "f1-british-grand-prix-winner-bottas-2026-07-05",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-06-06 01:00:00+01",
+        "2026-07-05 01:00:00+01",
+        "2026-06-06 12:34:34+01",
+        "2026-07-12 15:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "846",
+      "marketSlug": "f1-dutch-grand-prix-winner-norris-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "830",
+      "marketSlug": "f1-dutch-grand-prix-winner-verstappen-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "863",
+      "marketSlug": "f1-dutch-grand-prix-winner-antonelli-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "844",
+      "marketSlug": "f1-dutch-grand-prix-winner-leclerc-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "1",
+      "marketSlug": "f1-dutch-grand-prix-winner-hamilton-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "865",
+      "marketSlug": "f1-dutch-grand-prix-winner-hadjar-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "847",
+      "marketSlug": "f1-dutch-grand-prix-winner-russell-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "859",
+      "marketSlug": "f1-dutch-grand-prix-winner-lawson-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "807",
+      "marketSlug": "f1-dutch-grand-prix-winner-hulkenberg-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "866",
+      "marketSlug": "f1-dutch-grand-prix-winner-lindblad-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "864",
+      "marketSlug": "f1-dutch-grand-prix-winner-bortoleto-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "842",
+      "marketSlug": "f1-dutch-grand-prix-winner-gasly-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "840",
+      "marketSlug": "f1-dutch-grand-prix-winner-stroll-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "4",
+      "marketSlug": "f1-dutch-grand-prix-winner-alonso-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "861",
+      "marketSlug": "f1-dutch-grand-prix-winner-colapinto-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "839",
+      "marketSlug": "f1-dutch-grand-prix-winner-ocon-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "848",
+      "marketSlug": "f1-dutch-grand-prix-winner-albon-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "832",
+      "marketSlug": "f1-dutch-grand-prix-winner-jr-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "860",
+      "marketSlug": "f1-dutch-grand-prix-winner-bearman-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "857",
+      "marketSlug": "f1-dutch-grand-prix-winner-piastri-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "815",
+      "marketSlug": "f1-dutch-grand-prix-winner-perez-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "dutch",
+      "date": "2026-08-20",
+      "driverId": "822",
+      "marketSlug": "f1-dutch-grand-prix-winner-bottas-2026-08-23",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-18 01:00:00+01",
+        "2026-08-24 01:00:00+01",
+        "2026-08-18 04:35:39+01",
+        "2026-08-30 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "846",
+      "marketSlug": "f1-italian-grand-prix-winner-norris-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "863",
+      "marketSlug": "f1-italian-grand-prix-winner-antonelli-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "847",
+      "marketSlug": "f1-italian-grand-prix-winner-russell-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "1",
+      "marketSlug": "f1-italian-grand-prix-winner-hamilton-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "844",
+      "marketSlug": "f1-italian-grand-prix-winner-leclerc-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "857",
+      "marketSlug": "f1-italian-grand-prix-winner-piastri-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "859",
+      "marketSlug": "f1-italian-grand-prix-winner-lawson-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "807",
+      "marketSlug": "f1-italian-grand-prix-winner-hulkenberg-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "4",
+      "marketSlug": "f1-italian-grand-prix-winner-alonso-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "842",
+      "marketSlug": "f1-italian-grand-prix-winner-gasly-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "866",
+      "marketSlug": "f1-italian-grand-prix-winner-lindblad-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "864",
+      "marketSlug": "f1-italian-grand-prix-winner-bortoleto-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "861",
+      "marketSlug": "f1-italian-grand-prix-winner-colapinto-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "815",
+      "marketSlug": "f1-italian-grand-prix-winner-perez-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "832",
+      "marketSlug": "f1-italian-grand-prix-winner-jr-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "848",
+      "marketSlug": "f1-italian-grand-prix-winner-albon-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "822",
+      "marketSlug": "f1-italian-grand-prix-winner-bottas-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "839",
+      "marketSlug": "f1-italian-grand-prix-winner-ocon-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "840",
+      "marketSlug": "f1-italian-grand-prix-winner-stroll-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "860",
+      "marketSlug": "f1-italian-grand-prix-winner-bearman-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "italian",
+      "date": "2026-09-03",
+      "driverId": "830",
+      "marketSlug": "f1-italian-grand-prix-winner-verstappen-2026-09-06",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-08-08 01:00:00+01",
+        "2026-09-06 01:00:00+01",
+        "2026-08-08 12:30:31+01",
+        "2026-09-13 14:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "830",
+      "marketSlug": "f1-singapore-grand-prix-winner-verstappen-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "863",
+      "marketSlug": "f1-singapore-grand-prix-winner-antonelli-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "1",
+      "marketSlug": "f1-singapore-grand-prix-winner-hamilton-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "844",
+      "marketSlug": "f1-singapore-grand-prix-winner-leclerc-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "865",
+      "marketSlug": "f1-singapore-grand-prix-winner-hadjar-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "857",
+      "marketSlug": "f1-singapore-grand-prix-winner-piastri-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "859",
+      "marketSlug": "f1-singapore-grand-prix-winner-lawson-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "4",
+      "marketSlug": "f1-singapore-grand-prix-winner-alonso-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "846",
+      "marketSlug": "f1-singapore-grand-prix-winner-norris-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "866",
+      "marketSlug": "f1-singapore-grand-prix-winner-lindblad-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "807",
+      "marketSlug": "f1-singapore-grand-prix-winner-hulkenberg-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "840",
+      "marketSlug": "f1-singapore-grand-prix-winner-stroll-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "861",
+      "marketSlug": "f1-singapore-grand-prix-winner-colapinto-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "860",
+      "marketSlug": "f1-singapore-grand-prix-winner-bearman-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "839",
+      "marketSlug": "f1-singapore-grand-prix-winner-ocon-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "842",
+      "marketSlug": "f1-singapore-grand-prix-winner-gasly-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "832",
+      "marketSlug": "f1-singapore-grand-prix-winner-jr-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "864",
+      "marketSlug": "f1-singapore-grand-prix-winner-bortoleto-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "815",
+      "marketSlug": "f1-singapore-grand-prix-winner-perez-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "847",
+      "marketSlug": "f1-singapore-grand-prix-winner-russell-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "848",
+      "marketSlug": "f1-singapore-grand-prix-winner-albon-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    },
+    {
+      "race": "singapore",
+      "date": "2026-10-08",
+      "driverId": "822",
+      "marketSlug": "f1-singapore-grand-prix-winner-bottas-2026-10-11",
+      "catalogMatches": 1,
+      "catalogTimes": [
+        "2026-10-03 01:00:00+01",
+        "2026-10-11 01:00:00+01",
+        "2026-10-03 12:30:31+01",
+        "2026-10-18 13:00:00+01"
+      ]
+    }
+  ]
+}

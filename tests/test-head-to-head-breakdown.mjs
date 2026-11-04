@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { loadData } from '../packages/research/node/common.mjs';
 import { buildStateSpace } from '../packages/core/src/state-space/build.js';
 import { forecastPair } from '../packages/core/src/forecast/prepare.js';
-import { withoutForm } from '../packages/core/src/forecast/form.js';
+import { withoutCarForm, withoutDriverForm, withoutForm } from '../packages/core/src/forecast/form.js';
 
 // withoutForm zeroes the form signals and nothing else
 const f = {
@@ -13,6 +13,8 @@ const f = {
   same_team: 1,
   grid: 0.4,
   qual_fast: -0.1,
+  qual_fast_driver: -0.04,
+  qual_fast_track: 0.03,
   lap_slow_driver: 0.2,
   order_fast_track: 0.1,
   qual_now: 0.5,
@@ -25,6 +27,13 @@ assert.deepEqual(
   'ratings, context and qualifying are kept',
 );
 assert.equal(f.qual_fast, -0.1, 'the input is not mutated');
+const carOff = withoutCarForm(f);
+assert.equal(carOff.qual_fast, f.qual_fast_driver, 'legacy package keeps the driver contribution');
+const driverOff = withoutDriverForm(f);
+assert.ok(Math.abs(driverOff.qual_fast + 0.06) < 1e-12, 'driver form is removed from its package signal while car form remains');
+assert.equal(driverOff.qual_fast_driver, 0, 'driver-specific form is removed');
+assert.equal(driverOff.order_fast_track, 0, 'track form is removed');
+assert.equal(driverOff.baseline, 0.3, 'ratings remain available');
 
 const ctx = await loadData('data');
 const model = buildStateSpace(ctx.raw, ctx.lapSnapshots, ctx.maps, {}, ctx.lapPace);
@@ -41,10 +50,12 @@ for (const [a, b] of [
   const r = forecastPair(model, a, b, { L: 60 });
   const s = forecastPair(model, b, a, { L: 60 });
   assert.equal(r.breakdown.full, r.p, 'the last step is the headline');
-  for (const key of ['ratings', 'calibrated', 'full']) {
+  for (const key of ['ratings', 'calibrated', 'driverFormOff', 'carFormOff', 'full']) {
     assert.ok(r.breakdown[key] > 0 && r.breakdown[key] < 1, `${key} is a probability`);
     assert.ok(Math.abs(r.breakdown[key] + s.breakdown[key] - 1) < 1e-9, `${key} is symmetric when the drivers are swapped`);
   }
+  if (a === String(team.driverId) && b === String(mate.driverId))
+    assert(Math.abs(r.breakdown.full - r.breakdown.carFormOff) < 1e-12, 'same-car form cancels');
   assert.ok(Number.isFinite(r.gap), 'the rating gap used is exposed');
 }
 console.log('PASS head to head: breakdown ends at the headline and is symmetric');

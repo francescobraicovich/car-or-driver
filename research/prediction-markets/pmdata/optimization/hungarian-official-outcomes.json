@@ -1,0 +1,116 @@
+{
+  "source": "Polymarket Gamma API",
+  "requestUrl": "https://gamma-api.polymarket.com/events/slug/f1-hungarian-grand-prix-winner-2026-07-26",
+  "retrievedAt": "2026-11-02T18:17:12.993613+00:00",
+  "originalResponseSha256": "552b5fb499011384c83fd060eabd74edd430c1527683380a55943e9ec8026fd8",
+  "note": "Current retrospective settlement metadata; original historical tick, minimums and timestamps unverified.",
+  "event": {
+    "id": "640575",
+    "slug": "f1-hungarian-grand-prix-winner-2026-07-26",
+    "closed": true,
+    "updatedAt": "2026-08-13T17:42:30.679463Z",
+    "negRisk": true
+  },
+  "markets": [
+    {
+      "slug": "f1-hungarian-grand-prix-winner-leclerc-2026-07-26",
+      "conditionId": "0xfd369db75dc51f3ec661455cf868fdfa7845e8a47bfe65aefe9f1447dc2c7d4e",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "73427766498074792898749246635290882811998705137871731629954461975021080518245",
+        "89657822805124834114274312302521902372665192532902481019027751535305751062073"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-07-26 19:36:43+00",
+      "creationTime": "2026-06-27T11:30:03.146947Z",
+      "startDate": "2026-06-27T11:37:23.197124Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-hungarian-grand-prix-winner-norris-2026-07-26",
+      "conditionId": "0x36cc3c0839f8953b0c4359aea99336fceb76c750b5b2509082193a5ee79ac80e",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "1",
+        "0"
+      ],
+      "clobTokenIds": [
+        "54396481367166889461688610308196414708048744650531608611896677718305493951217",
+        "51544390988559398272971193176488931813820946689565383879206789859150413198935"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-07-26 19:46:16+00",
+      "creationTime": "2026-06-27T11:30:03.537956Z",
+      "startDate": "2026-06-27T11:37:32.642205Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-hungarian-grand-prix-winner-hamilton-2026-07-26",
+      "conditionId": "0x058c97f3553db10b8df590e491a15de53b39cdba231070a993b9d46d264bc3cd",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "29182557482930894926551444457441091281627059242568302863019387202603296788240",
+        "70868428807799974542797798784606518761183340277832328307810243583401632874361"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-07-26 19:39:42+00",
+      "creationTime": "2026-06-27T11:30:04.949129Z",
+      "startDate": "2026-06-27T11:38:02.758572Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-hungarian-grand-prix-winner-piastri-2026-07-26",
+      "conditionId": "0x47555861c47977569a157830c630638f9bfc75b683ffd67d465f78679c91fd42",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "74848003864727916602514232668855639524935571396025695310878339492645442275449",
+        "8121094496154980176910314020278730664522902103617026722330713694052909047688"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-07-26 19:39:42+00",
+      "creationTime": "2026-06-27T11:30:05.313103Z",
+      "startDate": "2026-06-27T11:38:24.646601Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    }
+  ]
+}

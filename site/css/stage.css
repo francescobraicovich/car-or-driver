@@ -1808,6 +1808,7 @@ body {
 .graph-rival {
   display: grid;
   grid-template-columns: minmax(90px, 1fr) 52px 52px;
+  align-items: center;
   gap: 6px;
   padding: 4px 6px;
   border-left: 3px solid #9aa5b4;
@@ -1825,6 +1826,14 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.graph-rival-name,
+.graph-rival small {
+  display: block;
+}
+.graph-rival small {
+  font-size: 10px;
+  line-height: 1.4;
 }
 .graph-note {
   margin: 14px 0 0;
@@ -2947,12 +2956,13 @@ body[data-page='graph'] .track-title {
   display: flex;
   flex: 0 1 auto;
   flex-direction: column;
-  min-height: calc(var(--rows, 20) * 13px);
+  min-height: 0;
+  overflow-y: auto;
   margin: 0;
   padding: 0 6px;
   font-family: var(--mono);
   font-size: 12px;
-  line-height: 1.1; /* the most that has been rated at one weekend is 24, which still has to fit on a laptop 600 high without scrolling */
+  line-height: 1.1; /* Dense historical fields scroll within the list when the viewport cannot hold every row. */
   list-style: none;
 }
 .ratings-list li {

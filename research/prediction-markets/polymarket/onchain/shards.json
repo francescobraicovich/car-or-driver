@@ -1,0 +1,87 @@
+[
+  {
+    "path": "event_month=2026-07/data_0.parquet",
+    "size": 244698743,
+    "publishedSha256": "3d7338175f9291cb82e03fe4e3217adfb87600ae4dc406210e1aebb20b112963"
+  },
+  {
+    "path": "event_month=2026-07/data_1.parquet",
+    "size": 491295883,
+    "publishedSha256": "2b84fd193dc3e101b36d9a7e5545c7d77acfed2d097c81ac9d424b8e1cd909d2"
+  },
+  {
+    "path": "event_month=2026-07/data_2.parquet",
+    "size": 243772909,
+    "publishedSha256": "23707ed9701a8a43305090725fdfbc1f93cf5d364e0811b7d3298e5985a836e7"
+  },
+  {
+    "path": "event_month=2026-07/data_3.parquet",
+    "size": 244804054,
+    "publishedSha256": "cae37dc818139dc3cc1199a7c4b0ffbb17493c358caae8149b6e8a97fa5b2fef"
+  },
+  {
+    "path": "event_month=2026-07/data_4.parquet",
+    "size": 364984985,
+    "publishedSha256": "9416a944ca990ca3f29d73ad03f6f48066a51aac06f7e7ac08873413580f314e"
+  },
+  {
+    "path": "event_month=2026-07/data_5.parquet",
+    "size": 428533578,
+    "publishedSha256": "4f0e75b68beaa400543fc376a091e4599107b6998dfed8c87a83aef76b1afe23"
+  },
+  {
+    "path": "event_month=2026-07/data_6.parquet",
+    "size": 425287090,
+    "publishedSha256": "8bb78d0423b80daf08cc990f68f1e5526907bf5f45fef2e82a9614096dcbdc6d"
+  },
+  {
+    "path": "event_month=2026-07/data_7.parquet",
+    "size": 364092744,
+    "publishedSha256": "cea1689f5a154d5cef09af5cf7f704a10170f99d3bbcdfb5e5b0ab59f3024299"
+  },
+  {
+    "path": "event_month=2026-07/data_8.parquet",
+    "size": 426211498,
+    "publishedSha256": "20e9f00499c109c70f6c629506fee7492be760fdef7ff04c17bd23ebab709f18"
+  },
+  {
+    "path": "event_month=2026-07/data_9.parquet",
+    "size": 304463125,
+    "publishedSha256": "b3ee994fda03f87da884168bf09246621db56c467f174cbae8e9aa7571fa0eb9"
+  },
+  {
+    "path": "event_month=2026-07/data_10.parquet",
+    "size": 243868617,
+    "publishedSha256": "af6dde0321ea34f296a64583ef4a0ad01a64834e265945cb65758a26c3d85877"
+  },
+  {
+    "path": "event_month=2026-07/data_11.parquet",
+    "size": 244553948,
+    "publishedSha256": "d0a6d3c58673895c220b1978179db902b8ed56b1ee5dffee3bdc10646c572e1e"
+  },
+  {
+    "path": "event_month=2026-07/data_12.parquet",
+    "size": 486490309,
+    "publishedSha256": "56ca46232dafbe27e466623b8dff4cc1bbce368474048c84ff463559b18a581c"
+  },
+  {
+    "path": "event_month=2026-07/data_13.parquet",
+    "size": 366593786,
+    "publishedSha256": "ddb60df87d652f2227ec06a7bb2a35767ca5feeed6926dadad5ed827cfd8b230"
+  },
+  {
+    "path": "event_month=2026-07/data_14.parquet",
+    "size": 243034072,
+    "publishedSha256": "d3fa762ee4e03dec3e4306f7c732899a069842570e701c88e2abb207d0c6cfea"
+  },
+  {
+    "path": "event_month=2026-07/data_15.parquet",
+    "size": 242305024,
+    "publishedSha256": "47d3616becda81065a3f0373db4c406c339fd629ebecfa9ae16b2fd8d838c2ac"
+  },
+  {
+    "path": "event_month=2026-07/data_16.parquet",
+    "size": 379858290,
+    "publishedSha256": "21c7d7378c40eb45f1622ed223b9944c8a9aa9648e0e5bf8a1a99af2fe302cb6"
+  }
+]

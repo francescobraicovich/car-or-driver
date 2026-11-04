@@ -6,7 +6,7 @@ import { populate } from './ratings-view.js';
 import { withHistories } from '../../packages/core/src/weekend-histories.js';
 import { deserialize } from '../../packages/core/src/json-serialization.js';
 
-const FILE_FORMAT = 1; // must match tools/build-model.mjs
+const FILE_FORMAT = 2; // must match tools/build-model.mjs
 
 async function fetchFile(name) {
   const response = await fetch(`../data/${name}`, { cache: 'no-cache' });

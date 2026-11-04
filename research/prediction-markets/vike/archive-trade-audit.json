@@ -1,0 +1,248 @@
+{
+  "classification": "Recorded trades only; not proof of no exchange activity or complete books",
+  "timeFilter": "local_ts >= 14:00:00 UTC and local_ts < 15:00:00 UTC; UTC-day file",
+  "datePartitionSource": "https://data.vike.io/archive/venue=polymarket",
+  "metadataNote": "Gamma outcome-token and condition IDs; USA metadata contains 29 conditions, Dutch metadata contains two selected conditions",
+  "races": [
+    {
+      "utcDate": "2026-10-22",
+      "windowStartMs": 1792677600000,
+      "windowEndMsExclusive": 1792681200000,
+      "metadataSha256": "5839c10a9dc1f05ffc11709f68fc9ae1fddb54ecb4cd59c9687c4393a1f5fd5b",
+      "partitions": [
+        {
+          "layout": "daily",
+          "url": "https://data.vike.io/archive/venue=polymarket/date=2026-10-22/trades.parquet",
+          "bytes": 11883841,
+          "sha256": "43f04dd4e5ae64634ac7ef18cebf1194fefe3939be26c3d46767e082302e0b81",
+          "selectedMarkets": [
+            {
+              "driver": "norris",
+              "conditionId": "0x07ecacb979f033a60b66e7c310911e26962c9159f6901616133085ff141af54b",
+              "yesTokenId": "112238491397922928846710301197732689010526377523840955416670810796827739098012",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "hamilton",
+              "conditionId": "0x3f9fc70f9d39b39f74da19c49831259d4504703100985c44802191f675feae43",
+              "yesTokenId": "95503243557920264561377159109447496483038940076424255641160925157685987932222",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "leclerc",
+              "conditionId": "0x8f3cd308a3a73110ec8a1df440082c2a1c3b502402ecd8cea44ea5ad26588801",
+              "yesTokenId": "2785477111385987396351157767672628383716339797604893699770768709895998756868",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "antonelli",
+              "conditionId": "0x69e74cb5d713b04795ac7634e2bddffe595b75d00cbe941bb13ee2eae1757677",
+              "yesTokenId": "69214144073267304315186993952977466398842210579304423579995205468670706511067",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "verstappen",
+              "conditionId": "0x9b89da4943aa1caa8ba77544c899699edc9699f2d29b614f6bbd3c05a334a420",
+              "yesTokenId": "62063168154771370547233383735658298848495603963216315713083401067515241352218",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "piastri",
+              "conditionId": "0xd7d2784f6b92700a3a4127a76d18363bbc10dca08fa4e64d41b58a8b1c1d32c9",
+              "yesTokenId": "11928926777217273384238156234160931843505901441169857320529503514505459260111",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "russell",
+              "conditionId": "0x1771f15cee1ddc9e6441b2f209272430a1f09657c56aa0f3e2229a6fd75cddc9",
+              "yesTokenId": "38014599841165281478544436495797755427388862508543852748182968985143162714299",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "other",
+              "conditionId": "0x448f1d82806de5783cf51c4af372a91df1efa65e0a78e4264862e18d07fa7389",
+              "yesTokenId": "50984908066190602824217710421213858960743750939268433344256960826353810251476",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            }
+          ],
+          "eventConditionsChecked": 29,
+          "eventConditionsWithTrades": 0,
+          "eventConditionTradeRows": 0
+        },
+        {
+          "layout": "other",
+          "url": "https://data.vike.io/archive/venue=polymarket/asset=other/tenor=other/date=2026-10-22/trades.parquet",
+          "bytes": 3632563,
+          "sha256": "96217c80d64d8298bfe73bbde2928117be25a4a8cb4c8629402a1d76cedfc97b",
+          "selectedMarkets": [
+            {
+              "driver": "norris",
+              "conditionId": "0x07ecacb979f033a60b66e7c310911e26962c9159f6901616133085ff141af54b",
+              "yesTokenId": "112238491397922928846710301197732689010526377523840955416670810796827739098012",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "hamilton",
+              "conditionId": "0x3f9fc70f9d39b39f74da19c49831259d4504703100985c44802191f675feae43",
+              "yesTokenId": "95503243557920264561377159109447496483038940076424255641160925157685987932222",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "leclerc",
+              "conditionId": "0x8f3cd308a3a73110ec8a1df440082c2a1c3b502402ecd8cea44ea5ad26588801",
+              "yesTokenId": "2785477111385987396351157767672628383716339797604893699770768709895998756868",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "antonelli",
+              "conditionId": "0x69e74cb5d713b04795ac7634e2bddffe595b75d00cbe941bb13ee2eae1757677",
+              "yesTokenId": "69214144073267304315186993952977466398842210579304423579995205468670706511067",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "verstappen",
+              "conditionId": "0x9b89da4943aa1caa8ba77544c899699edc9699f2d29b614f6bbd3c05a334a420",
+              "yesTokenId": "62063168154771370547233383735658298848495603963216315713083401067515241352218",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "piastri",
+              "conditionId": "0xd7d2784f6b92700a3a4127a76d18363bbc10dca08fa4e64d41b58a8b1c1d32c9",
+              "yesTokenId": "11928926777217273384238156234160931843505901441169857320529503514505459260111",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "russell",
+              "conditionId": "0x1771f15cee1ddc9e6441b2f209272430a1f09657c56aa0f3e2229a6fd75cddc9",
+              "yesTokenId": "38014599841165281478544436495797755427388862508543852748182968985143162714299",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "other",
+              "conditionId": "0x448f1d82806de5783cf51c4af372a91df1efa65e0a78e4264862e18d07fa7389",
+              "yesTokenId": "50984908066190602824217710421213858960743750939268433344256960826353810251476",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            }
+          ],
+          "eventConditionsChecked": 29,
+          "eventConditionsWithTrades": 0,
+          "eventConditionTradeRows": 0
+        }
+      ]
+    },
+    {
+      "utcDate": "2026-08-20",
+      "windowStartMs": 1787234400000,
+      "windowEndMsExclusive": 1787238000000,
+      "metadataSha256": "972f890834442454bbea032ab966aa40fe610955597d1fa01a252981172c7446",
+      "partitions": [
+        {
+          "layout": "daily",
+          "url": "https://data.vike.io/archive/venue=polymarket/date=2026-08-20/trades.parquet",
+          "bytes": 18193718,
+          "sha256": "d4995c929b318a525f37541a218a9ef7bb7caaba7f08f2677f3b64657acda0d7",
+          "selectedMarkets": [
+            {
+              "driver": "norris",
+              "conditionId": "0xa927be9f2b123bc602c336738ea2fbf4730a6a8ef2d2676f50d967e12d0c163c",
+              "yesTokenId": "61632483259791156388118428310258844217648412995334767231217680481104935845277",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "hamilton",
+              "conditionId": "0xc7bf80a13d95230833ed5fe12398197aa68441bcfcd729d6a153fb0a3129414d",
+              "yesTokenId": "68070681267453227644979843063596962102048622706439430091863269060786263117307",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            }
+          ],
+          "eventConditionsChecked": 2,
+          "eventConditionsWithTrades": 0,
+          "eventConditionTradeRows": 0
+        },
+        {
+          "layout": "other",
+          "url": "https://data.vike.io/archive/venue=polymarket/asset=other/tenor=other/date=2026-08-20/trades.parquet",
+          "bytes": 4069066,
+          "sha256": "fa7b9325b3abad279acf48666d3ab41db486a80bf10add2a40e0cba3b3759dc3",
+          "selectedMarkets": [
+            {
+              "driver": "norris",
+              "conditionId": "0xa927be9f2b123bc602c336738ea2fbf4730a6a8ef2d2676f50d967e12d0c163c",
+              "yesTokenId": "61632483259791156388118428310258844217648412995334767231217680481104935845277",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            },
+            {
+              "driver": "hamilton",
+              "conditionId": "0xc7bf80a13d95230833ed5fe12398197aa68441bcfcd729d6a153fb0a3129414d",
+              "yesTokenId": "68070681267453227644979843063596962102048622706439430091863269060786263117307",
+              "dailyTradeRows": 0,
+              "hourTradeRows": 0,
+              "firstReceiptMs": null,
+              "lastReceiptMs": null
+            }
+          ],
+          "eventConditionsChecked": 2,
+          "eventConditionsWithTrades": 0,
+          "eventConditionTradeRows": 0
+        }
+      ]
+    }
+  ]
+}

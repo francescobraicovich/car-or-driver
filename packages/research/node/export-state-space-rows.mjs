@@ -3,15 +3,13 @@
 // qual_driver/car) from the state-space levels as forecast before each weekend. Written to
 // research/state-space/pairs.jsonl; nothing under research/ else is touched.
 //
-// It also runs the Elo feature path beside the new one and fails unless every column other than the six rating
-// inputs is identical, row for row: that catches any alignment slip between the two pipelines. The Elo heads'
+// It also runs the Elo feature path beside the new one and checks the shared non-form context
+// row for row. The published driver/car form now has its own observation-based update. The Elo heads'
 // predictions are exported too (elo_post, elo_pre, elo_qual), so the new heads are compared on exactly the same
 // observations.
 import { mkdir, writeFile } from 'node:fs/promises';
 import { loadData } from './common.mjs';
-import { runSession } from '../../core/src/state-space/build.js';
-import { carIdentity } from '../../core/src/lineage.js';
-import { hybridRatings } from '../../core/src/hybrid/ratings.js';
+import { runPublishedRatings } from '../../core/src/state-space/build.js';
 import { collectExamWithElo } from '../../core/src/elo-benchmark.js';
 import { replayForecastLayer } from '../../core/src/state-space/replay.js';
 import { FormFeatures } from '../../core/src/forecast/form.js';
@@ -28,9 +26,7 @@ const exam = collectExamWithElo(ctx.raw, ctx.lapSnapshots, ctx.maps, { modelKind
 const { model } = exam;
 const weekends = exam.weekends.filter((w) => w.year <= through);
 const tmBoost = model.params.tmBoost;
-const qual = runSession(weekends, 'qual', tmBoost);
-const race = runSession(weekends, 'race', tmBoost, qual);
-const hybrid = hybridRatings(weekends, model.snaps.slice(0, weekends.length), race, qual, carIdentity);
+const persistent = runPublishedRatings(weekends, tmBoost);
 
 // Elo path: the form trackers on Elo ratings and the Elo heads
 const old = [];
@@ -65,7 +61,7 @@ const out = [];
 let seq = 0;
 replayForecastLayer(
   weekends,
-  { race: hybrid.pre, qual: qual.pre },
+  { race: persistent.race.pre, qual: persistent.qual.pre },
   {
     lapPace: ctx.lapPace,
     params: model.params,
@@ -74,7 +70,7 @@ replayForecastLayer(
       const o = old[seq++];
       if (o.weight !== weight) throw Error(`observation streams diverged at row ${seq}`);
       for (const name of Object.keys(features)) {
-        if (RATING_COLUMNS.has(name)) continue;
+        if (RATING_COLUMNS.has(name) || /^(qual|lap|order)_(fast|slow)/.test(name)) continue;
         if (features[name] !== o.f[name]) throw Error(`column ${name} differs at row ${seq}: ${features[name]} vs ${o.f[name]}`);
       }
       if (weekend < 20) return;
@@ -104,4 +100,4 @@ replayForecastLayer(
 if (seq !== old.length) throw Error(`row counts differ: ${seq} vs ${old.length}`);
 await mkdir('research/state-space', { recursive: true });
 await writeFile('research/state-space/pairs.jsonl', out.map((r) => JSON.stringify(r)).join('\n') + '\n');
-console.log(`Exported ${out.length} rows from ${weekends.length} weekends; non-rating columns identical to the Elo feature path.`);
+console.log(`Exported ${out.length} rows from ${weekends.length} weekends; shared context aligned with the Elo feature path.`);

@@ -1,0 +1,526 @@
+{
+  "protocol": "Simulator v2 on the real calendar through 2015, both sessions generated; three paired seeds per scenario. Retrospective stress tests, not real-world validation. Recovery begins after two initial seasons. Error bars are not evaluated.",
+  "scenarios": {
+    "default": {},
+    "persistent-fit": {
+      "sdInt": {
+        "race": 15,
+        "qual": 5.4
+      },
+      "rhoInt": 0.95
+    }
+  },
+  "seeds": [
+    1,
+    2,
+    3
+  ],
+  "summary": {
+    "default.race": {
+      "driverRmse": {
+        "original": 17.639291879871333,
+        "selected": 18.073328585899457,
+        "difference": 0.43403670602812144
+      },
+      "carRmse": {
+        "original": 38.757319637736245,
+        "selected": 34.60259479337561,
+        "difference": -4.154724844360637
+      },
+      "teammateGapRmse": {
+        "original": 25.840700361259934,
+        "selected": 26.31545828254139,
+        "difference": 0.47475792128145616
+      },
+      "fieldGapRmse": {
+        "original": 67.34398189732198,
+        "selected": 62.999574581946,
+        "difference": -4.344407315375986
+      },
+      "winterLeak": {
+        "original": 0.15234413731255242,
+        "selected": 0.15338393929863664,
+        "difference": 0.0010398019860842118
+      },
+      "seasonLeak": {
+        "original": 0.20485637711443885,
+        "selected": 0.21510350854841123,
+        "difference": 0.010247131433972378
+      },
+      "carCapture": {
+        "original": 1.2059336028184864,
+        "selected": 1.1620213484341662,
+        "difference": -0.043912254384320226
+      },
+      "moverStepRmse": {
+        "original": 12.31391504931519,
+        "selected": 12.761024661658041,
+        "difference": 0.4471096123428507
+      }
+    },
+    "default.qual": {
+      "driverRmse": {
+        "original": 25.892270581402794,
+        "selected": 25.89125135435246,
+        "difference": -0.001019227050336487
+      },
+      "carRmse": {
+        "original": 52.59562144225496,
+        "selected": 52.18683821720351,
+        "difference": -0.40878322505145565
+      },
+      "teammateGapRmse": {
+        "original": 29.824820753623055,
+        "selected": 29.79964429542188,
+        "difference": -0.025176458201171908
+      },
+      "fieldGapRmse": {
+        "original": 81.64199043915094,
+        "selected": 81.09125903635457,
+        "difference": -0.5507314027963636
+      },
+      "winterLeak": {
+        "original": 0.044876164083975496,
+        "selected": 0.04454767485036263,
+        "difference": -0.00032848923361286295
+      },
+      "seasonLeak": {
+        "original": 0.018159847535311135,
+        "selected": 0.017655786867985766,
+        "difference": -0.0005040606673253701
+      },
+      "carCapture": {
+        "original": 0.4402483192238667,
+        "selected": 0.44604474332109784,
+        "difference": 0.0057964240972310606
+      },
+      "moverStepRmse": {
+        "original": 28.506603695465973,
+        "selected": 28.50915365587271,
+        "difference": 0.0025499604067356074
+      }
+    },
+    "persistent-fit.race": {
+      "driverRmse": {
+        "original": 19.25503090858967,
+        "selected": 19.79808914598522,
+        "difference": 0.5430582373955524
+      },
+      "carRmse": {
+        "original": 37.88432983516606,
+        "selected": 33.89160817362398,
+        "difference": -3.992721661542081
+      },
+      "teammateGapRmse": {
+        "original": 30.40336037031437,
+        "selected": 31.146059609259392,
+        "difference": 0.742699238945022
+      },
+      "fieldGapRmse": {
+        "original": 67.86417754579756,
+        "selected": 63.86079861281649,
+        "difference": -4.003378932981079
+      },
+      "winterLeak": {
+        "original": 0.1640064517018959,
+        "selected": 0.16532387106080781,
+        "difference": 0.0013174193589118959
+      },
+      "seasonLeak": {
+        "original": 0.12330911155873499,
+        "selected": 0.13778367586376178,
+        "difference": 0.014474564305026796
+      },
+      "carCapture": {
+        "original": 1.1873348276289162,
+        "selected": 1.1434530134644452,
+        "difference": -0.04388181416447079
+      },
+      "moverStepRmse": {
+        "original": 12.501519950390696,
+        "selected": 13.061815071921389,
+        "difference": 0.5602951215306918
+      }
+    },
+    "persistent-fit.qual": {
+      "driverRmse": {
+        "original": 26.011394046949913,
+        "selected": 26.010114552331657,
+        "difference": -0.0012794946182571227
+      },
+      "carRmse": {
+        "original": 52.53326984107154,
+        "selected": 52.123135867297094,
+        "difference": -0.4101339737744472
+      },
+      "teammateGapRmse": {
+        "original": 30.13582942301565,
+        "selected": 30.11018893745528,
+        "difference": -0.025640485560366244
+      },
+      "fieldGapRmse": {
+        "original": 81.39921183924719,
+        "selected": 80.84583540249905,
+        "difference": -0.5533764367481382
+      },
+      "winterLeak": {
+        "original": 0.04500928356672873,
+        "selected": 0.04467576592653608,
+        "difference": -0.0003335176401926439
+      },
+      "seasonLeak": {
+        "original": 0.01833359231663031,
+        "selected": 0.0178301545609664,
+        "difference": -0.0005034377556639124
+      },
+      "carCapture": {
+        "original": 0.4385500222837952,
+        "selected": 0.44432186669466467,
+        "difference": 0.0057718444108694755
+      },
+      "moverStepRmse": {
+        "original": 28.441729980444364,
+        "selected": 28.444482880628517,
+        "difference": 0.0027529001841498277
+      }
+    }
+  },
+  "records": [
+    {
+      "scenario": "default",
+      "seed": 1,
+      "model": "original",
+      "session": "race",
+      "driverRmse": 17.398910020678876,
+      "carRmse": 35.46712968143872,
+      "teammateGapRmse": 26.2465780097792,
+      "fieldGapRmse": 64.14475496789322,
+      "winterLeak": 0.17447247324932932,
+      "seasonLeak": 0.20419201991517522,
+      "carCapture": 1.2491331160976988,
+      "moverStepRmse": 12.11363669891218
+    },
+    {
+      "scenario": "default",
+      "seed": 1,
+      "model": "original",
+      "session": "qual",
+      "driverRmse": 23.310093387656277,
+      "carRmse": 44.31361440437608,
+      "teammateGapRmse": 27.36612716997362,
+      "fieldGapRmse": 69.13993229628555,
+      "winterLeak": 0.030923511551104708,
+      "seasonLeak": 0.01341535040759389,
+      "carCapture": 0.41773790680338097,
+      "moverStepRmse": 27.818181744581455
+    },
+    {
+      "scenario": "default",
+      "seed": 1,
+      "model": "selected",
+      "session": "race",
+      "driverRmse": 17.92854978531281,
+      "carRmse": 31.67368753254002,
+      "teammateGapRmse": 26.537596883850068,
+      "fieldGapRmse": 59.8923011479415,
+      "winterLeak": 0.1777429522266721,
+      "seasonLeak": 0.2107324975738976,
+      "carCapture": 1.2116788125767812,
+      "moverStepRmse": 12.496979361400893
+    },
+    {
+      "scenario": "default",
+      "seed": 1,
+      "model": "selected",
+      "session": "qual",
+      "driverRmse": 23.319493464807966,
+      "carRmse": 43.98560389685144,
+      "teammateGapRmse": 27.353815103611463,
+      "fieldGapRmse": 68.68841150071091,
+      "winterLeak": 0.030558045336222535,
+      "seasonLeak": 0.012800680260304136,
+      "carCapture": 0.42276652865137715,
+      "moverStepRmse": 27.820576133732583
+    },
+    {
+      "scenario": "default",
+      "seed": 2,
+      "model": "original",
+      "session": "race",
+      "driverRmse": 16.622941781250073,
+      "carRmse": 47.519904452290945,
+      "teammateGapRmse": 24.812001710527547,
+      "fieldGapRmse": 75.73797408224121,
+      "winterLeak": 0.1298915406027345,
+      "seasonLeak": 0.3399227737872329,
+      "carCapture": 1.1419489898043453,
+      "moverStepRmse": 11.422540604178383
+    },
+    {
+      "scenario": "default",
+      "seed": 2,
+      "model": "original",
+      "session": "qual",
+      "driverRmse": 25.448838168448354,
+      "carRmse": 59.78138634282118,
+      "teammateGapRmse": 28.762082797894244,
+      "fieldGapRmse": 98.17088101100062,
+      "winterLeak": 0.03673226465931206,
+      "seasonLeak": 0.03904545564007232,
+      "carCapture": 0.47461170588328966,
+      "moverStepRmse": 29.551273283918157
+    },
+    {
+      "scenario": "default",
+      "seed": 2,
+      "model": "selected",
+      "session": "race",
+      "driverRmse": 16.865510414351192,
+      "carRmse": 42.30850637935239,
+      "teammateGapRmse": 25.182063237849135,
+      "fieldGapRmse": 69.97283202681945,
+      "winterLeak": 0.12636497037120445,
+      "seasonLeak": 0.3446388076350094,
+      "carCapture": 1.0902358076544565,
+      "moverStepRmse": 11.68016271436709
+    },
+    {
+      "scenario": "default",
+      "seed": 2,
+      "model": "selected",
+      "session": "qual",
+      "driverRmse": 25.462145511478653,
+      "carRmse": 59.27424532385365,
+      "teammateGapRmse": 28.73288288844864,
+      "fieldGapRmse": 97.47842502294493,
+      "winterLeak": 0.036474817884607436,
+      "seasonLeak": 0.03882152679655294,
+      "carCapture": 0.48117498478092224,
+      "moverStepRmse": 29.581565009800077
+    },
+    {
+      "scenario": "default",
+      "seed": 3,
+      "model": "original",
+      "session": "race",
+      "driverRmse": 18.89602383768505,
+      "carRmse": 33.28492477947907,
+      "teammateGapRmse": 26.463521363473053,
+      "fieldGapRmse": 62.149216641831515,
+      "winterLeak": 0.15266839808559346,
+      "seasonLeak": 0.0704543376409085,
+      "carCapture": 1.2267187025534145,
+      "moverStepRmse": 13.405567844855005
+    },
+    {
+      "scenario": "default",
+      "seed": 3,
+      "model": "original",
+      "session": "qual",
+      "driverRmse": 28.91788018810375,
+      "carRmse": 53.69186357956763,
+      "teammateGapRmse": 33.3462522930013,
+      "fieldGapRmse": 77.61515801016665,
+      "winterLeak": 0.06697271604150973,
+      "seasonLeak": 0.0020187365582671987,
+      "carCapture": 0.42839534498492954,
+      "moverStepRmse": 28.150356057898307
+    },
+    {
+      "scenario": "default",
+      "seed": 3,
+      "model": "selected",
+      "session": "race",
+      "driverRmse": 19.42592555803436,
+      "carRmse": 29.825590468234417,
+      "teammateGapRmse": 27.226714725924964,
+      "fieldGapRmse": 59.133590571077036,
+      "winterLeak": 0.15604389529803336,
+      "seasonLeak": 0.08993922043632674,
+      "carCapture": 1.1841494250712603,
+      "moverStepRmse": 14.105931909206138
+    },
+    {
+      "scenario": "default",
+      "seed": 3,
+      "model": "selected",
+      "session": "qual",
+      "driverRmse": 28.892115086770755,
+      "carRmse": 53.30066543090544,
+      "teammateGapRmse": 33.312234894205545,
+      "fieldGapRmse": 77.10694058540788,
+      "winterLeak": 0.06661016133025793,
+      "seasonLeak": 0.0013451535471002275,
+      "carCapture": 0.43419271653099395,
+      "moverStepRmse": 28.125319824085466
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 1,
+      "model": "original",
+      "session": "race",
+      "driverRmse": 19.34998547011109,
+      "carRmse": 36.534852666696594,
+      "teammateGapRmse": 30.37318034331046,
+      "fieldGapRmse": 68.74293239521668,
+      "winterLeak": 0.19873474398649635,
+      "seasonLeak": 0.07325173735664807,
+      "carCapture": 1.2884295233211551,
+      "moverStepRmse": 12.87745217382748
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 1,
+      "model": "original",
+      "session": "qual",
+      "driverRmse": 23.230513137429874,
+      "carRmse": 44.26667185784511,
+      "teammateGapRmse": 27.39031220783187,
+      "fieldGapRmse": 68.60902045897033,
+      "winterLeak": 0.02992185347057862,
+      "seasonLeak": 0.013927817434885996,
+      "carCapture": 0.4171031924731198,
+      "moverStepRmse": 27.686835998040188
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 1,
+      "model": "selected",
+      "session": "race",
+      "driverRmse": 20.042073412851632,
+      "carRmse": 32.88514631387497,
+      "teammateGapRmse": 31.026672509717258,
+      "fieldGapRmse": 64.77183705604754,
+      "winterLeak": 0.20095774132142533,
+      "seasonLeak": 0.08392061353376089,
+      "carCapture": 1.245224484671946,
+      "moverStepRmse": 13.55339093947279
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 1,
+      "model": "selected",
+      "session": "qual",
+      "driverRmse": 23.23924436478141,
+      "carRmse": 43.93840535326841,
+      "teammateGapRmse": 27.377136999788952,
+      "fieldGapRmse": 68.15483355071763,
+      "winterLeak": 0.029538283526952175,
+      "seasonLeak": 0.01330960028172789,
+      "carCapture": 0.42208549593925304,
+      "moverStepRmse": 27.687926841081644
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 2,
+      "model": "original",
+      "session": "race",
+      "driverRmse": 18.372637866608045,
+      "carRmse": 45.05391049867137,
+      "teammateGapRmse": 30.64006401460385,
+      "fieldGapRmse": 73.96105458882299,
+      "winterLeak": 0.12846476165389253,
+      "seasonLeak": 0.21249555835576747,
+      "carCapture": 1.0829494086382012,
+      "moverStepRmse": 12.265892933554195
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 2,
+      "model": "original",
+      "session": "qual",
+      "driverRmse": 25.661254622844808,
+      "carRmse": 59.61682795614338,
+      "teammateGapRmse": 29.2139693413969,
+      "fieldGapRmse": 97.81270696916931,
+      "winterLeak": 0.03856758765546682,
+      "seasonLeak": 0.03891265732751838,
+      "carCapture": 0.47168171397582537,
+      "moverStepRmse": 29.587677125416487
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 2,
+      "model": "selected",
+      "session": "race",
+      "driverRmse": 18.721347099523324,
+      "carRmse": 40.09506211024992,
+      "teammateGapRmse": 31.323370485337534,
+      "fieldGapRmse": 68.7539300592638,
+      "winterLeak": 0.1254888394105139,
+      "seasonLeak": 0.2220242883380039,
+      "carCapture": 1.032934909912753,
+      "moverStepRmse": 12.662576478029505
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 2,
+      "model": "selected",
+      "session": "qual",
+      "driverRmse": 25.674126489637263,
+      "carRmse": 59.10283769209166,
+      "teammateGapRmse": 29.184824930396612,
+      "fieldGapRmse": 97.11172802816375,
+      "winterLeak": 0.03832052449005215,
+      "seasonLeak": 0.03868366003637097,
+      "carCapture": 0.4781995072363587,
+      "moverStepRmse": 29.618675622361845
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 3,
+      "model": "original",
+      "session": "race",
+      "driverRmse": 20.042469389049867,
+      "carRmse": 32.06422634013021,
+      "teammateGapRmse": 30.196836753028794,
+      "fieldGapRmse": 60.88854565335301,
+      "winterLeak": 0.16481984946529885,
+      "seasonLeak": 0.08418003896378942,
+      "carCapture": 1.1906255509273918,
+      "moverStepRmse": 12.361214743790416
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 3,
+      "model": "original",
+      "session": "qual",
+      "driverRmse": 29.142414380575058,
+      "carRmse": 53.716309709226124,
+      "teammateGapRmse": 33.80320671981817,
+      "fieldGapRmse": 77.77590808960191,
+      "winterLeak": 0.06653840957414076,
+      "seasonLeak": 0.0021603021874865612,
+      "carCapture": 0.42686516040244044,
+      "moverStepRmse": 28.050676817876425
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 3,
+      "model": "selected",
+      "session": "race",
+      "driverRmse": 20.630846925580702,
+      "carRmse": 28.694616096747044,
+      "teammateGapRmse": 31.088135832723378,
+      "fieldGapRmse": 58.05662872313811,
+      "winterLeak": 0.1695250324504842,
+      "seasonLeak": 0.10740612571952057,
+      "carCapture": 1.1521996458086368,
+      "moverStepRmse": 12.969477798261872
+    },
+    {
+      "scenario": "persistent-fit",
+      "seed": 3,
+      "model": "selected",
+      "session": "qual",
+      "driverRmse": 29.116972802576296,
+      "carRmse": 53.328164556531206,
+      "teammateGapRmse": 33.76860488218028,
+      "fieldGapRmse": 77.27094462861577,
+      "winterLeak": 0.06616848976260394,
+      "seasonLeak": 0.0014972033648003352,
+      "carCapture": 0.4326805969083823,
+      "moverStepRmse": 28.02684617844206
+    }
+  ]
+}

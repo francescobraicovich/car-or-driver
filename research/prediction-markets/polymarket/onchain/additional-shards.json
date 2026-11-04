@@ -1,0 +1,407 @@
+[
+  {
+    "path": "event_month=2026-06/data_0.parquet",
+    "size": 241729400,
+    "publishedSha256": "623d7905f9fe8754bed6a4cb86bb18ee7354671c66a4e9aa63f257db8fa749b2"
+  },
+  {
+    "path": "event_month=2026-06/data_1.parquet",
+    "size": 790471931,
+    "publishedSha256": "b841839075fca67b375601db4538288815a8490da654390a9e0746f1f5fdefc3"
+  },
+  {
+    "path": "event_month=2026-06/data_10.parquet",
+    "size": 243743933,
+    "publishedSha256": "381ccd4a81893cb8c94ceeb11b93ba7f1758f927cbc84d60a29a7c49148941af"
+  },
+  {
+    "path": "event_month=2026-06/data_11.parquet",
+    "size": 244321789,
+    "publishedSha256": "025614664bb46c2ebe6ee73f66df227402399faacbf78092f024f330654db581"
+  },
+  {
+    "path": "event_month=2026-06/data_12.parquet",
+    "size": 243762128,
+    "publishedSha256": "2dba21035ec8d403c3e90ee8a8c26190b2cb07ae46de4532813ef3ebe77a2107"
+  },
+  {
+    "path": "event_month=2026-06/data_13.parquet",
+    "size": 368130192,
+    "publishedSha256": "90b471a197b06c211a78cc8275cfee5a1658a95aa86111910e32e2eb505df635"
+  },
+  {
+    "path": "event_month=2026-06/data_14.parquet",
+    "size": 244739827,
+    "publishedSha256": "8d84a1190cdf24ac266219d6778c66c4098efa54dc9f21cc32b1cffc72c6944d"
+  },
+  {
+    "path": "event_month=2026-06/data_15.parquet",
+    "size": 244758159,
+    "publishedSha256": "6b148c3c79ad9e7f863df4413bfa4922158c0b2a056cefc552ae100c15420755"
+  },
+  {
+    "path": "event_month=2026-06/data_16.parquet",
+    "size": 245337440,
+    "publishedSha256": "e235081f567f5fe78a4f0e60d66187f128f7f46cf6786c8786c09b0291beedb6"
+  },
+  {
+    "path": "event_month=2026-06/data_17.parquet",
+    "size": 245110256,
+    "publishedSha256": "99fc464e93ef9a287b17c2c2ae2b8bcbc896659042906e2c50aa0075a28aacd7"
+  },
+  {
+    "path": "event_month=2026-06/data_18.parquet",
+    "size": 796460629,
+    "publishedSha256": "a03db34addb223d10ae225b1a9e609f4fa82cd97f4879eda5efbdb721c0c4042"
+  },
+  {
+    "path": "event_month=2026-06/data_19.parquet",
+    "size": 244339974,
+    "publishedSha256": "a0178df23e92144061b4a4195e4dc51cc674ba5301d9c38a05829bf4d930721f"
+  },
+  {
+    "path": "event_month=2026-06/data_2.parquet",
+    "size": 245169135,
+    "publishedSha256": "c610606787c41bac30a145cff946b85ce1442e3569b5d1cc15df62fdea207281"
+  },
+  {
+    "path": "event_month=2026-06/data_20.parquet",
+    "size": 244456260,
+    "publishedSha256": "ce2158b9f750053956c2b3f08dbe8763c71aa4065a53a8400462098e0fd5d87a"
+  },
+  {
+    "path": "event_month=2026-06/data_21.parquet",
+    "size": 427094519,
+    "publishedSha256": "3f05ae222293ca370a48d5d5e3fb7c469f012f004d405a8e90952bf716fc7de6"
+  },
+  {
+    "path": "event_month=2026-06/data_22.parquet",
+    "size": 364481520,
+    "publishedSha256": "4c23627ce0fa48ec21699cc62622f43f606936522c5012f8a233f3692048f018"
+  },
+  {
+    "path": "event_month=2026-06/data_23.parquet",
+    "size": 243876457,
+    "publishedSha256": "4c3c7fa1463f12aa52f3edf7eb0fed95e64f2ef263dc94813e6f188bb749b537"
+  },
+  {
+    "path": "event_month=2026-06/data_24.parquet",
+    "size": 794934200,
+    "publishedSha256": "450a0649a74961785dc8c3cb8614911230e2aced37bacb35e7a1a6281f3e6c17"
+  },
+  {
+    "path": "event_month=2026-06/data_25.parquet",
+    "size": 365173014,
+    "publishedSha256": "a05d78df0e6b11b0128963f24a9499c6c9d0541c691a542510126894cd92db32"
+  },
+  {
+    "path": "event_month=2026-06/data_26.parquet",
+    "size": 365940443,
+    "publishedSha256": "c965e3cccfc3af078119be6cde419f3d84aadf22e76a300e93cba57e9ede6954"
+  },
+  {
+    "path": "event_month=2026-06/data_27.parquet",
+    "size": 487275652,
+    "publishedSha256": "e036089f926d512b52188b8668de766117342a72893cf0f25d71d73cf46871f2"
+  },
+  {
+    "path": "event_month=2026-06/data_28.parquet",
+    "size": 243810003,
+    "publishedSha256": "19b42ad7c6fef4408e3f366e9f78df097ef288eb5a84e35f4fe7ff41686726c9"
+  },
+  {
+    "path": "event_month=2026-06/data_29.parquet",
+    "size": 243344787,
+    "publishedSha256": "5f0b6df184f52dd5bc39a8d714e3995cffe4be904427e11818fec5518a4f4728"
+  },
+  {
+    "path": "event_month=2026-06/data_3.parquet",
+    "size": 245100683,
+    "publishedSha256": "3a9ef20773bcd0e74e95a53c8494ba91bb9000be6ec366e88440495591e77d4a"
+  },
+  {
+    "path": "event_month=2026-06/data_30.parquet",
+    "size": 243951666,
+    "publishedSha256": "5bc84f71541b7eaf68970295efa80b2b15979eabfbd99879a9c6893465021ff9"
+  },
+  {
+    "path": "event_month=2026-06/data_31.parquet",
+    "size": 244873862,
+    "publishedSha256": "bb344e3465a2e4935a37241a891654532b1e0ee223bc2370c5323cb961931805"
+  },
+  {
+    "path": "event_month=2026-06/data_32.parquet",
+    "size": 245605254,
+    "publishedSha256": "69dc696fae28faa07902ccc383cbdd9b0dd9341af39d382768929fae848f9a6c"
+  },
+  {
+    "path": "event_month=2026-06/data_33.parquet",
+    "size": 177201708,
+    "publishedSha256": "387535b135a0254ffb667bb75d8e0e0ed358f275a324895ef38f1ca8824c8642"
+  },
+  {
+    "path": "event_month=2026-06/data_4.parquet",
+    "size": 245344627,
+    "publishedSha256": "a22d3150a7e5fb1a45c9d90041b43019c56f4e3104742abcb93b0a57625853be"
+  },
+  {
+    "path": "event_month=2026-06/data_5.parquet",
+    "size": 245236786,
+    "publishedSha256": "4ea8537e5b17464d560597a74cc213f7fc9dcede7b17d53adc1c3ec701ba5430"
+  },
+  {
+    "path": "event_month=2026-06/data_6.parquet",
+    "size": 245046696,
+    "publishedSha256": "531949c81670db255131ad28443b730920571962135b1574ff4c9eea71c26521"
+  },
+  {
+    "path": "event_month=2026-06/data_7.parquet",
+    "size": 366291974,
+    "publishedSha256": "9814e665f624c91c8b5e12bff68a1d942f8df119775cb165a1a26e18ee455c92"
+  },
+  {
+    "path": "event_month=2026-06/data_8.parquet",
+    "size": 245548853,
+    "publishedSha256": "5b6f7edfe1bff5dae43d8a9eeb2114ccf64c2e8b85176f52d79f27a0ee8fb3ae"
+  },
+  {
+    "path": "event_month=2026-06/data_9.parquet",
+    "size": 245608089,
+    "publishedSha256": "f32ce74a61d663bfb4864bede6a819937ba0429615c91394963993571ca0fe9e"
+  },
+  {
+    "path": "event_month=2026-07/data_0.parquet",
+    "size": 244698743,
+    "publishedSha256": "3d7338175f9291cb82e03fe4e3217adfb87600ae4dc406210e1aebb20b112963"
+  },
+  {
+    "path": "event_month=2026-07/data_1.parquet",
+    "size": 491295883,
+    "publishedSha256": "2b84fd193dc3e101b36d9a7e5545c7d77acfed2d097c81ac9d424b8e1cd909d2"
+  },
+  {
+    "path": "event_month=2026-07/data_10.parquet",
+    "size": 243868617,
+    "publishedSha256": "af6dde0321ea34f296a64583ef4a0ad01a64834e265945cb65758a26c3d85877"
+  },
+  {
+    "path": "event_month=2026-07/data_11.parquet",
+    "size": 244553948,
+    "publishedSha256": "d0a6d3c58673895c220b1978179db902b8ed56b1ee5dffee3bdc10646c572e1e"
+  },
+  {
+    "path": "event_month=2026-07/data_12.parquet",
+    "size": 486490309,
+    "publishedSha256": "56ca46232dafbe27e466623b8dff4cc1bbce368474048c84ff463559b18a581c"
+  },
+  {
+    "path": "event_month=2026-07/data_13.parquet",
+    "size": 366593786,
+    "publishedSha256": "ddb60df87d652f2227ec06a7bb2a35767ca5feeed6926dadad5ed827cfd8b230"
+  },
+  {
+    "path": "event_month=2026-07/data_14.parquet",
+    "size": 243034072,
+    "publishedSha256": "d3fa762ee4e03dec3e4306f7c732899a069842570e701c88e2abb207d0c6cfea"
+  },
+  {
+    "path": "event_month=2026-07/data_15.parquet",
+    "size": 242305024,
+    "publishedSha256": "47d3616becda81065a3f0373db4c406c339fd629ebecfa9ae16b2fd8d838c2ac"
+  },
+  {
+    "path": "event_month=2026-07/data_16.parquet",
+    "size": 379858290,
+    "publishedSha256": "21c7d7378c40eb45f1622ed223b9944c8a9aa9648e0e5bf8a1a99af2fe302cb6"
+  },
+  {
+    "path": "event_month=2026-07/data_2.parquet",
+    "size": 243772909,
+    "publishedSha256": "23707ed9701a8a43305090725fdfbc1f93cf5d364e0811b7d3298e5985a836e7"
+  },
+  {
+    "path": "event_month=2026-07/data_3.parquet",
+    "size": 244804054,
+    "publishedSha256": "cae37dc818139dc3cc1199a7c4b0ffbb17493c358caae8149b6e8a97fa5b2fef"
+  },
+  {
+    "path": "event_month=2026-07/data_4.parquet",
+    "size": 364984985,
+    "publishedSha256": "9416a944ca990ca3f29d73ad03f6f48066a51aac06f7e7ac08873413580f314e"
+  },
+  {
+    "path": "event_month=2026-07/data_5.parquet",
+    "size": 428533578,
+    "publishedSha256": "4f0e75b68beaa400543fc376a091e4599107b6998dfed8c87a83aef76b1afe23"
+  },
+  {
+    "path": "event_month=2026-07/data_6.parquet",
+    "size": 425287090,
+    "publishedSha256": "8bb78d0423b80daf08cc990f68f1e5526907bf5f45fef2e82a9614096dcbdc6d"
+  },
+  {
+    "path": "event_month=2026-07/data_7.parquet",
+    "size": 364092744,
+    "publishedSha256": "cea1689f5a154d5cef09af5cf7f704a10170f99d3bbcdfb5e5b0ab59f3024299"
+  },
+  {
+    "path": "event_month=2026-07/data_8.parquet",
+    "size": 426211498,
+    "publishedSha256": "20e9f00499c109c70f6c629506fee7492be760fdef7ff04c17bd23ebab709f18"
+  },
+  {
+    "path": "event_month=2026-07/data_9.parquet",
+    "size": 304463125,
+    "publishedSha256": "b3ee994fda03f87da884168bf09246621db56c467f174cbae8e9aa7571fa0eb9"
+  },
+  {
+    "path": "event_month=2026-07/part-b090402715-b090402814-dd7f713bc367.parquet",
+    "size": 703016,
+    "publishedSha256": "dd7f713bc36765e37d1be29ccfc1af787b5fcd8a0dd355ddc69a90e162ee9793"
+  },
+  {
+    "path": "event_month=2026-07/part-b090402815-b090452814-d933fd8a285b.parquet",
+    "size": 254721880,
+    "publishedSha256": "d933fd8a285bb80c3dcd45b8a3297f1235dcaa7e55d4d293b56d9634a296b5d4"
+  },
+  {
+    "path": "event_month=2026-07/part-b090452815-b090502814-1a576be0b6a0.parquet",
+    "size": 274354587,
+    "publishedSha256": "1a576be0b6a0c077c87f36e55f80a510e93b99d10aa00fd955c3fa7df7b31852"
+  },
+  {
+    "path": "event_month=2026-07/part-b090502815-b090552814-bf3403e4daf3.parquet",
+    "size": 292531269,
+    "publishedSha256": "bf3403e4daf32e244413dcc455e49583fb64f9c5ec767a1d6a7c735ad5c0d8ec"
+  },
+  {
+    "path": "event_month=2026-07/part-b090552815-b090602814-2ceb0b0b9aef.parquet",
+    "size": 259644641,
+    "publishedSha256": "2ceb0b0b9aef71d8c09d17d1377b9580dfdf8bce43e23cf96f978d9d776d19b3"
+  },
+  {
+    "path": "event_month=2026-07/part-b090602815-b090652814-5d10329c99e1.parquet",
+    "size": 278728735,
+    "publishedSha256": "5d10329c99e11e262c43ea90dee1a1fa8d3e7645c80da8ce28eab868db8c6bd3"
+  },
+  {
+    "path": "event_month=2026-07/part-b090652815-b090702814-11003daab394.parquet",
+    "size": 276438549,
+    "publishedSha256": "11003daab394d74770fcd59cedd9b05d6ed64408bc1ba18d054fd16e4b89540f"
+  },
+  {
+    "path": "event_month=2026-07/part-b090702815-b090752814-782906764021.parquet",
+    "size": 274970094,
+    "publishedSha256": "782906764021931bcef1cf86ffa3e51cf0b82c9f7c3d7c14f49820bcc552ba34"
+  },
+  {
+    "path": "event_month=2026-07/part-b090752815-b090757166-f17d00c5d222.parquet",
+    "size": 22624585,
+    "publishedSha256": "f17d00c5d222b662bacdace8675cbb12628ee34ce17be8ff704cbac431f6e5fe"
+  },
+  {
+    "path": "event_month=2026-07/part-b090757167-b090762737-3dde1c0b0141.parquet",
+    "size": 26592944,
+    "publishedSha256": "3dde1c0b0141565c5ba132e22b89055e8c731ccde40834a924423bbb20650573"
+  },
+  {
+    "path": "event_month=2026-07/part-b090762738-b090763643-703e3a572664.parquet",
+    "size": 4841864,
+    "publishedSha256": "703e3a5726642e5804161ebe496f4734a2589523750449b145f82e9e565e2a34"
+  },
+  {
+    "path": "event_month=2026-07/part-b090763644-b090773498-9daccf56282f.parquet",
+    "size": 45269043,
+    "publishedSha256": "9daccf56282f821099a40e705fd3e79cba5927052e3004aaf933d1a31ede7626"
+  },
+  {
+    "path": "event_month=2026-07/part-b090773499-b090774221-da2a3e028698.parquet",
+    "size": 2173580,
+    "publishedSha256": "da2a3e0286984572e60918a5946e7e12aea1020ca80a7afeea7470aa75adf63c"
+  },
+  {
+    "path": "event_month=2026-07/part-b090774222-b090776172-ad12b269799e.parquet",
+    "size": 6005255,
+    "publishedSha256": "ad12b269799e7b1be8f47e80ab59cf6219a1679b486eeaf6fd74f545b8018fb6"
+  },
+  {
+    "path": "event_month=2026-07/part-b090776173-b090821237-adc6495cc93c.parquet",
+    "size": 238504301,
+    "publishedSha256": "adc6495cc93c2eaffd7c9b45434fab253929d9a445f983cdf1b92449a248eff9"
+  },
+  {
+    "path": "event_month=2026-07/part-b090821238-b090871237-04d09f0d9430.parquet",
+    "size": 239526172,
+    "publishedSha256": "04d09f0d94307c9bcec37d3d33c9d7f75dc069f089f229a4c3e884b8b6f03993"
+  },
+  {
+    "path": "event_month=2026-07/part-b090871238-b090878845-b7a3a9a03f18.parquet",
+    "size": 36926118,
+    "publishedSha256": "b7a3a9a03f181385e7d3a4f454e9c6ce7df7a2ae2387e17179a5ca165b263320"
+  },
+  {
+    "path": "event_month=2026-07/part-b090878846-b090928845-937a2fce35ba.parquet",
+    "size": 232318327,
+    "publishedSha256": "937a2fce35ba214031c65969e3eb79574da981f270aa83e8cbe72765d6632fc9"
+  },
+  {
+    "path": "event_month=2026-07/part-b090928846-b090936432-3ea56c021dfa.parquet",
+    "size": 37732086,
+    "publishedSha256": "3ea56c021dfa18fb74b4794fcf59728a74b6058ac79f1c6c019d0a0f08d54608"
+  },
+  {
+    "path": "event_month=2026-07/part-b090936433-b090986432-c2e0c7702453.parquet",
+    "size": 242201078,
+    "publishedSha256": "c2e0c7702453b7096727fb5636d7ac660f2abb7d1d5bfb78b278c77218727606"
+  },
+  {
+    "path": "event_month=2026-07/part-b090986433-b090994032-3ff19f58509c.parquet",
+    "size": 35139096,
+    "publishedSha256": "3ff19f58509c8e3cf371a3729fe33bf50803c911f7d5b3688375efa20a2a01c0"
+  },
+  {
+    "path": "event_month=2026-07/part-b090994033-b091044032-bf3dabc03814.parquet",
+    "size": 239792760,
+    "publishedSha256": "bf3dabc038142cbf84e77c6da3bb4fdbe527350cf3ae83b134864cceb63dd111"
+  },
+  {
+    "path": "event_month=2026-07/part-b091044033-b091051629-18dffcf3058d.parquet",
+    "size": 33749990,
+    "publishedSha256": "18dffcf3058dc8630d31ff71d7d526f7aada6f9caa645479965e1b71f77701df"
+  },
+  {
+    "path": "event_month=2026-07/part-b091051630-b091101629-aeef27c31ddb.parquet",
+    "size": 272712190,
+    "publishedSha256": "aeef27c31ddb093d2bbc65f7032c3ccf1b08758d4002280392aa17ce900d3797"
+  },
+  {
+    "path": "event_month=2026-07/part-b091101630-b091109237-6a2ef5e7b0eb.parquet",
+    "size": 34863509,
+    "publishedSha256": "6a2ef5e7b0eb784fe2552f609cabaf96a0e4fad8b0f664bab5686d18c80a0f1e"
+  },
+  {
+    "path": "event_month=2026-07/part-b091109238-b091159237-d1c5164ea460.parquet",
+    "size": 249431421,
+    "publishedSha256": "d1c5164ea460038a1df39d096fc3e0e78aa94e157a034896ece880749909ccb9"
+  },
+  {
+    "path": "event_month=2026-07/part-b091159238-b091166825-7a8c6860258f.parquet",
+    "size": 30460841,
+    "publishedSha256": "7a8c6860258fd0c71e62df719264ca6c94c2df56475044215a764c460bcc7a26"
+  },
+  {
+    "path": "event_month=2026-07/part-b091166826-b091216825-b085de17b37d.parquet",
+    "size": 255141713,
+    "publishedSha256": "b085de17b37d89a49c474fe5e59fe1948864e76efca4ba49962d2068bc93186e"
+  },
+  {
+    "path": "event_month=2026-07/part-b091216826-b091224439-9b1f28ff1bc8.parquet",
+    "size": 34954778,
+    "publishedSha256": "9b1f28ff1bc8592ae2b98a0184c7abbf90222a2aeb51096d3ac5cf3b761ff41a"
+  },
+  {
+    "path": "event_month=2026-07/part-b091224440-b091274439-26d63b38c405.parquet",
+    "size": 2037437,
+    "publishedSha256": "26d63b38c40572bc3ed7748c4b6eb1008b3b1e9fea5e03168ff09f440b52ce6b"
+  }
+]

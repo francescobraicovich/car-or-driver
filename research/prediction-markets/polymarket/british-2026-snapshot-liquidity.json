@@ -1,0 +1,487 @@
+{
+  "marketCount": 24,
+  "marketsWithSnapshot": 24,
+  "usableMarketCount": 24,
+  "cutoffExclusive": 1783078200000,
+  "medianSpread": 0.485,
+  "medianBidShares": 100.0,
+  "medianAskShares": 55.0,
+  "medianBidNotional": 24.0,
+  "medianAskNotional": 32.5,
+  "medianSecondsBeforeCutoff": 1073.9555,
+  "medianSourceAgeSeconds": 231.353,
+  "records": [
+    {
+      "conditionId": "0x1809fdfef0338347d3d418c74a61cdf0b8e9b9e83139392a5b7ac60004c074a8",
+      "drivers": [
+        "Leclerc",
+        "Russell"
+      ],
+      "assetId": "60871687832029506748291261172173043126719157362444610235934526930154072780056",
+      "received": 1783077127923,
+      "sourceTimestamp": 1783076607219,
+      "secondsBeforeCutoff": 1072.077,
+      "sourceAgeSeconds": 520.704,
+      "bid": 0.55,
+      "bidShares": 100.0,
+      "ask": 0.8,
+      "askShares": 100.0,
+      "spread": 0.25,
+      "bidNotional": 55.0,
+      "askNotional": 80.0
+    },
+    {
+      "conditionId": "0x187ab0d2c601e1d9f881d817fdfb31817e49b37e22b229e367d7775f43b53876",
+      "drivers": [
+        "Norris",
+        "Piastri"
+      ],
+      "assetId": "9935985870439334783856834513792982376105221888748764082308099364863034154061",
+      "received": 1783078143046,
+      "sourceTimestamp": 1783077731204,
+      "secondsBeforeCutoff": 56.954,
+      "sourceAgeSeconds": 411.842,
+      "bid": 0.5,
+      "bidShares": 8.0,
+      "ask": 0.76,
+      "askShares": 100.0,
+      "spread": 0.26,
+      "bidNotional": 4.0,
+      "askNotional": 76.0
+    },
+    {
+      "conditionId": "0x194928ce671d7c0cc9ad69d29bc35ef28c03cbc0f34f7f5bc48569f7cce4d38d",
+      "drivers": [
+        "Alonso",
+        "Stroll"
+      ],
+      "assetId": "108439092603650322022971533294433424221479884042033726195331338345795453961880",
+      "received": 1783075958029,
+      "sourceTimestamp": 1783075918611,
+      "secondsBeforeCutoff": 2241.971,
+      "sourceAgeSeconds": 39.418,
+      "bid": 0.01,
+      "bidShares": 96.0,
+      "ask": 0.88,
+      "askShares": 200.0,
+      "spread": 0.87,
+      "bidNotional": 0.96,
+      "askNotional": 176.0
+    },
+    {
+      "conditionId": "0x1c114cdd95a6bd0fc14eee20f0bc804942155b237b7017039d45092e5f955b2e",
+      "drivers": [
+        "Leclerc",
+        "Verstappen"
+      ],
+      "assetId": "34464087853562568668250951998171180753928348751249386944037661956260970730162",
+      "received": 1783076190201,
+      "sourceTimestamp": 1783076105635,
+      "secondsBeforeCutoff": 2009.799,
+      "sourceAgeSeconds": 84.566,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.75,
+      "askShares": 25.0,
+      "spread": 0.51,
+      "bidNotional": 24.0,
+      "askNotional": 18.75
+    },
+    {
+      "conditionId": "0x4a76f68147e6466451ab7f0d5491a1847047f46b664d943711c8ebd744c72dd2",
+      "drivers": [
+        "Lindblad",
+        "Lawson"
+      ],
+      "assetId": "29542837041799425030792718106146302750431335515474481516840703539497156582",
+      "received": 1783077123898,
+      "sourceTimestamp": 1783076735211,
+      "secondsBeforeCutoff": 1076.102,
+      "sourceAgeSeconds": 388.687,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.76,
+      "askShares": 100.0,
+      "spread": 0.52,
+      "bidNotional": 24.0,
+      "askNotional": 76.0
+    },
+    {
+      "conditionId": "0x59dda8b3899a1be76d10290c701193f717d1021d4011be45a1392588daddc82c",
+      "drivers": [
+        "Leclerc",
+        "Piastri"
+      ],
+      "assetId": "79818807015601655073589171344042015989772051707364495110031839441033676603037",
+      "received": 1783077764597,
+      "sourceTimestamp": 1783077737032,
+      "secondsBeforeCutoff": 435.403,
+      "sourceAgeSeconds": 27.565,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.7,
+      "askShares": 50.0,
+      "spread": 0.46,
+      "bidNotional": 24.0,
+      "askNotional": 35.0
+    },
+    {
+      "conditionId": "0x65b4b53f1773ac8c6634a136f27e6ed6d647afde98f79201b64fd1da576967d2",
+      "drivers": [
+        "Verstappen",
+        "Hadjar"
+      ],
+      "assetId": "69144692003525965188381626607634295568831194134844968450532120717842255888585",
+      "received": 1783077124166,
+      "sourceTimestamp": 1783076606597,
+      "secondsBeforeCutoff": 1075.834,
+      "sourceAgeSeconds": 517.569,
+      "bid": 0.09,
+      "bidShares": 10.56,
+      "ask": 0.5,
+      "askShares": 100.0,
+      "spread": 0.41,
+      "bidNotional": 0.9504,
+      "askNotional": 50.0
+    },
+    {
+      "conditionId": "0x6783ceea5587a36a98049335f357d2ac477b62a15b209332416a6555f13da1c0",
+      "drivers": [
+        "Colapinto",
+        "Gasly"
+      ],
+      "assetId": "68783322259434611319630330289670522823876377820542964067751208314761535942871",
+      "received": 1783077389827,
+      "sourceTimestamp": 1783077170823,
+      "secondsBeforeCutoff": 810.173,
+      "sourceAgeSeconds": 219.004,
+      "bid": 0.13,
+      "bidShares": 50.0,
+      "ask": 0.75,
+      "askShares": 25.0,
+      "spread": 0.62,
+      "bidNotional": 6.5,
+      "askNotional": 18.75
+    },
+    {
+      "conditionId": "0x68d3279f47e6a8bd70969bec2431f9f45ff394f42b5d35d4fb49c0e6cda13457",
+      "drivers": [
+        "Leclerc",
+        "Norris"
+      ],
+      "assetId": "63874268743800368161231509998943211515014228826310411478356598700360236903108",
+      "received": 1783076850635,
+      "sourceTimestamp": 1783076606933,
+      "secondsBeforeCutoff": 1349.365,
+      "sourceAgeSeconds": 243.702,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.7,
+      "askShares": 100.0,
+      "spread": 0.46,
+      "bidNotional": 24.0,
+      "askNotional": 70.0
+    },
+    {
+      "conditionId": "0x6d751cff6394f98bc3107cbb511c85651ff92f213a25b34c2aaa16e9e81023e6",
+      "drivers": [
+        "Piastri",
+        "Russell"
+      ],
+      "assetId": "17390117231709844672026477876004194271157601549063405751080834966979689956166",
+      "received": 1783076333483,
+      "sourceTimestamp": 1783076291214,
+      "secondsBeforeCutoff": 1866.517,
+      "sourceAgeSeconds": 42.269,
+      "bid": 0.13,
+      "bidShares": 50.0,
+      "ask": 0.76,
+      "askShares": 100.0,
+      "spread": 0.63,
+      "bidNotional": 6.5,
+      "askNotional": 76.0
+    },
+    {
+      "conditionId": "0x7806da4b58bd1728a4f3e8aa424444b5e46aa1d50abcd3fadd0e5277ee44204c",
+      "drivers": [
+        "Albon",
+        "Jr."
+      ],
+      "assetId": "72709721411557624786581376251626510703861562698531198873308174752437599653034",
+      "received": 1783072177985,
+      "sourceTimestamp": 1783071960720,
+      "secondsBeforeCutoff": 6022.015,
+      "sourceAgeSeconds": 217.265,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.76,
+      "askShares": 100.0,
+      "spread": 0.52,
+      "bidNotional": 24.0,
+      "askNotional": 76.0
+    },
+    {
+      "conditionId": "0x7c1f0e2c7997f4902d1bfaeb83fb0a792f76a6a4f993a85dbb2cd3800bc2e230",
+      "drivers": [
+        "Ocon",
+        "Bearman"
+      ],
+      "assetId": "28631998922032989399573692844262869223891649468040523558462506625720972030317",
+      "received": 1783074863271,
+      "sourceTimestamp": 1783074274504,
+      "secondsBeforeCutoff": 3336.729,
+      "sourceAgeSeconds": 588.767,
+      "bid": 0.15,
+      "bidShares": 6.33,
+      "ask": 0.76,
+      "askShares": 100.0,
+      "spread": 0.61,
+      "bidNotional": 0.9495,
+      "askNotional": 76.0
+    },
+    {
+      "conditionId": "0xa86ffbefd4f4fad3ecd019dab8b8c5c17fef26a335481fe5c847ec99b32fb91b",
+      "drivers": [
+        "Leclerc",
+        "Hamilton"
+      ],
+      "assetId": "78464735834269621995308399509557149883926795132453918714539714353255148019968",
+      "received": 1783077680204,
+      "sourceTimestamp": 1783077153760,
+      "secondsBeforeCutoff": 519.796,
+      "sourceAgeSeconds": 526.444,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.6,
+      "askShares": 10.0,
+      "spread": 0.36,
+      "bidNotional": 24.0,
+      "askNotional": 6.0
+    },
+    {
+      "conditionId": "0xad45d3c562fd31050ca9328a08af0af0ce75ddb742c63e695d984567bad0ef92",
+      "drivers": [
+        "Verstappen",
+        "Russell"
+      ],
+      "assetId": "12523623248304638567621318289212652268146565374860037121538755494058704236325",
+      "received": 1783077884500,
+      "sourceTimestamp": 1783077737317,
+      "secondsBeforeCutoff": 315.5,
+      "sourceAgeSeconds": 147.183,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.5,
+      "askShares": 60.0,
+      "spread": 0.26,
+      "bidNotional": 24.0,
+      "askNotional": 30.0
+    },
+    {
+      "conditionId": "0xada7eec27fb1981dcb7d35a62e89f126589b36bd8cd2a1348cbc8115ba7600f0",
+      "drivers": [
+        "Bortoleto",
+        "Hulkenberg"
+      ],
+      "assetId": "29950332587207589630574866709013712114825758358774164004649634588615926508399",
+      "received": 1783077890866,
+      "sourceTimestamp": 1783077736464,
+      "secondsBeforeCutoff": 309.134,
+      "sourceAgeSeconds": 154.402,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.85,
+      "askShares": 6.33,
+      "spread": 0.61,
+      "bidNotional": 24.0,
+      "askNotional": 5.3805
+    },
+    {
+      "conditionId": "0xb4d2525fb9a7a812dc4aa433a4ce747b0b7a631758c0b5f11ed96a6e1fa663a2",
+      "drivers": [
+        "Norris",
+        "Hamilton"
+      ],
+      "assetId": "1883390853092676921368363552022632325617900567267709111134180325707814492553",
+      "received": 1783078148449,
+      "sourceTimestamp": 1783077706630,
+      "secondsBeforeCutoff": 51.551,
+      "sourceAgeSeconds": 441.819,
+      "bid": 0.3,
+      "bidShares": 8.57,
+      "ask": 0.75,
+      "askShares": 25.0,
+      "spread": 0.45,
+      "bidNotional": 2.571,
+      "askNotional": 18.75
+    },
+    {
+      "conditionId": "0xbc8f1aed945424d60a4530a7fae0b3e88e301423318ae1f580e2dd3a542c7720",
+      "drivers": [
+        "Verstappen",
+        "Piastri"
+      ],
+      "assetId": "65705964083848363061314266547064088796436874388751923270212764138017728051390",
+      "received": 1783076196572,
+      "sourceTimestamp": 1783076178460,
+      "secondsBeforeCutoff": 2003.428,
+      "sourceAgeSeconds": 18.112,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.8,
+      "askShares": 10.0,
+      "spread": 0.56,
+      "bidNotional": 24.0,
+      "askNotional": 8.0
+    },
+    {
+      "conditionId": "0xc681d9adb3ff2259b773f29e492c94da788340ca5bf96f2441c9a4b168d54627",
+      "drivers": [
+        "Norris",
+        "Verstappen"
+      ],
+      "assetId": "64675849148377066547031457068862742099033783801249908746379708460180052870193",
+      "received": 1783078186211,
+      "sourceTimestamp": 1783077718834,
+      "secondsBeforeCutoff": 13.789,
+      "sourceAgeSeconds": 467.377,
+      "bid": 0.3,
+      "bidShares": 100.0,
+      "ask": 0.76,
+      "askShares": 100.0,
+      "spread": 0.46,
+      "bidNotional": 30.0,
+      "askNotional": 76.0
+    },
+    {
+      "conditionId": "0xc9ab687a7eadbf00fddc28b2a08291c6dc33befdc77035cbf36ff89dafacf5de",
+      "drivers": [
+        "Perez",
+        "Bottas"
+      ],
+      "assetId": "38246040164797135358236402780811688029299167234151130208218673030285318002410",
+      "received": 1783076209201,
+      "sourceTimestamp": 1783076017060,
+      "secondsBeforeCutoff": 1990.799,
+      "sourceAgeSeconds": 192.141,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.85,
+      "askShares": 6.33,
+      "spread": 0.61,
+      "bidNotional": 24.0,
+      "askNotional": 5.3805
+    },
+    {
+      "conditionId": "0xd0f10656b34c38fdb599f55528a4e8f1fe6d65e52d3a5296e6577292e0a10a49",
+      "drivers": [
+        "Norris",
+        "Russell"
+      ],
+      "assetId": "82162150025966965913343708485851798535477486852789366409952166687621596994158",
+      "received": 1783077378816,
+      "sourceTimestamp": 1783077171448,
+      "secondsBeforeCutoff": 821.184,
+      "sourceAgeSeconds": 207.368,
+      "bid": 0.5,
+      "bidShares": 60.0,
+      "ask": 0.86,
+      "askShares": 6.79,
+      "spread": 0.36,
+      "bidNotional": 30.0,
+      "askNotional": 5.8394
+    },
+    {
+      "conditionId": "0xdd9cfcad3041669e9b45ab796f2817415209aea19a1b89352285464c9e55896e",
+      "drivers": [
+        "Hamilton",
+        "Piastri"
+      ],
+      "assetId": "87600499702465730417671603498126149805928568291017515801023000389917712834179",
+      "received": 1783076190201,
+      "sourceTimestamp": 1783075987961,
+      "secondsBeforeCutoff": 2009.799,
+      "sourceAgeSeconds": 202.24,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.75,
+      "askShares": 25.0,
+      "spread": 0.51,
+      "bidNotional": 24.0,
+      "askNotional": 18.75
+    },
+    {
+      "conditionId": "0xe950b1a8e38ebc0626d7a9267fbbc1905e025be649f4d83c4a4e086f4ef5d496",
+      "drivers": [
+        "Hamilton",
+        "Russell"
+      ],
+      "assetId": "58682115368214875104806022321039592796417623519567463269176719657444206660082",
+      "received": 1783072837335,
+      "sourceTimestamp": 1783072545008,
+      "secondsBeforeCutoff": 5362.665,
+      "sourceAgeSeconds": 292.327,
+      "bid": 0.5,
+      "bidShares": 20.0,
+      "ask": 0.86,
+      "askShares": 6.79,
+      "spread": 0.36,
+      "bidNotional": 10.0,
+      "askNotional": 5.8394
+    },
+    {
+      "conditionId": "0xea277b3a112a9f8a9899216ed88fa1d78133df5bf22fb41f8c3db9fa1445abd3",
+      "drivers": [
+        "Verstappen",
+        "Hamilton"
+      ],
+      "assetId": "113881773763878069219322482851632019866451238137803750251030857266431172448441",
+      "received": 1783078073236,
+      "sourceTimestamp": 1783077710538,
+      "secondsBeforeCutoff": 126.764,
+      "sourceAgeSeconds": 362.698,
+      "bid": 0.3,
+      "bidShares": 30.0,
+      "ask": 0.76,
+      "askShares": 100.0,
+      "spread": 0.46,
+      "bidNotional": 9.0,
+      "askNotional": 76.0
+    },
+    {
+      "conditionId": "0xff610e34e89835fbd4e056c3ac52443d7429024fce65087d9427028c1678e252",
+      "drivers": [
+        "Russell",
+        "Antonelli"
+      ],
+      "assetId": "73095229629808810124895145844809849998514693245350638703861771771916131315002",
+      "received": 1783078080015,
+      "sourceTimestamp": 1783077736711,
+      "secondsBeforeCutoff": 119.985,
+      "sourceAgeSeconds": 343.304,
+      "bid": 0.24,
+      "bidShares": 100.0,
+      "ask": 0.75,
+      "askShares": 25.0,
+      "spread": 0.51,
+      "bidNotional": 24.0,
+      "askNotional": 18.75
+    }
+  ],
+  "excluded": [],
+  "source": "PMXT v2; https://archive.pmxt.dev/Polymarket/v2; CC BY 4.0",
+  "files": [
+    {
+      "name": "pmxt-2026-07-03T09.parquet",
+      "sha256": "1c4b79f3fe439bfd412c55c6c9d1fa4374938a783afda67bb2229a62a80cade7"
+    },
+    {
+      "name": "pmxt-2026-07-03T10.parquet",
+      "sha256": "d8e9098c84c617c033f0dfe013337353de841afa2b22d175bf4e9ca4443a01a8"
+    },
+    {
+      "name": "pmxt-2026-07-03T11.parquet",
+      "sha256": "3504bc9f1ec2ac74544f2d9a1702c974692e4d9c98a17c5dba44c973cdceabc2"
+    }
+  ]
+}

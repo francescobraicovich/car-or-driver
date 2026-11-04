@@ -1,0 +1,464 @@
+{
+  "referenceSourceHash": "928427f97ab9daf6",
+  "referenceFileHash": "c81017edb1d24cdacc7bbd0cd9d1c2e2e31612bb5c083bfc175163660eab71e7",
+  "rowsSha256": "53c0538ac0cfe7f37d12424626287295518f94f3d971b3534225e201cc086929",
+  "resultsSha256": "4d52646f0f5515abfb88f11cdcab58f542fc552e72a850e2eb1b5e0bfd02b430",
+  "candidate": "persistent-a0.25-g0.05-h3",
+  "protocol": "research/stable-ratings/protocol.md",
+  "design": "two-speed-bounded-form-segments",
+  "historicalEvidence": "Retrospective chronological folds; all historical periods previously inspected.",
+  "target": "Weighted pair benchmark: valid finish, pace, retirement snapshots and qualifying comparisons.",
+  "acceptedPointGuards": true,
+  "modes": {
+    "pre": {
+      "new": {
+        "loss": 0.38154488066233605,
+        "brier": 0.12405823531318518,
+        "weight": 1845545.948359198,
+        "pairs": 120940
+      },
+      "reference": {
+        "loss": 0.3805676896498738,
+        "brier": 0.12373632515438074,
+        "weight": 1845545.948359198,
+        "pairs": 120940
+      },
+      "pairedSeasons": {
+        "difference": 0.0009771910124622986,
+        "lower": 0.00024302154463620528,
+        "upper": 0.0015942619350951105,
+        "clusters": 18,
+        "replicates": 2000
+      },
+      "calibration": {
+        "slope": 1.0337474510943478,
+        "reliability": [
+          {
+            "lower": 0.5,
+            "upper": 0.5625,
+            "pairs": 8887,
+            "weight": 174489.62506814595,
+            "forecast": 0.5310045480409844,
+            "observed": 0.5436992432336738
+          },
+          {
+            "lower": 0.5625,
+            "upper": 0.625,
+            "pairs": 8663,
+            "weight": 170486.83086522808,
+            "forecast": 0.5936966056016842,
+            "observed": 0.5782587040423053
+          },
+          {
+            "lower": 0.625,
+            "upper": 0.6875,
+            "pairs": 8909,
+            "weight": 168219.39916878898,
+            "forecast": 0.6562737834044612,
+            "observed": 0.6399712350865162
+          },
+          {
+            "lower": 0.6875,
+            "upper": 0.75,
+            "pairs": 9231,
+            "weight": 155146.5279918054,
+            "forecast": 0.7189070164824,
+            "observed": 0.7169286206890597
+          },
+          {
+            "lower": 0.75,
+            "upper": 0.8125,
+            "pairs": 9819,
+            "weight": 148528.15306420787,
+            "forecast": 0.7815575454131368,
+            "observed": 0.7927179293244565
+          },
+          {
+            "lower": 0.8125,
+            "upper": 0.875,
+            "pairs": 11861,
+            "weight": 170850.31561776868,
+            "forecast": 0.8449239656687558,
+            "observed": 0.8581262296617675
+          },
+          {
+            "lower": 0.875,
+            "upper": 0.9375,
+            "pairs": 16753,
+            "weight": 209245.69011358393,
+            "forecast": 0.9087084692202935,
+            "observed": 0.9110312039502464
+          },
+          {
+            "lower": 0.9375,
+            "upper": 1.0,
+            "pairs": 46817,
+            "weight": 648579.406469669,
+            "forecast": 0.9766167013509535,
+            "observed": 0.9809992468991288
+          }
+        ]
+      }
+    },
+    "post": {
+      "new": {
+        "loss": 0.32827214810141037,
+        "brier": 0.10297141274134612,
+        "weight": 1845545.948359198,
+        "pairs": 120940
+      },
+      "reference": {
+        "loss": 0.32810750778327147,
+        "brier": 0.10291402263952001,
+        "weight": 1845545.948359198,
+        "pairs": 120940
+      },
+      "pairedSeasons": {
+        "difference": 0.00016464031813881154,
+        "lower": -0.00011554810735920128,
+        "upper": 0.00043322133256749326,
+        "clusters": 18,
+        "replicates": 2000
+      },
+      "calibration": {
+        "slope": 1.015662141451078,
+        "reliability": [
+          {
+            "lower": 0.5,
+            "upper": 0.5625,
+            "pairs": 5924,
+            "weight": 111522.72745692835,
+            "forecast": 0.5309271660897433,
+            "observed": 0.5495295814016169
+          },
+          {
+            "lower": 0.5625,
+            "upper": 0.625,
+            "pairs": 6367,
+            "weight": 120460.56769437675,
+            "forecast": 0.5942438271714077,
+            "observed": 0.622453597503083
+          },
+          {
+            "lower": 0.625,
+            "upper": 0.6875,
+            "pairs": 6749,
+            "weight": 119472.25633168485,
+            "forecast": 0.6568933494036081,
+            "observed": 0.6607347132883222
+          },
+          {
+            "lower": 0.6875,
+            "upper": 0.75,
+            "pairs": 7552,
+            "weight": 127396.3444796085,
+            "forecast": 0.719406995896442,
+            "observed": 0.7350913098499577
+          },
+          {
+            "lower": 0.75,
+            "upper": 0.8125,
+            "pairs": 8809,
+            "weight": 147962.10665453307,
+            "forecast": 0.7821121585963785,
+            "observed": 0.780897970116221
+          },
+          {
+            "lower": 0.8125,
+            "upper": 0.875,
+            "pairs": 11360,
+            "weight": 176759.64404326348,
+            "forecast": 0.8443087755838964,
+            "observed": 0.8552357098306699
+          },
+          {
+            "lower": 0.875,
+            "upper": 0.9375,
+            "pairs": 16803,
+            "weight": 242312.1325156666,
+            "forecast": 0.9086453698660892,
+            "observed": 0.9177697830102661
+          },
+          {
+            "lower": 0.9375,
+            "upper": 1.0,
+            "pairs": 57376,
+            "weight": 799660.1691831362,
+            "forecast": 0.9792468133011866,
+            "observed": 0.978126129433956
+          }
+        ]
+      }
+    },
+    "qual": {
+      "new": {
+        "loss": 0.37868043012593033,
+        "brier": 0.12216848627617008,
+        "weight": 199976.03958795144,
+        "pairs": 74158
+      },
+      "reference": {
+        "loss": 0.376887851645644,
+        "brier": 0.12147450878496449,
+        "weight": 199976.03958795144,
+        "pairs": 74158
+      },
+      "pairedSeasons": {
+        "difference": 0.0017925784802862547,
+        "lower": 0.0008686357241155382,
+        "upper": 0.002759768368636595,
+        "clusters": 18,
+        "replicates": 2000
+      },
+      "calibration": {
+        "slope": 1.0490342818661147,
+        "reliability": [
+          {
+            "lower": 0.5,
+            "upper": 0.5625,
+            "pairs": 5167,
+            "weight": 17989.843509151353,
+            "forecast": 0.5304399216971382,
+            "observed": 0.5236489264474309
+          },
+          {
+            "lower": 0.5625,
+            "upper": 0.625,
+            "pairs": 5089,
+            "weight": 17527.030482495087,
+            "forecast": 0.5946104018710469,
+            "observed": 0.6182205253000864
+          },
+          {
+            "lower": 0.625,
+            "upper": 0.6875,
+            "pairs": 5319,
+            "weight": 17467.497227362663,
+            "forecast": 0.6567061070767738,
+            "observed": 0.6571515247840651
+          },
+          {
+            "lower": 0.6875,
+            "upper": 0.75,
+            "pairs": 5637,
+            "weight": 17670.813909477438,
+            "forecast": 0.7189283852067585,
+            "observed": 0.7326541823206573
+          },
+          {
+            "lower": 0.75,
+            "upper": 0.8125,
+            "pairs": 6323,
+            "weight": 17327.08802955388,
+            "forecast": 0.7811159264308141,
+            "observed": 0.7963297314131874
+          },
+          {
+            "lower": 0.8125,
+            "upper": 0.875,
+            "pairs": 7577,
+            "weight": 19590.346576801585,
+            "forecast": 0.8440052025079227,
+            "observed": 0.8577230151977228
+          },
+          {
+            "lower": 0.875,
+            "upper": 0.9375,
+            "pairs": 10955,
+            "weight": 24101.920311137383,
+            "forecast": 0.9088422529346654,
+            "observed": 0.9158434699475562
+          },
+          {
+            "lower": 0.9375,
+            "upper": 1.0,
+            "pairs": 28091,
+            "weight": 68301.49954197204,
+            "forecast": 0.976511782239844,
+            "observed": 0.9795151266964953
+          }
+        ]
+      }
+    },
+    "grid": {
+      "new": {
+        "loss": 0.33655451312354223,
+        "brier": 0.10619514168012052,
+        "weight": 1845545.948359198,
+        "pairs": 120940
+      },
+      "reference": {
+        "loss": 0.3366550349348538,
+        "brier": 0.10635802641845658,
+        "weight": 1845545.948359198,
+        "pairs": 120940
+      },
+      "pairedSeasons": {
+        "difference": -0.00010052181131159212,
+        "lower": -0.0010129270999101997,
+        "upper": 0.0008963697801895408,
+        "clusters": 18,
+        "replicates": 2000
+      },
+      "calibration": {
+        "slope": 1.013277120619217,
+        "reliability": [
+          {
+            "lower": 0.5,
+            "upper": 0.5625,
+            "pairs": 6760,
+            "weight": 127797.45923056721,
+            "forecast": 0.5307364661224642,
+            "observed": 0.5227729779296396
+          },
+          {
+            "lower": 0.5625,
+            "upper": 0.625,
+            "pairs": 6941,
+            "weight": 126512.73442234067,
+            "forecast": 0.5936947126333684,
+            "observed": 0.6239596105997952
+          },
+          {
+            "lower": 0.625,
+            "upper": 0.6875,
+            "pairs": 7428,
+            "weight": 137450.5547746245,
+            "forecast": 0.6561563319630329,
+            "observed": 0.6924029223256299
+          },
+          {
+            "lower": 0.6875,
+            "upper": 0.75,
+            "pairs": 8009,
+            "weight": 140554.38986184567,
+            "forecast": 0.7194388571641676,
+            "observed": 0.7300634109144449
+          },
+          {
+            "lower": 0.75,
+            "upper": 0.8125,
+            "pairs": 8985,
+            "weight": 146197.17748858887,
+            "forecast": 0.7815021156102686,
+            "observed": 0.8034316117980745
+          },
+          {
+            "lower": 0.8125,
+            "upper": 0.875,
+            "pairs": 11150,
+            "weight": 163150.44614294745,
+            "forecast": 0.8447954767191466,
+            "observed": 0.8535171557467799
+          },
+          {
+            "lower": 0.875,
+            "upper": 0.9375,
+            "pairs": 16007,
+            "weight": 220226.37503453204,
+            "forecast": 0.9090198452422317,
+            "observed": 0.9124093444074752
+          },
+          {
+            "lower": 0.9375,
+            "upper": 1.0,
+            "pairs": 55660,
+            "weight": 783656.8114037514,
+            "forecast": 0.9809316033425463,
+            "observed": 0.9784928005373743
+          }
+        ]
+      }
+    },
+    "preCombined": {
+      "new": {
+        "loss": 0.3812648438417879,
+        "brier": 0.12387348807973368,
+        "weight": 2045521.9879471494
+      },
+      "reference": {
+        "loss": 0.3802079382344663,
+        "brier": 0.12351520356170356,
+        "weight": 2045521.9879471494
+      }
+    },
+    "postCombined": {
+      "new": {
+        "loss": 0.3332002049304707,
+        "brier": 0.10484817317696749,
+        "weight": 2045521.9879471494
+      },
+      "reference": {
+        "loss": 0.33287641275364804,
+        "brier": 0.10472854848380975,
+        "weight": 2045521.9879471494
+      }
+    }
+  },
+  "monitoring": {
+    "pre": {
+      "year": 2026,
+      "fitThrough": 2025,
+      "new": {
+        "loss": 0.3858235933892394,
+        "brier": 0.12344061809334386,
+        "weight": 87015.45981152376,
+        "pairs": 6246
+      },
+      "reference": {
+        "loss": 0.38568071593694847,
+        "brier": 0.12346048124292149,
+        "weight": 87015.45981152376,
+        "pairs": 6246
+      }
+    },
+    "post": {
+      "year": 2026,
+      "fitThrough": 2025,
+      "new": {
+        "loss": 0.3123033646398331,
+        "brier": 0.09524545890756912,
+        "weight": 87015.45981152376,
+        "pairs": 6246
+      },
+      "reference": {
+        "loss": 0.3124588138776207,
+        "brier": 0.09538565313489346,
+        "weight": 87015.45981152376,
+        "pairs": 6246
+      }
+    },
+    "qual": {
+      "year": 2026,
+      "fitThrough": 2025,
+      "new": {
+        "loss": 0.3252166120463635,
+        "brier": 0.10467385775896473,
+        "weight": 10863.301913988424,
+        "pairs": 4030
+      },
+      "reference": {
+        "loss": 0.32512089177951287,
+        "brier": 0.10464007228079314,
+        "weight": 10863.301913988424,
+        "pairs": 4030
+      }
+    },
+    "grid": {
+      "year": 2026,
+      "fitThrough": 2025,
+      "new": {
+        "loss": 0.3376632770826964,
+        "brier": 0.10462842941336356,
+        "weight": 87015.45981152376,
+        "pairs": 6246
+      },
+      "reference": {
+        "loss": 0.3352354768159387,
+        "brier": 0.10400078836327077,
+        "weight": 87015.45981152376,
+        "pairs": 6246
+      }
+    }
+  }
+}

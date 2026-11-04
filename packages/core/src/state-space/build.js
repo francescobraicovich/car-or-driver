@@ -1,5 +1,5 @@
-// The ratings shown on the site blend the joint state-space filters with a
-// forward-only comparison learner (hybrid/ratings.js).
+// The published ratings combine the state-space filters, a comparison learner,
+// and a portable teammate graph contribution to the driver levels.
 //
 // buildStateSpace collects the exam (state-space/exam.js: the observations of every weekend, the retirement hazards and the skeleton of the
 // snapshots), runs the state-space filters (qualifying, then the race filter that reads it) on the observations, and then
@@ -12,6 +12,7 @@
 // rating systems can be compared; without one nothing here reads the Elo core.
 import { MODEL_SETTINGS } from '../presets/model-settings.js';
 import { hybridRatings } from '../hybrid/ratings.js';
+import { graphRatings } from '../graph-ratings.js';
 import { BASE, combineRating, gapToP, pToRating } from '../math.js';
 import { headToHeadWithHazard } from '../hazard.js';
 import { CONSTRUCTOR_LINEAGE, carIdentity } from '../lineage.js';
@@ -21,7 +22,7 @@ import { addDiag, emptyDiag, finishDiag } from './diagnostics.js';
 import { STATE_SPACE } from '../presets/state-space.js';
 import { STATE_SPACE_FIT } from '../presets/state-space-fit.js';
 import { runStateSpace } from './filter.js';
-import { arrivalOffsets, qualLink } from './qualifying-link.js';
+import { qualLink } from './qualifying-link.js';
 import { replayForecastLayer } from './replay.js';
 import { STATE_SPACE_HEADS } from './forecast-heads.js';
 
@@ -45,16 +46,23 @@ export const ssContext = (tmBoost) => ({ canon: canonicalTeam, carOf: carLineage
  */
 export function runSession(weekends, session, tmBoost, qualRun = null) {
   const link = STATE_SPACE.link;
-  const linked = session === 'race' && qualRun && link && (link.beta || link.gamma);
+  const linked = session === 'race' && qualRun && link?.beta;
   return runStateSpace(
     weekends.map((w) => ({ year: w.year, rows: w.rows, obs: session === 'race' ? w.raceObs : w.qualObs })),
     STATE_SPACE[session],
     {
       ...ssContext(tmBoost),
-      ...(linked ? qualLink(qualRun, link.beta, link.gamma) : {}),
-      ...(session === 'race' && STATE_SPACE.adapt?.dip ? { adapt: arrivalOffsets(weekends, canonicalTeam, STATE_SPACE.adapt) } : {}),
+      ...(linked ? qualLink(qualRun, link.beta) : {}),
     },
   );
+}
+
+/** The published driver/car pipeline, shared by builds and evaluation. */
+export function runPublishedRatings(weekends, tmBoost) {
+  const qual = runSession(weekends, 'qual', tmBoost);
+  const race = runSession(weekends, 'race', tmBoost, qual);
+  const fast = hybridRatings(weekends, race, qual, carLineage);
+  return graphRatings(weekends, fast, qual);
 }
 
 /**
@@ -66,10 +74,8 @@ export function buildStateSpace(raw, lapSnapshots, maps, params, lapPace = null,
   const exam = collectExam(raw, lapSnapshots, maps, params, lapPace);
   benchmark?.observe(exam, data);
   const tmBoost = exam.model.params.tmBoost;
-  const qual = runSession(exam.weekends, 'qual', tmBoost);
-  const race = runSession(exam.weekends, 'race', tmBoost, qual);
-  const hybrid = hybridRatings(exam.weekends, exam.model.snaps, race, qual, carLineage);
-  const model = finishStateSpace(exam.model, exam.weekends, hybrid, qual, data);
+  const ratings = runPublishedRatings(exam.weekends, tmBoost);
+  const model = finishStateSpace(exam.model, exam.weekends, ratings.race, ratings.qual, data);
   benchmark?.attach(model, exam, data);
   return model;
 }
@@ -170,10 +176,19 @@ export function finishStateSpace(model, weekends, race, qual, { raw, lapPace }) 
     slopes,
     scenario: STATE_SPACE_FIT.scenario,
   };
-  model.params = { ...MODEL_SETTINGS, modelKind: 'state-space', ratingMethod: 'hybrid' };
+  model.params = { ...MODEL_SETTINGS, modelKind: 'state-space', ratingMethod: 'graph' };
 
   // ---- the forecast layer: form trackers and probability heads, on the hybrid levels as forecast before each weekend
-  const { form, diags } = replayForecastLayer(weekends, { race: race.pre, qual: qual.pre }, { lapPace, params, heads: STATE_SPACE_HEADS });
+  const { form, diags } = replayForecastLayer(
+    weekends,
+    { race: race.pre, qual: qual.pre },
+    {
+      lapPace,
+      params,
+      heads: STATE_SPACE_HEADS,
+      formOptions: { track: false },
+    },
+  );
   model.snaps.forEach((snap, i) => {
     const d = snap.diag;
     const { q, ...race1 } = diags[i];
@@ -181,6 +196,7 @@ export function finishStateSpace(model, weekends, race, qual, { raw, lapPace }) 
     Object.assign(d.q, q);
   });
   model.forecastState = {
+    heads: STATE_SPACE_HEADS,
     form: form.exportState(),
     seen: new Map(form.w.raceSeen),
     nationalities: new Map(raw.drivers.map((d) => [String(d.driverId), d.nationality])),

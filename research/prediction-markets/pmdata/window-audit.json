@@ -1,0 +1,719 @@
+{
+  "description": "Researcher-selected Thursday 14:00\u201316:00 UTC, separately audited by market. The source order and feed completeness are not verified.",
+  "reports": [
+    {
+      "market_slug": "f1-austrian-grand-prix-winner-hamilton-2026-06-28",
+      "window_start": "2026-06-25T14:00:00",
+      "window_end_exclusive": "2026-06-25T16:00:00",
+      "first_practice": "2026-06-26T11:30:00",
+      "counts": {
+        "trades": 20,
+        "trades_without_transaction_hash": 0,
+        "price_change": 3388,
+        "book": 20,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 3018,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 393,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 0,
+        "trades_window_source_reversals": 0,
+        "reported_best_ask_disagreements": 3
+      },
+      "chain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 20,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "reference": "research/prediction-markets/polymarket/onchain/winner/winner-onchain-events.json",
+        "reference_sha256": "dd962d765324939dd7738ea5568b5b4e5af86ff5f323241b43196fae5dba9b61",
+        "block_time_scope": "start minus 60 seconds to end plus 60 seconds; boundary mismatches may be expected"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "austrian",
+      "driver": "hamilton",
+      "files": {
+        "tmp/pmdata/austrian-2026-06-25-hamilton-l2.parquet": "6eafa41cfe08f40fc1eb375df9ec325499056a21dff11d3753dbaee065050ab3",
+        "tmp/pmdata/austrian-2026-06-25-hamilton-trades.parquet": "505a753a9ad27e99376becd1b129f2d98fd73316c639d8b669fee9e6da20d1f6"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 20,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/austrian-2026-06-25-hamilton-onchain_fills.parquet",
+        "sha256": "4ee59b82aba4f290757786658bd8d36e9c01ab83a20599fafcdb19365c4a8831"
+      }
+    },
+    {
+      "market_slug": "f1-austrian-grand-prix-winner-norris-2026-06-28",
+      "window_start": "2026-06-25T14:00:00",
+      "window_end_exclusive": "2026-06-25T16:00:00",
+      "first_practice": "2026-06-26T11:30:00",
+      "counts": {
+        "trades": 18,
+        "trades_without_transaction_hash": 0,
+        "price_change": 1148,
+        "book": 18,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 1320,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 179,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 1,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 1,
+        "trades_window_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 18,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "reference": "research/prediction-markets/polymarket/onchain/winner/winner-onchain-events.json",
+        "reference_sha256": "dd962d765324939dd7738ea5568b5b4e5af86ff5f323241b43196fae5dba9b61",
+        "block_time_scope": "start minus 60 seconds to end plus 60 seconds; boundary mismatches may be expected"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "austrian",
+      "driver": "norris",
+      "files": {
+        "tmp/pmdata/austrian-2026-06-25-norris-l2.parquet": "440b8ecd4d1a3a920d8684a488d91e8ae4aa6681fd7e0fd79c9fadf2c6359899",
+        "tmp/pmdata/austrian-2026-06-25-norris-trades.parquet": "78f2229f19f8ede0d15766e87959bd1d2c950919b5c335d237c909f0e4048507"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 18,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/austrian-2026-06-25-norris-onchain_fills.parquet",
+        "sha256": "f4270f21b57750c9dde38363928b1639432911965166b8a9e844491fc5f01cd0"
+      }
+    },
+    {
+      "market_slug": "f1-belgian-grand-prix-winner-hamilton-2026-07-19",
+      "window_start": "2026-07-16T14:00:00",
+      "window_end_exclusive": "2026-07-16T16:00:00",
+      "first_practice": "2026-07-17T11:30:00",
+      "counts": {
+        "trades": 3,
+        "trades_without_transaction_hash": 0,
+        "price_change": 1072,
+        "book": 3,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 3144,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 222,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 0,
+        "trades_window_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 3,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "reference": "research/prediction-markets/polymarket/onchain/winner/winner-onchain-events.json",
+        "reference_sha256": "dd962d765324939dd7738ea5568b5b4e5af86ff5f323241b43196fae5dba9b61",
+        "block_time_scope": "start minus 60 seconds to end plus 60 seconds; boundary mismatches may be expected"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "belgian",
+      "driver": "hamilton",
+      "files": {
+        "tmp/pmdata/belgian-2026-07-16-hamilton-l2.parquet": "2c8d4edb054d8f1a942244dae5714a57f4bc045469cf01972946326a560f3eb2",
+        "tmp/pmdata/belgian-2026-07-16-hamilton-trades.parquet": "f38d57fa9953913a91b898a46c9324266bca423170b40fbf9cf642209b1917c2"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 3,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/belgian-2026-07-16-hamilton-onchain_fills.parquet",
+        "sha256": "c20d9a6b3036b8601192ade10554fa5d5237be1fd33262a2adb7111363b72ce1"
+      }
+    },
+    {
+      "market_slug": "f1-belgian-grand-prix-winner-norris-2026-07-19",
+      "window_start": "2026-07-16T14:00:00",
+      "window_end_exclusive": "2026-07-16T16:00:00",
+      "first_practice": "2026-07-17T11:30:00",
+      "counts": {
+        "trades": 1,
+        "trades_without_transaction_hash": 0,
+        "price_change": 606,
+        "book": 1,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 2616,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 129,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 0,
+        "trades_window_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 1,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "reference": "research/prediction-markets/polymarket/onchain/winner/winner-onchain-events.json",
+        "reference_sha256": "dd962d765324939dd7738ea5568b5b4e5af86ff5f323241b43196fae5dba9b61",
+        "block_time_scope": "start minus 60 seconds to end plus 60 seconds; boundary mismatches may be expected"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "belgian",
+      "driver": "norris",
+      "files": {
+        "tmp/pmdata/belgian-2026-07-16-norris-l2.parquet": "4184b7a23032d89747ece4107c2c2d176bde3e1d6c65bcc836eb27cf15ee9302",
+        "tmp/pmdata/belgian-2026-07-16-norris-trades.parquet": "670fa3345e8134a51e95b796af6a57c16b29b8f02162d232d820624ab353a128"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 1,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/belgian-2026-07-16-norris-onchain_fills.parquet",
+        "sha256": "5425f902144959c6ddaf7ee5d98c3f3ff89d81b7225bed9c247544e90009379a"
+      }
+    },
+    {
+      "market_slug": "f1-british-grand-prix-winner-hamilton-2026-07-05",
+      "window_start": "2026-07-02T14:00:00",
+      "window_end_exclusive": "2026-07-02T16:00:00",
+      "first_practice": "2026-07-03T11:30:00",
+      "counts": {
+        "trades": 4,
+        "trades_without_transaction_hash": 0,
+        "price_change": 2014,
+        "book": 4,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 2670,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 303,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 0,
+        "trades_window_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 4,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "reference": "research/prediction-markets/polymarket/onchain/winner/winner-onchain-events.json",
+        "reference_sha256": "dd962d765324939dd7738ea5568b5b4e5af86ff5f323241b43196fae5dba9b61",
+        "block_time_scope": "start minus 60 seconds to end plus 60 seconds; boundary mismatches may be expected"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "british",
+      "driver": "hamilton",
+      "files": {
+        "tmp/pmdata/british-2026-07-02-hamilton-l2.parquet": "a26acb4df36a4aa2162435212426042f64bf98a988a37a872120c888f785b322",
+        "tmp/pmdata/british-2026-07-02-hamilton-trades.parquet": "dcbe914fb912e5872d01834343331468675392d477307db446345a9a223211ad"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 4,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/british-2026-07-02-hamilton-onchain_fills.parquet",
+        "sha256": "6af4036cb6ae78d6514ac5a033daa1d4ba6b3470a22cdb3e10b919b17542de36"
+      }
+    },
+    {
+      "market_slug": "f1-british-grand-prix-winner-norris-2026-07-05",
+      "window_start": "2026-07-02T14:00:00",
+      "window_end_exclusive": "2026-07-02T16:00:00",
+      "first_practice": "2026-07-03T11:30:00",
+      "counts": {
+        "trades": 4,
+        "trades_without_transaction_hash": 0,
+        "price_change": 1160,
+        "book": 4,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 1946,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 126,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 0,
+        "trades_window_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 4,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "reference": "research/prediction-markets/polymarket/onchain/winner/winner-onchain-events.json",
+        "reference_sha256": "dd962d765324939dd7738ea5568b5b4e5af86ff5f323241b43196fae5dba9b61",
+        "block_time_scope": "start minus 60 seconds to end plus 60 seconds; boundary mismatches may be expected"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "british",
+      "driver": "norris",
+      "files": {
+        "tmp/pmdata/british-2026-07-02-norris-l2.parquet": "07efd5958d0405ea731cecfc83da69a2e7a7c24e9f50ae65cb5afd8e661fe6a2",
+        "tmp/pmdata/british-2026-07-02-norris-trades.parquet": "8e59defb9f0f5c9687f3fdff56cbfa61018a07ac18fc8e8d2071aa0d5d109149"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 4,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/british-2026-07-02-norris-onchain_fills.parquet",
+        "sha256": "58690b2346b8604b9382d44d1e676f1198b3c1b91da655c24d4dd66461c80031"
+      }
+    },
+    {
+      "market_slug": "f1-dutch-grand-prix-winner-hamilton-2026-08-23",
+      "window_start": "2026-08-20T14:00:00",
+      "window_end_exclusive": "2026-08-20T16:00:00",
+      "first_practice": "2026-08-21T10:30:00",
+      "counts": {
+        "trades": 1,
+        "trades_without_transaction_hash": 0,
+        "price_change": 389,
+        "book": 2,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 0,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 0,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 0,
+        "trades_window_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "not supplied"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "dutch",
+      "driver": "hamilton",
+      "files": {
+        "tmp/pmdata/dutch-2026-08-20-hamilton-l2.parquet": "16df582b27dfccab782aca01fe56cc4640289b14135fee277295fc59fa80e9fb",
+        "tmp/pmdata/dutch-2026-08-20-hamilton-trades.parquet": "a451f4a2f639447112993d5577181a051588646eb59b0ceca1d2ad75b55e200e"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 1,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/dutch-2026-08-20-hamilton-onchain_fills.parquet",
+        "sha256": "100b260480bb8bcb77e7154564d1f8c4b2dc0efe878c3f68fb542b5c35aaf414"
+      }
+    },
+    {
+      "market_slug": "f1-dutch-grand-prix-winner-norris-2026-08-23",
+      "window_start": "2026-08-20T14:00:00",
+      "window_end_exclusive": "2026-08-20T16:00:00",
+      "first_practice": "2026-08-21T10:30:00",
+      "counts": {
+        "price_change": 330,
+        "book": 2,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 0,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 0,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "not supplied"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "dutch",
+      "driver": "norris",
+      "files": {
+        "tmp/pmdata/dutch-2026-08-20-norris-l2.parquet": "5f13761bd8e19bd9062d5937f29fa512989ee5b112828f091689a8c43ffabd31",
+        "tmp/pmdata/dutch-2026-08-20-norris-trades.parquet": "39a3327491dcb6778a358cb8132e89304991f16a1381cce92991a523aad5a78a"
+      },
+      "same_provider_onchain_check": {
+        "status": "not comparable: trade hashes absent",
+        "chain_hashes": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/dutch-2026-08-20-norris-onchain_fills.parquet",
+        "sha256": "7019b3d04a6db6844cd9f045881a1f7c90fb762f6e78f482bcf99f3c6478b231"
+      }
+    },
+    {
+      "market_slug": "f1-hungarian-grand-prix-winner-hamilton-2026-07-26",
+      "window_start": "2026-07-23T14:00:00",
+      "window_end_exclusive": "2026-07-23T16:00:00",
+      "first_practice": "2026-07-24T11:30:00",
+      "counts": {
+        "trades": 1,
+        "trades_without_transaction_hash": 0,
+        "price_change": 944,
+        "book": 1,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 3266,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 263,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 0,
+        "trades_window_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 1,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 1,
+        "reference": "research/prediction-markets/polymarket/onchain/winner/winner-onchain-events.json",
+        "reference_sha256": "dd962d765324939dd7738ea5568b5b4e5af86ff5f323241b43196fae5dba9b61",
+        "block_time_scope": "start minus 60 seconds to end plus 60 seconds; boundary mismatches may be expected"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "hungarian",
+      "driver": "hamilton",
+      "files": {
+        "tmp/pmdata/hungarian-2026-07-23-hamilton-l2.parquet": "9aa7f11a38f52c80a522afba7e9c9cafa1a31690f96089a3eff3193dca4e587b",
+        "tmp/pmdata/hungarian-2026-07-23-hamilton-trades.parquet": "0bf9a185b57fdbfa0c40dc92d06cd31ad53699dbe1db2ca2cd03e0f1313b86ef"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 1,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 1,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/hungarian-2026-07-23-hamilton-onchain_fills.parquet",
+        "sha256": "7ab990501de2d5b116064ed926400d9380a00b5a131251efe1cd2454aad24158"
+      }
+    },
+    {
+      "market_slug": "f1-hungarian-grand-prix-winner-norris-2026-07-26",
+      "window_start": "2026-07-23T14:00:00",
+      "window_end_exclusive": "2026-07-23T16:00:00",
+      "first_practice": "2026-07-24T11:30:00",
+      "counts": {
+        "trades": 1,
+        "trades_without_transaction_hash": 0,
+        "price_change": 1389,
+        "book": 1,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 10415,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 499,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 0,
+        "trades_window_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 1,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "reference": "research/prediction-markets/polymarket/onchain/winner/winner-onchain-events.json",
+        "reference_sha256": "dd962d765324939dd7738ea5568b5b4e5af86ff5f323241b43196fae5dba9b61",
+        "block_time_scope": "start minus 60 seconds to end plus 60 seconds; boundary mismatches may be expected"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "hungarian",
+      "driver": "norris",
+      "files": {
+        "tmp/pmdata/hungarian-2026-07-23-norris-l2.parquet": "013c0d29da7e37ff7b71969d8185526c224b97d3da149a51b9a01cff9abbb321",
+        "tmp/pmdata/hungarian-2026-07-23-norris-trades.parquet": "e17669afe0534dd0c2878018b5b0652d387807da0f47c1d30f7b88444aa34133"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 1,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/hungarian-2026-07-23-norris-onchain_fills.parquet",
+        "sha256": "c714ef893f800ecb6ecf7ed59c091081cdc8617a67ae308702c5bf70018b1f41"
+      }
+    },
+    {
+      "market_slug": "f1-italian-grand-prix-winner-hamilton-2026-09-06",
+      "window_start": "2026-09-03T14:00:00",
+      "window_end_exclusive": "2026-09-03T16:00:00",
+      "first_practice": "2026-09-04T10:30:00",
+      "counts": {
+        "price_change": 505,
+        "book": 3,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 0,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 0,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "not supplied"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "italian",
+      "driver": "hamilton",
+      "files": {
+        "tmp/pmdata/italian-2026-09-03-hamilton-l2.parquet": "82cb6478aed18568395c48bbae936997a4bf899c80cd337b2fb5244147af3355",
+        "tmp/pmdata/italian-2026-09-03-hamilton-trades.parquet": "b27155e8f836061ca71e7a58743b67b2a51d578f9fc041c28fcd82da0727c489"
+      },
+      "same_provider_onchain_check": {
+        "status": "not comparable: trade hashes absent",
+        "chain_hashes": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/italian-2026-09-03-hamilton-onchain_fills.parquet",
+        "sha256": "c5821fb33c4a7ea00f175f748329f3b391c42086d0802b168928040f21f33464"
+      }
+    },
+    {
+      "market_slug": "f1-italian-grand-prix-winner-norris-2026-09-06",
+      "window_start": "2026-09-03T14:00:00",
+      "window_end_exclusive": "2026-09-03T16:00:00",
+      "first_practice": "2026-09-04T10:30:00",
+      "counts": {
+        "trades": 2,
+        "trades_without_transaction_hash": 0,
+        "price_change": 575,
+        "book": 5,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 2,
+        "l2_receipt_ties": 0,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 0,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 0,
+        "trades_window_source_reversals": 0,
+        "reported_best_ask_disagreements": 1,
+        "crossed_or_locked_book_events": 1
+      },
+      "chain_check": {
+        "status": "not supplied"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "italian",
+      "driver": "norris",
+      "files": {
+        "tmp/pmdata/italian-2026-09-03-norris-l2.parquet": "057840a38de023714b938924709679489d8402a9dd43c86750f5fbbe0dcadee5",
+        "tmp/pmdata/italian-2026-09-03-norris-trades.parquet": "1233c4434092baeb7fe532cfe397912dd0f1be0cd95c0e26676f1549a6cb616d"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 2,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/italian-2026-09-03-norris-onchain_fills.parquet",
+        "sha256": "36963957d36852e8d84f2269bad3ceca2b1405a9124432a177d3f1ea532b4266"
+      }
+    },
+    {
+      "market_slug": "f1-singapore-grand-prix-winner-hamilton-2026-10-11",
+      "window_start": "2026-10-08T14:00:00",
+      "window_end_exclusive": "2026-10-08T16:00:00",
+      "first_practice": "2026-10-09T08:30:00",
+      "counts": {
+        "price_change": 517,
+        "book": 2,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 0,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 0,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "reported_best_ask_disagreements": 1
+      },
+      "chain_check": {
+        "status": "not supplied"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "singapore",
+      "driver": "hamilton",
+      "files": {
+        "tmp/pmdata/singapore-2026-10-08-hamilton-l2.parquet": "7be1f72151206c031eee212f95179356621d7ce248f41fcd0f14f5d818a8ef07",
+        "tmp/pmdata/singapore-2026-10-08-hamilton-trades.parquet": "3de04da2fc75cf1c61b360cec7a929d8d4b0c06a1c7bb8416452199998fbe96e"
+      },
+      "same_provider_onchain_check": {
+        "status": "not comparable: trade hashes absent",
+        "chain_hashes": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/singapore-2026-10-08-hamilton-onchain_fills.parquet",
+        "sha256": "90e3b21646c72767b50d2da743fc55f0b55b07dea40b1bea7998152c282b0ebc"
+      }
+    },
+    {
+      "market_slug": "f1-singapore-grand-prix-winner-norris-2026-10-11",
+      "window_start": "2026-10-08T14:00:00",
+      "window_end_exclusive": "2026-10-08T16:00:00",
+      "first_practice": "2026-10-09T08:30:00",
+      "counts": {
+        "trades": 1,
+        "trades_without_transaction_hash": 0,
+        "price_change": 502,
+        "book": 4,
+        "initial_snapshot_at_or_before_start": 1
+      },
+      "diagnostics": {
+        "l2_source_after_receipt": 0,
+        "l2_receipt_reversals": 0,
+        "l2_receipt_ties": 0,
+        "l2_source_reversals": 0,
+        "l2_window_receipt_reversals": 0,
+        "l2_window_receipt_ties": 0,
+        "l2_window_source_reversals": 0,
+        "trades_source_after_receipt": 0,
+        "trades_receipt_reversals": 0,
+        "trades_receipt_ties": 0,
+        "trades_source_reversals": 0,
+        "trades_window_receipt_reversals": 0,
+        "trades_window_receipt_ties": 0,
+        "trades_window_source_reversals": 0
+      },
+      "chain_check": {
+        "status": "not supplied"
+      },
+      "coverage_complete": false,
+      "warning": "No feed continuity, trade completeness, queue position or execution is proven by this audit.",
+      "race": "singapore",
+      "driver": "norris",
+      "files": {
+        "tmp/pmdata/singapore-2026-10-08-norris-l2.parquet": "85c4c7c9693a0e2999d46b98ca26578633370acd13768a25d81fc65343d2d670",
+        "tmp/pmdata/singapore-2026-10-08-norris-trades.parquet": "e13cedae67db8377092cc2d4dba457666394a7f8a681f877e62ea875112690ea"
+      },
+      "same_provider_onchain_check": {
+        "status": "partial hash comparison only; block and match times differ",
+        "tape_hashes": 1,
+        "tape_hashes_absent_from_chain_file": 0,
+        "chain_hashes_not_in_window_tape": 0,
+        "note": "PMData on-chain file is a same-provider cross-check, not independent; block inclusion uses start minus 60 seconds to end plus 60 seconds",
+        "file": "tmp/pmdata/singapore-2026-10-08-norris-onchain_fills.parquet",
+        "sha256": "44ee54dc496665ee0499bf793de39444c16e0c52b05c6800506b0a17659e479c"
+      }
+    }
+  ]
+}

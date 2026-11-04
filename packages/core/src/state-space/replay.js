@@ -3,7 +3,7 @@
 // The exam's observations do not depend on any rating, so the filters can run first and the form trackers and
 // probability heads can then be replayed with the state-space levels as their rating inputs. The same function
 // trains (heads = null, `onRow` receives every feature row) and builds (heads given, per-weekend diagnostics out).
-import { FormFeatures } from '../forecast/form.js';
+import { createFormFeatures } from '../forecast/form-method.js';
 import { scoreHead, selectHeads } from '../forecast/inference.js';
 import { hitScore } from '../math.js';
 import { pairHazard, ssBaseline, ssGap } from './inputs.js';
@@ -25,8 +25,9 @@ const mean = (a, key) => (a.weight ? a[key] / a.weight : NaN);
  * @param opts      { lapPace, params, heads (STATE_SPACE_HEADS or null), onRow(row) }
  * @returns         { form, diags: per weekend { logLoss, brier, acc, preLogLoss, preBrier, preAcc, q: {...} } }
  */
-export function replayForecastLayer(weekends, pre, { lapPace, params, heads: allHeads = null, onRow = null }) {
-  const form = new FormFeatures(lapPace);
+export function replayForecastLayer(weekends, pre, { lapPace, params, heads: allHeads = null, onRow = null, formOptions = {} }) {
+  const method = allHeads ? (Object.values(allHeads)[0].pre.formMethod ?? 'legacy') : 'continuous';
+  const form = createFormFeatures(lapPace, method, formOptions);
   const diags = [];
   weekends.forEach((wk, i) => {
     const maps = { D: pre.race[i].drivers, C: pre.race[i].cars, QD: pre.qual[i].drivers, QC: pre.qual[i].cars };
@@ -60,7 +61,7 @@ export function replayForecastLayer(weekends, pre, { lapPace, params, heads: all
         add(acc.pre, ob.obs, predicted.pre, weight);
       }
     }
-    form.afterWeekend({ info: wk.info, rows: wk.rawRows });
+    form.afterWeekend({ info: wk.info, rows: wk.rawRows, replayObs: wk.replayObs });
     diags.push({
       logLoss: mean(acc.race, 'loss'),
       brier: mean(acc.race, 'brier'),

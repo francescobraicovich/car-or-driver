@@ -1,0 +1,23 @@
+{
+  "referenceSourceHash": "7a44023e0b230847",
+  "referenceArchiveSha256": "606c5a4e824441f2592ef6a9c575712f13617d1063b835e1f2414d3735fc060f",
+  "ratingsSha256": "941ccb58a8b3a3d7a939c22c2fe0065a8085fe9b60228a44adeaa56a63604048",
+  "inputsSha256": "8ebc000128a99c92ae9963eb2a6bca7fb5cf1ef604fa4150a3cc5a9da5834122",
+  "files": {
+    "features": {
+      "path": "tmp/current-form/features.csv",
+      "rows": 292794,
+      "sha256": "09374857d22b72c3e2d04fd865c0e0b9b218f8e055bec492a61fc6b92c6dfea5"
+    },
+    "frozen": {
+      "path": "tmp/current-form/frozen.csv",
+      "rows": 1960,
+      "sha256": "fed68122f7f5f74a4628ca4be61d0189c8333e7c0c359de927f6d7e706ca9c63"
+    },
+    "adaptive": {
+      "path": "tmp/current-form/adaptive.csv",
+      "rows": 53172,
+      "sha256": "e776668d91365fa60e1c5fbf271be136dc86ca9682a66b8bd8e4580cb1d356e4"
+    }
+  }
+}

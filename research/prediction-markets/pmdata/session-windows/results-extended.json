@@ -1,0 +1,4356 @@
+{
+  "classification": "Conditional retrospective simulation; feed, historical forecast vintages and fills are not verified",
+  "assumptions": {
+    "initialCapital": 3000,
+    "initialCompleteSets": 5,
+    "orderSize": 5,
+    "minimumOrderSize": 5,
+    "maxInventory": 10,
+    "tickSize": 0.01,
+    "latencyMs": 1000,
+    "cancelLatencyMs": 1000,
+    "maxBookAgeMs": 60000,
+    "maxSourceAgeMs": 120000,
+    "minimumEdgeTicks": 1,
+    "inventorySkewTicks": 0.1,
+    "quoteImprovementTicks": 1,
+    "marketMidpointWeight": 0,
+    "liquidationSlippageTicks": 1,
+    "allowUnverifiedData": true,
+    "allowSourceTimestampDisorder": true,
+    "tradeThroughFills": true,
+    "timings": "Quote until qualifying start, resume three hours after scheduled qualifying after a fresh book, pause at UTC midnight, resume at race start minus 3h after a fresh snapshot, and stop quoting 30 minutes before the race.",
+    "holding": "At wind-down, retain a net position if its model forecast advantage over its weighted average entry price exceeds the specified per-share margin. Otherwise attempt to close; residual positions with insufficient displayed liquidity are explicitly forced to settle. This entry-price rule does not compare the position with the current market opportunity; settlement depends on the winner.",
+    "sourceSelection": "Pre-qualifying tape is used only when a qualifying-post capture and matching post-qualifying roster entry exist; a market can enter with qualifying-post data alone or race-day data alone. These retrospective completeness and roster rules are not ex-ante selection rules.",
+    "model": "Projected pairwise finishing-order forecasts are not calibrated winner probabilities; qualifying positions proxy the grid and historical publication/revision times are unverified.",
+    "qualifyingPublication": "F1 qualifying reports were published before the three-hour restart in both races; exact historical availability and revisions of all qualifying inputs remain unverified. This extended window was added after inspecting earlier results.",
+    "clock": "For source timestamps leading receipt by at most 5ms, effective receipt is delayed to the source timestamp and events are reordered; larger leads are rejected. Actual collector and venue clock synchronization is not verified.",
+    "delayedPrints": "Markets with recorded trade receipt more than one second after source time are excluded. Smaller delays may still overlap cancellations; historical fills and acknowledgment timing remain unverified.",
+    "weekendInformation": "Pre-qualifying probabilities use previous races only; practice and any current-weekend sprint are not model inputs.",
+    "fees": "0.03 taker fee coefficient before 10 July 2026 and 0.05 afterward, with zero maker fee; contract-specific fees and gas are unverified.",
+    "outcomes": "Recorded resolution is used for realized settlement and a metadata integrity check only. One winning driver per event; Other and uniform-half void scenarios are included."
+  },
+  "coverage": [
+    {
+      "race": "monaco",
+      "requestedDrivers": 22,
+      "drivers": [
+        {
+          "driver": "Andrea Kimi Antonelli",
+          "active": false,
+          "reason": "4 on-chain transactions lack same-day exchange prints"
+        },
+        {
+          "driver": "Lewis Hamilton",
+          "active": false,
+          "reason": "1 on-chain transactions lack same-day exchange prints"
+        },
+        {
+          "driver": "Max Verstappen",
+          "active": false,
+          "reason": "1 on-chain transactions lack same-day exchange prints"
+        },
+        {
+          "driver": "Charles Leclerc",
+          "active": false,
+          "reason": "2 on-chain transactions lack same-day exchange prints"
+        },
+        {
+          "driver": "Isack Hadjar",
+          "active": true,
+          "qualifyingCapture": false,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1780765653457,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 1
+        },
+        {
+          "driver": "Franco Colapinto",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1780715680838,
+          "firstRaceDaySnapshot": 1780828618547,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Liam Lawson",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1780734543645,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Pierre Gasly",
+          "active": false,
+          "reason": "Recorded trade lag exceeds the one-second cancellation latency"
+        },
+        {
+          "driver": "Carlos Sainz",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1780716498208,
+          "firstRaceDaySnapshot": 1780828625528,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Oliver Bearman",
+          "active": false,
+          "reason": "Recorded trade lag exceeds the one-second cancellation latency"
+        },
+        {
+          "driver": "Oscar Piastri",
+          "active": true,
+          "qualifyingCapture": false,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1780765653437,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Nico Hülkenberg",
+          "active": true,
+          "qualifyingCapture": false,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1780788473077,
+          "firstRaceDaySnapshot": 1780828632048,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Gabriel Bortoleto",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1780746939363,
+          "firstRaceDaySnapshot": 1780828609523,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Esteban Ocon",
+          "active": true,
+          "qualifyingCapture": false,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1780788898803,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Lance Stroll",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1780734545223,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Valtteri Bottas",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1780734541686,
+          "firstRaceDaySnapshot": 1780831552915,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Sergio Pérez",
+          "active": false,
+          "reason": "No initial book in the trading window"
+        },
+        {
+          "driver": "Lando Norris",
+          "active": false,
+          "reason": "1 on-chain transactions lack same-day exchange prints"
+        },
+        {
+          "driver": "George Russell",
+          "active": false,
+          "reason": "1 on-chain transactions lack same-day exchange prints"
+        },
+        {
+          "driver": "Fernando Alonso",
+          "active": true,
+          "qualifyingCapture": false,
+          "afterQualifyingCapture": false,
+          "raceDayCapture": true,
+          "firstSnapshot": 1780835057792,
+          "firstRaceDaySnapshot": 1780835057792,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Alexander Albon",
+          "active": true,
+          "qualifyingCapture": false,
+          "afterQualifyingCapture": false,
+          "raceDayCapture": true,
+          "firstSnapshot": 1780828596742,
+          "firstRaceDaySnapshot": 1780828596742,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Arvid Lindblad",
+          "active": true,
+          "qualifyingCapture": false,
+          "afterQualifyingCapture": false,
+          "raceDayCapture": true,
+          "firstSnapshot": 1780828653618,
+          "firstRaceDaySnapshot": 1780828653618,
+          "roundedVwapAssumptions": 0
+        }
+      ],
+      "activeDrivers": 13,
+      "qualifyingCaptures": 6,
+      "afterQualifyingCaptures": 10,
+      "raceDayCaptures": 8
+    },
+    {
+      "race": "singapore",
+      "requestedDrivers": 22,
+      "drivers": [
+        {
+          "driver": "Max Verstappen",
+          "active": false,
+          "reason": "Recorded trade lag exceeds the one-second cancellation latency"
+        },
+        {
+          "driver": "Andrea Kimi Antonelli",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1791592511265.633,
+          "firstRaceDaySnapshot": 1791709724055.738,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Lewis Hamilton",
+          "active": false,
+          "reason": "Exchange print price does not match any reconciled maker price or verified summary"
+        },
+        {
+          "driver": "Charles Leclerc",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1791593253503.916,
+          "firstRaceDaySnapshot": 1791711058989.513,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Isack Hadjar",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1791591247281.261,
+          "firstRaceDaySnapshot": 1791711058948.652,
+          "roundedVwapAssumptions": 1
+        },
+        {
+          "driver": "Oscar Piastri",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1791594131970.725,
+          "firstRaceDaySnapshot": 1791711058946.195,
+          "roundedVwapAssumptions": 3
+        },
+        {
+          "driver": "Liam Lawson",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1791593291944.041,
+          "firstRaceDaySnapshot": 1791719438901.994,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Fernando Alonso",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1791593640226.711,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Lando Norris",
+          "active": false,
+          "reason": "Exchange print price does not match any reconciled maker price or verified summary"
+        },
+        {
+          "driver": "Arvid Lindblad",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1791593240675.215,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Nico Hülkenberg",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1791593990336.709,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Lance Stroll",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1791594102016.546,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Franco Colapinto",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1791593305365.2,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Oliver Bearman",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": true,
+          "firstSnapshot": 1791594107903.56,
+          "firstRaceDaySnapshot": 1791716125597.287,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Esteban Ocon",
+          "active": true,
+          "qualifyingCapture": true,
+          "afterQualifyingCapture": true,
+          "raceDayCapture": false,
+          "firstSnapshot": 1791593736366.502,
+          "firstRaceDaySnapshot": null,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Pierre Gasly",
+          "active": true,
+          "qualifyingCapture": false,
+          "afterQualifyingCapture": false,
+          "raceDayCapture": true,
+          "firstSnapshot": 1791712882376.598,
+          "firstRaceDaySnapshot": 1791712882376.598,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Carlos Sainz",
+          "active": false,
+          "reason": "No initial book in the trading window"
+        },
+        {
+          "driver": "Gabriel Bortoleto",
+          "active": false,
+          "reason": "No initial book in the trading window"
+        },
+        {
+          "driver": "Sergio Pérez",
+          "active": false,
+          "reason": "No initial book in the trading window"
+        },
+        {
+          "driver": "George Russell",
+          "active": true,
+          "qualifyingCapture": false,
+          "afterQualifyingCapture": false,
+          "raceDayCapture": true,
+          "firstSnapshot": 1791711058948.188,
+          "firstRaceDaySnapshot": 1791711058948.188,
+          "roundedVwapAssumptions": 0
+        },
+        {
+          "driver": "Alexander Albon",
+          "active": false,
+          "reason": "No initial book in the trading window"
+        },
+        {
+          "driver": "Valtteri Bottas",
+          "active": false,
+          "reason": "No initial book in the trading window"
+        }
+      ],
+      "activeDrivers": 14,
+      "qualifyingCaptures": 12,
+      "afterQualifyingCaptures": 12,
+      "raceDayCaptures": 8
+    }
+  ],
+  "forecastAccuracy": {
+    "preQualifying": {
+      "withoutForm": {
+        "races": 8,
+        "missingWinners": 0,
+        "meanBrier": 0.8527313692163281,
+        "meanLogLoss": 2.1114605184683497,
+        "meanLogLossConditionalOnWinnerInRoster": 2.1114605184683497
+      },
+      "withForm": {
+        "races": 8,
+        "missingWinners": 0,
+        "meanBrier": 0.8293050456645331,
+        "meanLogLoss": 1.8934409964784626,
+        "meanLogLossConditionalOnWinnerInRoster": 1.8934409964784626
+      }
+    },
+    "postQualifying": {
+      "withoutForm": {
+        "races": 8,
+        "missingWinners": 0,
+        "meanBrier": 0.7181095868281401,
+        "meanLogLoss": 1.5746522941854855,
+        "meanLogLossConditionalOnWinnerInRoster": 1.5746522941854855
+      },
+      "withForm": {
+        "races": 8,
+        "missingWinners": 0,
+        "meanBrier": 0.7055185539269625,
+        "meanLogLoss": 1.5045214200877233,
+        "meanLogLossConditionalOnWinnerInRoster": 1.5045214200877233
+      }
+    }
+  },
+  "fullFormHold": {
+    "available": true,
+    "initialCapital": 3000,
+    "finalCapital": 2997.4718000000007,
+    "profit": -2.5281999999992877,
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": true,
+        "profit": -2.5281999999992877,
+        "initialCapital": 3000,
+        "makerFills": 9,
+        "makerShares": 40,
+        "inferredTradeThroughFills": 8,
+        "closingFills": 1,
+        "fees": 0.028200000000000003,
+        "liquidationSlippage": 0.10000000000000002,
+        "peakCapitalCommitted": 73.09999999999972,
+        "heldPositions": [
+          {
+            "driver": "Charles Leclerc",
+            "inventory": 10,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "holdDecision": "close"
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "holdDecision": "close"
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 2,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": 7.471800000000712
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": 7.471800000000712
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 7.471800000000712
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "George Russell",
+              "profit": -2.5281999999992877
+            }
+          ],
+          "other": -2.5281999999992877,
+          "worstWinnerProfit": -2.5281999999992877,
+          "uniformHalfPayoutVoidProfit": 12.471800000000712
+        },
+        "forcedCarries": [
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "averageEntryPrice": 0.02,
+            "basisAmount": 0.2,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "averageEntryPrice": 0.04,
+            "basisAmount": 0.4,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          }
+        ],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "inventory": 10,
+            "probability": 0.1764544481119291,
+            "entryBasis": 0.13,
+            "expectedAdvantage": 0.046454448111929086,
+            "decision": "hold"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791718208521.277,
+            "inventory": 10,
+            "probability": 0.012749044354169268,
+            "entryBasis": 0.02,
+            "expectedAdvantage": -0.0072509556458307325,
+            "decision": "close"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "inventory": 10,
+            "probability": 0.1216160163924099,
+            "entryBasis": 0.12,
+            "expectedAdvantage": 0.001616016392409908,
+            "decision": "close"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791718226003.956,
+            "inventory": 10,
+            "probability": 0.03645208766176678,
+            "entryBasis": 0.04,
+            "expectedAdvantage": -0.0035479123382332195,
+            "decision": "close"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598240966.618,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 2,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598416208.027,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 3,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791600648923.823,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd|SELL|0.0190",
+            "tradeThrough": true,
+            "transactionHash": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791600686122.11,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791600717698.776,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad|SELL|0.0400",
+            "transactionHash": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "tradeThrough": true,
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791622964446.34,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882|SELL|0.0180",
+            "tradeThrough": true,
+            "transactionHash": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791622964539.963,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791622964613.562,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "side": "sell",
+            "price": 0.060000000000000005,
+            "displayedPrice": 0.07,
+            "slippageCost": 0.10000000000000002,
+            "quantity": 10,
+            "fee": 0.028200000000000003,
+            "kind": "liquidation"
+          }
+        ]
+      }
+    ]
+  },
+  "noFormHold": {
+    "available": true,
+    "initialCapital": 3000,
+    "finalCapital": 2997.7718,
+    "profit": -2.2282000000000153,
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": true,
+        "profit": -2.2282000000000153,
+        "initialCapital": 3000,
+        "makerFills": 8,
+        "makerShares": 40,
+        "inferredTradeThroughFills": 5,
+        "closingFills": 1,
+        "fees": 0.028200000000000003,
+        "liquidationSlippage": 0.10000000000000002,
+        "peakCapitalCommitted": 72.80000000000018,
+        "heldPositions": [
+          {
+            "driver": "Charles Leclerc",
+            "inventory": 10,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "holdDecision": "close"
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "holdDecision": "hold"
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 1,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": -2.2282000000000153
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": 7.771799999999985
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": 7.771799999999985
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 7.771799999999985
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -2.2282000000000153
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -2.2282000000000153
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -2.2282000000000153
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -2.2282000000000153
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -2.2282000000000153
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -2.2282000000000153
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -2.2282000000000153
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -2.2282000000000153
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -2.2282000000000153
+            },
+            {
+              "driver": "George Russell",
+              "profit": -2.2282000000000153
+            }
+          ],
+          "other": -2.2282000000000153,
+          "worstWinnerProfit": -2.2282000000000153,
+          "uniformHalfPayoutVoidProfit": 12.771799999999985
+        },
+        "forcedCarries": [
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "averageEntryPrice": 0.02,
+            "basisAmount": 0.2,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          }
+        ],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "inventory": 10,
+            "probability": 0.18361326560440464,
+            "entryBasis": 0.13,
+            "expectedAdvantage": 0.05361326560440463,
+            "decision": "hold"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791718208521.277,
+            "inventory": 10,
+            "probability": 0.01407365642461682,
+            "entryBasis": 0.02,
+            "expectedAdvantage": -0.005926343575383181,
+            "decision": "close"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "inventory": 10,
+            "probability": 0.10622095783709253,
+            "entryBasis": 0.10500000000000001,
+            "expectedAdvantage": 0.001220957837092515,
+            "decision": "close"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791718226003.956,
+            "inventory": 10,
+            "probability": 0.04771902203632248,
+            "entryBasis": 0.025,
+            "expectedAdvantage": 0.022719022036322478,
+            "decision": "hold"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791600648923.823,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd|SELL|0.0190",
+            "tradeThrough": true,
+            "transactionHash": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "tradeThrough": true,
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791622964446.34,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882|SELL|0.0180",
+            "tradeThrough": true,
+            "transactionHash": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791626625957.743,
+            "side": "buy",
+            "price": 0.11,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x78412ff8fdf750f2e67f3395f439fc7a6f440e89fa38267ce443e3737d2da7f4|SELL|0.1100",
+            "transactionHash": "0x78412ff8fdf750f2e67f3395f439fc7a6f440e89fa38267ce443e3737d2da7f4"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791627042701.398,
+            "side": "buy",
+            "price": 0.1,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf596719b99c9b10414651948bf771c7d4e913d30d693df6105cd23184d3a7465|SELL|0.1000",
+            "transactionHash": "0xf596719b99c9b10414651948bf771c7d4e913d30d693df6105cd23184d3a7465"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791670760389.173,
+            "side": "buy",
+            "price": 0.01,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xb632b3938152eabe9a7dd2ed76c0de5b6092fac2749bd347a83b1c4d07469857|SELL|0.0090",
+            "tradeThrough": true,
+            "transactionHash": "0xb632b3938152eabe9a7dd2ed76c0de5b6092fac2749bd347a83b1c4d07469857"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791670760390.291,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x321ea5b39674c625db6bb33f3dd78463e5283ddcdc12465a6429f9847b2baa2f|SELL|0.1300",
+            "transactionHash": "0x321ea5b39674c625db6bb33f3dd78463e5283ddcdc12465a6429f9847b2baa2f"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791672720133.882,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x2426ca4377a104651f0756e9bf5aa886e662714ad3f0cb95d64d6ae3d0910f07|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0x2426ca4377a104651f0756e9bf5aa886e662714ad3f0cb95d64d6ae3d0910f07"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "side": "sell",
+            "price": 0.060000000000000005,
+            "displayedPrice": 0.07,
+            "slippageCost": 0.10000000000000002,
+            "quantity": 10,
+            "fee": 0.028200000000000003,
+            "kind": "liquidation"
+          }
+        ]
+      }
+    ]
+  },
+  "fullFormClose": {
+    "available": false,
+    "reason": "Incomplete decision or exit in singapore",
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "sourceTimestampReversals": 19,
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": false,
+        "profit": null,
+        "initialCapital": 3000,
+        "makerFills": 9,
+        "makerShares": 40,
+        "inferredTradeThroughFills": 8,
+        "closingFills": 2,
+        "fees": 0.07715000000000001,
+        "liquidationSlippage": 0.19999999999999996,
+        "peakCapitalCommitted": 73.09999999999972,
+        "heldPositions": [
+          {
+            "driver": "Isack Hadjar",
+            "inventory": 10
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 10
+          }
+        ],
+        "sourceTimestampReversals": 10,
+        "fills": [
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598240966.618,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 2,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598416208.027,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 3,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791600648923.823,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd|SELL|0.0190",
+            "tradeThrough": true,
+            "transactionHash": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791600686122.11,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791600717698.776,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad|SELL|0.0400",
+            "transactionHash": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "tradeThrough": true,
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791622964446.34,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882|SELL|0.0180",
+            "tradeThrough": true,
+            "transactionHash": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791622964539.963,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791622964613.562,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "side": "sell",
+            "price": 0.11,
+            "displayedPrice": 0.12,
+            "slippageCost": 0.09999999999999995,
+            "quantity": 10,
+            "fee": 0.04895000000000001,
+            "kind": "liquidation"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "side": "sell",
+            "price": 0.060000000000000005,
+            "displayedPrice": 0.07,
+            "slippageCost": 0.10000000000000002,
+            "quantity": 10,
+            "fee": 0.028200000000000003,
+            "kind": "liquidation"
+          }
+        ]
+      }
+    ]
+  },
+  "fullFormHoldStrict": {
+    "available": false,
+    "reason": "Incomplete decision or exit in singapore",
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": false,
+        "profit": null,
+        "initialCapital": 3000,
+        "makerFills": 9,
+        "makerShares": 40,
+        "inferredTradeThroughFills": 8,
+        "closingFills": 1,
+        "fees": 0.028200000000000003,
+        "liquidationSlippage": 0.10000000000000002,
+        "peakCapitalCommitted": 73.09999999999972,
+        "heldPositions": [
+          {
+            "driver": "Charles Leclerc",
+            "inventory": 10,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "holdDecision": "close"
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "holdDecision": "close"
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": false,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": 7.471800000000712
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": 7.471800000000712
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 7.471800000000712
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "George Russell",
+              "profit": -2.5281999999992877
+            }
+          ],
+          "other": -2.5281999999992877,
+          "worstWinnerProfit": -2.5281999999992877,
+          "uniformHalfPayoutVoidProfit": 12.471800000000712
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "inventory": 10,
+            "probability": 0.1764544481119291,
+            "entryBasis": 0.13,
+            "expectedAdvantage": 0.046454448111929086,
+            "decision": "hold"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791718208521.277,
+            "inventory": 10,
+            "probability": 0.012749044354169268,
+            "entryBasis": 0.02,
+            "expectedAdvantage": -0.0072509556458307325,
+            "decision": "close"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "inventory": 10,
+            "probability": 0.1216160163924099,
+            "entryBasis": 0.12,
+            "expectedAdvantage": 0.001616016392409908,
+            "decision": "close"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791718226003.956,
+            "inventory": 10,
+            "probability": 0.03645208766176678,
+            "entryBasis": 0.04,
+            "expectedAdvantage": -0.0035479123382332195,
+            "decision": "close"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598240966.618,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 2,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598416208.027,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 3,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791600648923.823,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd|SELL|0.0190",
+            "tradeThrough": true,
+            "transactionHash": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791600686122.11,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791600717698.776,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad|SELL|0.0400",
+            "transactionHash": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "tradeThrough": true,
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791622964446.34,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882|SELL|0.0180",
+            "tradeThrough": true,
+            "transactionHash": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791622964539.963,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791622964613.562,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "side": "sell",
+            "price": 0.060000000000000005,
+            "displayedPrice": 0.07,
+            "slippageCost": 0.10000000000000002,
+            "quantity": 10,
+            "fee": 0.028200000000000003,
+            "kind": "liquidation"
+          }
+        ]
+      }
+    ]
+  },
+  "fullFormHoldExecutable": {
+    "available": false,
+    "reason": "Incomplete decision or exit in singapore",
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": false,
+        "profit": null,
+        "initialCapital": 3000,
+        "makerFills": 9,
+        "makerShares": 40,
+        "inferredTradeThroughFills": 8,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 73.09999999999972,
+        "heldPositions": [
+          {
+            "driver": "Andrea Kimi Antonelli",
+            "inventory": 10,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Charles Leclerc",
+            "inventory": 10,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "holdDecision": null
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "holdDecision": null
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": false,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": 6.900000000000546
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": 6.900000000000546
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": 6.900000000000546
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 6.900000000000546
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -3.0999999999994543
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -3.0999999999994543
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -3.0999999999994543
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -3.0999999999994543
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -3.0999999999994543
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -3.0999999999994543
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -3.0999999999994543
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -3.0999999999994543
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -3.0999999999994543
+            },
+            {
+              "driver": "George Russell",
+              "profit": -3.0999999999994543
+            }
+          ],
+          "other": -3.0999999999994543,
+          "worstWinnerProfit": -3.0999999999994543,
+          "uniformHalfPayoutVoidProfit": 16.900000000000546
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "inventory": 10,
+            "probability": 0.1764544481119291,
+            "executableValue": 0.105105,
+            "expectedAdvantage": 0.07134944811192909,
+            "decision": "hold"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "inventory": 10,
+            "probability": 0.1216160163924099,
+            "executableValue": 0.057179999999999995,
+            "expectedAdvantage": 0.06443601639240991,
+            "decision": "hold"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598240966.618,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 2,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598416208.027,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 3,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791600648923.823,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd|SELL|0.0190",
+            "tradeThrough": true,
+            "transactionHash": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791600686122.11,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791600717698.776,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad|SELL|0.0400",
+            "transactionHash": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "tradeThrough": true,
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791622964446.34,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882|SELL|0.0180",
+            "tradeThrough": true,
+            "transactionHash": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791622964539.963,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791622964613.562,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06"
+          }
+        ]
+      }
+    ]
+  },
+  "fullFormHoldSamePriceOnly": {
+    "available": true,
+    "initialCapital": 3000,
+    "finalCapital": 2998.25,
+    "profit": -1.75,
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": true,
+        "profit": -1.75,
+        "initialCapital": 3000,
+        "makerFills": 6,
+        "makerShares": 25,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 72.39999999999972,
+        "heldPositions": [
+          {
+            "driver": "Andrea Kimi Antonelli",
+            "inventory": 10,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Charles Leclerc",
+            "inventory": 5,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "holdDecision": "close"
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 1,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": 8.25
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": 3.25
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": -1.75
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 8.25
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -1.75
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -1.75
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -1.75
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -1.75
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -1.75
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -1.75
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -1.75
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -1.75
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -1.75
+            },
+            {
+              "driver": "George Russell",
+              "profit": -1.75
+            }
+          ],
+          "other": -1.75,
+          "worstWinnerProfit": -1.75,
+          "uniformHalfPayoutVoidProfit": 10.75
+        },
+        "forcedCarries": [
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "averageEntryPrice": 0.025,
+            "basisAmount": 0.25,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          }
+        ],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "inventory": 5,
+            "probability": 0.1764544481119291,
+            "entryBasis": 0.13,
+            "expectedAdvantage": 0.046454448111929086,
+            "decision": "hold"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "inventory": 10,
+            "probability": 0.1216160163924099,
+            "entryBasis": 0.08499999999999999,
+            "expectedAdvantage": 0.03661601639240991,
+            "decision": "hold"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791718226003.956,
+            "inventory": 10,
+            "probability": 0.03645208766176678,
+            "entryBasis": 0.025,
+            "expectedAdvantage": 0.01145208766176678,
+            "decision": "close"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791600717698.776,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad|SELL|0.0400",
+            "transactionHash": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791660672359.195,
+            "side": "buy",
+            "price": 0.09,
+            "quantity": 1.0989,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xab2d4a30dd7f53e88bdc87258e42a8af4e6e4e87d64fcafc614779955b0bac2e|SELL|0.0900",
+            "transactionHash": "0xab2d4a30dd7f53e88bdc87258e42a8af4e6e4e87d64fcafc614779955b0bac2e"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791661176644.647,
+            "side": "buy",
+            "price": 0.09,
+            "quantity": 3.9011,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xe39481d7c8a3fa91e80d0ff82278d3e42155a71e67e79cf3d534f9aa6d1b85c6|SELL|0.0900",
+            "transactionHash": "0xe39481d7c8a3fa91e80d0ff82278d3e42155a71e67e79cf3d534f9aa6d1b85c6"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791670760390.291,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x321ea5b39674c625db6bb33f3dd78463e5283ddcdc12465a6429f9847b2baa2f|SELL|0.1300",
+            "transactionHash": "0x321ea5b39674c625db6bb33f3dd78463e5283ddcdc12465a6429f9847b2baa2f"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791712572420.441,
+            "side": "buy",
+            "price": 0.08,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x8740e2a140ada63ecffa6a5115efd0010bffb7a132a2eb4aad820949dc3462de|SELL|0.0800",
+            "transactionHash": "0x8740e2a140ada63ecffa6a5115efd0010bffb7a132a2eb4aad820949dc3462de"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791717752678.753,
+            "side": "buy",
+            "price": 0.01,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x45797778d82b6f466b32bd2ad68ecc55bb38e960bc32c841ec5baca289139ab0|SELL|0.0100",
+            "transactionHash": "0x45797778d82b6f466b32bd2ad68ecc55bb38e960bc32c841ec5baca289139ab0"
+          }
+        ]
+      }
+    ]
+  },
+  "fullFormHoldSlow": {
+    "available": true,
+    "initialCapital": 3000,
+    "finalCapital": 2997.4718000000007,
+    "profit": -2.5281999999992877,
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": true,
+        "profit": -2.5281999999992877,
+        "initialCapital": 3000,
+        "makerFills": 9,
+        "makerShares": 40,
+        "inferredTradeThroughFills": 8,
+        "closingFills": 1,
+        "fees": 0.028200000000000003,
+        "liquidationSlippage": 0.10000000000000002,
+        "peakCapitalCommitted": 73.09999999999972,
+        "heldPositions": [
+          {
+            "driver": "Charles Leclerc",
+            "inventory": 10,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "holdDecision": "close"
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "holdDecision": "close"
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 2,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": 7.471800000000712
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": 7.471800000000712
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 7.471800000000712
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -2.5281999999992877
+            },
+            {
+              "driver": "George Russell",
+              "profit": -2.5281999999992877
+            }
+          ],
+          "other": -2.5281999999992877,
+          "worstWinnerProfit": -2.5281999999992877,
+          "uniformHalfPayoutVoidProfit": 12.471800000000712
+        },
+        "forcedCarries": [
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "averageEntryPrice": 0.02,
+            "basisAmount": 0.2,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "averageEntryPrice": 0.04,
+            "basisAmount": 0.4,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          }
+        ],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791718208521.277,
+            "inventory": 10,
+            "probability": 0.012749044354169268,
+            "entryBasis": 0.02,
+            "expectedAdvantage": -0.0072509556458307325,
+            "decision": "close"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "inventory": 10,
+            "probability": 0.1216160163924099,
+            "entryBasis": 0.12,
+            "expectedAdvantage": 0.001616016392409908,
+            "decision": "close"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718215606.615,
+            "inventory": 10,
+            "probability": 0.1764544481119291,
+            "entryBasis": 0.13,
+            "expectedAdvantage": 0.046454448111929086,
+            "decision": "hold"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791718226003.956,
+            "inventory": 10,
+            "probability": 0.03645208766176678,
+            "entryBasis": 0.04,
+            "expectedAdvantage": -0.0035479123382332195,
+            "decision": "close"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598240966.618,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 2,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598416208.027,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 3,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791600648923.823,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd|SELL|0.0190",
+            "tradeThrough": true,
+            "transactionHash": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791600686122.11,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791600717698.776,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad|SELL|0.0400",
+            "transactionHash": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "tradeThrough": true,
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791622964446.34,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882|SELL|0.0180",
+            "tradeThrough": true,
+            "transactionHash": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791622964539.963,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791622964613.562,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "side": "sell",
+            "price": 0.060000000000000005,
+            "displayedPrice": 0.07,
+            "slippageCost": 0.10000000000000002,
+            "quantity": 10,
+            "fee": 0.028200000000000003,
+            "kind": "liquidation"
+          }
+        ]
+      }
+    ]
+  },
+  "fullFormHoldHigherMargin": {
+    "available": true,
+    "initialCapital": 3000,
+    "finalCapital": 2998.5228500000007,
+    "profit": -1.4771499999992557,
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": true,
+        "profit": -1.4771499999992557,
+        "initialCapital": 3000,
+        "makerFills": 9,
+        "makerShares": 40,
+        "inferredTradeThroughFills": 8,
+        "closingFills": 2,
+        "fees": 0.07715000000000001,
+        "liquidationSlippage": 0.19999999999999996,
+        "peakCapitalCommitted": 73.09999999999972,
+        "heldPositions": [
+          {
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "holdDecision": "close"
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "holdDecision": "close"
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 2,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": 8.522850000000744
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 8.522850000000744
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -1.4771499999992557
+            },
+            {
+              "driver": "George Russell",
+              "profit": -1.4771499999992557
+            }
+          ],
+          "other": -1.4771499999992557,
+          "worstWinnerProfit": -1.4771499999992557,
+          "uniformHalfPayoutVoidProfit": 8.522850000000744
+        },
+        "forcedCarries": [
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "averageEntryPrice": 0.02,
+            "basisAmount": 0.2,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "averageEntryPrice": 0.04,
+            "basisAmount": 0.4,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          }
+        ],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "inventory": 10,
+            "probability": 0.1764544481119291,
+            "entryBasis": 0.13,
+            "expectedAdvantage": 0.046454448111929086,
+            "decision": "close"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791718208521.277,
+            "inventory": 10,
+            "probability": 0.012749044354169268,
+            "entryBasis": 0.02,
+            "expectedAdvantage": -0.0072509556458307325,
+            "decision": "close"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "inventory": 10,
+            "probability": 0.1216160163924099,
+            "entryBasis": 0.12,
+            "expectedAdvantage": 0.001616016392409908,
+            "decision": "close"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791718226003.956,
+            "inventory": 10,
+            "probability": 0.03645208766176678,
+            "entryBasis": 0.04,
+            "expectedAdvantage": -0.0035479123382332195,
+            "decision": "close"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598240966.618,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 2,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598416208.027,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 3,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791600648923.823,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd|SELL|0.0190",
+            "tradeThrough": true,
+            "transactionHash": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791600686122.11,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0xad0eaf8508f2b58266d2653098d690bb945b022ae9699b97982b89958413c356"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791600717698.776,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad|SELL|0.0400",
+            "transactionHash": "0xf5ae25087da25e872c33d627836bf08ddc4305398c2f29c91f9435c44dca56ad"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.04,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "tradeThrough": true,
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791622964446.34,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882|SELL|0.0180",
+            "tradeThrough": true,
+            "transactionHash": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791622964539.963,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0x440b54bdb8219b34dfa61ed23534429d578237765a6ca779758f3bbfbcf06500"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791622964613.562,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "side": "sell",
+            "price": 0.11,
+            "displayedPrice": 0.12,
+            "slippageCost": 0.09999999999999995,
+            "quantity": 10,
+            "fee": 0.04895000000000001,
+            "kind": "liquidation"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "side": "sell",
+            "price": 0.060000000000000005,
+            "displayedPrice": 0.07,
+            "slippageCost": 0.10000000000000002,
+            "quantity": 10,
+            "fee": 0.028200000000000003,
+            "kind": "liquidation"
+          }
+        ]
+      }
+    ]
+  },
+  "blendedQuotesWithFormHold": {
+    "available": true,
+    "initialCapital": 3000,
+    "finalCapital": 2997.7218000000003,
+    "profit": -2.2781999999997424,
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": true,
+        "profit": -2.2781999999997424,
+        "initialCapital": 3000,
+        "makerFills": 9,
+        "makerShares": 40,
+        "inferredTradeThroughFills": 8,
+        "closingFills": 1,
+        "fees": 0.028200000000000003,
+        "liquidationSlippage": 0.10000000000000002,
+        "peakCapitalCommitted": 72.89999999999982,
+        "heldPositions": [
+          {
+            "driver": "Charles Leclerc",
+            "inventory": 10,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "holdDecision": "close"
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "holdDecision": "close"
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 2,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": -2.2781999999997424
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": 7.721800000000258
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": 7.721800000000258
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 7.721800000000258
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -2.2781999999997424
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -2.2781999999997424
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -2.2781999999997424
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -2.2781999999997424
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -2.2781999999997424
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -2.2781999999997424
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -2.2781999999997424
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -2.2781999999997424
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -2.2781999999997424
+            },
+            {
+              "driver": "George Russell",
+              "profit": -2.2781999999997424
+            }
+          ],
+          "other": -2.2781999999997424,
+          "worstWinnerProfit": -2.2781999999997424,
+          "uniformHalfPayoutVoidProfit": 12.721800000000258
+        },
+        "forcedCarries": [
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "averageEntryPrice": 0.02,
+            "basisAmount": 0.2,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "averageEntryPrice": 0.02,
+            "basisAmount": 0.2,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          }
+        ],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "inventory": 10,
+            "probability": 0.1764544481119291,
+            "entryBasis": 0.125,
+            "expectedAdvantage": 0.05145444811192909,
+            "decision": "hold"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791718208521.277,
+            "inventory": 10,
+            "probability": 0.012749044354169268,
+            "entryBasis": 0.02,
+            "expectedAdvantage": -0.0072509556458307325,
+            "decision": "close"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "inventory": 10,
+            "probability": 0.1216160163924099,
+            "entryBasis": 0.12,
+            "expectedAdvantage": 0.001616016392409908,
+            "decision": "close"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791718226003.956,
+            "inventory": 10,
+            "probability": 0.03645208766176678,
+            "entryBasis": 0.02,
+            "expectedAdvantage": 0.01645208766176678,
+            "decision": "close"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598240966.618,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 2,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0x3cff4f129f7393f23c53a5763d006b6d7f0e1784046466d513e7cccfdcb1f215"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791598416208.027,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 3,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xfc81f8c0a097e4ba7ee9c61df3bd975803c40a44e01a37fd5decccb8f2d7386e"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791600648923.823,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd|SELL|0.0190",
+            "tradeThrough": true,
+            "transactionHash": "0x2861c90cda6b08356e6e66772a344ceed6ee290d656653b6f92a669346f8e4dd"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791600697969.801,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x85bcebd8dfac9cd2c5ba5c2fe5b975d6c55a2a2184ae55c2e61447be632d1919|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0x85bcebd8dfac9cd2c5ba5c2fe5b975d6c55a2a2184ae55c2e61447be632d1919"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.03,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791622964446.34,
+            "side": "buy",
+            "price": 0.02,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882|SELL|0.0180",
+            "tradeThrough": true,
+            "transactionHash": "0xd1c1bd09261cd6b70a5bea30215ddec1a1b69b8947168a88e640eb5578b1a882"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791622964613.562,
+            "side": "buy",
+            "price": 0.12,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06|SELL|0.1100",
+            "tradeThrough": true,
+            "transactionHash": "0xe71571fce3c001b2a857bcc1cda86b2408d7ddc4b547c9e90239f8e999c7de06"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791670760389.173,
+            "side": "buy",
+            "price": 0.01,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xb632b3938152eabe9a7dd2ed76c0de5b6092fac2749bd347a83b1c4d07469857|SELL|0.0090",
+            "tradeThrough": true,
+            "transactionHash": "0xb632b3938152eabe9a7dd2ed76c0de5b6092fac2749bd347a83b1c4d07469857"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791672720133.882,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x2426ca4377a104651f0756e9bf5aa886e662714ad3f0cb95d64d6ae3d0910f07|SELL|0.1200",
+            "tradeThrough": true,
+            "transactionHash": "0x2426ca4377a104651f0756e9bf5aa886e662714ad3f0cb95d64d6ae3d0910f07"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "side": "sell",
+            "price": 0.060000000000000005,
+            "displayedPrice": 0.07,
+            "slippageCost": 0.10000000000000002,
+            "quantity": 10,
+            "fee": 0.028200000000000003,
+            "kind": "liquidation"
+          }
+        ]
+      }
+    ]
+  },
+  "blendedQuotesSamePriceOnly": {
+    "available": true,
+    "initialCapital": 3000,
+    "finalCapital": 2998.2999999999997,
+    "profit": -1.7000000000002728,
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": true,
+        "profit": -1.7000000000002728,
+        "initialCapital": 3000,
+        "makerFills": 6,
+        "makerShares": 25,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 72.35,
+        "heldPositions": [
+          {
+            "driver": "Andrea Kimi Antonelli",
+            "inventory": 10,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Charles Leclerc",
+            "inventory": 5,
+            "holdDecision": "hold"
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "holdDecision": "close"
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 1,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": 8.299999999999727
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": 3.299999999999727
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": -1.7000000000002728
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 8.299999999999727
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -1.7000000000002728
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -1.7000000000002728
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -1.7000000000002728
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -1.7000000000002728
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -1.7000000000002728
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -1.7000000000002728
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -1.7000000000002728
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -1.7000000000002728
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -1.7000000000002728
+            },
+            {
+              "driver": "George Russell",
+              "profit": -1.7000000000002728
+            }
+          ],
+          "other": -1.7000000000002728,
+          "worstWinnerProfit": -1.7000000000002728,
+          "uniformHalfPayoutVoidProfit": 10.799999999999727
+        },
+        "forcedCarries": [
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "driver": "Oscar Piastri",
+            "inventory": 10,
+            "averageEntryPrice": 0.02,
+            "basisAmount": 0.2,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          }
+        ],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "inventory": 5,
+            "probability": 0.1764544481119291,
+            "entryBasis": 0.13,
+            "expectedAdvantage": 0.046454448111929086,
+            "decision": "hold"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "inventory": 10,
+            "probability": 0.1216160163924099,
+            "entryBasis": 0.08499999999999999,
+            "expectedAdvantage": 0.03661601639240991,
+            "decision": "hold"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791718226003.956,
+            "inventory": 10,
+            "probability": 0.03645208766176678,
+            "entryBasis": 0.02,
+            "expectedAdvantage": 0.01645208766176678,
+            "decision": "close"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.03,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791660672359.195,
+            "side": "buy",
+            "price": 0.09,
+            "quantity": 1.0989,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xab2d4a30dd7f53e88bdc87258e42a8af4e6e4e87d64fcafc614779955b0bac2e|SELL|0.0900",
+            "transactionHash": "0xab2d4a30dd7f53e88bdc87258e42a8af4e6e4e87d64fcafc614779955b0bac2e"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791661176644.647,
+            "side": "buy",
+            "price": 0.09,
+            "quantity": 3.9011,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xe39481d7c8a3fa91e80d0ff82278d3e42155a71e67e79cf3d534f9aa6d1b85c6|SELL|0.0900",
+            "transactionHash": "0xe39481d7c8a3fa91e80d0ff82278d3e42155a71e67e79cf3d534f9aa6d1b85c6"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791670760390.291,
+            "side": "buy",
+            "price": 0.13,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x321ea5b39674c625db6bb33f3dd78463e5283ddcdc12465a6429f9847b2baa2f|SELL|0.1300",
+            "transactionHash": "0x321ea5b39674c625db6bb33f3dd78463e5283ddcdc12465a6429f9847b2baa2f"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791712572420.441,
+            "side": "buy",
+            "price": 0.08,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x8740e2a140ada63ecffa6a5115efd0010bffb7a132a2eb4aad820949dc3462de|SELL|0.0800",
+            "transactionHash": "0x8740e2a140ada63ecffa6a5115efd0010bffb7a132a2eb4aad820949dc3462de"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791717752678.753,
+            "side": "buy",
+            "price": 0.01,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x45797778d82b6f466b32bd2ad68ecc55bb38e960bc32c841ec5baca289139ab0|SELL|0.0100",
+            "transactionHash": "0x45797778d82b6f466b32bd2ad68ecc55bb38e960bc32c841ec5baca289139ab0"
+          }
+        ]
+      }
+    ]
+  },
+  "midpointQuotesWithFormHold": {
+    "available": true,
+    "initialCapital": 3000,
+    "finalCapital": 2999.947649999999,
+    "profit": -0.052350000000842556,
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": true,
+        "profit": -0.052350000000842556,
+        "initialCapital": 3000,
+        "makerFills": 8,
+        "makerShares": 35,
+        "inferredTradeThroughFills": 3,
+        "closingFills": 2,
+        "fees": 0.05235000000000001,
+        "liquidationSlippage": 0.10000000000000002,
+        "peakCapitalCommitted": 71.45,
+        "heldPositions": [
+          {
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "holdDecision": "close"
+          },
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 5,
+            "holdDecision": "close"
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 2,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": 9.947649999999157
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 4.9476499999991574
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -0.052350000000842556
+            },
+            {
+              "driver": "George Russell",
+              "profit": -0.052350000000842556
+            }
+          ],
+          "other": -0.052350000000842556,
+          "worstWinnerProfit": -0.052350000000842556,
+          "uniformHalfPayoutVoidProfit": 7.4476499999991574
+        },
+        "forcedCarries": [
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "driver": "Isack Hadjar",
+            "inventory": 10,
+            "averageEntryPrice": 0.01,
+            "basisAmount": 0.1,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "driver": "Oscar Piastri",
+            "inventory": 5,
+            "averageEntryPrice": 0.03,
+            "basisAmount": 0.15,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          }
+        ],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "inventory": -5,
+            "probability": 0.1764544481119291,
+            "entryBasis": 0.14,
+            "expectedAdvantage": -0.03645444811192908,
+            "decision": "close"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791718208521.277,
+            "inventory": 10,
+            "probability": 0.012749044354169268,
+            "entryBasis": 0.01,
+            "expectedAdvantage": 0.0027490443541692677,
+            "decision": "close"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "inventory": -5,
+            "probability": 0.1216160163924099,
+            "entryBasis": 0.12,
+            "expectedAdvantage": -0.001616016392409908,
+            "decision": "close"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791718226003.956,
+            "inventory": 5,
+            "probability": 0.03645208766176678,
+            "entryBasis": 0.03,
+            "expectedAdvantage": 0.0064520876617667824,
+            "decision": "close"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791601678001.156,
+            "side": "sell",
+            "price": 0.13,
+            "quantity": 2.1538470000000007,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x4c61a1726c2cbeb6f73735f7b40bcfa0ec9f78509c1633b51940e764f061dbf0|BUY|0.1300",
+            "transactionHash": "0x4c61a1726c2cbeb6f73735f7b40bcfa0ec9f78509c1633b51940e764f061dbf0"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791602775731.4,
+            "side": "sell",
+            "price": 0.13,
+            "quantity": 2.8461529999999993,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x1fcb156bda684f9bcbf06b28e76d900b1f05d14433b69551c6e8a810a8a6c599|BUY|0.1300",
+            "transactionHash": "0x1fcb156bda684f9bcbf06b28e76d900b1f05d14433b69551c6e8a810a8a6c599"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.03,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791622964592.53,
+            "side": "buy",
+            "price": 0.01,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x553057f8750d6428b3107c6bf132c0f96ab77fa909fa47916641ffc044700672|SELL|0.0090",
+            "tradeThrough": true,
+            "transactionHash": "0x553057f8750d6428b3107c6bf132c0f96ab77fa909fa47916641ffc044700672"
+          },
+          {
+            "market": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "timestamp": 1791625844709.673,
+            "side": "buy",
+            "price": 0.01,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x3e01817f056311cc18f6d64317f5073e4d65e54f74d0dc160aa36cb040315a40|SELL|0.0080",
+            "tradeThrough": true,
+            "transactionHash": "0x3e01817f056311cc18f6d64317f5073e4d65e54f74d0dc160aa36cb040315a40"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791627042701.398,
+            "side": "buy",
+            "price": 0.1,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf596719b99c9b10414651948bf771c7d4e913d30d693df6105cd23184d3a7465|SELL|0.1000",
+            "transactionHash": "0xf596719b99c9b10414651948bf771c7d4e913d30d693df6105cd23184d3a7465"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791627407743.654,
+            "side": "sell",
+            "price": 0.12,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xe5efe0ec52545a8dafd13e9b0ad9d2a10e4a772a1c00094c8487835ca572ae1a|BUY|0.1300",
+            "tradeThrough": true,
+            "transactionHash": "0xe5efe0ec52545a8dafd13e9b0ad9d2a10e4a772a1c00094c8487835ca572ae1a"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791711278622.43,
+            "side": "sell",
+            "price": 0.14,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xeeead29a9725e2342386f3a999910285068c85e2282c2979344de0f8a8652593|BUY|0.1400",
+            "transactionHash": "0xeeead29a9725e2342386f3a999910285068c85e2282c2979344de0f8a8652593"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "side": "buy",
+            "price": 0.15000000000000002,
+            "displayedPrice": 0.14,
+            "slippageCost": 0.050000000000000044,
+            "quantity": 5,
+            "fee": 0.03187500000000001,
+            "kind": "liquidation"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791718208772.648,
+            "side": "buy",
+            "price": 0.09,
+            "displayedPrice": 0.08,
+            "slippageCost": 0.049999999999999975,
+            "quantity": 5,
+            "fee": 0.020475,
+            "kind": "liquidation"
+          }
+        ]
+      }
+    ]
+  },
+  "midpointQuotesSamePriceOnly": {
+    "available": true,
+    "initialCapital": 3000,
+    "finalCapital": 2999.9181249999997,
+    "profit": -0.08187500000030923,
+    "races": [
+      {
+        "race": "Monaco Grand Prix",
+        "complete": true,
+        "profit": 0,
+        "initialCapital": 3000,
+        "makerFills": 0,
+        "makerShares": 0,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 0,
+        "fees": 0,
+        "liquidationSlippage": 0,
+        "peakCapitalCommitted": 65,
+        "heldPositions": [],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": true,
+          "forcedCarryCount": 0,
+          "winners": [
+            {
+              "driver": "Isack Hadjar",
+              "profit": 0
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": 0
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": 0
+            },
+            {
+              "driver": "Carlos Sainz",
+              "profit": 0
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 0
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": 0
+            },
+            {
+              "driver": "Gabriel Bortoleto",
+              "profit": 0
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": 0
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": 0
+            },
+            {
+              "driver": "Valtteri Bottas",
+              "profit": 0
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": 0
+            },
+            {
+              "driver": "Alexander Albon",
+              "profit": 0
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": 0
+            }
+          ],
+          "other": 0,
+          "worstWinnerProfit": 0,
+          "uniformHalfPayoutVoidProfit": 0
+        },
+        "forcedCarries": [],
+        "sourceTimestampReversals": 19,
+        "holdingDecisions": [],
+        "fills": []
+      },
+      {
+        "race": "Singapore Grand Prix",
+        "complete": true,
+        "profit": -0.08187500000030923,
+        "initialCapital": 3000,
+        "makerFills": 5,
+        "makerShares": 20,
+        "inferredTradeThroughFills": 0,
+        "closingFills": 1,
+        "fees": 0.03187500000000001,
+        "liquidationSlippage": 0.050000000000000044,
+        "peakCapitalCommitted": 71.45,
+        "heldPositions": [
+          {
+            "driver": "Oscar Piastri",
+            "inventory": 5,
+            "holdDecision": "close"
+          }
+        ],
+        "outcomeScenarios": {
+          "conditionalOnImmediateSettlement": true,
+          "decisionComplete": true,
+          "flatBeforeRace": false,
+          "forcedCarryCount": 1,
+          "winners": [
+            {
+              "driver": "Andrea Kimi Antonelli",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Charles Leclerc",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Isack Hadjar",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Oscar Piastri",
+              "profit": 4.918124999999691
+            },
+            {
+              "driver": "Liam Lawson",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Fernando Alonso",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Arvid Lindblad",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Nico Hülkenberg",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Lance Stroll",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Franco Colapinto",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Oliver Bearman",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Esteban Ocon",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "Pierre Gasly",
+              "profit": -0.08187500000030923
+            },
+            {
+              "driver": "George Russell",
+              "profit": -0.08187500000030923
+            }
+          ],
+          "other": -0.08187500000030923,
+          "worstWinnerProfit": -0.08187500000030923,
+          "uniformHalfPayoutVoidProfit": 2.4181249999996908
+        },
+        "forcedCarries": [
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "driver": "Oscar Piastri",
+            "inventory": 5,
+            "averageEntryPrice": 0.03,
+            "basisAmount": 0.15,
+            "basisSide": "purchase",
+            "closedShares": 0,
+            "closingFees": 0,
+            "closingSlippage": 0,
+            "reason": "A model-directed close could not be completed before the deadline"
+          }
+        ],
+        "sourceTimestampReversals": 10,
+        "holdingDecisions": [
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "inventory": -5,
+            "probability": 0.1764544481119291,
+            "entryBasis": 0.14,
+            "expectedAdvantage": -0.03645444811192908,
+            "decision": "close"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791718226003.956,
+            "inventory": 5,
+            "probability": 0.03645208766176678,
+            "entryBasis": 0.03,
+            "expectedAdvantage": 0.0064520876617667824,
+            "decision": "close"
+          }
+        ],
+        "fills": [
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791601678001.156,
+            "side": "sell",
+            "price": 0.13,
+            "quantity": 2.1538470000000007,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x4c61a1726c2cbeb6f73735f7b40bcfa0ec9f78509c1633b51940e764f061dbf0|BUY|0.1300",
+            "transactionHash": "0x4c61a1726c2cbeb6f73735f7b40bcfa0ec9f78509c1633b51940e764f061dbf0"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791602775731.4,
+            "side": "sell",
+            "price": 0.13,
+            "quantity": 2.8461529999999993,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x1fcb156bda684f9bcbf06b28e76d900b1f05d14433b69551c6e8a810a8a6c599|BUY|0.1300",
+            "transactionHash": "0x1fcb156bda684f9bcbf06b28e76d900b1f05d14433b69551c6e8a810a8a6c599"
+          },
+          {
+            "market": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "timestamp": 1791622644510.871,
+            "side": "buy",
+            "price": 0.03,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a|SELL|0.0300",
+            "transactionHash": "0x00b030cc6a26226f67dd94b19ecb511d13fea23d103dab2b63b24ba9eade603a"
+          },
+          {
+            "market": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "timestamp": 1791627042701.398,
+            "side": "buy",
+            "price": 0.1,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xf596719b99c9b10414651948bf771c7d4e913d30d693df6105cd23184d3a7465|SELL|0.1000",
+            "transactionHash": "0xf596719b99c9b10414651948bf771c7d4e913d30d693df6105cd23184d3a7465"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791711278622.43,
+            "side": "sell",
+            "price": 0.14,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0xeeead29a9725e2342386f3a999910285068c85e2282c2979344de0f8a8652593|BUY|0.1400",
+            "transactionHash": "0xeeead29a9725e2342386f3a999910285068c85e2282c2979344de0f8a8652593"
+          },
+          {
+            "market": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "timestamp": 1791718201027.022,
+            "side": "buy",
+            "price": 0.15000000000000002,
+            "displayedPrice": 0.14,
+            "slippageCost": 0.050000000000000044,
+            "quantity": 5,
+            "fee": 0.03187500000000001,
+            "kind": "liquidation"
+          }
+        ]
+      }
+    ]
+  }
+}

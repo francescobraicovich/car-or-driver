@@ -8,15 +8,15 @@ import { TUNED_ELO } from '../packages/core/src/presets/tuned-elo.js';
 const ctx = await loadData('data');
 
 /** Each driver's rating the first time the model sees them, with the year it was seen. */
-function startingRatings(params) {
+function startingRatings(params, data = ctx) {
   const first = new Map();
   let firstYear = null;
   buildEloCore(
-    ctx.raw,
-    ctx.lapSnapshots,
-    ctx.maps,
+    data.raw,
+    data.lapSnapshots,
+    data.maps,
     params,
-    ctx.lapPace,
+    data.lapPace,
     {
       beforeWeekend: ({ info, rows, D }) => {
         firstYear ??= info.year;
@@ -51,7 +51,16 @@ const dob = new Map(ctx.raw.drivers.map((d) => [String(d.driverId), Date.parse(d
 const aged = startingRatings({ ...TUNED_ELO, rookieStart: -6, rookieAge: -4 });
 for (const [id, s] of aged.first) {
   if (s.year === aged.firstYear) continue;
-  const age = (Date.parse(s.date) - dob.get(String(id))) / (365.25 * 86400000);
+  const born = dob.get(String(id));
+  const age = Number.isFinite(born) ? (Date.parse(s.date) - born) / (365.25 * 86400000) : 22;
   assert.ok(Math.abs(s.rating - (1000 - 6 - 4 * (age - 22))) < 1e-9, `driver ${id}: age ${age.toFixed(1)} start ${s.rating.toFixed(2)}`);
 }
+
+// A missing birth date leaves the age adjustment at zero.
+const debutant = [...base.first].find(([id, s]) => s.year !== base.firstYear && Number.isFinite(dob.get(String(id))))[0];
+const missingBirthDate = {
+  ...ctx,
+  raw: { ...ctx.raw, drivers: ctx.raw.drivers.map((driver) => (driver.driverId === debutant ? { ...driver, dob: '\\N' } : driver)) },
+};
+assert.equal(startingRatings({ ...TUNED_ELO, rookieStart: -6, rookieAge: -4 }, missingBirthDate).first.get(debutant).rating, 994);
 console.log(`PASS rookie prior: ${rookies} debutants start at the stated rating, first-season drivers untouched, defaults change nothing`);

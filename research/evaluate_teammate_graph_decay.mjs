@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fitSlope, observationRows } from '../packages/eval/src/index.js';
 import { strictItems, strictScores } from '../packages/research/node/mover-strict.mjs';
 import { load } from '../packages/research/node/strict-eval.mjs';
-import { buildTeammateGraph } from '../tools/teammate-graph.mjs';
+import { buildLegacyTeammateGraph as buildTeammateGraph } from '../tools/teammate-graph.mjs';
 import { buildHybridRatings } from './hybrid_rating_model.mjs';
 import { jointRatingBlend } from './joint_rating_blend.mjs';
 

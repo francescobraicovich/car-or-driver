@@ -22,6 +22,20 @@ export const gridVal = (r) => {
   return g > 0 ? g : 20;
 };
 
+const uniqueExactRows = (rows) => {
+  const seen = new Set();
+  return rows.filter((row) => {
+    const key = JSON.stringify(
+      Object.keys(row)
+        .sort()
+        .map((name) => [name, typeof row[name], String(row[name])]),
+    );
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+};
+
 /** Ordered unique circuits with display names (for pre-weekend prediction). */
 export function buildCircuitList(raw) {
   const names = new Map((raw.circuits || []).map((c) => [String(c.circuitId), c.name || c.circuitRef || c.circuitId]));
@@ -54,7 +68,7 @@ export function groupWeekends(raw) {
   );
 
   const byRace = new Map();
-  for (const r of raw.results) {
+  for (const r of uniqueExactRows(raw.results)) {
     const ri = rinfo.get(String(r.raceId));
     if (!ri || ri.year < FIRST_YEAR) continue;
     const rid = String(r.raceId);
@@ -68,7 +82,7 @@ export function groupWeekends(raw) {
     });
   }
   const byQual = new Map();
-  for (const q of raw.qualifying || []) {
+  for (const q of uniqueExactRows(raw.qualifying || [])) {
     const ri = rinfo.get(String(q.raceId));
     if (!ri || ri.year < FIRST_YEAR) continue;
     const rid = String(q.raceId);

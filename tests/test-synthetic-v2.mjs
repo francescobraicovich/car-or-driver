@@ -117,10 +117,15 @@ const w1 = syntheticWorld(tl, idx, 'race', params, 1);
   };
   const finish = loss((r) => r.src === 'finish');
   const paceW = loss((r) => r.src === 'paceW');
+  const validationSlope = fitSlope(rows.filter((r) => r.year >= 2008).map((r) => ({ ...r, z: c * r.z })));
   assert.ok(finish > 0.25 && finish < 0.5, `finish loss ${finish.toFixed(3)} in the band (real 0.39)`);
   assert.ok(paceW > 0.25 && paceW < 0.5, `paceW loss ${paceW.toFixed(3)} in the band (real 0.37)`);
-  assert.ok(c > 0.7 && c < 1.3, `calibration multiplier ${c.toFixed(2)} near 1`);
-  console.log(`PASS the shipped filter on a v2 world: finish ${finish.toFixed(3)}, paceW ${paceW.toFixed(3)}, multiplier ${c.toFixed(2)}`);
+  // Slower intrinsic learning changes the raw scale. Test whether calibration
+  // fitted on the earlier prefix transfers, rather than requiring a raw unit slope.
+  assert.ok(validationSlope > 0.7 && validationSlope < 1.3, `validation calibration slope ${validationSlope.toFixed(2)} near 1`);
+  console.log(
+    `PASS the shipped filter on a v2 world: finish ${finish.toFixed(3)}, paceW ${paceW.toFixed(3)}, multiplier ${c.toFixed(2)}, validation slope ${validationSlope.toFixed(2)}`,
+  );
 }
 
 console.log('v2 simulator tests passed.');

@@ -1,0 +1,34 @@
+{
+  "sourceHash": "928427f97ab9daf6",
+  "weekends": 619,
+  "numbers": 39699,
+  "maxima": {
+    "race": 0.004998995893402025,
+    "qual": 0.004999574240628135,
+    "combined": 0.004999269715085575
+  },
+  "where": {
+    "race": {
+      "date": "2017-10-01",
+      "id": "1",
+      "observed": 1051.79,
+      "expected": 1051.7949989958934
+    },
+    "qual": {
+      "date": "2012-10-14",
+      "id": "5",
+      "observed": 1005.2,
+      "expected": 1005.2049995742407
+    },
+    "combined": {
+      "date": "2001-10-14",
+      "id": "23",
+      "observed": 1007.56,
+      "expected": 1007.5550007302849
+    }
+  },
+  "buildMilliseconds": 35016,
+  "passed": true,
+  "savedRatingResolution": 0.01,
+  "maximumRoundingError": 0.005001
+}

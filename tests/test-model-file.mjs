@@ -43,6 +43,11 @@ const { sourceHash, lastRace } = await modelSourceHash();
 const file = deserialize(await readFile('data/model.json', 'utf8'));
 const exportFile = deserialize(await readFile('data/export-rows.json', 'utf8'));
 assert.equal(file.format, FILE_FORMAT);
+assert.ok(file.model.forecastState.heads, 'the saved model carries its own forecast definitions');
+assert.ok(
+  Object.values(file.model.forecastState.heads).every((bundle) => Object.values(bundle).every((head) => head.family === 'linear')),
+  'production forecasts use only linear heads',
+);
 for (const [name, f] of [
   ['model.json', file],
   ['export-rows.json', exportFile],

@@ -1,0 +1,3265 @@
+{
+  "description": "Weekend market-day data for pre-qualifying and post-qualifying replay.",
+  "successfulNewDownloads": 190,
+  "races": [
+    {
+      "id": "monaco",
+      "name": "Monaco Grand Prix",
+      "dates": [
+        "2026-06-06",
+        "2026-06-07"
+      ],
+      "drivers": [
+        {
+          "driverId": "863",
+          "name": "Andrea Kimi Antonelli",
+          "constructorId": "131",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-antonelli-2026-06-07",
+            "question": "Will Kimi Antonelli win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x427a6b47590aab053b2e03423fffb5b757b8e879d639b10af496b0e76c65f62e",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "66393489832207840268871489816986495954171777084600153701153761050390173773230",
+              "99389334035240379979200553248995577646220038160040748621365491867817132558883"
+            ],
+            "outcomePrices": [
+              "1",
+              "0"
+            ],
+            "createdAt": "2026-05-09T11:30:02.514247Z",
+            "startDate": "2026-05-09T13:13:02.561798Z",
+            "closedTime": "2026-06-07 20:58:28+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/863/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-antonelli-2026-06-07.parquet",
+                "bytes": 1268374,
+                "sha256": "921b7bc5ee2cc2de781ae62fd5788cfb4e0efdea0a7345dc9beec23128da6692"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/863/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-antonelli-2026-06-07.parquet",
+                "bytes": 44515,
+                "sha256": "6fc87993e7cd2f3d54310d0c2bbb1b088c495a38349573cbd4d0e6d9f1232280"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/863/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-antonelli-2026-06-07.parquet",
+                "bytes": 88534,
+                "sha256": "7b912084a7b44c47e9f7511d38bf6c3e492cbe9b7879cb648e107d8b825cdefe"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/863/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-antonelli-2026-06-07.parquet",
+                "bytes": 1574798,
+                "sha256": "30ea5925ef584c754f0b04450fbfa99ed448c15639aeb0bb01b4e1207df098a8"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/863/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-antonelli-2026-06-07.parquet",
+                "bytes": 105450,
+                "sha256": "464a78f1c5ed850771c03edcc53222277ddf53abbb23fce0fe897ee29df5393c"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/863/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-antonelli-2026-06-07.parquet",
+                "bytes": 197246,
+                "sha256": "4a0b13bac518391ca67d946511516f84f8ffe6c0513c3febc997d6d5fefc8531"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "1",
+          "name": "Lewis Hamilton",
+          "constructorId": "6",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-hamilton-2026-06-07",
+            "question": "Will Lewis Hamilton win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x480e352167e241afcd36df63fce8bb3a6af5308e47b13262b1b437d797b86db1",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "59257537591670038179620140177120720107300978199987127646173806081836051514975",
+              "51139647279433150695856019221083451512639497682795395774675407526592495046515"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:03.175835Z",
+            "startDate": "2026-05-09T13:13:18.461935Z",
+            "closedTime": "2026-06-07 20:56:21+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/1/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-hamilton-2026-06-07.parquet",
+                "bytes": 826564,
+                "sha256": "a9ebb26d4bccd277535b37f5ee410ef12efdba14302c9db5f6165017c4488157"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/1/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-hamilton-2026-06-07.parquet",
+                "bytes": 33762,
+                "sha256": "43f55706c0a1c76d6457b1dbe251746848c259750f17cb27c8b54c02f3506321"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/1/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-hamilton-2026-06-07.parquet",
+                "bytes": 59153,
+                "sha256": "6390ffaf36b767302214123a80b77ffd02ed0317a69642f9c10660d6910318e1"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/1/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-hamilton-2026-06-07.parquet",
+                "bytes": 1746691,
+                "sha256": "14407f23f1ffd1e0e70f0b2a1e9c1d2985f716fff7e84ebb9157bb85eff1c470"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/1/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-hamilton-2026-06-07.parquet",
+                "bytes": 53623,
+                "sha256": "1ddd048963417216634588ed96e7d7346627d1850cb48c318e70a61fb37a9f0c"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/1/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-hamilton-2026-06-07.parquet",
+                "bytes": 109425,
+                "sha256": "e8cdc7f4913d8486745445f7fc01b9387784907cbf27fdd01b19304116707b47"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "830",
+          "name": "Max Verstappen",
+          "constructorId": "9",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-verstappen-2026-06-07",
+            "question": "Will Max Verstappen win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x7a59b3b1a673ee9b1af258edeb31029750fe48e8ad8d154446c1f8a51b724fdd",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "12187011581347563744688860460727059785614272885467480370185719551066094042449",
+              "57731513522290572119051734604581961122295612332247455865292443134149268487308"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:02.65319Z",
+            "startDate": "2026-05-09T13:13:02.815859Z",
+            "closedTime": "2026-06-07 20:57:51+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/830/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-verstappen-2026-06-07.parquet",
+                "bytes": 984886,
+                "sha256": "f98f2c743d5bb6e5f395a3ee06fac55ee30e429dbb7b7ed19da72eda71b4abdb"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/830/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-verstappen-2026-06-07.parquet",
+                "bytes": 31943,
+                "sha256": "4dcfcd6d451def6d52472ff1d6be08d963a5c724bd65e6abf425e585382bc4eb"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/830/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-verstappen-2026-06-07.parquet",
+                "bytes": 60551,
+                "sha256": "95671c2f517e2bf979e6814898e60b64307ba7110ae56b61c7cfeff5cabc8f08"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/830/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-verstappen-2026-06-07.parquet",
+                "bytes": 576776,
+                "sha256": "b263b8db5af04636fa1272722424c6066cad41f733bc5bd979b6ba32f9bf9f00"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/830/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-verstappen-2026-06-07.parquet",
+                "bytes": 28542,
+                "sha256": "3da6f203837b13eb05e8f653490a96d60ff3732eadf33353c441f3fc12c46896"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/830/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-verstappen-2026-06-07.parquet",
+                "bytes": 57611,
+                "sha256": "9cf4e4c52d823048673c8db64de19219851c3691fba9aad07ded0187ea40486b"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "844",
+          "name": "Charles Leclerc",
+          "constructorId": "6",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-leclerc-2026-06-07",
+            "question": "Will Charles Leclerc win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x46208f52175f84673b68e5ab0eb0a923dd3f2b91906510e6f41998432d486950",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "72242299304338713759627574297802907602981462406295518815797559127101294681792",
+              "27721378004896096657377769974479266040216487404845752005883374544782840408663"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:02.177548Z",
+            "startDate": "2026-05-09T13:12:47.26137Z",
+            "closedTime": "2026-06-07 20:57:57+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/844/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-leclerc-2026-06-07.parquet",
+                "bytes": 873610,
+                "sha256": "fe16b638eac44b721826c3995afbf8c69f80157a1070a17595543491f6dbb335"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/844/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-leclerc-2026-06-07.parquet",
+                "bytes": 32593,
+                "sha256": "8190df639aa22390d843fde9b13e7a97b8de62c47dfe040b864ec3d9ab7229c8"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/844/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-leclerc-2026-06-07.parquet",
+                "bytes": 62959,
+                "sha256": "db153ed40de9d4a4043df4790c333687c161d5c59e0197295832d22e0222a9b8"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/844/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-leclerc-2026-06-07.parquet",
+                "bytes": 859580,
+                "sha256": "02f9ed7632bd6a2bf563bf616e22276ee49920ccede0c1684e018eb985bf7cd3"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/844/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-leclerc-2026-06-07.parquet",
+                "bytes": 34183,
+                "sha256": "f1ed97bae6ab6f0204ef0fa960e44d9ec4842f34a2780a4c53cfd4b0742e3235"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/844/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-leclerc-2026-06-07.parquet",
+                "bytes": 69450,
+                "sha256": "2dff6f0e93f841d5d018facbd023552d60b5c650dbcead53128ef8a1421756e8"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "865",
+          "name": "Isack Hadjar",
+          "constructorId": "9",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-hadjar-2026-06-07",
+            "question": "Will Isack Hadjar win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0xe8fbed5148ea09f199fac28c06084175b08223c150bd2c0d20d95ab98e3634d1",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "40296399014668311023217194307382348083512870958995829818560941703548072377720",
+              "80955816381441735115888819007799598442526144839829457451606846304810433252176"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:03.704777Z",
+            "startDate": "2026-05-09T13:13:46.621324Z",
+            "closedTime": "2026-06-07 20:59:28+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/865/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-hadjar-2026-06-07.parquet",
+                "bytes": 482128,
+                "sha256": "9166b9b58c3b34747ab38e0d4bb124d80a7cf7d68c7f8f5b215d4d8f8ca7cc03"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/865/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-hadjar-2026-06-07.parquet",
+                "bytes": 12671,
+                "sha256": "204eca2bd6308b2d89c2cd050f80d0d7a534f77e1250ffbcbc5184cd6db4937e"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/865/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-hadjar-2026-06-07.parquet",
+                "bytes": 20362,
+                "sha256": "84011c4e04d65a05034d2f9002e7272c3db0bc948f057177cfc8ceac98f87a1c"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/865/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-hadjar-2026-06-07.parquet",
+                "bytes": 592407,
+                "sha256": "61a81a679aa7585a0abd7f10746fe629afe265b0b8bcf27623de22bfe5586b29"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/865/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-hadjar-2026-06-07.parquet",
+                "bytes": 19567,
+                "sha256": "ed00546a6c20e92d2501e5f32d16c71029cb93669075e097c44994ac08b1c5c6"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/865/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-hadjar-2026-06-07.parquet",
+                "bytes": 34827,
+                "sha256": "c781138853a9ed8d49f6e26637a06a889008f5a615369c328696be2884b75059"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "861",
+          "name": "Franco Colapinto",
+          "constructorId": "214",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-colapinto-2026-06-07",
+            "question": "Will Franco Colapinto win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x7c638bc8b85bfac9e7a00398f96c516983a4cdf3073b98daf978fd31e1217771",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "45546749472918237726636293624725639534468020576928068228860602984618290658961",
+              "8841268331664786420071169436137921260960151661597568056760116895673249776307"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:02.759035Z",
+            "startDate": "2026-05-09T13:13:04.363842Z",
+            "closedTime": "2026-06-07 21:04:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/861/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-colapinto-2026-06-07.parquet",
+                "bytes": 203049,
+                "sha256": "e43dfd607223d9d550543ffe6df6160bd28e947bb86a5a4bf56d6d3f0aa94743"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/861/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-colapinto-2026-06-07.parquet",
+                "bytes": 4544,
+                "sha256": "2db93a9e0f624c04e1c573c90e4c254d4b934fd8849b1550d22ae1d469e0d2d4"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/861/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-colapinto-2026-06-07.parquet",
+                "bytes": 6426,
+                "sha256": "1b15939d8c2cc7c3b8d29bd00c139c40094853c2129bf79a45dd84381c548afb"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/861/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-colapinto-2026-06-07.parquet",
+                "bytes": 537290,
+                "sha256": "0ac736fea9565025f7b90748493c3fd97648156242c856461de9df0ead1f4418"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/861/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-colapinto-2026-06-07.parquet",
+                "bytes": 4350,
+                "sha256": "92cbe0f716d212c4089c344467b87db5e9879cd86c58b543ef1247b31aff9233"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/861/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-colapinto-2026-06-07.parquet",
+                "bytes": 5899,
+                "sha256": "b2b2924ec22c3a5ba000928f088c95d28a73c74788acb069198d416074ea4f92"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "859",
+          "name": "Liam Lawson",
+          "constructorId": "215",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-lawson-2026-06-07",
+            "question": "Will Liam Lawson win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0xc61ce2057a50d592c7b462d9b65b38163c32a851f06a160a3bb9278899d96ffd",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "82639597571761502014283768447329240063547018481861061507584519667292476447835",
+              "84578406335811579322206494198060036629289867501947013910741119420003940512818"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:03.808209Z",
+            "startDate": "2026-05-09T13:13:52.543594Z",
+            "closedTime": "2026-06-07 20:58:31+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/859/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-lawson-2026-06-07.parquet",
+                "bytes": 158875,
+                "sha256": "e9555d95a3811c5bcf6930d9bdfd98d72a0b58db779c66d796447316b01c6afb"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/859/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-lawson-2026-06-07.parquet",
+                "bytes": 4435,
+                "sha256": "3d69ec0d8f1f50882cfd9c22f9f033e89be2617a2f914cc0ca5620177dc57f61"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/859/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-lawson-2026-06-07.parquet",
+                "bytes": 6073,
+                "sha256": "583781d34ffa85aaa8bdacdedc52502d30f482af1c1c5365a45ec741f24b3de1"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/859/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-lawson-2026-06-07.parquet",
+                "bytes": 391315,
+                "sha256": "3020c56de408e3e8e6be971ff1dab6dc6a7b177e64e0e3d368bcfe4623330eed"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/859/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-lawson-2026-06-07.parquet",
+                "bytes": 4607,
+                "sha256": "2769d0e72197125777c9429b6d860a4888714137dd7469b8d9c34ea457362b3a"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/859/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-lawson-2026-06-07.parquet",
+                "bytes": 6309,
+                "sha256": "bf153c5a2bcc51d75a6026ebbd209241262a199227ab2bd0d57c536a73660bd3"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "842",
+          "name": "Pierre Gasly",
+          "constructorId": "214",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-gasly-2026-06-07",
+            "question": "Will Pierre Gasly win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0xd8ffcd7a3d2a5a5802676db1d252bd460ae8f16826bdef56dcc270f33b3b9604",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "4102962180825495752825078695726623894619313324640522750370969457560176259922",
+              "66195157442030793939624885763754563954511562943801031693887996354777062104448"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:01.641057Z",
+            "startDate": "2026-05-09T13:12:34.251542Z",
+            "closedTime": "2026-06-07 21:04:45+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/842/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-gasly-2026-06-07.parquet",
+                "bytes": 231767,
+                "sha256": "72bfd8f8a36a3affa6782bfb81c10951d9fc74954ee415346dad41d9d5cb909c"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/842/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-gasly-2026-06-07.parquet",
+                "bytes": 5083,
+                "sha256": "8fbe7a1a6ce01dc66b1f95679c47bea329ff288e35b6077349c7d861c556d7e3"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/842/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-gasly-2026-06-07.parquet",
+                "bytes": 7368,
+                "sha256": "3d0a56366ae703f49182ccdce9b57178f4d6ad4cb80a602744e0266e4e76a188"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/842/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-gasly-2026-06-07.parquet",
+                "bytes": 452412,
+                "sha256": "b6942a4896595ffe15db54e0e119c7cd62b7310db982db98af18348b8cd71d8b"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/842/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-gasly-2026-06-07.parquet",
+                "bytes": 4971,
+                "sha256": "8245a584de5856f4fe260f4c20bb3800804e7d1e2630b192cc47b1c9676204f1"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/842/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-gasly-2026-06-07.parquet",
+                "bytes": 7061,
+                "sha256": "79f8ecdc885372c5428bd4e7199055251577a4b8453b8b212c5f9e16e55cd375"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "832",
+          "name": "Carlos Sainz",
+          "constructorId": "3",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-jr-2026-06-07",
+            "question": "Will Carlos Sainz Jr. win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x107862782b49491aa000880f00143878b383929d10833d270868c8b6b61c85a6",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "12583569779169966865971413209980217184284724104096395887982296149428931198016",
+              "90537188397085906126266857002625398797783454528933102600108169837245439823682"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:02.865551Z",
+            "startDate": "2026-05-09T13:13:08.226626Z",
+            "closedTime": "2026-06-07 21:03:33+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/832/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-jr-2026-06-07.parquet",
+                "bytes": 353805,
+                "sha256": "c3975955ffadac5cf6aa152148146d9b1e4a3a5bf57c55d31a31db3184f77eb7"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/832/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-jr-2026-06-07.parquet",
+                "bytes": 5580,
+                "sha256": "34624f199ea05796931a414b737c380c205d0d50782c1066f189d1463a05e54b"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/832/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-jr-2026-06-07.parquet",
+                "bytes": 8040,
+                "sha256": "00272e37c6ac0f4c334f9ec9138db3d43dbdbe1c1502f541dc6b82949e8cdbdb"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/832/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-jr-2026-06-07.parquet",
+                "bytes": 416808,
+                "sha256": "5c66c6649ab83bca402fc33e2b1aa9380bf3e007d9c4289e355346c405aedafb"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/832/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-jr-2026-06-07.parquet",
+                "bytes": 4513,
+                "sha256": "3f98e6bcbf12d0257e42b53bb1f2a9195a3b6bc073033b582623f2ff7597c78c"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/832/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-jr-2026-06-07.parquet",
+                "bytes": 6162,
+                "sha256": "82f8d5929c6e989f989b843029cc2f1ef685bb4e6d1b4600a552f5e0c07232ac"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "860",
+          "name": "Oliver Bearman",
+          "constructorId": "210",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-bearman-2026-06-07",
+            "question": "Will Oliver Bearman win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x8d4be44d954722922130bc659eeacba84e0e1e6975c5ba57e5e2c859bd76573f",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "1991917479981956239535141986052894191566771281742487053851273364896593019036",
+              "1457517121298529146268197002106723096938693357112140531093616392472429633622"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:03.279937Z",
+            "startDate": "2026-05-09T13:14:26.07033Z",
+            "closedTime": "2026-06-07 20:58:28+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/860/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-bearman-2026-06-07.parquet",
+                "bytes": 246296,
+                "sha256": "77aa7562138c2b3d94c60a1af88e41ea59e1c6b50c6d1020be568ec1a48122db"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/860/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-bearman-2026-06-07.parquet",
+                "bytes": 4403,
+                "sha256": "cb0b003245a239c3a0d7393d2318ab933b976840d424f3e6421c3923ca3963ce"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/860/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-bearman-2026-06-07.parquet",
+                "bytes": 5937,
+                "sha256": "baa4ebf6d6aa9a7f5ca6482df221649b7a538c589339fa4e39fe3050c38d37c5"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/860/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-bearman-2026-06-07.parquet",
+                "bytes": 458029,
+                "sha256": "042109579ac4c334117fe2376d8bafe17b6edadfa60948f817b755aa462e2789"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/860/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-bearman-2026-06-07.parquet",
+                "bytes": 4365,
+                "sha256": "51aa724da96522ade3d1a89526aa6a4e2d54ca06d1e7e882100561c5c1a76843"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/860/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-bearman-2026-06-07.parquet",
+                "bytes": 5782,
+                "sha256": "7a22bb631467de0529b03eff188a90b4ec9b5dbe8f9b919e256436600b54f971"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "857",
+          "name": "Oscar Piastri",
+          "constructorId": "1",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-piastri-2026-06-07",
+            "question": "Will Oscar Piastri win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0xd13688433cdaf55b125f65398f194f7123f981f81b9df69b966518ed918b187d",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "578826477558082662775668641120279207527058361091668662574424635920058858635",
+              "62113108027168421259106730376001952380807289992810776029981396282828839993382"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:03.384471Z",
+            "startDate": "2026-05-09T13:13:25.296413Z",
+            "closedTime": "2026-06-07 20:59:30+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/857/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-piastri-2026-06-07.parquet",
+                "bytes": 487078,
+                "sha256": "1a461a2464910604d04cc22dae52afad4c30489d548d9c61532047a5a6f0c48b"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/857/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-piastri-2026-06-07.parquet",
+                "bytes": 16901,
+                "sha256": "d3b2eebbfd05c2b28ac7fc472b0649c8cee6bdb8101a586fa559060093cb4b62"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/857/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-piastri-2026-06-07.parquet",
+                "bytes": 27891,
+                "sha256": "729f5ac46dd91edd0eaf4c9ca53a4d8f4fe39ad62aac7441836ca14c1fcf3f9b"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/857/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-piastri-2026-06-07.parquet",
+                "bytes": 448148,
+                "sha256": "3fe238e21bc007bec842eaa225fd60894ccb96181a62e1192bc9b000fb32dd00"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/857/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-piastri-2026-06-07.parquet",
+                "bytes": 16553,
+                "sha256": "5f1164f08496128036ad045aa167c76d806dd422181b19f8c6dcada3f4c0411d"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/857/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-piastri-2026-06-07.parquet",
+                "bytes": 27108,
+                "sha256": "a1d6082bbef4676600bffb4ab1166023eb3870054adb95ed56923536a0584c75"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "807",
+          "name": "Nico H\u00fclkenberg",
+          "constructorId": "217",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-hulkenberg-2026-06-07",
+            "question": "Will Nico Hulkenberg win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x2496da9f6d0c7ead1d61ce9055d4055b990f09863caafff50dbd0992e798dc71",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "107900376554628346367852817471960516940296711154374240907934217043318180946306",
+              "39607898979176089047881529079708914568586568691311307901086583102003310616949"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:02.968926Z",
+            "startDate": "2026-05-09T13:13:11.527984Z",
+            "closedTime": "2026-06-07 20:59:30+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/807/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-hulkenberg-2026-06-07.parquet",
+                "bytes": 184704,
+                "sha256": "5f71642093beb7e59deb8da03fc7c6388fe477875269adc54712c6fbc35e112f"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/807/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-hulkenberg-2026-06-07.parquet",
+                "bytes": 4191,
+                "sha256": "cd9b479e436397389e9072e3fc8808b6d88ce5368d2d98c0f54718b6cf589cd1"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/807/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-hulkenberg-2026-06-07.parquet",
+                "bytes": 5468,
+                "sha256": "9967b480891d8038ca67dcfce02c2570f72de762db2fcece61a282b202437f15"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/807/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-hulkenberg-2026-06-07.parquet",
+                "bytes": 431962,
+                "sha256": "44d4570fd7c2914328eaa743399d11a96ba0e1c43af7f49951b6cb1eb9ef2719"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/807/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-hulkenberg-2026-06-07.parquet",
+                "bytes": 4633,
+                "sha256": "f479137a1aea0c6a52bdfd3963878c40559cb0f037e7d6fc323e51e638dae3d9"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/807/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-hulkenberg-2026-06-07.parquet",
+                "bytes": 6115,
+                "sha256": "cea2687615936e66c7123cff52418c6ae4af5e218890b2dcb3dcd754734874aa"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "864",
+          "name": "Gabriel Bortoleto",
+          "constructorId": "217",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-bortoleto-2026-06-07",
+            "question": "Will Gabriel Bortoleto win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0xd1754484ea5f065e0337a9bb69f441d7ec32b656472e8783cb16ec421fcf9a30",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "57375201283606725714547829751183456661629722334214115953582666858730783133752",
+              "57024332890254089706507801955070329142507942515151017262751603993292306004978"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:01.969359Z",
+            "startDate": "2026-05-09T13:13:31.202849Z",
+            "closedTime": "2026-06-07 21:04:36+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/864/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-bortoleto-2026-06-07.parquet",
+                "bytes": 227766,
+                "sha256": "e5f6a76e3e42bed18ad73ce879145d323240c47673f6b17e94298215ba303d72"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/864/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-bortoleto-2026-06-07.parquet",
+                "bytes": 4329,
+                "sha256": "637c4f5b79a0bdf8c5afa125756cfe728e36bd73ca415c6ec796ae0f3a0efd5b"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/864/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-bortoleto-2026-06-07.parquet",
+                "bytes": 6040,
+                "sha256": "2da6eef2095d06a9b863599dd27d51048d73ec8fc9d99be5c045886e3bad8783"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/864/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-bortoleto-2026-06-07.parquet",
+                "bytes": 475029,
+                "sha256": "272e6c43890f8bc608816e634c0081005b86a98152dce649bc097f5ba7e3a661"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/864/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-bortoleto-2026-06-07.parquet",
+                "bytes": 4315,
+                "sha256": "0dd72e1e20bfbfbdc8c9dbb27a5977f637e46da9d0e6ab0e2e85c642732cc3f4"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/864/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-bortoleto-2026-06-07.parquet",
+                "bytes": 5749,
+                "sha256": "a086beb3e6ec5735d37765a4252197397bf7437758e187fe5a6ec8ae79eea29f"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "839",
+          "name": "Esteban Ocon",
+          "constructorId": "210",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-ocon-2026-06-07",
+            "question": "Will Esteban Ocon win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0xbb451315b4ed3ec51a9163c21d46b98b564a74724aefb94d13c488d99983c799",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "75866106371054153733628890206574037425243961682928199930540587872165810678069",
+              "14950175147861450391043982733545132547691249551955216712177644268051298717896"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:02.301643Z",
+            "startDate": "2026-05-09T13:12:50.434447Z",
+            "closedTime": "2026-06-07 21:03:37+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/839/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-ocon-2026-06-07.parquet",
+                "bytes": 261301,
+                "sha256": "c6b7296945b68c0c8582ffdd775dc22a4ef6119b41c1c6633164954a9c16e665"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/839/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-ocon-2026-06-07.parquet",
+                "bytes": 4065,
+                "sha256": "5982d7fc72cf72f1033a971796b098ecdeb756e4bc86b3f31bc64549e97bff7f"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/839/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-ocon-2026-06-07.parquet",
+                "bytes": 5268,
+                "sha256": "b89377c3289d6df166073da5c27eb94edb6737c042c4986f00946088caa33e66"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/839/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-ocon-2026-06-07.parquet",
+                "bytes": 537231,
+                "sha256": "9677cc5c49d473d8d7d6deefd6fd4a7253af8f35c86da32c7234291b792b403c"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/839/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-ocon-2026-06-07.parquet",
+                "bytes": 4297,
+                "sha256": "22083d9c53be62e05387ab2f39ffec7bdc023561943ad02abd6ecd580f76c3d4"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/839/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-ocon-2026-06-07.parquet",
+                "bytes": 5657,
+                "sha256": "8d64e9775c7873ddaf11d3cd8c5c2fa02dcb281ff85f67d14a50c61f21dfc9fb"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "840",
+          "name": "Lance Stroll",
+          "constructorId": "117",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-stroll-2026-06-07",
+            "question": "Will Lance Stroll win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0xe1ca2cbf47c23a1f6ce16d384fe919d7acfc427332b3b131412e3ccd68cf8292",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "23521080349938670200236521117490311212640466215284354677891830532829115561261",
+              "61670697384176057419035783376719733100400922001128686861763517385495419195809"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:03.91266Z",
+            "startDate": "2026-05-09T13:14:03.802876Z",
+            "closedTime": "2026-06-07 20:59:31+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/840/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-stroll-2026-06-07.parquet",
+                "bytes": 151345,
+                "sha256": "d74a2c473509e868fe4fe58be497e1d59e9e006ffb6161ab46f7d02b74617df7"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/840/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-stroll-2026-06-07.parquet",
+                "bytes": 4399,
+                "sha256": "145cb44e195f5369f5cfa47ae249553e3429273fef579335a77c01c2448b0cd2"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/840/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-stroll-2026-06-07.parquet",
+                "bytes": 5940,
+                "sha256": "73eb24c39171826a82d870461a46c792098ab3dd1c25481ae34bd81b10dfdcef"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/840/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-stroll-2026-06-07.parquet",
+                "bytes": 315609,
+                "sha256": "9fdd2a8c2274f292348aa9ce5c528766cde890d6f2b92f4c4e708a2644e41cea"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/840/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-stroll-2026-06-07.parquet",
+                "bytes": 4155,
+                "sha256": "7d4b44cfca4856e559084d03caffb0b9c229e18dd3a4e9111fd69f0145298f5e"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/840/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-stroll-2026-06-07.parquet",
+                "bytes": 5235,
+                "sha256": "c8c3a788dd5df7023b18884de07dabeb5210c7fb49d7282bc1727adddeac3a3d"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "822",
+          "name": "Valtteri Bottas",
+          "constructorId": "216",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-bottas-2026-06-07",
+            "question": "Will Valtteri Bottas win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x67f8faf5e745c8f1281b814eea607d359b5e5c99dcd030ad095705390c4b5243",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "43259919215105092779683942854061297228276698348943729598903437083495672138477",
+              "80582068394063743993315746870022666790494879157196546430167885200045536500346"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:03.07168Z",
+            "startDate": "2026-05-09T13:13:15.639526Z",
+            "closedTime": "2026-06-07 20:59:27+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/822/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/06/f1-monaco-grand-prix-winner-bottas-2026-06-07.parquet",
+                "bytes": 157651,
+                "sha256": "1a54b029a7c14a47c83eb94e1bd6c23eac7da25c88de84d67c213ad0b653c544"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/822/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/06/f1-monaco-grand-prix-winner-bottas-2026-06-07.parquet",
+                "bytes": 4479,
+                "sha256": "16d50a73b98bd042d93cba6178de42ba9ff78e120fb9c7bc91b16237d5a44503"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-06/822/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/06/f1-monaco-grand-prix-winner-bottas-2026-06-07.parquet",
+                "bytes": 6262,
+                "sha256": "607f4bd6adc46dba3bc5479912003e5340e83fa47afad503124a11fd767e9e5c"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/822/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-bottas-2026-06-07.parquet",
+                "bytes": 557253,
+                "sha256": "eac71170421f6c63b14a1f61df37f6424da49cdde36e98fb1f56a51d8ea2849b"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/822/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-bottas-2026-06-07.parquet",
+                "bytes": 4368,
+                "sha256": "0964730cf4c2460dd53fe85f82d9dc25aef5c1123d4f3c9fedb39e514ddfc950"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/822/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-bottas-2026-06-07.parquet",
+                "bytes": 5847,
+                "sha256": "791f9e8f635907346ac54afcbe5d684225390c44b48dd4f91b0fe1229aefc892"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "815",
+          "name": "Sergio P\u00e9rez",
+          "constructorId": "216",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-perez-2026-06-07",
+            "question": "Will Sergio Perez win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x2d906fa3852483eb8ba8b09cd296caca97d7089189e69cc526d6d3b72772bedd",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "93841939450849168367491096257016663131142412070013774610783741802652865627754",
+              "49604535985196477608156300716594063054580356214465752862031637525534729041056"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:02.073269Z",
+            "startDate": "2026-05-09T13:12:41.427047Z",
+            "closedTime": "2026-06-07 20:57:55+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/815/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-perez-2026-06-07.parquet",
+                "bytes": 428621,
+                "sha256": "fb6711d2d26bf12271e6d8f6054c23736f168954004f45dd91c297c1fdc9fd31"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/815/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-perez-2026-06-07.parquet",
+                "bytes": 4298,
+                "sha256": "652fb13414fd1e35c1b9c8766a224e0f6dd9ea4b24650e5b54106c647bdf7681"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/815/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-perez-2026-06-07.parquet",
+                "bytes": 5665,
+                "sha256": "51cbe37ff5ba1245c85db6ede33d6aedc644f0240d1e01bee82ccee0313c5100"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "846",
+          "name": "Lando Norris",
+          "constructorId": "1",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-norris-2026-06-07",
+            "question": "Will Lando Norris win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x83b602301cd7e5b717b50e2c055d94433df638db563556209493fbc074ff8a4a",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "57675532514190197377823258775443578797292899515149396025799339207033680551158",
+              "94594108643827152550558567656383835789403483587762281612971261449356667158681"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:02.408475Z",
+            "startDate": "2026-05-09T13:12:54.301716Z",
+            "closedTime": "2026-06-07 20:57:58+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/846/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-norris-2026-06-07.parquet",
+                "bytes": 506219,
+                "sha256": "97c420405112a516fc68efcd0265b4044e4c6f5957fe58bd507807d8473978dc"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/846/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-norris-2026-06-07.parquet",
+                "bytes": 13836,
+                "sha256": "286a15d83de3d12a11f795ef98dcea394bff75b7e8805cd806248f9032f85ec3"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/846/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-norris-2026-06-07.parquet",
+                "bytes": 23324,
+                "sha256": "cfef0ab284fa47d3a8242eb5839b0df872c0e5436db318897c28dd5cd7863cb8"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "847",
+          "name": "George Russell",
+          "constructorId": "131",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-russell-2026-06-07",
+            "question": "Will George Russell win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0xf9deae61d56b06ab1d24559339d0c074a4a9cda57667bc386168dd48803d1d24",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "104244920796904754388845253974491195701098029552328564854810764310021155826042",
+              "59237121821371128682437276223314354687966753565404699572850516053197018329944"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:03.489938Z",
+            "startDate": "2026-05-09T13:14:54.580073Z",
+            "closedTime": "2026-06-07 20:57:24+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/847/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-russell-2026-06-07.parquet",
+                "bytes": 519449,
+                "sha256": "2cc4455f2f85c07039a65683c4cd5c86e2eea3f57b614de42813f21d2fb963e4"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/847/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-russell-2026-06-07.parquet",
+                "bytes": 18490,
+                "sha256": "d3487c46475bc8a9bdd40887ffb6685b14ef9d97e52735fbb4e103474782bfa9"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/847/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-russell-2026-06-07.parquet",
+                "bytes": 33075,
+                "sha256": "aa065a90bdd76c3512f9da5ad1f8cf3d7059e2c81a95d8b60cc368240858eff6"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "4",
+          "name": "Fernando Alonso",
+          "constructorId": "117",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-alonso-2026-06-07",
+            "question": "Will Fernando Alonso win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0xc0b9f46f1a7dc47f03a81bb1d0e30025d3026020f4e43fab74da65d4cf67c053",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "74151946313801201138442334471560608618698081070737786204363061152207545656394",
+              "17409870668272691068783160167096559623794948908426590814746506559639132193675"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:01.75732Z",
+            "startDate": "2026-05-09T13:14:32.040678Z",
+            "closedTime": "2026-06-07 21:07:19+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/4/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-alonso-2026-06-07.parquet",
+                "bytes": 500369,
+                "sha256": "cc6c76fea61e992979bcc110637153322e5ece2d4d1d764caccc426acacb7747"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/4/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-alonso-2026-06-07.parquet",
+                "bytes": 4278,
+                "sha256": "8a30a690e546b9e11cbfb4731b4d147d2cf3e5cde18fe8104b30761048f88059"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/4/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-alonso-2026-06-07.parquet",
+                "bytes": 5582,
+                "sha256": "a86ec767124e135e2fdc2ef10c583647bd9822a9450006b04cbc7732b25e8d40"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "848",
+          "name": "Alexander Albon",
+          "constructorId": "3",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-albon-2026-06-07",
+            "question": "Will Alexander Albon win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0x9aa431b0b75a14f3a50377b3e87cc8c0276ee45eebb473cdd1c715184d3466bd",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "52253721048689529548425589367722429321455278018527931906979334897967102062797",
+              "105243916344673773415224566357998017227036303954000359326010891091798896900576"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:01.864036Z",
+            "startDate": "2026-05-09T13:12:38.355332Z",
+            "closedTime": "2026-06-07 21:04:43+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/848/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-albon-2026-06-07.parquet",
+                "bytes": 556648,
+                "sha256": "d5833da8358aa4801cd3927ad2400026d105e48846b8de7a0d2e9aa782c4da3f"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/848/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-albon-2026-06-07.parquet",
+                "bytes": 4201,
+                "sha256": "df984de7b44f49a6c56103f9df350fb3122649e658719da2d7637a0f95a4dd89"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/848/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-albon-2026-06-07.parquet",
+                "bytes": 5544,
+                "sha256": "808ab9df2cd56e8a6b63cbe61317e7f321e39b2eeb1b8d1fb48bf42b2ae13a7b"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "866",
+          "name": "Arvid Lindblad",
+          "constructorId": "215",
+          "market": {
+            "slug": "f1-monaco-grand-prix-winner-lindblad-2026-06-07",
+            "question": "Will Arvid Lindblad win the 2026 F1 Monaco Grand Prix?",
+            "conditionId": "0xc9842f97d3c17c73c27e46cd8fe7c99a3d4c0920f1b404728bc8be94d3085530",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "9238904946658008109058896360422163286532741343470571123492594564149180666371",
+              "71607379023704923956634169855058869981926885727181148769403365207359649366817"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-05-09T11:30:03.600617Z",
+            "startDate": "2026-05-09T13:13:41.480252Z",
+            "closedTime": "2026-06-07 20:59:27+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-06-06": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-06-07": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/866/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/06/07/f1-monaco-grand-prix-winner-lindblad-2026-06-07.parquet",
+                "bytes": 426342,
+                "sha256": "b0dc76a941c0a7bcf194052392c42a720f872f77a2956cdc598497183f3cb9e5"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/866/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/06/07/f1-monaco-grand-prix-winner-lindblad-2026-06-07.parquet",
+                "bytes": 4287,
+                "sha256": "a1db32331a2a74c0065cc380695cfda77fb3698df86a92a02cc2f4c95c2a3d77"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/monaco/2026-06-07/866/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/06/07/f1-monaco-grand-prix-winner-lindblad-2026-06-07.parquet",
+                "bytes": 5643,
+                "sha256": "4cdddcc26113a764098b1758d31e69b07deb1305bd71e5dd55ea86219be8aa93"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "singapore",
+      "name": "Singapore Grand Prix",
+      "dates": [
+        "2026-10-10",
+        "2026-10-11"
+      ],
+      "drivers": [
+        {
+          "driverId": "830",
+          "name": "Max Verstappen",
+          "constructorId": "9",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-verstappen-2026-10-11",
+            "question": "Will Max Verstappen win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0xb844ce6f929ea8ed090c4b23c77ef06eae93200b571db36bb714ed382f092e0d",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "105026689771335810478914327541724319323338915766526076386906176141135574302746",
+              "18169266132685133743396945809504334013307326707016878522262902463728560859642"
+            ],
+            "outcomePrices": [
+              "1",
+              "0"
+            ],
+            "createdAt": "2026-10-03T11:30:02.736033Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:48+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/830/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-verstappen-2026-10-11.parquet",
+                "bytes": 652194,
+                "sha256": "c8e1f2282bab238e0eb28cfe62785d0e805b4aee44528827488e1a1122fc8a2a"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/830/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/10/f1-singapore-grand-prix-winner-verstappen-2026-10-11.parquet",
+                "bytes": 23107,
+                "sha256": "23091bd9f6aaca4c70904377ca9619c8853f7f05ec9ddf64af52ccfb66ad078d"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/830/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/10/f1-singapore-grand-prix-winner-verstappen-2026-10-11.parquet",
+                "bytes": 44196,
+                "sha256": "d995ea693caa0a9fbf4f9a4020b03c0bbcda978127c2ef31680481c742461ef9"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/830/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-verstappen-2026-10-11.parquet",
+                "bytes": 569265,
+                "sha256": "7880fa6bbfa29a7d475cc047678d0eade6a9e5b77b98983b86a0cc7c1a813ee1"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/830/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/11/f1-singapore-grand-prix-winner-verstappen-2026-10-11.parquet",
+                "bytes": 33446,
+                "sha256": "2e65b4c3a949b1f1df8ddd7a76f34fab1f5693b7dc2e26cd792e42004e175810"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/830/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/11/f1-singapore-grand-prix-winner-verstappen-2026-10-11.parquet",
+                "bytes": 66330,
+                "sha256": "c93f2839cbec0a241504b7b27facf07993f63d8f89488726e81fe19dae637242"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "863",
+          "name": "Andrea Kimi Antonelli",
+          "constructorId": "131",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-antonelli-2026-10-11",
+            "question": "Will Kimi Antonelli win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x39d38a7f1834d225f080d2cc19a553b16bd6b408c763b4a255ec278324e95f44",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "5696133373196488147875236821860681766749634665413742392928884679633318673226",
+              "27059576822493931167716228258804549919191574188989410600175203808901887202446"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:02.564534Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:27:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/863/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-antonelli-2026-10-11.parquet",
+                "bytes": 476546,
+                "sha256": "59b487604fd20dc6cb48afac064265fdf90802a9232b700e537284d0281ffbfa"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/863/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/10/f1-singapore-grand-prix-winner-antonelli-2026-10-11.parquet",
+                "bytes": 14965,
+                "sha256": "3b0dc1f4bc1d87d14d1517c957cc1e797514eff69711800d311efcc8df903746"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/863/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/10/f1-singapore-grand-prix-winner-antonelli-2026-10-11.parquet",
+                "bytes": 26553,
+                "sha256": "b1c628555b5b3207282190e2d7d59f31089f79bd70185c7b8cda14976fcc758e"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/863/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-antonelli-2026-10-11.parquet",
+                "bytes": 236243,
+                "sha256": "ed886a1d5589dee1ace8d937205189966e0dc2c3b91a10e1f0d078007db4cf50"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/863/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/11/f1-singapore-grand-prix-winner-antonelli-2026-10-11.parquet",
+                "bytes": 15297,
+                "sha256": "875780a95feb534574909d713af140b1d2c868c542a80762917f25c30c76e6db"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/863/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/11/f1-singapore-grand-prix-winner-antonelli-2026-10-11.parquet",
+                "bytes": 28409,
+                "sha256": "94d6cdd871ddd972a4f2f8eb987d32c859d39c53278b22caf3cc8dbb4b223cdb"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "1",
+          "name": "Lewis Hamilton",
+          "constructorId": "6",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-hamilton-2026-10-11",
+            "question": "Will Lewis Hamilton win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0xbd329c1f994d55ec7f73ffbb8a501a746bbc2e870ec8f9db7d96d1809858f900",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "9518453683994039663103190001640433279731056992400699084747973794695685716810",
+              "35668829211009293309437648336363518152351767550983526694141672795895341168362"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:03.573278Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:27:28+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/1/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-hamilton-2026-10-11.parquet",
+                "bytes": 737803,
+                "sha256": "59e06e66d79a2912da8f7ef3dba83c3fa035fbaddcb7c72defc4fb7fa027db92"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/1/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/10/f1-singapore-grand-prix-winner-hamilton-2026-10-11.parquet",
+                "bytes": 15776,
+                "sha256": "a1c99c90ddbf797f4803ab71484e239fc0b664cb19b51f030edeaf2a5c802a64"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/1/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/10/f1-singapore-grand-prix-winner-hamilton-2026-10-11.parquet",
+                "bytes": 28569,
+                "sha256": "3832931c8bdda77b179b01d4f0a52d645664327b590be7884f4c8ccf74ee6754"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/1/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-hamilton-2026-10-11.parquet",
+                "bytes": 525474,
+                "sha256": "19ce1d7a5b2466474cff33785391842746475602b59141d88411be41ac875e1a"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/1/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/11/f1-singapore-grand-prix-winner-hamilton-2026-10-11.parquet",
+                "bytes": 22513,
+                "sha256": "8483bf37c63d36c6f348d27e25e4926e35379c05d655ec42cba5ddf569966ef7"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/1/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/11/f1-singapore-grand-prix-winner-hamilton-2026-10-11.parquet",
+                "bytes": 42973,
+                "sha256": "00ccb05c3a6ff79d5bdbfaf8189c0452f3ac3c6c81a65ccd4f780fabaa4754ab"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "844",
+          "name": "Charles Leclerc",
+          "constructorId": "6",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-leclerc-2026-10-11",
+            "question": "Will Charles Leclerc win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x6d090dc0195f6412c094f1a68dc1d894fd177ed833260b439141de989c6e7c98",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "92443082174901362958213182894863948289679800011664028904195269564952495193793",
+              "95430379190808124848262215797183522744692001755332714315319382852349048109004"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:02.073874Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:27:28+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/844/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-leclerc-2026-10-11.parquet",
+                "bytes": 395300,
+                "sha256": "5fdf08066de362ec2469a09ecdc0dcabec3402d5f28033a49fa3daf8f7b8163e"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/844/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/10/f1-singapore-grand-prix-winner-leclerc-2026-10-11.parquet",
+                "bytes": 11258,
+                "sha256": "51b96ca62292b11988502411e4394446da7132805bd05656230060f1b7c80eee"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/844/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/10/f1-singapore-grand-prix-winner-leclerc-2026-10-11.parquet",
+                "bytes": 19764,
+                "sha256": "abc781fa13ec48899de62d422c602b896e0889863016d08e9d1d0f2ba8604895"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/844/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-leclerc-2026-10-11.parquet",
+                "bytes": 365845,
+                "sha256": "f07a17601bee354bba23f3ef74f3cfa7f1a6643af6ef98ccbdb49b1b17c95fa8"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/844/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/11/f1-singapore-grand-prix-winner-leclerc-2026-10-11.parquet",
+                "bytes": 16575,
+                "sha256": "52ceb16829513f43719db5b6738a68e8f018f80ebe2d312cf23067828c315b5c"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/844/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/11/f1-singapore-grand-prix-winner-leclerc-2026-10-11.parquet",
+                "bytes": 31774,
+                "sha256": "fb3e9f3204a7adf88eaf34dd979179797d3e75944bd6116f7952a7de419c4f18"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "865",
+          "name": "Isack Hadjar",
+          "constructorId": "9",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-hadjar-2026-10-11",
+            "question": "Will Isack Hadjar win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x5553788e651e38bc5d2c36375377422e2793c830d69c7dca0419ecce7ca15c53",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "5925247658760843939848257679933962433517180533220416892662406179964839647949",
+              "28286144959101394798460376037075633290755670688976847834633756838807126158555"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:04.363918Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:27:28+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/865/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-hadjar-2026-10-11.parquet",
+                "bytes": 184472,
+                "sha256": "dad987931c842cfb55d87cd44f0583017d1a02c57b248b83cd719f3bf506e978"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/865/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/10/f1-singapore-grand-prix-winner-hadjar-2026-10-11.parquet",
+                "bytes": 8583,
+                "sha256": "45e158cda71df943cd8a8a69d638fbeb3c24abc883a9dab6a302c8dd02cc52c1"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/865/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/10/f1-singapore-grand-prix-winner-hadjar-2026-10-11.parquet",
+                "bytes": 13471,
+                "sha256": "7392fc4acf4f878f5614cf48deac8b1cd31a6b5be8fbad11ec93ac6f70cf5a9e"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/865/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-hadjar-2026-10-11.parquet",
+                "bytes": 99207,
+                "sha256": "0176be3b40709df0bf15d88aeb8c7e1f0240389d384b1bca18e731bdc91f3cd0"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/865/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/11/f1-singapore-grand-prix-winner-hadjar-2026-10-11.parquet",
+                "bytes": 6115,
+                "sha256": "5db3faa1e016b3073944cf0701cc1aae73540d375003569755d925d295d65dbf"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/865/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/11/f1-singapore-grand-prix-winner-hadjar-2026-10-11.parquet",
+                "bytes": 8736,
+                "sha256": "427e28353dbb5bb709f65a6e613bbd5cdadbac90bb4da78144d80aa1ecdb31c0"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "857",
+          "name": "Oscar Piastri",
+          "constructorId": "1",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-piastri-2026-10-11",
+            "question": "Will Oscar Piastri win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x4b1e28da0d2853b175d616218efe93664d515478039e0a8571f587eba97e7eac",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "92166685409924243611608345305761239418833259618841446683252071008964493612883",
+              "3385430802896926213986407891446343525468798905239141667160928320973097548001"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:03.897881Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:27:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/857/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-piastri-2026-10-11.parquet",
+                "bytes": 283352,
+                "sha256": "cd2f7d1cbeaffe2c33006f5bb1a19858161b9629fa798317cbab5db5b6e8026e"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/857/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/10/f1-singapore-grand-prix-winner-piastri-2026-10-11.parquet",
+                "bytes": 9002,
+                "sha256": "e62d1afec06cc91237f927846e00b0b4fdbc695f5de7195fd4f785eb541d73c2"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/857/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/10/f1-singapore-grand-prix-winner-piastri-2026-10-11.parquet",
+                "bytes": 14255,
+                "sha256": "a88aac2767abb2f452639bad42f70ed49e212e57c108a2ad898d68c40bae1fbf"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/857/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-piastri-2026-10-11.parquet",
+                "bytes": 137522,
+                "sha256": "6eb5c739635453d15770911f38ec1397646488bc0aab020d96c86747d116375e"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/857/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/11/f1-singapore-grand-prix-winner-piastri-2026-10-11.parquet",
+                "bytes": 7704,
+                "sha256": "c62e8e9a580079427835427313719015f9847db8692125cb256c55a242af16b7"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/857/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/11/f1-singapore-grand-prix-winner-piastri-2026-10-11.parquet",
+                "bytes": 11677,
+                "sha256": "8a7e2e98560bdb20377c74da4fb8867d732c46f78130ba191b937579ecf2bc7e"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "859",
+          "name": "Liam Lawson",
+          "constructorId": "215",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-lawson-2026-10-11",
+            "question": "Will Liam Lawson win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x77b34b8340d6d3ba8b618ede8d139250210817999cb2bf3a4d798fc7cee95bf4",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "59218091277618579146661875012717821529527136170610280346022356243553006480870",
+              "68974350686540740395028995862923652784200624912762127346014032642983746971236"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:04.528628Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:03+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/859/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-lawson-2026-10-11.parquet",
+                "bytes": 130747,
+                "sha256": "151b1cd830de6cc240b6195fa7e7b60679d8009bd93e8d0dc3758b1710adec69"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/859/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/10/f1-singapore-grand-prix-winner-lawson-2026-10-11.parquet",
+                "bytes": 7325,
+                "sha256": "75fc99d6121e2c0a25346589adebf0af1756599c7c2949802fd61f5e6d827d34"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/859/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/10/f1-singapore-grand-prix-winner-lawson-2026-10-11.parquet",
+                "bytes": 10377,
+                "sha256": "0a68d80a2165282b7c68961acd0631977b2bc66af93c648329061bb13c4bb1d1"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/859/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-lawson-2026-10-11.parquet",
+                "bytes": 68193,
+                "sha256": "6aab0cfa4bc44d27a75bda30b502a5b7777fc9248beb2dd99ba1547f7d167ab6"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "4",
+          "name": "Fernando Alonso",
+          "constructorId": "117",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-alonso-2026-10-11",
+            "question": "Will Fernando Alonso win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0xc3d5383ed4cfdd062479725116f52351fe9783f719b289d6be2fa4e4f7e1ccc3",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "24946613243542045093782896030972508052414682034023350754030313581675845916465",
+              "688196349142491032970805209810190541161183653328028838461927340671812074805"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:01.376138Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/4/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-alonso-2026-10-11.parquet",
+                "bytes": 86126,
+                "sha256": "8399ca7ba4823fd744656e09df423dc935c04f45cc028bc67744d741a3f58a66"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/4/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/10/f1-singapore-grand-prix-winner-alonso-2026-10-11.parquet",
+                "bytes": 4110,
+                "sha256": "aa83e0d737c7679383ff1c3a6d269df8ede2a37940ed61a6869007c67721da77"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/4/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/10/f1-singapore-grand-prix-winner-alonso-2026-10-11.parquet",
+                "bytes": 5219,
+                "sha256": "03daf7e035781cc9ed583865c32fc6d40f26cb64f8a589027a8e2280b50a36c3"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/4/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-alonso-2026-10-11.parquet",
+                "bytes": 72075,
+                "sha256": "635fd943dbaa04142a8a0b217a89fd1a5ee6e43f8e2e12528d7f65dc456731be"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "846",
+          "name": "Lando Norris",
+          "constructorId": "1",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-norris-2026-10-11",
+            "question": "Will Lando Norris win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x0db778ef36653053b8434e4d934dcafcf4c2a9aed6f1e9786baeccf2c4e2feb1",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "50434279802004157692776355100568844573677746234993201217816404234694902233906",
+              "82977813690489649341195807886227971338596987009971362649627702486177591251082"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:02.39295Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:03+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/846/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-norris-2026-10-11.parquet",
+                "bytes": 401990,
+                "sha256": "59c74214fadf5ef03200bf3b4828a3a38f8cddad6c239ef13ec82b6341b0a70e"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/846/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/10/f1-singapore-grand-prix-winner-norris-2026-10-11.parquet",
+                "bytes": 10181,
+                "sha256": "9c78a0d385908fa603fcd144ab8927a9851d567e7639f175e79f1f5c573f333b"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/846/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/10/f1-singapore-grand-prix-winner-norris-2026-10-11.parquet",
+                "bytes": 16596,
+                "sha256": "006be4bb830477eff4630e4879b0159ccccb0bbd0d10cf917524901631910c98"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/846/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-norris-2026-10-11.parquet",
+                "bytes": 223108,
+                "sha256": "de40af230446529c4970ce52d69313a4dac1da7511d8a94738e566c71c23795a"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/846/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/11/f1-singapore-grand-prix-winner-norris-2026-10-11.parquet",
+                "bytes": 11115,
+                "sha256": "ec99ca35944d41d3346091c099182cb7b71e95808ebd2be73e9050bf013ebadb"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/846/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/11/f1-singapore-grand-prix-winner-norris-2026-10-11.parquet",
+                "bytes": 18022,
+                "sha256": "b629d75896f8611964eb610e85a96fa79f353db1ac6a9766376938325949d5a9"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "866",
+          "name": "Arvid Lindblad",
+          "constructorId": "215",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-lindblad-2026-10-11",
+            "question": "Will Arvid Lindblad win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x89557c1c6e4568d2e14ba822ffcca0a1cb3834bbd928ffdb04cfcb6d6f6e5d66",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "35806167495708067688142660894515436986537444155410197985851888007006540375369",
+              "73786217494773844315097241601469402261181288587752020787779094277282096464707"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:04.214272Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:03+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/866/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-lindblad-2026-10-11.parquet",
+                "bytes": 68014,
+                "sha256": "94200662e3fbebd005edc44eaf4ff68b09f1f8f008cf154d436a0869227f9398"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/866/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-lindblad-2026-10-11.parquet",
+                "bytes": 65132,
+                "sha256": "eedfa07e6b219a54f22b8eef3f951c179bfff97dbcd8effe6403bb80b46bfdd9"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "807",
+          "name": "Nico H\u00fclkenberg",
+          "constructorId": "217",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-hulkenberg-2026-10-11",
+            "question": "Will Nico Hulkenberg win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x5fc1c38dbaf5ca432bc94acbfbfecd29430b89afcc8f5128c81647627d19dee1",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "46633357118097927706875836765976613273002880284113105333660319153040915921433",
+              "46558944688737814439714383532789142567034783154621017481305654310836380507619"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:03.234092Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:03+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/807/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-hulkenberg-2026-10-11.parquet",
+                "bytes": 68772,
+                "sha256": "2a90332a2562b307ab27c03dd88a9181e4661028e53f4f417174eb4fe0c934ef"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/807/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-hulkenberg-2026-10-11.parquet",
+                "bytes": 64243,
+                "sha256": "8bedc6dc92a247bf65b5bc8c0eca13fcdf50fec4f2001a0047dab4b637d77224"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "840",
+          "name": "Lance Stroll",
+          "constructorId": "117",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-stroll-2026-10-11",
+            "question": "Will Lance Stroll win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x9a6e1c12d9ee7d1efaafaf36585685d0c98ce5cf50f440d7b18da5daaf1c5d2d",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "17728978960408046070104397306363646944957497115347892906141065161648077901163",
+              "2388976098769779767613593861341471794344583020006926737684379225160634471605"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:04.694158Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:03+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/840/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-stroll-2026-10-11.parquet",
+                "bytes": 83155,
+                "sha256": "270b45e958cb99fa304603d59287589c7f59719ef807ae13079de24cba95aace"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/840/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-stroll-2026-10-11.parquet",
+                "bytes": 68710,
+                "sha256": "4abb33d0e13879ac0e32e54198a866abf315df110ad9c151e161cf2a58b835ef"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "861",
+          "name": "Franco Colapinto",
+          "constructorId": "214",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-colapinto-2026-10-11",
+            "question": "Will Franco Colapinto win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x9fd82a69c3dba60a0fd857c9660b7bebe06a721f6c3bc328a2962b598e44efca",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "4367879003640045686956388825375902266684763445371199130205596602619739253591",
+              "49057690591639976752386540027295719904315179028275546848996738611360655484055"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:02.907726Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:03+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/861/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-colapinto-2026-10-11.parquet",
+                "bytes": 72110,
+                "sha256": "a28593c78175a0b103fd13fceb50ab2e506c91af9a6fd11b05b0017f866a2209"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/861/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-colapinto-2026-10-11.parquet",
+                "bytes": 64064,
+                "sha256": "165750f8debdd4159a793df3af34bc9d8f5a8571d307ce7faef1c7e36920285f"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "860",
+          "name": "Oliver Bearman",
+          "constructorId": "210",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-bearman-2026-10-11",
+            "question": "Will Oliver Bearman win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x306e0be72a56e689686dbf24124f8fc97cba194ef41fc89e5129fbe79815c9a6",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "22577247696951783128672169989438357120216379084843314121733136822205330394386",
+              "13717374230957858723045934231422808606746673178179462144868698508031677984657"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:03.736617Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:27:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/860/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-bearman-2026-10-11.parquet",
+                "bytes": 86052,
+                "sha256": "0f19ca5bfd969d07317d2100c5ad15aa3760f97928db1d7d3bce020379a044d0"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/860/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/10/f1-singapore-grand-prix-winner-bearman-2026-10-11.parquet",
+                "bytes": 4110,
+                "sha256": "c42b72f8fc658968ace20f079190977658182a2bb7f84693b76cbd7655ff8577"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/860/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/10/f1-singapore-grand-prix-winner-bearman-2026-10-11.parquet",
+                "bytes": 5052,
+                "sha256": "61b3b3f6a6e49496a4a539ca1ea3c101950f2eb0ba29e26f18cb0bc098779bb6"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/860/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-bearman-2026-10-11.parquet",
+                "bytes": 67520,
+                "sha256": "69f4373df75be5fe53195cde26885f951e51dc7592c4364924a328c2388b2462"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "839",
+          "name": "Esteban Ocon",
+          "constructorId": "210",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-ocon-2026-10-11",
+            "question": "Will Esteban Ocon win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0xe917b9547d0bf18f7a43bcf59d13266a0df013dd381fb4558f08f41766f9df32",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "110900142078134549566830658584183223162291771163731239731531646173931267218149",
+              "63060709909855097864166172784073983493335825111434319427466733382350732860087"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:02.232633Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:27:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/839/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-ocon-2026-10-11.parquet",
+                "bytes": 65545,
+                "sha256": "616d8f2f30d449ec014b4b010dc90d56b96441fe4865d3cbbf08b33253452000"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/839/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-ocon-2026-10-11.parquet",
+                "bytes": 64710,
+                "sha256": "411d2e05d7cd69ba9e3d2bf38e1907c07468ff30f2eee60b6cfcaaa64f6a9cbd"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "842",
+          "name": "Pierre Gasly",
+          "constructorId": "214",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-gasly-2026-10-11",
+            "question": "Will Pierre Gasly win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x39d93060d045d63ea8f2e6d07058708de8a18ad4d884db52f88dc516d68a1cfb",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "28558391061191296576456870322949545965070312914289181555918414954825561771030",
+              "33234606269264767866687030773778716736397936958460885125542303929674184100679"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:01.146421Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:04+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-10/842/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/10/f1-singapore-grand-prix-winner-gasly-2026-10-11.parquet",
+                "bytes": 86792,
+                "sha256": "8690ec6fc0a1d9668c680cc83b0101cec1af632e9da8a61155a9b1587e037260"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/842/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-gasly-2026-10-11.parquet",
+                "bytes": 63042,
+                "sha256": "ea52b4cd9563aafa0cf66174d829491118a31c9841cdf62d487de7a014408017"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "832",
+          "name": "Carlos Sainz",
+          "constructorId": "3",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-jr-2026-10-11",
+            "question": "Will Carlos Sainz Jr. win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x1300a4dfa7d035542fcfefa516d9da7ceb6737d335bd25f1b9c38cd70115b90b",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "112114148297929537173847598641186061156229360765636408243334062234430064452907",
+              "1852992700424315675198144277005984754155960815357870052594091261317173172688"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:03.070989Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:27:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/832/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-jr-2026-10-11.parquet",
+                "bytes": 72267,
+                "sha256": "a54f9774ac2f9fe9808c7796a70c849e3aa61954b11781935f2ddc9c1656a907"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/832/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/11/f1-singapore-grand-prix-winner-jr-2026-10-11.parquet",
+                "bytes": 4074,
+                "sha256": "ca89ad087547b460e4ced5098fc9c1bc2caf37c1527fa846be6a0abf0ff986f8"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/832/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/11/f1-singapore-grand-prix-winner-jr-2026-10-11.parquet",
+                "bytes": 5125,
+                "sha256": "1f13e51abdfbf44277f91af64169db38f04d83e529e517b52fd1acf4f26e4aaf"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "864",
+          "name": "Gabriel Bortoleto",
+          "constructorId": "217",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-bortoleto-2026-10-11",
+            "question": "Will Gabriel Bortoleto win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0xdeadfd09430114150d45edadf61e2574d18b9c658b468dfb4e662ed547dfce92",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "2835735619366113132331629458875618026032260678708439186410341002678206064734",
+              "81542601039846077964668618799849538243986175326686082556762467310022311182394"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:01.728995Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/864/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-bortoleto-2026-10-11.parquet",
+                "bytes": 66225,
+                "sha256": "041145bbd21e5bcb9282c4cea3c5b78c0b78c780fecc65b2aabb3a2bca0b913e"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "815",
+          "name": "Sergio P\u00e9rez",
+          "constructorId": "216",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-perez-2026-10-11",
+            "question": "Will Sergio Perez win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x195073a57cd6d941c09c8debcb0ced3b11b943f273787f118fec36436694b798",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "83652434777062733522317823357052014621993834306632156362686898553393933523458",
+              "97278170508002700050758316001573025656446063304850496024337495869772679870382"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:01.879466Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/815/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-perez-2026-10-11.parquet",
+                "bytes": 65156,
+                "sha256": "32822bd644c27e29d02bedfa506f8a54162d37ee0e1e56b5d937d397447621da"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "847",
+          "name": "George Russell",
+          "constructorId": "131",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-russell-2026-10-11",
+            "question": "Will George Russell win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x84b89bd12e19f0d74c202365323061f7fe4d5377a83ee007378210a9b5226f04",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "56718796378955317111468916340265911522929583552165139147928588786823433132601",
+              "70690888793508309483507812013399704643435598035170387722185908835870850129091"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:04.067613Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:27:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/847/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-russell-2026-10-11.parquet",
+                "bytes": 113826,
+                "sha256": "8dee0a7527c2c3e42528ae1c26263a51cf3cc49f104d520f99b7cb81fab0ab1a"
+              },
+              "trades": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/847/trades.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/trades/2026/10/11/f1-singapore-grand-prix-winner-russell-2026-10-11.parquet",
+                "bytes": 8610,
+                "sha256": "55318c44867cc0e7f99ae47aebd5e68a02ef91cc49c96086741dcf499d354277"
+              },
+              "onchain_fills": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/847/onchain_fills.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/onchain_fills/2026/10/11/f1-singapore-grand-prix-winner-russell-2026-10-11.parquet",
+                "bytes": 14145,
+                "sha256": "d03f7fbc572c351d6787688d6c8c3611c56067b2d823ca34f62fae684c9e73bf"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "848",
+          "name": "Alexander Albon",
+          "constructorId": "3",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-albon-2026-10-11",
+            "question": "Will Alexander Albon win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0xf3f7e34bd7e4beb5db2ce33f06d77d0fe12f918667f19567bb9b53a2e6034344",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "20899351361659882916278870698966147459616666433222997076649183873101393641787",
+              "106800336502305569440780829628151973470239916586551844296826478788257576824090"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:01.54988Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:28:48+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/848/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-albon-2026-10-11.parquet",
+                "bytes": 64215,
+                "sha256": "7367b7ac0e1d8f3605ad8cf5d276539992d8d2b280b1bfa4d2f69989d96e52aa"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        },
+        {
+          "driverId": "822",
+          "name": "Valtteri Bottas",
+          "constructorId": "216",
+          "market": {
+            "slug": "f1-singapore-grand-prix-winner-bottas-2026-10-11",
+            "question": "Will Valtteri Bottas win the 2026 F1 Singapore Grand Prix?",
+            "conditionId": "0x6dcf5db9e9230a83984188d371374cabc7485e4d91e65755c0b5083a6c74c567",
+            "outcomes": [
+              "Yes",
+              "No"
+            ],
+            "clobTokenIds": [
+              "37377009617262886055248856685172953678066728775153467706615477067585995032236",
+              "59927668342489198362755994728474079285761440738589520731870247508309195382811"
+            ],
+            "outcomePrices": [
+              "0",
+              "1"
+            ],
+            "createdAt": "2026-10-03T11:30:03.402633Z",
+            "startDate": "2026-10-03T11:30:31Z",
+            "closedTime": "2026-10-11 18:27:46+00",
+            "closed": true,
+            "umaResolutionStatus": "resolved",
+            "negRisk": true
+          },
+          "days": {
+            "2026-10-10": {
+              "l2": {
+                "status": "not_requested_quota_cap"
+              },
+              "trades": {
+                "status": "not_requested_quota_cap"
+              },
+              "onchain_fills": {
+                "status": "not_requested_quota_cap"
+              }
+            },
+            "2026-10-11": {
+              "l2": {
+                "status": "available",
+                "origin": "downloaded",
+                "path": "tmp/pmdata-session-windows/singapore/2026-10-11/822/l2.parquet",
+                "url": "https://api.pmdata.dev/v1/polymarket/l2/2026/10/11/f1-singapore-grand-prix-winner-bottas-2026-10-11.parquet",
+                "bytes": 64832,
+                "sha256": "5b590e755e2991fa451fdf13517565969ae7f155446593ea30ab7271afa5b171"
+              },
+              "trades": {
+                "status": "not_found"
+              },
+              "onchain_fills": {
+                "status": "not_found"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "collectionStatus": "Stopped at the cap of 190 successful new downloads; some qualifying-day files were not requested."
+}

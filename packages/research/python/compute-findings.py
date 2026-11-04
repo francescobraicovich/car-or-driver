@@ -57,10 +57,10 @@ class Tables:
         self.drivers['driver'] = self.drivers.driverId.map(self.driver_names)
         self.drivers['team'] = self.drivers.constructorId.map(self.constructor_names)
         self.cars['team'] = self.cars.constructorId.map(self.constructor_names)
-        car_combined = self.cars.set_index(['raceId', 'constructorId']).combined
-        self.drivers['carCombined'] = [car_combined.get((race, team), np.nan) for race, team in zip(self.drivers.raceId, self.drivers.constructorId)]
-        self.drivers['driverRating'] = self.drivers.combined - 1000
-        self.drivers['carRating'] = self.drivers.carCombined - 1000
+        car_race = self.cars.set_index(['raceId', 'constructorId']).race
+        self.drivers['carRace'] = [car_race.get((race, team), np.nan) for race, team in zip(self.drivers.raceId, self.drivers.constructorId)]
+        self.drivers['driverRating'] = self.drivers.race - 1000
+        self.drivers['carRating'] = self.drivers.carRace - 1000
 
         self.races = pd.read_csv(DATA_DIRECTORY / 'races.csv', na_values=['\\N'])
         self.people = pd.read_csv(DATA_DIRECTORY / 'drivers.csv', na_values=['\\N'])
@@ -78,8 +78,8 @@ class Tables:
 
     def before_race_entries(self, first_year=None, last_year=2100):
         """One row per classified finisher with the driver and car ratings posted before that race (the previous snapshot)."""
-        driver_before = self.drivers.set_index(['index', 'driverId']).combined
-        car_before = self.cars.set_index(['index', 'constructorId']).combined
+        driver_before = self.drivers.set_index(['index', 'driverId']).race
+        car_before = self.cars.set_index(['index', 'constructorId']).race
         entries = self.results[self.results.year.between(self.analysis_year if first_year is None else first_year, last_year)].copy()
         entries['index'] = entries.raceId.map(self.snapshot_of_race)
         entries = entries.dropna(subset=['index'])
@@ -94,7 +94,7 @@ class Tables:
 
 def best_car_against_best_driver(tables):
     entrants = season_entrants(tables)
-    cars = tables.cars.groupby(['year', 'constructorId', 'team']).agg(races=('index', 'size'), pace=('combined', 'mean')).reset_index()
+    cars = tables.cars.groupby(['year', 'constructorId', 'team']).agg(races=('index', 'size'), pace=('race', 'mean')).reset_index()
     cars = cars[cars.races >= 8]
     cars['pace'] -= 1000
     rows = []
@@ -113,7 +113,7 @@ def season_entrants(tables):
     """Season averages per driver with at least 8 races."""
     entrants = (
         tables.drivers.groupby(['year', 'driverId', 'driver'])
-        .agg(races=('index', 'size'), driverRating=('driverRating', 'mean'), carRating=('carRating', 'mean'), uncertainty=('combinedSd', 'mean'),
+        .agg(races=('index', 'size'), driverRating=('driverRating', 'mean'), carRating=('carRating', 'mean'), uncertainty=('raceSd', 'mean'),
              team=('team', lambda s: s.value_counts().index[0]))
         .reset_index()
     )
@@ -306,17 +306,17 @@ def upsets(tables, count=14):
 
 def dominance(tables):
     def lead(group):
-        ordered = group.combined.sort_values(ascending=False)
+        ordered = group.race.sort_values(ascending=False)
         return ordered.iloc[0] - ordered.iloc[1]
 
     leads = tables.cars.groupby(['year', 'round']).apply(lead).reset_index(name='lead')
-    leading_team = tables.cars.loc[tables.cars.groupby(['year', 'round']).combined.idxmax()].groupby('year').team.agg(lambda s: s.value_counts().index[0])
+    leading_team = tables.cars.loc[tables.cars.groupby(['year', 'round']).race.idxmax()].groupby('year').team.agg(lambda s: s.value_counts().index[0])
     yearly = leads.groupby('year').lead.agg(['mean', 'max'])
     return [dict(year=int(year), team=leading_team[year], meanLead=rounded(row['mean']), largestLead=rounded(row['max'])) for year, row in yearly.iterrows()]
 
 
 def winter_order(tables):
-    last_of_season = tables.cars.sort_values('index').groupby(['year', 'constructorId']).tail(1).set_index(['year', 'constructorId']).combined
+    last_of_season = tables.cars.sort_values('index').groupby(['year', 'constructorId']).tail(1).set_index(['year', 'constructorId']).race
     correlations, changes = [], []
     for year in range(tables.first_year + 1, int(tables.drivers.year.max())):
         before, after = last_of_season.xs(year - 1, level=0), last_of_season.xs(year, level=0)
@@ -337,10 +337,10 @@ def development(tables):
     for (year, constructor), group in tables.cars.groupby(['year', 'constructorId']):
         group = group.sort_values('round')
         if len(group) >= 12:
-            rows.append((year, tables.constructor_names[constructor], group.combined.iloc[-3:].mean() - group.combined.iloc[2:5].mean()))
+            rows.append((year, tables.constructor_names[constructor], group.race.iloc[-3:].mean() - group.race.iloc[2:5].mean()))
     frame = pd.DataFrame(rows, columns=['year', 'team', 'change']).sort_values('change')
     describe = lambda rows_: [dict(year=int(r.year), team=r.team, change=rounded(r.change)) for r in rows_.itertuples()]
-    trajectory = lambda team: [rounded(v, 0) for v in (tables.cars[(tables.cars.year == 2024) & (tables.cars.team == team)].sort_values('round').combined - 1000)]
+    trajectory = lambda team: [rounded(v, 0) for v in (tables.cars[(tables.cars.year == 2024) & (tables.cars.team == team)].sort_values('round').race - 1000)]
     mclaren_2023 = frame[(frame.year == 2023) & (frame.team == 'McLaren')].iloc[0].change
     return dict(slides=describe(frame.head(8)), climbs=describe(frame.tail(8)[::-1]), mclaren2023=rounded(mclaren_2023),
                 season2024={team: trajectory(team) for team in ['Red Bull', 'McLaren', 'Ferrari', 'Mercedes']})
@@ -352,7 +352,7 @@ def teammate_gaps(tables):
         for (_, first), (_, second) in itertools.combinations(group.groupby('driverId'), 2):
             shared = first.merge(second, on='index', suffixes=('_a', '_b'))
             if len(shared) >= 8:
-                rows.append((year, tables.constructor_names[constructor], first.driver.iloc[0], second.driver.iloc[0], len(shared), (shared.combined_a - shared.combined_b).mean()))
+                rows.append((year, tables.constructor_names[constructor], first.driver.iloc[0], second.driver.iloc[0], len(shared), (shared.race_a - shared.race_b).mean()))
     gaps = pd.DataFrame(rows, columns=['year', 'team', 'first', 'second', 'races', 'gap'])
     gaps['size'] = gaps.gap.abs()
 
@@ -489,7 +489,7 @@ def fast_but_fragile(tables, starts):
     teams = starts[starts.year >= tables.first_year].groupby(['team', 'year']).agg(starts=('mechanicalRetirement', 'size'), rate=('mechanicalRetirement', 'mean')).reset_index()
     teams = teams[teams.starts >= 30]
     teams['excess'] = (teams.rate - teams.year.map(season_rate)) * 100
-    pace = tables.cars.groupby(['team', 'year']).agg(races=('index', 'size'), pace=('combined', 'mean')).reset_index()
+    pace = tables.cars.groupby(['team', 'year']).agg(races=('index', 'size'), pace=('race', 'mean')).reset_index()
     pace = pace[pace.races >= 12]
     pace['pace'] -= 1000
     merged = teams.merge(pace, on=['team', 'year'])
@@ -513,9 +513,8 @@ def grid_dependence(tables):
 
 
 def current_grid(tables):
-    year = tables.drivers.year.max()
-    latest = tables.drivers[tables.drivers.year == year].sort_values('index').groupby('driverId').tail(1)
-    return [dict(name=r.driver, team=r.team, driverRating=rounded(r.driverRating), carRating=rounded(r.carRating), uncertainty=rounded(r.combinedSd)) for r in latest.sort_values('combined', ascending=False).itertuples()]
+    latest = tables.drivers[tables.drivers['index'] == tables.drivers['index'].max()]
+    return [dict(name=r.driver, team=r.team, driverRating=rounded(r.driverRating), carRating=rounded(r.carRating), uncertainty=rounded(r.raceSd)) for r in latest.sort_values('race', ascending=False).itertuples()]
 
 
 def main():
@@ -524,7 +523,22 @@ def main():
     pairs = race_pairs(tables)
     starts = mechanical_retirements(tables)
     manifest = json.load(open(DATA_DIRECTORY / 'manifest.json'))
+    model = json.load(open(DATA_DIRECTORY / 'model.json'))
+    if model['lastRace'] != manifest['lastRace']:
+        raise ValueError('Published model does not match the data manifest')
+    latest = model['model']['snaps'][-1]
+    if str(latest['raceId']) != str(tables.drivers.loc[tables.drivers['index'].idxmax(), 'raceId']):
+        raise ValueError('Ratings export does not match the published model weekend')
+    for key, frame, rows in [('driverId', tables.drivers, latest['drivers']), ('constructorId', tables.cars, latest['cars'])]:
+        current = frame[frame['index'] == frame['index'].max()].set_index(key)
+        if set(current.index) != {str(row[key]) for row in rows}:
+            raise ValueError(f'Ratings export does not match the published {key} lineup')
+        for row in rows:
+            if abs(current.loc[str(row[key]), 'race'] - row['race']) > 0.006:
+                raise ValueError(f'Ratings export does not match published race rating for {key} {row[key]}')
     findings = dict(
+        ratingMetric='race',
+        modelSourceHash=model['sourceHash'],
         dataThrough=manifest['lastRace'],
         analysisFrom=tables.analysis_year,
         bestCarAgainstBestDriver=best_car_against_best_driver(tables),

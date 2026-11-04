@@ -1,11 +1,13 @@
 # Open problems
 
+The current implementation and updated evaluation are in [docs/temporal-graph.md](docs/temporal-graph.md) and [docs/backtesting.md](docs/backtesting.md). The diagnostic quantities below came from earlier filter-only work and require fresh measurement before being treated as current numerical targets. Complete-blend uncertainty and unconditional finish/win probability calibration remain unsolved. The no-jump temporal candidate worsens the frozen-mover score by 0.01395 against the original reference, exceeding the prior +0.010 cost budget. The identical team-change learning rule was chosen after this result; complete forecast verification remains pending. Earlier synthetic-world results used a different model and need to be rerun for this candidate.
+
 What is not solved, in the order the evidence says it matters. The evidence and the numbers are in [docs/diagnosis.md](docs/diagnosis.md) and [docs/metrics.md](docs/metrics.md); the pre-registered rule for any change is [research/eval/ACCEPTANCE-detach.md](research/eval/ACCEPTANCE-detach.md).
 
 1. **Drivers in a new car are still forecast worse than drivers who stayed**, more so since 2012 (the gap to the stayers' loss is three to six times larger in 2012–2015 than in 2002–2011). Estimate the variance of the persistent driver–car fit from the data (marginal likelihood) instead of searching for it; the simulator that matches the late eras needs a fit about twice the size the filter assumes.
 2. **Make the uncertainty informative about transferability.** The likelihood is tempered so uniformly that a mover's rating has almost the same error bar as a stayer's. A within-weekend dependence model (shared noise) in place of the global weight `tau` would let the variance follow how much cross-car information a rating rests on.
 3. **Do not treat the race-specific part of a rating as portable across cars.** In 2012 onward it carries no information in duels between movers.
-4. **Decide on the arrival-adaptation prior** (`STATE_SPACE.adapt`, off): movers lose about 16 percentage points against their rating in the first weekend, and the model does not anticipate it. It passes the gates but is keyed to a team change.
+4. **Study arrival adaptation without mover-specific learning rules.** Earlier work estimated an arrival penalty, but the selected policy applies identical portable-driver learning rules across team changes; historical estimates require revalidation.
 5. **Make Simulator v2 realistic** on the three things it lacks: a driver–car fit near 15 points, an early-weekend penalty, and a race/qualifying relation that gives the late-era pattern. Always simulate both sessions (`simulation-both.mjs`).
 6. **Two guards are at their limits** (efficiency of cars, drivers' ratings following their car through a winter in which a driver joins): any change must make room there first.
 

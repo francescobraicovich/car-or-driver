@@ -90,12 +90,14 @@ export function interactiveDot(svg, dot, description) {
   });
   dot.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
+      event.preventDefault();
+      event.stopPropagation();
       tooltip.dataset.pinned = 'false';
       tooltip.hidden = true;
       dot.blur();
     } else if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      dot.click();
+      dot.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     }
   });
   return dot;

@@ -1,0 +1,91 @@
+{
+  "source": "Polymarket Gamma public event API",
+  "requestUrl": "https://gamma-api.polymarket.com/events?slug=f1-austrian-grand-prix-winner-2026-06-28",
+  "retrievedAt": "2026-11-02T16:35:13Z",
+  "originalResponseSha256": "abcd4d1dfb1d9eab90c236edf40f41acaf2d3076df4fd34df01e245647c9b1e0",
+  "note": "Selected fields extracted from a current event response. Current tick, minimum size and fee-enabled flags do not establish historical values; resolved prices are not independent on-chain oracle evidence.",
+  "event": {
+    "id": "541059",
+    "slug": "f1-austrian-grand-prix-winner-2026-06-28",
+    "closed": true,
+    "updatedAt": "2026-08-13T15:02:56.390913Z",
+    "negRisk": true
+  },
+  "markets": [
+    {
+      "slug": "f1-austrian-grand-prix-winner-norris-2026-06-28",
+      "conditionId": "0x4660332081e4aca6fe2456ceb6370f49366257ee43ed138cdb14ced55158a3b5",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "24216312900714616454605626938457375146268588031086210672731405048715498030153",
+        "34796736142026392511185687667807746522769353124596851711940302139688791509909"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-06-28 18:57:55+00",
+      "creationTime": "2026-05-30T11:30:02.758935Z",
+      "startDate": "2026-05-30T11:34:51.538279Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-austrian-grand-prix-winner-hamilton-2026-06-28",
+      "conditionId": "0xecb91145f7ed41128c538bd4828072c8e3f47f11253f80b252123c6890a3a94f",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "82236222753757094269178031193182750388049025367439430202758328328253193544474",
+        "99765331245255195052701441582397349317632998386742131434607264656398211524175"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-06-28 18:57:55+00",
+      "creationTime": "2026-05-30T11:30:03.7645Z",
+      "startDate": "2026-05-30T11:35:16.366996Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-austrian-grand-prix-winner-russell-2026-06-28",
+      "conditionId": "0xad67da53baaabe17272aa2a4cd67776585779422267579e91de9c50ec2c1fb72",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "1",
+        "0"
+      ],
+      "clobTokenIds": [
+        "107726792896650556952448314546653464136882863737369073867852849264155020665374",
+        "4271939415367710538077554705880337040928752270398299854468362453090084303407"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-06-28 19:18:50+00",
+      "creationTime": "2026-05-30T11:30:04.15844Z",
+      "startDate": "2026-05-30T11:35:35.354326Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    }
+  ]
+}

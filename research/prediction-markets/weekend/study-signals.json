@@ -1,0 +1,4366 @@
+{
+  "description": "Retrospective prior-prefix pairwise-head projections; winner shares are not calibrated.",
+  "limitations": [
+    "Prior model architecture, fitted heads, corrected historical inputs and qualifying publication vintages are unverified.",
+    "Post-qualifying signal assumes qualifying results are available three hours after scheduled start and at least three hours before race; exact publication and later revisions are not verified.",
+    "Qualifying positions proxy for the pre-race grid; race-result grid and target race finish data are excluded from features.",
+    "Previous-race roster and teams may differ from the entry list; unmatched post-qualifying drivers are omitted with no Other allocation.",
+    "Pairwise finishing/pace forecasts are projected to a winner score, not directly calibrated win probabilities."
+  ],
+  "summary": {
+    "preQualifying": {
+      "withoutForm": {
+        "races": 8,
+        "missingWinners": 0,
+        "meanBrier": 0.8527313692163281,
+        "meanLogLoss": 2.1114605184683497,
+        "meanLogLossConditionalOnWinnerInRoster": 2.1114605184683497
+      },
+      "withForm": {
+        "races": 8,
+        "missingWinners": 0,
+        "meanBrier": 0.8293050456645331,
+        "meanLogLoss": 1.8934409964784626,
+        "meanLogLossConditionalOnWinnerInRoster": 1.8934409964784626
+      }
+    },
+    "postQualifying": {
+      "withoutForm": {
+        "races": 8,
+        "missingWinners": 0,
+        "meanBrier": 0.7181095868281401,
+        "meanLogLoss": 1.5746522941854855,
+        "meanLogLossConditionalOnWinnerInRoster": 1.5746522941854855
+      },
+      "withForm": {
+        "races": 8,
+        "missingWinners": 0,
+        "meanBrier": 0.7055185539269625,
+        "meanLogLoss": 1.5045214200877233,
+        "meanLogLossConditionalOnWinnerInRoster": 1.5045214200877233
+      }
+    }
+  },
+  "races": [
+    {
+      "raceId": "1173",
+      "race": "Canadian Grand Prix",
+      "previousRaceId": "1172",
+      "previousRaceDate": "2026-05-03",
+      "qualifyingStart": "2026-05-23T20:00:00.000Z",
+      "raceStart": "2026-05-24T20:00:00.000Z",
+      "qualifyingTimingVerified": false,
+      "historicalVintageVerified": false,
+      "preQualifying": {
+        "asOf": "2026-05-23T00:00:00.000Z",
+        "roster": [
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.14166022176670237,
+            "driverRating": 992.5852927125308,
+            "carRating": 1106.0006837250758,
+            "formShift": 1.0795317389441108,
+            "teammateFormShift": -0.06878911168010138,
+            "fullHeadStrength": 2.809717361042396
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.15513090753947323,
+            "driverRating": 1023.1164052204351,
+            "carRating": 1078.428352405509,
+            "formShift": 0.9888244780659204,
+            "teammateFormShift": 0.06755788054407652,
+            "fullHeadStrength": 2.7354037160992886
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.10656245804328433,
+            "driverRating": 1010.8843474572011,
+            "carRating": 1078.428352405509,
+            "formShift": 0.8537087169777675,
+            "teammateFormShift": -0.06755788054407641,
+            "fullHeadStrength": 2.445736810581494
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.342674640509264,
+            "driverRating": 1021.3578463498336,
+            "carRating": 1106.0006837250758,
+            "formShift": 1.2171099623043136,
+            "teammateFormShift": 0.06878911168010138,
+            "fullHeadStrength": 3.246793035298528
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.06513924783812866,
+            "driverRating": 1071.4953950470617,
+            "carRating": 1001.7851930497407,
+            "formShift": 1.0662999686782066,
+            "teammateFormShift": 0.5687058400853029,
+            "fullHeadStrength": 2.3226597639349293
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.03463774566167012,
+            "driverRating": 1002.5576352343575,
+            "carRating": 1050.1509688239373,
+            "formShift": 0.7881181536049063,
+            "teammateFormShift": -0.10540536889232122,
+            "fullHeadStrength": 1.8472631359759533
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.003257962529302285,
+            "driverRating": 970.7837888992917,
+            "carRating": 1004.929550117366,
+            "formShift": 0.06725270675347829,
+            "teammateFormShift": -0.11692954461011561,
+            "fullHeadStrength": -0.4337758865625149
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.10594048058126487,
+            "driverRating": 1038.971059216019,
+            "carRating": 1050.1509688239373,
+            "formShift": 0.9989288913895489,
+            "teammateFormShift": 0.10540536889232133,
+            "fullHeadStrength": 2.5462481262523173
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.003204915354683242,
+            "driverRating": 1021.7330534846039,
+            "carRating": 953.4455714383139,
+            "formShift": -0.13372452262850934,
+            "teammateFormShift": 0.024287508448507855,
+            "fullHeadStrength": -0.7476415825189456
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.001513538003480229,
+            "driverRating": 997.296310959416,
+            "carRating": 953.4455714383139,
+            "formShift": -0.18229953952552505,
+            "teammateFormShift": -0.024287508448507855,
+            "fullHeadStrength": -0.9455341473769238
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.005362486592640314,
+            "driverRating": 995.8353367499622,
+            "carRating": 996.109512339273,
+            "formShift": 0.012310481093979121,
+            "teammateFormShift": 0.14912181630859184,
+            "fullHeadStrength": -0.11707158287835039
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.0028769244696717935,
+            "driverRating": 994.4980464128803,
+            "carRating": 977.1639707344625,
+            "formShift": -0.4835858821731483,
+            "teammateFormShift": -0.19090970346727426,
+            "fullHeadStrength": -1.0009106420228735
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.002679095786501032,
+            "driverRating": 973.2319883983885,
+            "carRating": 996.109512339273,
+            "formShift": -0.2859331515232046,
+            "teammateFormShift": -0.14912181630859186,
+            "fullHeadStrength": -0.7135059570899833
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.0034934292068835716,
+            "driverRating": 954.8258847602985,
+            "carRating": 1023.1603938906098,
+            "formShift": -0.3344260732581655,
+            "teammateFormShift": -0.019881188163496988,
+            "fullHeadStrength": -0.8005527396727203
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0007165255657812436,
+            "driverRating": 1011.1879170285291,
+            "carRating": 915.1968424128503,
+            "formShift": -1.035141807546887,
+            "teammateFormShift": 0.17988677277177345,
+            "fullHeadStrength": -2.266227636978469
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.00019332030789165607,
+            "driverRating": 990.0842324349713,
+            "carRating": 893.6289610628615,
+            "formShift": -1.43420914305624,
+            "teammateFormShift": 0.09360519713270832,
+            "fullHeadStrength": -3.366256706599834
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00023441769350619204,
+            "driverRating": 974.794819361361,
+            "carRating": 915.1968424128503,
+            "formShift": -1.394915353090434,
+            "teammateFormShift": -0.17988677277177345,
+            "fullHeadStrength": -3.139201109696515
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00016270738052121846,
+            "driverRating": 984.4689655704844,
+            "carRating": 893.6289610628615,
+            "formShift": -1.6214195373216567,
+            "teammateFormShift": -0.09360519713270832,
+            "fullHeadStrength": -3.6373068827401482
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.003975058718369917,
+            "driverRating": 1005.0291780254059,
+            "carRating": 977.1639707344625,
+            "formShift": -0.10176647523859983,
+            "teammateFormShift": 0.1909097034672742,
+            "fullHeadStrength": -0.4820492782761526
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.004112036541742075,
+            "driverRating": 960.13626114942,
+            "carRating": 1023.1603938906098,
+            "formShift": -0.2946636969311715,
+            "teammateFormShift": 0.019881188163496988,
+            "fullHeadStrength": -0.6321249281676334
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.008275783601932315,
+            "driverRating": 1001.1485169738943,
+            "carRating": 1004.929550117366,
+            "formShift": 0.3011117959737095,
+            "teammateFormShift": 0.11692954461011562,
+            "fullHeadStrength": 0.38382051191303196
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.008196096307305532,
+            "driverRating": 1003.9777185536544,
+            "carRating": 1001.7851930497407,
+            "formShift": -0.07111171149239905,
+            "teammateFormShift": -0.5687058400853029,
+            "fullHeadStrength": -0.05548338051687551
+          }
+        ]
+      },
+      "postQualifying": {
+        "asOf": "2026-05-24T17:00:00.000Z",
+        "excludedPriorDriverIds": [],
+        "gridSource": "qualifying position, not the subsequently published race-result grid",
+        "roster": [
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.14166022176670237,
+            "driverRating": 992.5852927125308,
+            "carRating": 1106.0006837250758,
+            "formShift": 0.563474335729995,
+            "teammateFormShift": -0.00792946685728868,
+            "fullHeadStrength": 3.437583486775462
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.15513090753947323,
+            "driverRating": 1023.1164052204351,
+            "carRating": 1078.428352405509,
+            "formShift": 0.5451451021960187,
+            "teammateFormShift": 0.022716389045632224,
+            "fullHeadStrength": 3.122766190441698
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.10656245804328433,
+            "driverRating": 1010.8843474572011,
+            "carRating": 1078.428352405509,
+            "formShift": 0.49971232410475425,
+            "teammateFormShift": -0.02271638904563228,
+            "fullHeadStrength": 2.7100535575997853
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.342674640509264,
+            "driverRating": 1021.3578463498336,
+            "carRating": 1106.0006837250758,
+            "formShift": 0.5793332694445724,
+            "teammateFormShift": 0.007929466857288792,
+            "fullHeadStrength": 3.7568224784730764
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.06513924783812866,
+            "driverRating": 1071.4953950470617,
+            "carRating": 1001.7851930497407,
+            "formShift": 0.8308453314583868,
+            "teammateFormShift": 0.45648480995441804,
+            "fullHeadStrength": 2.183712018443579
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.03463774566167012,
+            "driverRating": 1002.5576352343575,
+            "carRating": 1050.1509688239373,
+            "formShift": 0.502762612951829,
+            "teammateFormShift": -0.092311831094668,
+            "fullHeadStrength": 2.2574479188656005
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.003257962529302285,
+            "driverRating": 970.7837888992917,
+            "carRating": 1004.929550117366,
+            "formShift": 0.13707352087249877,
+            "teammateFormShift": -0.05087519899954909,
+            "fullHeadStrength": -0.3325948153374307
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.10594048058126487,
+            "driverRating": 1038.971059216019,
+            "carRating": 1050.1509688239373,
+            "formShift": 0.6873862751411651,
+            "teammateFormShift": 0.09231183109466812,
+            "fullHeadStrength": 2.0947704050823024
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.003204915354683242,
+            "driverRating": 1021.7330534846039,
+            "carRating": 953.4455714383139,
+            "formShift": 0.02307558884610058,
+            "teammateFormShift": 0.052834008027881615,
+            "fullHeadStrength": -1.0618483501027771
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.001513538003480229,
+            "driverRating": 997.296310959416,
+            "carRating": 953.4455714383139,
+            "formShift": -0.08259242720966266,
+            "teammateFormShift": -0.052834008027881615,
+            "fullHeadStrength": -1.3362633504845474
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.005362486592640314,
+            "driverRating": 995.8353367499622,
+            "carRating": 996.109512339273,
+            "formShift": 0.0539585357573082,
+            "teammateFormShift": 0.1171773695877989,
+            "fullHeadStrength": -0.794736399519077
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.0028769244696717935,
+            "driverRating": 994.4980464128803,
+            "carRating": 977.1639707344625,
+            "formShift": -0.1912701470813549,
+            "teammateFormShift": -0.1391084533856854,
+            "fullHeadStrength": -0.9949703880706594
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.002679095786501032,
+            "driverRating": 973.2319883983885,
+            "carRating": 996.109512339273,
+            "formShift": -0.1803962034182896,
+            "teammateFormShift": -0.1171773695877989,
+            "fullHeadStrength": -1.1390608285822463
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.0034934292068835716,
+            "driverRating": 954.8258847602985,
+            "carRating": 1023.1603938906098,
+            "formShift": -0.21000611885279757,
+            "teammateFormShift": -0.02994659451393583,
+            "fullHeadStrength": -0.2083135491396729
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0007165255657812436,
+            "driverRating": 1011.1879170285291,
+            "carRating": 915.1968424128503,
+            "formShift": -0.7609441165856647,
+            "teammateFormShift": 0.10723686852253533,
+            "fullHeadStrength": -2.6467319120763806
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.00019332030789165607,
+            "driverRating": 990.0842324349713,
+            "carRating": 893.6289610628615,
+            "formShift": -0.9654991375963845,
+            "teammateFormShift": 0.09233760740879637,
+            "fullHeadStrength": -3.3522025600171577
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00023441769350619204,
+            "driverRating": 974.794819361361,
+            "carRating": 915.1968424128503,
+            "formShift": -0.9754178536307353,
+            "teammateFormShift": -0.10723686852253522,
+            "fullHeadStrength": -3.39842032937967
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00016270738052121846,
+            "driverRating": 984.4689655704844,
+            "carRating": 893.6289610628615,
+            "formShift": -1.1501743524139771,
+            "teammateFormShift": -0.09233760740879626,
+            "fullHeadStrength": -3.906437904732682
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.003975058718369917,
+            "driverRating": 1005.0291780254059,
+            "carRating": 977.1639707344625,
+            "formShift": 0.0869467596900159,
+            "teammateFormShift": 0.1391084533856854,
+            "fullHeadStrength": -0.33449057735703647
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.004112036541742075,
+            "driverRating": 960.13626114942,
+            "carRating": 1023.1603938906098,
+            "formShift": -0.15011292982492594,
+            "teammateFormShift": 0.029946594513935804,
+            "fullHeadStrength": -0.5232434467622429
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.008275783601932315,
+            "driverRating": 1001.1485169738943,
+            "carRating": 1004.929550117366,
+            "formShift": 0.23882391887159693,
+            "teammateFormShift": 0.050875198999549065,
+            "fullHeadStrength": -0.29301690386685303
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.008196096307305532,
+            "driverRating": 1003.9777185536544,
+            "carRating": 1001.7851930497407,
+            "formShift": -0.08212428845044932,
+            "teammateFormShift": -0.4564848099544181,
+            "fullHeadStrength": 0.7591752597469273
+          }
+        ]
+      },
+      "scores": {
+        "preQualifying": {
+          "withoutForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.12937015426720472,
+            "logLoss": 2.045077570603438,
+            "brier": 0.8441660316943003
+          },
+          "withForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.15658039814337063,
+            "logLoss": 1.8541856747583119,
+            "brier": 0.8309235106505718
+          }
+        },
+        "postQualifying": {
+          "withoutForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.20623102803123441,
+            "logLoss": 1.57875824330136,
+            "brier": 0.7528923888831237
+          },
+          "withForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.2133071140414684,
+            "logLoss": 1.5450223017803302,
+            "brier": 0.7513746733965998
+          }
+        }
+      }
+    },
+    {
+      "raceId": "1174",
+      "race": "Monaco Grand Prix",
+      "previousRaceId": "1173",
+      "previousRaceDate": "2026-05-24",
+      "qualifyingStart": "2026-06-06T14:00:00.000Z",
+      "raceStart": "2026-06-07T13:00:00.000Z",
+      "qualifyingTimingVerified": false,
+      "historicalVintageVerified": false,
+      "preQualifying": {
+        "asOf": "2026-06-06T00:00:00.000Z",
+        "roster": [
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.162233538344782,
+            "driverRating": 993.4393826871301,
+            "carRating": 1112.232979543625,
+            "formShift": 1.0759063970427372,
+            "teammateFormShift": -0.05497168020282128,
+            "fullHeadStrength": 2.879570302180689
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.03749692735136275,
+            "driverRating": 1006.3502464819559,
+            "carRating": 1051.6112438252944,
+            "formShift": 0.8972348075400844,
+            "teammateFormShift": -0.12830152335198597,
+            "fullHeadStrength": 2.046758233082783
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.07158027665005622,
+            "driverRating": 1070.858432897952,
+            "carRating": 1008.1628842496564,
+            "formShift": 1.099705438522861,
+            "teammateFormShift": 0.31693272680827467,
+            "fullHeadStrength": 2.4528631274808115
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.0945036957344003,
+            "driverRating": 1036.459229832639,
+            "carRating": 1051.6112438252944,
+            "formShift": 1.1538378542440566,
+            "teammateFormShift": 0.1283015233519862,
+            "fullHeadStrength": 2.686393858062444
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.010214337301326771,
+            "driverRating": 1007.439694594308,
+            "carRating": 1008.1628842496564,
+            "formShift": 0.4658399849063116,
+            "teammateFormShift": -0.3169327268082748,
+            "fullHeadStrength": 0.7793852631945282
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.0036514361292643367,
+            "driverRating": 975.4581532318923,
+            "carRating": 1006.6384391028344,
+            "formShift": 0.01916125935428282,
+            "teammateFormShift": -0.14617346281135815,
+            "fullHeadStrength": -0.36313178117249223
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.004151655685489251,
+            "driverRating": 960.295091595091,
+            "carRating": 1025.9833222436553,
+            "formShift": -0.06984924542547097,
+            "teammateFormShift": 0.019257141550892296,
+            "fullHeadStrength": -0.3413902003646482
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.007329167501432161,
+            "driverRating": 998.1524736436602,
+            "carRating": 1006.6384391028344,
+            "formShift": 0.3115081849769991,
+            "teammateFormShift": 0.14617346281135815,
+            "fullHeadStrength": 0.38438723745890874
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.002981081727312162,
+            "driverRating": 1022.5010902460612,
+            "carRating": 952.988765148534,
+            "formShift": -0.1704371520317661,
+            "teammateFormShift": 0.07425731380953385,
+            "fullHeadStrength": -0.7496355674028319
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.003901593760090365,
+            "driverRating": 995.6182890008089,
+            "carRating": 988.6366788054145,
+            "formShift": -0.12929921499783037,
+            "teammateFormShift": 0.16560021005630926,
+            "fullHeadStrength": -0.4107682058981554
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.07849673517993308,
+            "driverRating": 1007.5807347935639,
+            "carRating": 1074.4449489647068,
+            "formShift": 0.7952667569629185,
+            "teammateFormShift": -0.06363915979577539,
+            "fullHeadStrength": 2.1973420606651515
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.0034929044117269323,
+            "driverRating": 1004.4326978364088,
+            "carRating": 976.2181189230848,
+            "formShift": -0.04317489608961889,
+            "teammateFormShift": 0.11978382156779008,
+            "fullHeadStrength": -0.461739452298541
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.002491844036405327,
+            "driverRating": 993.4327595206612,
+            "carRating": 976.2181189230848,
+            "formShift": -0.28274253922519904,
+            "teammateFormShift": -0.11978382156779008,
+            "fullHeadStrength": -0.8494357548230174
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0018327347766811236,
+            "driverRating": 971.0076069599472,
+            "carRating": 988.6366788054145,
+            "formShift": -0.4604996351104489,
+            "teammateFormShift": -0.16560021005630926,
+            "fullHeadStrength": -1.086845483089113
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.0001751289971113308,
+            "driverRating": 973.71543090589,
+            "carRating": 909.4482378495196,
+            "formShift": -1.7722871701373697,
+            "teammateFormShift": -0.1776278171864254,
+            "fullHeadStrength": -3.6195164749726896
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00013009222859486716,
+            "driverRating": 979.8462843821123,
+            "carRating": 893.6343813436752,
+            "formShift": -1.7129755657941637,
+            "teammateFormShift": -0.1358661554977698,
+            "fullHeadStrength": -3.7524886289133605
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.000189877439880328,
+            "driverRating": 992.1629354236667,
+            "carRating": 893.6343813436752,
+            "formShift": -1.4412432547986243,
+            "teammateFormShift": 0.1358661554977696,
+            "fullHeadStrength": -3.30842964384116
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.12556831269208413,
+            "driverRating": 1022.8828696296881,
+            "carRating": 1074.4449489647068,
+            "formShift": 0.9225450765544694,
+            "teammateFormShift": 0.0636391597957755,
+            "fullHeadStrength": 2.531329781489026
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.38360048848828027,
+            "driverRating": 1021.4697710277751,
+            "carRating": 1112.232979543625,
+            "formShift": 1.1858497574483797,
+            "teammateFormShift": 0.05497168020282128,
+            "fullHeadStrength": 3.2881119334888664
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.000541165591779941,
+            "driverRating": 1010.463339528335,
+            "carRating": 909.4482378495196,
+            "formShift": -1.417031535764519,
+            "teammateFormShift": 0.1776278171864254,
+            "fullHeadStrength": -2.7504692537282844
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0013470048973153574,
+            "driverRating": 996.6257371591854,
+            "carRating": 952.988765148534,
+            "formShift": -0.3189517796508338,
+            "teammateFormShift": -0.07425731380953388,
+            "fullHeadStrength": -1.0750441229829788
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.004090001074690819,
+            "driverRating": 959.807748621268,
+            "carRating": 1025.9833222436553,
+            "formShift": -0.10836352852725556,
+            "teammateFormShift": -0.019257141550892296,
+            "fullHeadStrength": -0.4772472276159347
+          }
+        ]
+      },
+      "postQualifying": {
+        "asOf": "2026-06-07T10:00:00.000Z",
+        "excludedPriorDriverIds": [],
+        "gridSource": "qualifying position, not the subsequently published race-result grid",
+        "roster": [
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.162233538344782,
+            "driverRating": 993.4393826871301,
+            "carRating": 1112.232979543625,
+            "formShift": 0.5796904247893866,
+            "teammateFormShift": -0.08149326222820585,
+            "fullHeadStrength": 3.8392451612989578
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.03749692735136275,
+            "driverRating": 1006.3502464819559,
+            "carRating": 1051.6112438252944,
+            "formShift": 0.5137457147515909,
+            "teammateFormShift": -0.10097613828648921,
+            "fullHeadStrength": 2.677234494722462
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.07158027665005622,
+            "driverRating": 1070.858432897952,
+            "carRating": 1008.1628842496564,
+            "formShift": 0.6723996567067749,
+            "teammateFormShift": 0.16884100877841401,
+            "fullHeadStrength": 3.2754564604570366
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.0945036957344003,
+            "driverRating": 1036.459229832639,
+            "carRating": 1051.6112438252944,
+            "formShift": 0.7156979913245693,
+            "teammateFormShift": 0.10097613828648921,
+            "fullHeadStrength": 2.9326533514616817
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.010214337301326771,
+            "driverRating": 1007.439694594308,
+            "carRating": 1008.1628842496564,
+            "formShift": 0.33471763914994684,
+            "teammateFormShift": -0.16884100877841407,
+            "fullHeadStrength": 1.4500710663634138
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.0036514361292643367,
+            "driverRating": 975.4581532318923,
+            "carRating": 1006.6384391028344,
+            "formShift": 0.17005899976586972,
+            "teammateFormShift": -0.05897141244972218,
+            "fullHeadStrength": -0.6296116050666615
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.004151655685489251,
+            "driverRating": 960.295091595091,
+            "carRating": 1025.9833222436553,
+            "formShift": -0.030403501032695904,
+            "teammateFormShift": 0.01454412983723075,
+            "fullHeadStrength": -0.32487155269985685
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.007329167501432161,
+            "driverRating": 998.1524736436602,
+            "carRating": 1006.6384391028344,
+            "formShift": 0.28800182466531404,
+            "teammateFormShift": 0.05897141244972215,
+            "fullHeadStrength": 0.208780666943409
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.002981081727312162,
+            "driverRating": 1022.5010902460612,
+            "carRating": 952.988765148534,
+            "formShift": -0.038351542186833114,
+            "teammateFormShift": 0.038761701661069854,
+            "fullHeadStrength": -0.7758002864872022
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.003901593760090365,
+            "driverRating": 995.6182890008089,
+            "carRating": 988.6366788054145,
+            "formShift": -0.06556068563095313,
+            "teammateFormShift": 0.1291561560261968,
+            "fullHeadStrength": -1.0496575227533427
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.07849673517993308,
+            "driverRating": 1007.5807347935639,
+            "carRating": 1074.4449489647068,
+            "formShift": 0.5026119588830084,
+            "teammateFormShift": -0.05145524649279498,
+            "fullHeadStrength": 1.964372303495319
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.0034929044117269323,
+            "driverRating": 1004.4326978364088,
+            "carRating": 976.2181189230848,
+            "formShift": 0.13302074052713417,
+            "teammateFormShift": 0.10612962608267992,
+            "fullHeadStrength": -0.4739509370843335
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.002491844036405327,
+            "driverRating": 993.4327595206612,
+            "carRating": 976.2181189230848,
+            "formShift": -0.07923851163822569,
+            "teammateFormShift": -0.10612962608267992,
+            "fullHeadStrength": -1.0423916407149105
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0018327347766811236,
+            "driverRating": 971.0076069599472,
+            "carRating": 988.6366788054145,
+            "formShift": -0.3238729976833467,
+            "teammateFormShift": -0.1291561560261968,
+            "fullHeadStrength": -1.3887088767146203
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.0001751289971113308,
+            "driverRating": 973.71543090589,
+            "carRating": 909.4482378495196,
+            "formShift": -1.2963472680726238,
+            "teammateFormShift": -0.10609718622270381,
+            "fullHeadStrength": -3.861480839776774
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00013009222859486716,
+            "driverRating": 979.8462843821123,
+            "carRating": 893.6343813436752,
+            "formShift": -1.208577840341178,
+            "teammateFormShift": -0.12615271854619503,
+            "fullHeadStrength": -3.647646503587813
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.000189877439880328,
+            "driverRating": 992.1629354236667,
+            "carRating": 893.6343813436752,
+            "formShift": -0.9562724032487879,
+            "teammateFormShift": 0.12615271854619503,
+            "fullHeadStrength": -2.910561192103121
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.12556831269208413,
+            "driverRating": 1022.8828696296881,
+            "carRating": 1074.4449489647068,
+            "formShift": 0.6055224518685983,
+            "teammateFormShift": 0.05145524649279498,
+            "fullHeadStrength": 2.176385867839901
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.38360048848828027,
+            "driverRating": 1021.4697710277751,
+            "carRating": 1112.232979543625,
+            "formShift": 0.7426769492457982,
+            "teammateFormShift": 0.08149326222820574,
+            "fullHeadStrength": 2.693134617177107
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.000541165591779941,
+            "driverRating": 1010.463339528335,
+            "carRating": 909.4482378495196,
+            "formShift": -1.0841528956272164,
+            "teammateFormShift": 0.10609718622270359,
+            "fullHeadStrength": -3.2014443246638553
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0013470048973153574,
+            "driverRating": 996.6257371591854,
+            "carRating": 952.988765148534,
+            "formShift": -0.11587494550897283,
+            "teammateFormShift": -0.03876170166106986,
+            "fullHeadStrength": -0.8284235325290823
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.004090001074690819,
+            "driverRating": 959.807748621268,
+            "carRating": 1025.9833222436553,
+            "formShift": -0.05949176070715741,
+            "teammateFormShift": -0.014544129837230753,
+            "fullHeadStrength": -1.0827851755777143
+          }
+        ]
+      },
+      "scores": {
+        "preQualifying": {
+          "withoutForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.13861602357010783,
+            "logLoss": 1.9760475887347373,
+            "brier": 0.8262450962934148
+          },
+          "withForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.163496203988035,
+            "logLoss": 1.810965506112915,
+            "brier": 0.8158339841747835
+          }
+        },
+        "postQualifying": {
+          "withoutForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.3169623397806623,
+            "logLoss": 1.1489723141161141,
+            "brier": 0.532604263192714
+          },
+          "withForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.3169202953911224,
+            "logLoss": 1.1491049708171144,
+            "brier": 0.5424682739541478
+          }
+        }
+      }
+    },
+    {
+      "raceId": "1175",
+      "race": "Barcelona Grand Prix",
+      "previousRaceId": "1174",
+      "previousRaceDate": "2026-06-07",
+      "qualifyingStart": "2026-06-13T14:00:00.000Z",
+      "raceStart": "2026-06-14T13:00:00.000Z",
+      "qualifyingTimingVerified": false,
+      "historicalVintageVerified": false,
+      "preQualifying": {
+        "asOf": "2026-06-13T00:00:00.000Z",
+        "roster": [
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.18364564689530413,
+            "driverRating": 998.2525984757289,
+            "carRating": 1107.7051788956633,
+            "formShift": 1.2597297885281653,
+            "teammateFormShift": 0.07919888686318788,
+            "fullHeadStrength": 3.0539924069818527
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.05258541306689137,
+            "driverRating": 1007.1701264942849,
+            "carRating": 1058.0539997290864,
+            "formShift": 1.1122606671979187,
+            "teammateFormShift": -0.05575396778043329,
+            "fullHeadStrength": 2.3568096552231084
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.014964711509651405,
+            "driverRating": 1010.1750430040822,
+            "carRating": 1014.1143126583637,
+            "formShift": 0.45621680231313666,
+            "teammateFormShift": -0.390854932708257,
+            "fullHeadStrength": 0.9788674050516394
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.06971517489106552,
+            "driverRating": 1008.6011271144735,
+            "carRating": 1065.8076514696988,
+            "formShift": 0.5614672766721119,
+            "teammateFormShift": -0.05275759256999657,
+            "fullHeadStrength": 1.8166480906932732
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.005455264658218982,
+            "driverRating": 964.1807881112112,
+            "carRating": 1027.239628251895,
+            "formShift": -0.13244672322080273,
+            "teammateFormShift": 0.050303586816008855,
+            "fullHeadStrength": -0.294003554761249
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.004611114307462153,
+            "driverRating": 958.7050428662694,
+            "carRating": 1027.239628251895,
+            "formShift": -0.2330538968528204,
+            "teammateFormShift": -0.05030358681600883,
+            "fullHeadStrength": -0.5596213201174929
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.008910117784195603,
+            "driverRating": 1001.2402842843651,
+            "carRating": 1006.1602035908306,
+            "formShift": 0.26857324808564925,
+            "teammateFormShift": 0.2301494530706882,
+            "fullHeadStrength": 0.3866007274527065
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.001830001017905344,
+            "driverRating": 997.9458185446026,
+            "carRating": 957.8972607970726,
+            "formShift": -0.4154314677769344,
+            "teammateFormShift": -0.08047135756591106,
+            "fullHeadStrength": -1.0831630976351996
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0018789951752196349,
+            "driverRating": 973.6617222925014,
+            "carRating": 983.0419320725834,
+            "formShift": -0.6053441742113362,
+            "teammateFormShift": -0.10082592925298284,
+            "fullHeadStrength": -1.2772760742408957
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.000557653581394525,
+            "driverRating": 1010.9018608091936,
+            "carRating": 906.234705862263,
+            "formShift": -1.1793405503735988,
+            "teammateFormShift": 0.14028961920258243,
+            "fullHeadStrength": -2.5476789881725193
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.002946352673354822,
+            "driverRating": 994.234032929684,
+            "carRating": 977.12155130869,
+            "formShift": -0.23086805473945748,
+            "teammateFormShift": -0.15073428579738188,
+            "fullHeadStrength": -0.7494322279592673
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.31439550884270384,
+            "driverRating": 1015.7647756104017,
+            "carRating": 1107.7051788956633,
+            "formShift": 1.1013320148017898,
+            "teammateFormShift": -0.07919888686318766,
+            "fullHeadStrength": 3.0502788165647647
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.0037569164756131924,
+            "driverRating": 1002.1500436753688,
+            "carRating": 977.12155130869,
+            "formShift": 0.07060051685530627,
+            "teammateFormShift": 0.15073428579738188,
+            "fullHeadStrength": -0.3550507209075024
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.003593366897140124,
+            "driverRating": 971.6616431039049,
+            "carRating": 1006.1602035908306,
+            "formShift": -0.19172565805572717,
+            "teammateFormShift": -0.2301494530706882,
+            "fullHeadStrength": -0.6436166586441533
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.0002507666741439452,
+            "driverRating": 994.4808906340832,
+            "carRating": 896.6235753638525,
+            "formShift": -1.1422021727851395,
+            "teammateFormShift": 0.28407115941220806,
+            "fullHeadStrength": -2.9754943031003194
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.003632521597645238,
+            "driverRating": 1020.2775840822196,
+            "carRating": 957.8972607970726,
+            "formShift": -0.2544887526451122,
+            "teammateFormShift": 0.08047135756591112,
+            "fullHeadStrength": -0.7880420666872593
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.12449987268520199,
+            "driverRating": 1035.2428978140229,
+            "carRating": 1058.0539997290864,
+            "formShift": 1.2237686027587853,
+            "teammateFormShift": 0.05575396778043329,
+            "fullHeadStrength": 2.7958345756920866
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00017656423642920495,
+            "driverRating": 973.4422291777223,
+            "carRating": 906.234705862263,
+            "formShift": -1.4599197887787634,
+            "teammateFormShift": -0.1402896192025822,
+            "fullHeadStrength": -3.353554796496493
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.10127804692908669,
+            "driverRating": 1020.7652268529337,
+            "carRating": 1065.8076514696988,
+            "formShift": 0.6669824618121051,
+            "teammateFormShift": 0.05275759256999657,
+            "fullHeadStrength": 2.1105090443768186
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.003378594726406087,
+            "driverRating": 992.7725049098096,
+            "carRating": 983.0419320725834,
+            "formShift": -0.4036923157053706,
+            "teammateFormShift": 0.10082592925298278,
+            "fullHeadStrength": -0.8188360925576295
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.0001468742796481054,
+            "driverRating": 977.056585350626,
+            "carRating": 896.6235753638525,
+            "formShift": -1.7103444916095556,
+            "teammateFormShift": -0.28407115941220806,
+            "fullHeadStrength": -3.788554013084869
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.09779052109531795,
+            "driverRating": 1071.3171738625106,
+            "carRating": 1014.1143126583637,
+            "formShift": 1.2379266677296508,
+            "teammateFormShift": 0.3908549327082571,
+            "fullHeadStrength": 2.684783192328599
+          }
+        ]
+      },
+      "postQualifying": {
+        "asOf": "2026-06-14T10:00:00.000Z",
+        "excludedPriorDriverIds": [],
+        "gridSource": "qualifying position, not the subsequently published race-result grid",
+        "roster": [
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.18364564689530413,
+            "driverRating": 998.2525984757289,
+            "carRating": 1107.7051788956633,
+            "formShift": 0.7773749653939421,
+            "teammateFormShift": 0.13803260208689394,
+            "fullHeadStrength": 3.365196526142029
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.05258541306689137,
+            "driverRating": 1007.1701264942849,
+            "carRating": 1058.0539997290864,
+            "formShift": 0.6751410949691447,
+            "teammateFormShift": -0.11299120132616325,
+            "fullHeadStrength": 3.180738975426377
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.014964711509651405,
+            "driverRating": 1010.1750430040822,
+            "carRating": 1014.1143126583637,
+            "formShift": 0.30618516091632314,
+            "teammateFormShift": -0.2896970890781951,
+            "fullHeadStrength": 1.2036931197155658
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.06971517489106552,
+            "driverRating": 1008.6011271144735,
+            "carRating": 1065.8076514696988,
+            "formShift": 0.2882244725930778,
+            "teammateFormShift": -0.008692401283899698,
+            "fullHeadStrength": 1.730909252738786
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.005455264658218982,
+            "driverRating": 964.1807881112112,
+            "carRating": 1027.239628251895,
+            "formShift": -0.09195716014573069,
+            "teammateFormShift": 0.023161174521925135,
+            "fullHeadStrength": 0.08284492990080126
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.004611114307462153,
+            "driverRating": 958.7050428662694,
+            "carRating": 1027.239628251895,
+            "formShift": -0.13827950918958096,
+            "teammateFormShift": -0.023161174521925135,
+            "fullHeadStrength": -0.3128426825490662
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.008910117784195603,
+            "driverRating": 1001.2402842843651,
+            "carRating": 1006.1602035908306,
+            "formShift": 0.2180129845942232,
+            "teammateFormShift": 0.11435595978669855,
+            "fullHeadStrength": -0.16527902643457004
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.001830001017905344,
+            "driverRating": 997.9458185446026,
+            "carRating": 957.8972607970726,
+            "formShift": -0.23388325259847234,
+            "teammateFormShift": -0.08137098016913222,
+            "fullHeadStrength": -1.56784853748333
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0018789951752196349,
+            "driverRating": 973.6617222925014,
+            "carRating": 983.0419320725834,
+            "formShift": -0.4135409727143454,
+            "teammateFormShift": -0.09903895240912719,
+            "fullHeadStrength": -1.5143490070584955
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.000557653581394525,
+            "driverRating": 1010.9018608091936,
+            "carRating": 906.234705862263,
+            "formShift": -0.7860554009803942,
+            "teammateFormShift": 0.10134334158775549,
+            "fullHeadStrength": -3.112255771310072
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.002946352673354822,
+            "driverRating": 994.234032929684,
+            "carRating": 977.12155130869,
+            "formShift": -0.009256922373891514,
+            "teammateFormShift": -0.07181601594583238,
+            "fullHeadStrength": -0.5640252402365676
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.31439550884270384,
+            "driverRating": 1015.7647756104017,
+            "carRating": 1107.7051788956633,
+            "formShift": 0.5013097612201542,
+            "teammateFormShift": -0.13803260208689394,
+            "fullHeadStrength": 3.7592290670793713
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.0037569164756131924,
+            "driverRating": 1002.1500436753688,
+            "carRating": 977.12155130869,
+            "formShift": 0.13437510951777323,
+            "teammateFormShift": 0.07181601594583237,
+            "fullHeadStrength": 0.001723053103065924
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.003593366897140124,
+            "driverRating": 971.6616431039049,
+            "carRating": 1006.1602035908306,
+            "formShift": -0.010698934979173907,
+            "teammateFormShift": -0.11435595978669855,
+            "fullHeadStrength": -0.6436873792551989
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.0002507666741439452,
+            "driverRating": 994.4808906340832,
+            "carRating": 896.6235753638525,
+            "formShift": -0.7444437802848122,
+            "teammateFormShift": 0.2725147515981411,
+            "fullHeadStrength": -2.9221669046379586
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.003632521597645238,
+            "driverRating": 1020.2775840822196,
+            "carRating": 957.8972607970726,
+            "formShift": -0.07114129226020788,
+            "teammateFormShift": 0.08137098016913225,
+            "fullHeadStrength": -1.4712899589587771
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.12449987268520199,
+            "driverRating": 1035.2428978140229,
+            "carRating": 1058.0539997290864,
+            "formShift": 0.9011234976214711,
+            "teammateFormShift": 0.11299120132616325,
+            "fullHeadStrength": 2.415807227563629
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00017656423642920495,
+            "driverRating": 973.4422291777223,
+            "carRating": 906.234705862263,
+            "formShift": -0.9887420841559051,
+            "teammateFormShift": -0.10134334158775549,
+            "fullHeadStrength": -3.53115792451832
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.10127804692908669,
+            "driverRating": 1020.7652268529337,
+            "carRating": 1065.8076514696988,
+            "formShift": 0.30560927516087727,
+            "teammateFormShift": 0.008692401283899753,
+            "fullHeadStrength": 2.308697418721275
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.003378594726406087,
+            "driverRating": 992.7725049098096,
+            "carRating": 983.0419320725834,
+            "formShift": -0.21546306789609107,
+            "teammateFormShift": 0.09903895240912716,
+            "fullHeadStrength": -1.058828923363233
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.0001468742796481054,
+            "driverRating": 977.056585350626,
+            "carRating": 896.6235753638525,
+            "formShift": -1.2894732834810945,
+            "teammateFormShift": -0.2725147515981412,
+            "fullHeadStrength": -3.762793966393908
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.09779052109531795,
+            "driverRating": 1071.3171738625106,
+            "carRating": 1014.1143126583637,
+            "formShift": 0.8855793390727132,
+            "teammateFormShift": 0.289697089078195,
+            "fullHeadStrength": 2.577685751808597
+          }
+        ]
+      },
+      "scores": {
+        "preQualifying": {
+          "withoutForm": {
+            "winnerId": "1",
+            "winnerInRoster": true,
+            "winnerProbability": 0.08158775481503781,
+            "logLoss": 2.506076091813939,
+            "brier": 0.9346051468245778
+          },
+          "withForm": {
+            "winnerId": "1",
+            "winnerInRoster": true,
+            "winnerProbability": 0.09851608414411417,
+            "logLoss": 2.3175354533313963,
+            "brier": 0.9429578104094759
+          }
+        },
+        "postQualifying": {
+          "withoutForm": {
+            "winnerId": "1",
+            "winnerInRoster": true,
+            "winnerProbability": 0.14946736241574532,
+            "logLoss": 1.900677221585208,
+            "brier": 0.8701965003018685
+          },
+          "withForm": {
+            "winnerId": "1",
+            "winnerInRoster": true,
+            "winnerProbability": 0.16568677177306987,
+            "logLoss": 1.797656190125834,
+            "brier": 0.8442888501188044
+          }
+        }
+      }
+    },
+    {
+      "raceId": "1176",
+      "race": "Austrian Grand Prix",
+      "previousRaceId": "1175",
+      "previousRaceDate": "2026-06-14",
+      "qualifyingStart": "2026-06-27T14:00:00.000Z",
+      "raceStart": "2026-06-28T13:00:00.000Z",
+      "qualifyingTimingVerified": false,
+      "historicalVintageVerified": false,
+      "preQualifying": {
+        "asOf": "2026-06-27T00:00:00.000Z",
+        "roster": [
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.06248470688105083,
+            "driverRating": 1008.940444278962,
+            "carRating": 1065.0984908508858,
+            "formShift": 1.3779717100710434,
+            "teammateFormShift": 0.004255289105046245,
+            "fullHeadStrength": 2.729522099248115
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.3225839322036906,
+            "driverRating": 1017.2223080649768,
+            "carRating": 1110.2818016647318,
+            "formShift": 1.2735323483129959,
+            "teammateFormShift": -0.05673343894852656,
+            "fullHeadStrength": 3.256479002170209
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.09604005545050225,
+            "driverRating": 1022.0647205739524,
+            "carRating": 1065.9751144509266,
+            "formShift": 0.9553534360165205,
+            "teammateFormShift": 0.08493661498837246,
+            "fullHeadStrength": 2.411995077057164
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.09451287217628072,
+            "driverRating": 1071.5158123415492,
+            "carRating": 1016.0019146174412,
+            "formShift": 1.369191413334774,
+            "teammateFormShift": 0.4394365026509073,
+            "fullHeadStrength": 2.8686330095313406
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.06048178959732973,
+            "driverRating": 1007.0026378915704,
+            "carRating": 1065.9751144509266,
+            "formShift": 0.7854802060397755,
+            "teammateFormShift": -0.08493661498837246,
+            "fullHeadStrength": 2.014084867172666
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.01486295455884015,
+            "driverRating": 1011.2618764979898,
+            "carRating": 1016.0019146174412,
+            "formShift": 0.49031840803295934,
+            "teammateFormShift": -0.4394365026509074,
+            "fullHeadStrength": 1.098344554705938
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.007773569510328853,
+            "driverRating": 1001.0942728350708,
+            "carRating": 1005.0581685042389,
+            "formShift": 0.14700056873541012,
+            "teammateFormShift": 0.199093196712768,
+            "fullHeadStrength": 0.2601762728329277
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.005408487278701061,
+            "driverRating": 964.8393755068009,
+            "carRating": 1029.4972152986868,
+            "formShift": -0.014020013783157648,
+            "teammateFormShift": 0.09529713269444616,
+            "fullHeadStrength": -0.13134472236107705
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.00465377484957924,
+            "driverRating": 959.944092182556,
+            "carRating": 1029.4972152986868,
+            "formShift": -0.20461427917204997,
+            "teammateFormShift": -0.09529713269444616,
+            "fullHeadStrength": -0.47217849919983496
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.0032104266489163475,
+            "driverRating": 972.2899427386324,
+            "carRating": 1005.0581685042389,
+            "formShift": -0.2511858246901259,
+            "teammateFormShift": -0.199093196712768,
+            "fullHeadStrength": -0.691397995302425
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.003022147452201115,
+            "driverRating": 994.0937567993544,
+            "carRating": 981.2858218141615,
+            "formShift": -0.18076527313706023,
+            "teammateFormShift": -0.062107176459336264,
+            "fullHeadStrength": -0.6382317433790121
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.0027138251208753557,
+            "driverRating": 1020.2649992623082,
+            "carRating": 951.6095449714608,
+            "formShift": -0.5258790560558684,
+            "teammateFormShift": 0.067262619979645,
+            "fullHeadStrength": -1.1503018193224628
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0015152492795504622,
+            "driverRating": 973.1607494198201,
+            "carRating": 979.7314619093197,
+            "formShift": -0.7159342838153208,
+            "teammateFormShift": -0.15673336015299733,
+            "fullHeadStrength": -1.4544538838068344
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.0002267981983655695,
+            "driverRating": 995.3408854001,
+            "carRating": 895.68798948699,
+            "formShift": -1.1364869775137987,
+            "teammateFormShift": 0.31930337635549955,
+            "fullHeadStrength": -2.9558030751241584
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.1361569417658774,
+            "driverRating": 1034.310398123022,
+            "carRating": 1065.0984908508858,
+            "formShift": 1.3694611318609509,
+            "teammateFormShift": -0.004255289105046245,
+            "fullHeadStrength": 2.994871264020215
+          },
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.1758262626409025,
+            "driverRating": 997.4553840635921,
+            "carRating": 1110.2818016647318,
+            "formShift": 1.3869992262100488,
+            "teammateFormShift": 0.05673343894852634,
+            "fullHeadStrength": 3.1807415660705916
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.0027075503544547997,
+            "driverRating": 992.0676836273585,
+            "carRating": 979.7314619093197,
+            "formShift": -0.40246756350932616,
+            "teammateFormShift": 0.15673336015299727,
+            "fullHeadStrength": -0.8814206430720137
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0012880931071016682,
+            "driverRating": 995.9924041100769,
+            "carRating": 951.6095449714608,
+            "formShift": -0.6604042960151584,
+            "teammateFormShift": -0.067262619979645,
+            "fullHeadStrength": -1.4676565637581935
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0003997242103360196,
+            "driverRating": 1009.7154624260799,
+            "carRating": 899.7724764311567,
+            "formShift": -1.5459233283019804,
+            "teammateFormShift": 0.0700297869377331,
+            "fullHeadStrength": -3.015165073265874
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.003875104817179076,
+            "driverRating": 1002.1913421137252,
+            "carRating": 981.2858218141615,
+            "formShift": -0.0565509202183877,
+            "teammateFormShift": 0.062107176459336264,
+            "fullHeadStrength": -0.4370044905477735
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.0001237589058246891,
+            "driverRating": 975.6111499552134,
+            "carRating": 895.68798948699,
+            "formShift": -1.7750937302247976,
+            "teammateFormShift": -0.3193033763554993,
+            "fullHeadStrength": -3.8687527635200856
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00013197499211145623,
+            "driverRating": 973.6203017872888,
+            "carRating": 899.7724764311567,
+            "formShift": -1.6859829021774466,
+            "teammateFormShift": -0.0700297869377331,
+            "fullHeadStrength": -3.65113644014942
+          }
+        ]
+      },
+      "postQualifying": {
+        "asOf": "2026-06-28T10:00:00.000Z",
+        "excludedPriorDriverIds": [],
+        "gridSource": "qualifying position, not the subsequently published race-result grid",
+        "roster": [
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.06248470688105083,
+            "driverRating": 1008.940444278962,
+            "carRating": 1065.0984908508858,
+            "formShift": 0.8949564928239362,
+            "teammateFormShift": 0.03579183820884646,
+            "fullHeadStrength": 3.093291223092846
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.3225839322036906,
+            "driverRating": 1017.2223080649768,
+            "carRating": 1110.2818016647318,
+            "formShift": 0.717402801194918,
+            "teammateFormShift": -0.10743101812848288,
+            "fullHeadStrength": 3.8460402934395588
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.09604005545050225,
+            "driverRating": 1022.0647205739524,
+            "carRating": 1065.9751144509266,
+            "formShift": 0.6087289701198445,
+            "teammateFormShift": 0.04421955745780215,
+            "fullHeadStrength": 2.396055752288247
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.09451287217628072,
+            "driverRating": 1071.5158123415492,
+            "carRating": 1016.0019146174412,
+            "formShift": 1.08829753004553,
+            "teammateFormShift": 0.3607677872482239,
+            "fullHeadStrength": 2.73130871410001
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.06048178959732973,
+            "driverRating": 1007.0026378915704,
+            "carRating": 1065.9751144509266,
+            "formShift": 0.5202898552042402,
+            "teammateFormShift": -0.04421955745780215,
+            "fullHeadStrength": 2.002484192862418
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.01486295455884015,
+            "driverRating": 1011.2618764979898,
+            "carRating": 1016.0019146174412,
+            "formShift": 0.3667619555490822,
+            "teammateFormShift": -0.3607677872482239,
+            "fullHeadStrength": 1.215372422118003
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.007773569510328853,
+            "driverRating": 1001.0942728350708,
+            "carRating": 1005.0581685042389,
+            "formShift": 0.1533400515486336,
+            "teammateFormShift": 0.12399621979116437,
+            "fullHeadStrength": 0.17989744793690923
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.005408487278701061,
+            "driverRating": 964.8393755068009,
+            "carRating": 1029.4972152986868,
+            "formShift": -0.048951631513391325,
+            "teammateFormShift": 0.058681576964579776,
+            "fullHeadStrength": 0.20807410709592924
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.00465377484957924,
+            "driverRating": 959.944092182556,
+            "carRating": 1029.4972152986868,
+            "formShift": -0.16631478544255088,
+            "teammateFormShift": -0.058681576964579776,
+            "fullHeadStrength": -0.1738174145849821
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.0032104266489163475,
+            "driverRating": 972.2899427386324,
+            "carRating": 1005.0581685042389,
+            "formShift": -0.09465238803369515,
+            "teammateFormShift": -0.12399621979116437,
+            "fullHeadStrength": -1.154787363728682
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.003022147452201115,
+            "driverRating": 994.0937567993544,
+            "carRating": 981.2858218141615,
+            "formShift": -0.025080884347553824,
+            "teammateFormShift": -0.030961748615181226,
+            "fullHeadStrength": -0.47191985578791124
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.0027138251208753557,
+            "driverRating": 1020.2649992623082,
+            "carRating": 951.6095449714608,
+            "formShift": -0.3268946647231175,
+            "teammateFormShift": 0.03408143714771167,
+            "fullHeadStrength": -1.4591615002485208
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0015152492795504622,
+            "driverRating": 973.1607494198201,
+            "carRating": 979.7314619093197,
+            "formShift": -0.46200253906059763,
+            "teammateFormShift": -0.09992413615103574,
+            "fullHeadStrength": -1.6164248127613001
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.0002267981983655695,
+            "driverRating": 995.3408854001,
+            "carRating": 895.68798948699,
+            "formShift": -0.7275912483274493,
+            "teammateFormShift": 0.31495988628708116,
+            "fullHeadStrength": -2.964521448742258
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.1361569417658774,
+            "driverRating": 1034.310398123022,
+            "carRating": 1065.0984908508858,
+            "formShift": 0.8233728164062434,
+            "teammateFormShift": -0.03579183820884635,
+            "fullHeadStrength": 3.3045526805831105
+          },
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.1758262626409025,
+            "driverRating": 997.4553840635921,
+            "carRating": 1110.2818016647318,
+            "formShift": 0.9322648374518837,
+            "teammateFormShift": 0.10743101812848288,
+            "fullHeadStrength": 3.399203291388721
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.0027075503544547997,
+            "driverRating": 992.0676836273585,
+            "carRating": 979.7314619093197,
+            "formShift": -0.26215426675852616,
+            "teammateFormShift": 0.09992413615103574,
+            "fullHeadStrength": -0.9432813792229104
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0012880931071016682,
+            "driverRating": 995.9924041100769,
+            "carRating": 951.6095449714608,
+            "formShift": -0.3950575390185408,
+            "teammateFormShift": -0.03408143714771161,
+            "fullHeadStrength": -1.7493821153538547
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0003997242103360196,
+            "driverRating": 1009.7154624260799,
+            "carRating": 899.7724764311567,
+            "formShift": -1.087512086477827,
+            "teammateFormShift": 0.05051139107221614,
+            "fullHeadStrength": -3.406187811079489
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.003875104817179076,
+            "driverRating": 1002.1913421137252,
+            "carRating": 981.2858218141615,
+            "formShift": 0.03684261288280863,
+            "teammateFormShift": 0.030961748615181226,
+            "fullHeadStrength": -0.6851764850734223
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.0001237589058246891,
+            "driverRating": 975.6111499552134,
+            "carRating": 895.68798948699,
+            "formShift": -1.3575110209016115,
+            "teammateFormShift": -0.31495988628708105,
+            "fullHeadStrength": -3.8815389470489774
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00013197499211145623,
+            "driverRating": 973.6203017872888,
+            "carRating": 899.7724764311567,
+            "formShift": -1.1885348686222594,
+            "teammateFormShift": -0.05051139107221636,
+            "fullHeadStrength": -3.8700809912734457
+          }
+        ]
+      },
+      "scores": {
+        "preQualifying": {
+          "withoutForm": {
+            "winnerId": "847",
+            "winnerInRoster": true,
+            "winnerProbability": 0.16617701480579472,
+            "logLoss": 1.7947017045256486,
+            "brier": 0.7661886154764034
+          },
+          "withForm": {
+            "winnerId": "847",
+            "winnerInRoster": true,
+            "winnerProbability": 0.1990512157456014,
+            "logLoss": 1.614193121814692,
+            "brier": 0.7424981712589054
+          }
+        },
+        "postQualifying": {
+          "withoutForm": {
+            "winnerId": "847",
+            "winnerInRoster": true,
+            "winnerProbability": 0.2854729544909608,
+            "logLoss": 1.2536079847026576,
+            "brier": 0.5816619723607338
+          },
+          "withForm": {
+            "winnerId": "847",
+            "winnerInRoster": true,
+            "winnerProbability": 0.27700348923713625,
+            "logLoss": 1.2837251763501765,
+            "brier": 0.6120864828006687
+          }
+        }
+      }
+    },
+    {
+      "raceId": "1177",
+      "race": "British Grand Prix",
+      "previousRaceId": "1176",
+      "previousRaceDate": "2026-06-28",
+      "qualifyingStart": "2026-07-04T15:00:00.000Z",
+      "raceStart": "2026-07-05T14:00:00.000Z",
+      "qualifyingTimingVerified": false,
+      "historicalVintageVerified": false,
+      "preQualifying": {
+        "asOf": "2026-07-04T00:00:00.000Z",
+        "roster": [
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.34758441438250715,
+            "driverRating": 1019.0099233472149,
+            "carRating": 1114.5777977277417,
+            "formShift": 1.3466684591183187,
+            "teammateFormShift": -0.035722955226618947,
+            "fullHeadStrength": 3.3974708801426075
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.09708792798955908,
+            "driverRating": 1072.574282664972,
+            "carRating": 1019.4713087689772,
+            "formShift": 1.5124324716537652,
+            "teammateFormShift": 0.45491442902334667,
+            "fullHeadStrength": 3.067382040890895
+          },
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.1743424914359697,
+            "driverRating": 996.5356448546638,
+            "carRating": 1114.5777977277417,
+            "formShift": 1.4181143695715563,
+            "teammateFormShift": 0.035722955226618724,
+            "fullHeadStrength": 3.252976894936134
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.05664153256548588,
+            "driverRating": 1008.6794300810903,
+            "carRating": 1065.813893578801,
+            "formShift": 0.935687987994698,
+            "teammateFormShift": -0.055403025487445356,
+            "fullHeadStrength": 2.2170044718173183
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.06322229226300147,
+            "driverRating": 1009.6195773069699,
+            "carRating": 1068.4538895346661,
+            "formShift": 1.3322415402806616,
+            "teammateFormShift": 0.05080705264978169,
+            "fullHeadStrength": 2.7289439251933305
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.014858652881978237,
+            "driverRating": 1011.435348000004,
+            "carRating": 1019.4713087689772,
+            "formShift": 0.6026036136070718,
+            "teammateFormShift": -0.45491442902334667,
+            "fullHeadStrength": 1.2748499570369276
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.08096830655177165,
+            "driverRating": 1020.317934615394,
+            "carRating": 1065.813893578801,
+            "formShift": 1.0464940389695887,
+            "teammateFormShift": 0.055403025487445356,
+            "fullHeadStrength": 2.484397402765798
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.13214491225360397,
+            "driverRating": 1033.633092967976,
+            "carRating": 1068.4538895346661,
+            "formShift": 1.2306274349810982,
+            "teammateFormShift": -0.05080705264978169,
+            "fullHeadStrength": 2.8750725345419843
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.005666075582443707,
+            "driverRating": 965.8628841494851,
+            "carRating": 1033.6414920965701,
+            "formShift": 0.0526955842969969,
+            "teammateFormShift": 0.02408863417327585,
+            "fullHeadStrength": 0.017264089958938546
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.004890449066407184,
+            "driverRating": 961.0678623979489,
+            "carRating": 1033.6414920965701,
+            "formShift": 0.004518315950445203,
+            "teammateFormShift": -0.02408863417327585,
+            "fullHeadStrength": -0.16959322785411288
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.0029071208784456027,
+            "driverRating": 995.7302562770275,
+            "carRating": 982.0376744702509,
+            "formShift": -0.16048343770280354,
+            "teammateFormShift": -0.11812539990672682,
+            "fullHeadStrength": -0.5679169844340352
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.0033894831755508516,
+            "driverRating": 1000.7305357047777,
+            "carRating": 982.0376744702509,
+            "formShift": 0.0757673621106501,
+            "teammateFormShift": 0.11812539990672682,
+            "fullHeadStrength": -0.2896740851132797
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.006401786708180628,
+            "driverRating": 1001.3292147090467,
+            "carRating": 1002.1515743076494,
+            "formShift": 0.15823696053781822,
+            "teammateFormShift": 0.2715962291660156,
+            "fullHeadStrength": 0.20612000075910822
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.0023272614524678533,
+            "driverRating": 992.1413701677652,
+            "carRating": 978.3802170282235,
+            "formShift": -0.46043800929272377,
+            "teammateFormShift": 0.23779685802877565,
+            "fullHeadStrength": -0.9555341944315803
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.0024850028252454796,
+            "driverRating": 970.5061411893464,
+            "carRating": 1002.1515743076494,
+            "formShift": -0.384955497794213,
+            "teammateFormShift": -0.2715962291660156,
+            "fullHeadStrength": -0.9015735367755263
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.001257367805470802,
+            "driverRating": 972.0876571698939,
+            "carRating": 978.3802170282235,
+            "formShift": -0.936031725350275,
+            "teammateFormShift": -0.2377968580287756,
+            "fullHeadStrength": -1.7130806127227112
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0009830063408358739,
+            "driverRating": 994.9404101976644,
+            "carRating": 947.5095127300923,
+            "formShift": -0.8054439212630029,
+            "teammateFormShift": -0.08242811937331729,
+            "fullHeadStrength": -1.7173755532070274
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0002879556449060908,
+            "driverRating": 1008.7692616619856,
+            "carRating": 893.6883570674129,
+            "formShift": -1.6841197655008435,
+            "teammateFormShift": 0.02230754502813026,
+            "fullHeadStrength": -3.2601039974077497
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00009784456330932184,
+            "driverRating": 973.6100943635631,
+            "carRating": 893.6883570674129,
+            "formShift": -1.7287348555571043,
+            "teammateFormShift": -0.022307545028130482,
+            "fullHeadStrength": -3.7422580633449027
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.002154281160521674,
+            "driverRating": 1020.496365017363,
+            "carRating": 947.5095127300923,
+            "formShift": -0.6405876825163683,
+            "teammateFormShift": 0.08242811937331729,
+            "fullHeadStrength": -1.3441907748352497
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.00019813800820466006,
+            "driverRating": 996.006500763204,
+            "carRating": 894.2742826896152,
+            "formShift": -1.1914887977984452,
+            "teammateFormShift": 0.2661578242492222,
+            "fullHeadStrength": -3.0180690887681507
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00010369646413303747,
+            "driverRating": 974.9162123926435,
+            "carRating": 894.2742826896152,
+            "formShift": -1.7238044462968896,
+            "teammateFormShift": -0.2661578242492222,
+            "fullHeadStrength": -3.8421120791487127
+          }
+        ]
+      },
+      "postQualifying": {
+        "asOf": "2026-07-05T11:00:00.000Z",
+        "excludedPriorDriverIds": [],
+        "gridSource": "qualifying position, not the subsequently published race-result grid",
+        "roster": [
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.34758441438250715,
+            "driverRating": 1019.0099233472149,
+            "carRating": 1114.5777977277417,
+            "formShift": 0.8915351898398508,
+            "teammateFormShift": 0.035838225249387734,
+            "fullHeadStrength": 3.290169553600217
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.09708792798955908,
+            "driverRating": 1072.574282664972,
+            "carRating": 1019.4713087689772,
+            "formShift": 1.282532802975148,
+            "teammateFormShift": 0.42719783070069417,
+            "fullHeadStrength": 2.835264586093297
+          },
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.1743424914359697,
+            "driverRating": 996.5356448546638,
+            "carRating": 1114.5777977277417,
+            "formShift": 0.8198587393410753,
+            "teammateFormShift": -0.035838225249387734,
+            "fullHeadStrength": 4.111653479342437
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.05664153256548588,
+            "driverRating": 1008.6794300810903,
+            "carRating": 1065.813893578801,
+            "formShift": 0.6910213612297135,
+            "teammateFormShift": -0.04090687166774465,
+            "fullHeadStrength": 1.8914159227873966
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.06322229226300147,
+            "driverRating": 1009.6195773069699,
+            "carRating": 1068.4538895346661,
+            "formShift": 0.8621211299802067,
+            "teammateFormShift": 0.06751290557974765,
+            "fullHeadStrength": 3.1823234069400868
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.014858652881978237,
+            "driverRating": 1011.435348000004,
+            "carRating": 1019.4713087689772,
+            "formShift": 0.42813714157375954,
+            "teammateFormShift": -0.4271978307006942,
+            "fullHeadStrength": 1.8281070995964248
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.08096830655177165,
+            "driverRating": 1020.317934615394,
+            "carRating": 1065.813893578801,
+            "formShift": 0.7728351045652029,
+            "teammateFormShift": 0.04090687166774476,
+            "fullHeadStrength": 2.19536779503113
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.13214491225360397,
+            "driverRating": 1033.633092967976,
+            "carRating": 1068.4538895346661,
+            "formShift": 0.7270953188207113,
+            "teammateFormShift": -0.06751290557974776,
+            "fullHeadStrength": 3.4757429081159428
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.005666075582443707,
+            "driverRating": 965.8628841494851,
+            "carRating": 1033.6414920965701,
+            "formShift": 0.023442010863708947,
+            "teammateFormShift": 0.01642371434962582,
+            "fullHeadStrength": 0.23946233658279245
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.004890449066407184,
+            "driverRating": 961.0678623979489,
+            "carRating": 1033.6414920965701,
+            "formShift": -0.009405417835542697,
+            "teammateFormShift": -0.01642371434962582,
+            "fullHeadStrength": 0.227406844819388
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.0029071208784456027,
+            "driverRating": 995.7302562770275,
+            "carRating": 982.0376744702509,
+            "formShift": -0.03125444779778307,
+            "teammateFormShift": -0.06970931032088429,
+            "fullHeadStrength": -0.27005136314358197
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.0033894831755508516,
+            "driverRating": 1000.7305357047777,
+            "carRating": 982.0376744702509,
+            "formShift": 0.10816417284398548,
+            "teammateFormShift": 0.06970931032088427,
+            "fullHeadStrength": -0.3638713458035634
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.006401786708180628,
+            "driverRating": 1001.3292147090467,
+            "carRating": 1002.1515743076494,
+            "formShift": 0.15271465572821163,
+            "teammateFormShift": 0.19248977454889138,
+            "fullHeadStrength": -0.1847313921576154
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.0023272614524678533,
+            "driverRating": 992.1413701677652,
+            "carRating": 978.3802170282235,
+            "formShift": -0.34370866133689265,
+            "teammateFormShift": 0.17929945459344993,
+            "fullHeadStrength": -1.2951155541697816
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.0024850028252454796,
+            "driverRating": 970.5061411893464,
+            "carRating": 1002.1515743076494,
+            "formShift": -0.23226489336957112,
+            "teammateFormShift": -0.19248977454889138,
+            "fullHeadStrength": -1.4627620561860488
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.001257367805470802,
+            "driverRating": 972.0876571698939,
+            "carRating": 978.3802170282235,
+            "formShift": -0.7023075705237926,
+            "teammateFormShift": -0.17929945459344998,
+            "fullHeadStrength": -1.8261681420554083
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0009830063408358739,
+            "driverRating": 994.9404101976644,
+            "carRating": 947.5095127300923,
+            "formShift": -0.529250367964302,
+            "teammateFormShift": -0.05969898330983525,
+            "fullHeadStrength": -2.093116233469973
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0002879556449060908,
+            "driverRating": 1008.7692616619856,
+            "carRating": 893.6883570674129,
+            "formShift": -1.208037659691869,
+            "teammateFormShift": 0.004107622577906644,
+            "fullHeadStrength": -3.6555371407658384
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00009784456330932184,
+            "driverRating": 973.6100943635631,
+            "carRating": 893.6883570674129,
+            "formShift": -1.2162529048476822,
+            "teammateFormShift": -0.004107622577906644,
+            "fullHeadStrength": -3.8165702347205492
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.002154281160521674,
+            "driverRating": 1020.496365017363,
+            "carRating": 947.5095127300923,
+            "formShift": -0.4098524013446315,
+            "teammateFormShift": 0.05969898330983525,
+            "fullHeadStrength": -1.6877899252704205
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.00019813800820466006,
+            "driverRating": 996.006500763204,
+            "carRating": 894.2742826896152,
+            "formShift": -0.7652430829307412,
+            "teammateFormShift": 0.2733185685940126,
+            "fullHeadStrength": -3.0010312999149815
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00010369646413303747,
+            "driverRating": 974.9162123926435,
+            "carRating": 894.2742826896152,
+            "formShift": -1.3118802201187665,
+            "teammateFormShift": -0.2733185685940127,
+            "fullHeadStrength": -3.62016924525135
+          }
+        ]
+      },
+      "scores": {
+        "preQualifying": {
+          "withoutForm": {
+            "winnerId": "844",
+            "winnerInRoster": true,
+            "winnerProbability": 0.11465522261053476,
+            "logLoss": 2.1658257180725844,
+            "brier": 0.8711475270675741
+          },
+          "withForm": {
+            "winnerId": "844",
+            "winnerInRoster": true,
+            "winnerProbability": 0.1257342057128477,
+            "logLoss": 2.073585078583776,
+            "brier": 0.8903247495357316
+          }
+        },
+        "postQualifying": {
+          "withoutForm": {
+            "winnerId": "844",
+            "winnerInRoster": true,
+            "winnerProbability": 0.18072366779944607,
+            "logLoss": 1.7107861115466771,
+            "brier": 0.8077374736967762
+          },
+          "withForm": {
+            "winnerId": "844",
+            "winnerInRoster": true,
+            "winnerProbability": 0.17092164629504117,
+            "logLoss": 1.7665500362901376,
+            "brier": 0.8408167795373179
+          }
+        }
+      }
+    },
+    {
+      "raceId": "1180",
+      "race": "Dutch Grand Prix",
+      "previousRaceId": "1179",
+      "previousRaceDate": "2026-07-26",
+      "qualifyingStart": "2026-08-22T14:00:00.000Z",
+      "raceStart": "2026-08-23T13:00:00.000Z",
+      "qualifyingTimingVerified": false,
+      "historicalVintageVerified": false,
+      "preQualifying": {
+        "asOf": "2026-08-22T00:00:00.000Z",
+        "roster": [
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.09752988854808228,
+            "driverRating": 1022.856099885631,
+            "carRating": 1071.5727343346384,
+            "formShift": 1.3188643908793503,
+            "teammateFormShift": 0.11259679802817057,
+            "fullHeadStrength": 2.829283465096949
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.10505650736375408,
+            "driverRating": 1071.0278648313497,
+            "carRating": 1025.822361678247,
+            "formShift": 1.5608256602091972,
+            "teammateFormShift": 0.38597856889104487,
+            "fullHeadStrength": 3.1452446134088063
+          },
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.16556957218270874,
+            "driverRating": 1000.670665084715,
+            "carRating": 1110.9963790365364,
+            "formShift": 1.1998668638272982,
+            "teammateFormShift": 0.016180498015467837,
+            "fullHeadStrength": 3.0037051986719674
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.1822595716400497,
+            "driverRating": 1035.5090881882816,
+            "carRating": 1079.286192329483,
+            "formShift": 1.3661439238672684,
+            "teammateFormShift": 0.07702648962150427,
+            "fullHeadStrength": 3.1702070744559396
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.07905028199801926,
+            "driverRating": 1008.3000690617415,
+            "carRating": 1079.286192329483,
+            "formShift": 1.2120909446242598,
+            "teammateFormShift": -0.07702648962150427,
+            "fullHeadStrength": 2.7110793138536593
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.01778090985999641,
+            "driverRating": 1013.1676914711607,
+            "carRating": 1025.822361678247,
+            "formShift": 0.7888685224271076,
+            "teammateFormShift": -0.38597856889104476,
+            "fullHeadStrength": 1.5851538488422585
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.2631492525910896,
+            "driverRating": 1015.7622861530127,
+            "carRating": 1110.9963790365364,
+            "formShift": 1.1675058677963623,
+            "teammateFormShift": -0.01618049801546806,
+            "fullHeadStrength": 3.1086571994650636
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.006060422971079583,
+            "driverRating": 964.4999808094649,
+            "carRating": 1039.4312439900316,
+            "formShift": -0.02615940243221523,
+            "teammateFormShift": -0.01963832921664298,
+            "fullHeadStrength": 0.013917757436377354
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.003639583436965196,
+            "driverRating": 1000.2204225042168,
+            "carRating": 987.1019581194715,
+            "formShift": -0.06122591036779495,
+            "teammateFormShift": 0.03859184823136189,
+            "fullHeadStrength": -0.32399937188913513
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.007029187414852401,
+            "driverRating": 969.3301448452629,
+            "carRating": 1039.4312439900316,
+            "formShift": 0.013117256001070731,
+            "teammateFormShift": 0.01963832921664298,
+            "fullHeadStrength": 0.05219648140388616
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.0034016693161209007,
+            "driverRating": 998.0184534505479,
+            "carRating": 987.1019581194715,
+            "formShift": -0.13840960683051873,
+            "teammateFormShift": -0.038591848231361886,
+            "fullHeadStrength": -0.4091915868824573
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.005313586407025163,
+            "driverRating": 1000.7897923839124,
+            "carRating": 998.8577932865339,
+            "formShift": 0.07764973134377334,
+            "teammateFormShift": 0.17331884514908,
+            "fullHeadStrength": 0.04141814383964484
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.0000820922725131273,
+            "driverRating": 973.8442032190814,
+            "carRating": 889.971972268352,
+            "formShift": -1.505749903630099,
+            "teammateFormShift": -0.03814451434884725,
+            "fullHeadStrength": -3.482210768470476
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0002295549609635013,
+            "driverRating": 1007.3380335702262,
+            "carRating": 889.971972268352,
+            "formShift": -1.4294608749324045,
+            "teammateFormShift": 0.03814451434884725,
+            "fullHeadStrength": -3.016777665433122
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.002078398006513197,
+            "driverRating": 970.2153651274662,
+            "carRating": 998.8577932865339,
+            "formShift": -0.26898795895438665,
+            "teammateFormShift": -0.17331884514908,
+            "fullHeadStrength": -0.8277205410101818
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0008503792818272728,
+            "driverRating": 972.4438530671501,
+            "carRating": 967.520601863477,
+            "formShift": -0.9245999811898803,
+            "teammateFormShift": -0.09059543495655664,
+            "fullHeadStrength": -1.893215060916478
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0006638455703999351,
+            "driverRating": 994.9748862851869,
+            "carRating": 936.9236479689171,
+            "formShift": -0.8805099102447713,
+            "teammateFormShift": -0.01980396218843461,
+            "fullHeadStrength": -1.957846328228438
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.0013186558688090355,
+            "driverRating": 1017.329717055665,
+            "carRating": 936.9236479689171,
+            "formShift": -0.8409019858679021,
+            "teammateFormShift": 0.01980396218843461,
+            "fullHeadStrength": -1.7471236350330164
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.0014104420344099949,
+            "driverRating": 988.9245459464569,
+            "carRating": 967.520601863477,
+            "formShift": -0.7434091112767671,
+            "teammateFormShift": 0.09059543495655653,
+            "fullHeadStrength": -1.4901895919500439
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.057273814500818435,
+            "driverRating": 1005.5174784345729,
+            "carRating": 1071.5727343346384,
+            "formShift": 1.0936707948230089,
+            "teammateFormShift": -0.1125967980281708,
+            "fullHeadStrength": 2.36198405400731
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.00015163833907504997,
+            "driverRating": 991.2890659163651,
+            "carRating": 892.5151151243118,
+            "formShift": -1.2376776765640631,
+            "teammateFormShift": 0.2519169784719151,
+            "fullHeadStrength": -3.081876617565131
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00010074543492725281,
+            "driverRating": 977.9702927085317,
+            "carRating": 892.5151151243118,
+            "formShift": -1.7415116335078933,
+            "teammateFormShift": -0.2519169784719151,
+            "fullHeadStrength": -3.7926959831033815
+          }
+        ]
+      },
+      "postQualifying": {
+        "asOf": "2026-08-23T10:00:00.000Z",
+        "excludedPriorDriverIds": [
+          "865",
+          "859"
+        ],
+        "gridSource": "qualifying position, not the subsequently published race-result grid",
+        "roster": [
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.09991192193267158,
+            "driverRating": 1022.856099885631,
+            "carRating": 1071.5727343346384,
+            "formShift": 0.7719209233042961,
+            "teammateFormShift": 0.022783166008973676,
+            "fullHeadStrength": 3.777501219347559
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.1076223680607592,
+            "driverRating": 1071.0278648313497,
+            "carRating": 1025.822361678247,
+            "formShift": 1.277111511593057,
+            "teammateFormShift": 0,
+            "fullHeadStrength": 2.75241746782368
+          },
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.16961338125788206,
+            "driverRating": 1000.670665084715,
+            "carRating": 1110.9963790365364,
+            "formShift": 0.7963277971447987,
+            "teammateFormShift": 0.047616787769168556,
+            "fullHeadStrength": 3.2830434238810624
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.18671101099644255,
+            "driverRating": 1035.5090881882816,
+            "carRating": 1079.286192329483,
+            "formShift": 1.0156487325354562,
+            "teammateFormShift": 0.06702627478940704,
+            "fullHeadStrength": 2.880266907274903
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.08098097640958571,
+            "driverRating": 1008.3000690617415,
+            "carRating": 1079.286192329483,
+            "formShift": 0.8815961829566421,
+            "teammateFormShift": -0.06702627478940704,
+            "fullHeadStrength": 2.810496271629993
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.269576311148556,
+            "driverRating": 1015.7622861530127,
+            "carRating": 1110.9963790365364,
+            "formShift": 0.7010942216064617,
+            "teammateFormShift": -0.047616787769168445,
+            "fullHeadStrength": 3.4314990893975468
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.003728475256508035,
+            "driverRating": 1000.2204225042168,
+            "carRating": 987.1019581194715,
+            "formShift": 0.009036005486897813,
+            "teammateFormShift": 0.01399358534187764,
+            "fullHeadStrength": -0.4797074342555218
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.007200865649473357,
+            "driverRating": 969.3301448452629,
+            "carRating": 1039.4312439900316,
+            "formShift": 0.021370954971615508,
+            "teammateFormShift": 0,
+            "fullHeadStrength": 0.06381812098468378
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.0034847504104906367,
+            "driverRating": 998.0184534505479,
+            "carRating": 987.1019581194715,
+            "formShift": -0.018951165196857467,
+            "teammateFormShift": -0.01399358534187764,
+            "fullHeadStrength": -0.07909772898626874
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.005443363446677924,
+            "driverRating": 1000.7897923839124,
+            "carRating": 998.8577932865339,
+            "formShift": 0.1250110996877532,
+            "teammateFormShift": 0.1131319208996506,
+            "fullHeadStrength": -0.006999465920657455
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00008409726335905313,
+            "driverRating": 973.8442032190814,
+            "carRating": 889.971972268352,
+            "formShift": -0.9512810083110065,
+            "teammateFormShift": 0.0009328908348703591,
+            "fullHeadStrength": -2.989225576000071
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0002351615251537554,
+            "driverRating": 1007.3380335702262,
+            "carRating": 889.971972268352,
+            "formShift": -0.9531467899807472,
+            "teammateFormShift": -0.0009328908348703591,
+            "fullHeadStrength": -2.6917306192934674
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.002129160019181114,
+            "driverRating": 970.2153651274662,
+            "carRating": 998.8577932865339,
+            "formShift": -0.101252742111548,
+            "teammateFormShift": -0.1131319208996506,
+            "fullHeadStrength": -0.8436314945364736
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.000871148626169105,
+            "driverRating": 972.4438530671501,
+            "carRating": 967.520601863477,
+            "formShift": -0.5982032486961574,
+            "teammateFormShift": -0.04025635023927687,
+            "fullHeadStrength": -1.9486019206424494
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0006800590853997476,
+            "driverRating": 994.9748862851869,
+            "carRating": 936.9236479689171,
+            "formShift": -0.5549590846611776,
+            "teammateFormShift": -0.002382581316623722,
+            "fullHeadStrength": -2.061262081909115
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.001350862224717452,
+            "driverRating": 1017.329717055665,
+            "carRating": 936.9236479689171,
+            "formShift": -0.5501939220279302,
+            "teammateFormShift": 0.002382581316623722,
+            "fullHeadStrength": -1.7813576482172095
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.0014448901411699684,
+            "driverRating": 988.9245459464569,
+            "carRating": 967.520601863477,
+            "formShift": -0.5176905482176035,
+            "teammateFormShift": 0.04025635023927698,
+            "fullHeadStrength": -1.8892395452081825
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.05867264864525063,
+            "driverRating": 1005.5174784345729,
+            "carRating": 1071.5727343346384,
+            "formShift": 0.7263545912863487,
+            "teammateFormShift": -0.022783166008973676,
+            "fullHeadStrength": 2.864715111335896
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.00015534189694267088,
+            "driverRating": 991.2890659163651,
+            "carRating": 892.5151151243118,
+            "formShift": -0.794718228283209,
+            "teammateFormShift": 0.24517852740194068,
+            "fullHeadStrength": -3.2598753711094117
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00010320600360947145,
+            "driverRating": 977.9702927085317,
+            "carRating": 892.5151151243118,
+            "formShift": -1.2850752830870902,
+            "teammateFormShift": -0.24517852740194046,
+            "fullHeadStrength": -3.8330287255964968
+          }
+        ]
+      },
+      "scores": {
+        "preQualifying": {
+          "withoutForm": {
+            "winnerId": "846",
+            "winnerInRoster": true,
+            "winnerProbability": 0.09813919682780056,
+            "logLoss": 2.321368432297209,
+            "brier": 0.9021292824446925
+          },
+          "withForm": {
+            "winnerId": "846",
+            "winnerInRoster": true,
+            "winnerProbability": 0.11855287637171909,
+            "logLoss": 2.132396203823527,
+            "brier": 0.8936830448140768
+          }
+        },
+        "postQualifying": {
+          "withoutForm": {
+            "winnerId": "846",
+            "winnerInRoster": true,
+            "winnerProbability": 0.2550289766963858,
+            "logLoss": 1.366378106176103,
+            "brier": 0.6448376262348934
+          },
+          "withForm": {
+            "winnerId": "846",
+            "winnerInRoster": true,
+            "winnerProbability": 0.2515527138465164,
+            "logLoss": 1.3801027136056232,
+            "brier": 0.6535145480886572
+          }
+        }
+      }
+    },
+    {
+      "raceId": "1181",
+      "race": "Italian Grand Prix",
+      "previousRaceId": "1180",
+      "previousRaceDate": "2026-08-23",
+      "qualifyingStart": "2026-09-05T14:00:00.000Z",
+      "raceStart": "2026-09-06T13:00:00.000Z",
+      "qualifyingTimingVerified": false,
+      "historicalVintageVerified": false,
+      "preQualifying": {
+        "asOf": "2026-09-05T00:00:00.000Z",
+        "roster": [
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.11607610861882448,
+            "driverRating": 1026.8594224235183,
+            "carRating": 1077.3776127975275,
+            "formShift": 1.3802510304769233,
+            "teammateFormShift": 0.14436526407927563,
+            "fullHeadStrength": 3.0300849762556097
+          },
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.17454869415976793,
+            "driverRating": 1003.798704235393,
+            "carRating": 1113.7263632772306,
+            "formShift": 1.4007078490082625,
+            "teammateFormShift": 0.08400834259943446,
+            "fullHeadStrength": 3.2582828058676707
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.2658247766727463,
+            "driverRating": 1017.4996182541482,
+            "carRating": 1113.7263632772306,
+            "formShift": 1.2326911638093934,
+            "teammateFormShift": -0.08400834259943468,
+            "fullHeadStrength": 3.2076949506569394
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.07613618325027911,
+            "driverRating": 1011.3240639604421,
+            "carRating": 1079.1765908643076,
+            "formShift": 1.2778079022099578,
+            "teammateFormShift": -0.08098952460621978,
+            "fullHeadStrength": 2.821880706720928
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.16534493670146688,
+            "driverRating": 1036.5840488563722,
+            "carRating": 1079.1765908643076,
+            "formShift": 1.4397869514223975,
+            "teammateFormShift": 0.08098952460622,
+            "fullHeadStrength": 3.2440359315432628
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.06175351027624353,
+            "driverRating": 1006.3033331113452,
+            "carRating": 1077.3776127975275,
+            "formShift": 1.0915205023183723,
+            "teammateFormShift": -0.1443652640792754,
+            "fullHeadStrength": 2.465628127138943
+          },
+          {
+            "driverId": "859",
+            "constructorId": "9",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.006380537277414495,
+            "driverRating": 978.8629610283834,
+            "carRating": 1030.882654950474,
+            "formShift": 0.3720313802680964,
+            "teammateFormShift": -0.541795598401007,
+            "fullHeadStrength": 0.7545074828089035
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.0037447571648518566,
+            "driverRating": 1003.7729475926833,
+            "carRating": 988.6151491410876,
+            "formShift": -0.029653819400027048,
+            "teammateFormShift": 0.008108999689606284,
+            "fullHeadStrength": -0.19372851255715373
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0002445091896559257,
+            "driverRating": 1010.3723789275996,
+            "carRating": 893.1310822521264,
+            "formShift": -1.0767077831299139,
+            "teammateFormShift": 0.12377765048600753,
+            "fullHeadStrength": -2.5450119961130167
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.004974969757857746,
+            "driverRating": 1003.7014945515898,
+            "carRating": 997.9391110339659,
+            "formShift": -0.07210174099957153,
+            "teammateFormShift": 0.17013083069279686,
+            "fullHeadStrength": -0.06690557764059539
+          },
+          {
+            "driverId": "852",
+            "constructorId": "215",
+            "name": "Yuki Tsunoda",
+            "baselineProbability": 0.0038459689164625486,
+            "driverRating": 959.0295786993929,
+            "carRating": 1034.2271762481853,
+            "formShift": -0.3144461362206915,
+            "teammateFormShift": -0.0624247674009345,
+            "fullHeadStrength": -0.4254056773095711
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.006012653841165915,
+            "driverRating": 973.5841110680831,
+            "carRating": 1034.2271762481853,
+            "formShift": -0.1895966014188225,
+            "teammateFormShift": 0.0624247674009345,
+            "fullHeadStrength": -0.17590565956419243
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.0032366581129234726,
+            "driverRating": 999.0234351225763,
+            "carRating": 988.6151491410876,
+            "formShift": -0.04587181877923962,
+            "teammateFormShift": -0.008108999689606287,
+            "fullHeadStrength": -0.2809266818828922
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.0018303817761170695,
+            "driverRating": 971.1328374076753,
+            "carRating": 997.9391110339659,
+            "formShift": -0.4123634023851652,
+            "teammateFormShift": -0.17013083069279683,
+            "fullHeadStrength": -0.9576478089339598
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.0001136751532150252,
+            "driverRating": 991.3114360825183,
+            "carRating": 887.2448022399607,
+            "formShift": -1.2697852751691687,
+            "teammateFormShift": 0.17782038272287726,
+            "fullHeadStrength": -3.171325912869263
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.0010765478789923305,
+            "driverRating": 1017.8811213969311,
+            "carRating": 933.9027020313772,
+            "formShift": -0.7399025735334088,
+            "teammateFormShift": 0.07584653577535228,
+            "fullHeadStrength": -1.68850319570752
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0005753692714929394,
+            "driverRating": 997.4746199727658,
+            "carRating": 933.9027020313772,
+            "formShift": -0.8915956450841134,
+            "teammateFormShift": -0.07584653577535228,
+            "fullHeadStrength": -1.9679549119599153
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00007967960517456951,
+            "driverRating": 979.7375579715755,
+            "carRating": 887.2448022399607,
+            "formShift": -1.6254260406149235,
+            "teammateFormShift": -0.17782038272287748,
+            "fullHeadStrength": -3.7119069805132217
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0007306459758991951,
+            "driverRating": 975.3825917949546,
+            "carRating": 963.7767551637571,
+            "formShift": -0.9157781448751927,
+            "teammateFormShift": -0.08642542700192313,
+            "fullHeadStrength": -1.9187289197843145
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.0000841645091115897,
+            "driverRating": 975.6349145590509,
+            "carRating": 893.1310822521264,
+            "formShift": -1.324263084101929,
+            "teammateFormShift": -0.12377765048600753,
+            "fullHeadStrength": -3.2260026522529923
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.001153685718185846,
+            "driverRating": 990.2611307715448,
+            "carRating": 963.7767551637571,
+            "formShift": -0.7429272908713465,
+            "teammateFormShift": 0.08642542700192313,
+            "fullHeadStrength": -1.5272032433707166
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.10623158617215124,
+            "driverRating": 1070.4676922114559,
+            "carRating": 1030.882654950474,
+            "formShift": 1.4556225770701106,
+            "teammateFormShift": 0.5417955984010071,
+            "fullHeadStrength": 3.0750427494670687
+          }
+        ]
+      },
+      "postQualifying": {
+        "asOf": "2026-09-06T10:00:00.000Z",
+        "excludedPriorDriverIds": [],
+        "gridSource": "qualifying position, not the subsequently published race-result grid",
+        "roster": [
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.11607610861882448,
+            "driverRating": 1026.8594224235183,
+            "carRating": 1077.3776127975275,
+            "formShift": 1.0478786922010421,
+            "teammateFormShift": 0.17844637503403626,
+            "fullHeadStrength": 2.5479098013146957
+          },
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.17454869415976793,
+            "driverRating": 1003.798704235393,
+            "carRating": 1113.7263632772306,
+            "formShift": 1.0628790188988189,
+            "teammateFormShift": 0.17214456669586176,
+            "fullHeadStrength": 3.0322289941699343
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.2658247766727463,
+            "driverRating": 1017.4996182541482,
+            "carRating": 1113.7263632772306,
+            "formShift": 0.7185898855070953,
+            "teammateFormShift": -0.17214456669586176,
+            "fullHeadStrength": 3.4475609344115083
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.07613618325027911,
+            "driverRating": 1011.3240639604421,
+            "carRating": 1079.1765908643076,
+            "formShift": 0.9677922202862933,
+            "teammateFormShift": -0.03092247499305667,
+            "fullHeadStrength": 2.6530968288223065
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.16534493670146688,
+            "driverRating": 1036.5840488563722,
+            "carRating": 1079.1765908643076,
+            "formShift": 1.0296371702724068,
+            "teammateFormShift": 0.03092247499305678,
+            "fullHeadStrength": 2.986838608915967
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.06175351027624353,
+            "driverRating": 1006.3033331113452,
+            "carRating": 1077.3776127975275,
+            "formShift": 0.6909859421329696,
+            "teammateFormShift": -0.17844637503403626,
+            "fullHeadStrength": 2.8810222822278533
+          },
+          {
+            "driverId": "859",
+            "constructorId": "9",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.006380537277414495,
+            "driverRating": 978.8629610283834,
+            "carRating": 1030.882654950474,
+            "formShift": 0.27033786318047737,
+            "teammateFormShift": -0.45954498360027884,
+            "fullHeadStrength": 0.27494799968962824
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.0037447571648518566,
+            "driverRating": 1003.7729475926833,
+            "carRating": 988.6151491410876,
+            "formShift": -0.016739284178190164,
+            "teammateFormShift": -0.020746964253116448,
+            "fullHeadStrength": -0.4518431537567204
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0002445091896559257,
+            "driverRating": 1010.3723789275996,
+            "carRating": 893.1310822521264,
+            "formShift": -0.7253449032525402,
+            "teammateFormShift": 0.06996670666905735,
+            "fullHeadStrength": -3.013549690756941
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.004974969757857746,
+            "driverRating": 1003.7014945515898,
+            "carRating": 997.9391110339659,
+            "formShift": -0.17691675016479855,
+            "teammateFormShift": 0.07502607527591568,
+            "fullHeadStrength": 1.830320040635182
+          },
+          {
+            "driverId": "852",
+            "constructorId": "215",
+            "name": "Yuki Tsunoda",
+            "baselineProbability": 0.0038459689164625486,
+            "driverRating": 959.0295786993929,
+            "carRating": 1034.2271762481853,
+            "formShift": -0.33751825548638903,
+            "teammateFormShift": -0.06660801039991432,
+            "fullHeadStrength": -0.9955721122910389
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.006012653841165915,
+            "driverRating": 973.5841110680831,
+            "carRating": 1034.2271762481853,
+            "formShift": -0.20430223468656042,
+            "teammateFormShift": 0.06660801039991429,
+            "fullHeadStrength": 0.033028254902013436
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.0032366581129234726,
+            "driverRating": 999.0234351225763,
+            "carRating": 988.6151491410876,
+            "formShift": 0.02475464432804273,
+            "teammateFormShift": 0.020746964253116448,
+            "fullHeadStrength": -0.10301536980514193
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.0018303817761170695,
+            "driverRating": 971.1328374076753,
+            "carRating": 997.9391110339659,
+            "formShift": -0.32696890071662993,
+            "teammateFormShift": -0.0750260752759157,
+            "fullHeadStrength": -0.16389451565075663
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.0001136751532150252,
+            "driverRating": 991.3114360825183,
+            "carRating": 887.2448022399607,
+            "formShift": -0.8378007426327382,
+            "teammateFormShift": 0.20134179167675803,
+            "fullHeadStrength": -3.2001733015706546
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.0010765478789923305,
+            "driverRating": 1017.8811213969311,
+            "carRating": 933.9027020313772,
+            "formShift": -0.47255934470710004,
+            "teammateFormShift": 0.08242031504325986,
+            "fullHeadStrength": -1.9770665122393312
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0005753692714929394,
+            "driverRating": 997.4746199727658,
+            "carRating": 933.9027020313772,
+            "formShift": -0.6373999747936198,
+            "teammateFormShift": -0.08242031504325986,
+            "fullHeadStrength": -2.30313444578032
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00007967960517456951,
+            "driverRating": 979.7375579715755,
+            "carRating": 887.2448022399607,
+            "formShift": -1.2404843259862541,
+            "teammateFormShift": -0.20134179167675792,
+            "fullHeadStrength": -3.6614718430462116
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0007306459758991951,
+            "driverRating": 975.3825917949546,
+            "carRating": 963.7767551637571,
+            "formShift": -0.6289849785271701,
+            "teammateFormShift": -0.04849986153081731,
+            "fullHeadStrength": -2.0705254908209847
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.0000841645091115897,
+            "driverRating": 975.6349145590509,
+            "carRating": 893.1310822521264,
+            "formShift": -0.8652783165906548,
+            "teammateFormShift": -0.06996670666905724,
+            "fullHeadStrength": -3.398581420147667
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.001153685718185846,
+            "driverRating": 990.2611307715448,
+            "carRating": 963.7767551637571,
+            "formShift": -0.5319852554655355,
+            "teammateFormShift": 0.0484998615308172,
+            "fullHeadStrength": -1.2401212610522923
+          },
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.10623158617215124,
+            "driverRating": 1070.4676922114559,
+            "carRating": 1030.882654950474,
+            "formShift": 1.189427830381035,
+            "teammateFormShift": 0.45954498360027884,
+            "fullHeadStrength": 2.891995371828972
+          }
+        ]
+      },
+      "scores": {
+        "preQualifying": {
+          "withoutForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.13523672080069774,
+            "logLoss": 2.000728548695385,
+            "brier": 0.8308308186384599
+          },
+          "withForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.1681172103484756,
+            "logLoss": 1.7830938621991903,
+            "brier": 0.8004753853444244
+          }
+        },
+        "postQualifying": {
+          "withoutForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.10491400601176756,
+            "logLoss": 2.2546142547445642,
+            "brier": 0.9094555524846811
+          },
+          "withForm": {
+            "winnerId": "863",
+            "winnerInRoster": true,
+            "winnerProbability": 0.1411349770590851,
+            "logLoss": 1.9580385624012067,
+            "brier": 0.8502441530219091
+          }
+        }
+      }
+    },
+    {
+      "raceId": "1185",
+      "race": "Singapore Grand Prix",
+      "previousRaceId": "1184",
+      "previousRaceDate": "2026-10-04",
+      "qualifyingStart": "2026-10-10T13:00:00.000Z",
+      "raceStart": "2026-10-11T12:00:00.000Z",
+      "qualifyingTimingVerified": false,
+      "historicalVintageVerified": false,
+      "preQualifying": {
+        "asOf": "2026-10-10T00:00:00.000Z",
+        "roster": [
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.16048302728172276,
+            "driverRating": 1066.9231316083574,
+            "carRating": 1042.6907941517036,
+            "formShift": 1.5245094806531478,
+            "teammateFormShift": 0.36809751283587455,
+            "fullHeadStrength": 3.2647960561117952
+          },
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.13331893707698853,
+            "driverRating": 1000.5117257048555,
+            "carRating": 1103.0619051330634,
+            "formShift": 1.227182258793466,
+            "teammateFormShift": 0.0363257386691449,
+            "fullHeadStrength": 2.9553421755081826
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.08677058999239522,
+            "driverRating": 1009.7659402136469,
+            "carRating": 1079.818743721238,
+            "formShift": 1.054027632112592,
+            "teammateFormShift": -0.046247167634265285,
+            "fullHeadStrength": 2.5281114489082337
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.17695410521043092,
+            "driverRating": 1032.9775471129024,
+            "carRating": 1079.818743721238,
+            "formShift": 1.1465219673811224,
+            "teammateFormShift": 0.04624716763426506,
+            "fullHeadStrength": 2.861607893809815
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.03402202321875138,
+            "driverRating": 1016.3979587485882,
+            "carRating": 1042.6907941517036,
+            "formShift": 0.7883144549813987,
+            "teammateFormShift": -0.36809751283587455,
+            "fullHeadStrength": 1.844001021508875
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.05760823129373813,
+            "driverRating": 1003.6192261303854,
+            "carRating": 1072.6238571413298,
+            "formShift": 0.6207160601437144,
+            "teammateFormShift": -0.12885645922805777,
+            "fullHeadStrength": 1.834884858769098
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.005465472781266107,
+            "driverRating": 977.3427594990011,
+            "carRating": 1022.1860633391888,
+            "formShift": -0.12349238240060324,
+            "teammateFormShift": 0.027547455286581105,
+            "fullHeadStrength": -0.16062491330189957
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0003527788245381704,
+            "driverRating": 1008.2264464723291,
+            "carRating": 902.0429843423383,
+            "formShift": -0.773512814010923,
+            "teammateFormShift": 0.1616263578709215,
+            "fullHeadStrength": -2.127156156518366
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.10074768176664053,
+            "driverRating": 1021.8255151380718,
+            "carRating": 1072.6238571413298,
+            "formShift": 0.8784289785998299,
+            "teammateFormShift": 0.12885645922805777,
+            "fullHeadStrength": 2.340746153260104
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.0052775423931206095,
+            "driverRating": 976.2030591063414,
+            "carRating": 1022.1860633391888,
+            "formShift": -0.17858729297376547,
+            "teammateFormShift": -0.02754745528658112,
+            "fullHeadStrength": -0.26128298406881273
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.0029950840244075466,
+            "driverRating": 1000.4280242036002,
+            "carRating": 979.5093942473411,
+            "formShift": -0.26196581801268465,
+            "teammateFormShift": 0.08945306600036645,
+            "fullHeadStrength": -0.6346426571385222
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00011669883351670845,
+            "driverRating": 972.1937469357298,
+            "carRating": 902.0429843423383,
+            "formShift": -1.0967655297527659,
+            "teammateFormShift": -0.1616263578709214,
+            "fullHeadStrength": -2.912218495691341
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.003953014530586157,
+            "driverRating": 973.2769388312536,
+            "carRating": 1015.6994346268846,
+            "formShift": -0.04079253050319267,
+            "teammateFormShift": -0.050355524519207905,
+            "fullHeadStrength": -0.31098057352811886
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.0014020567369208703,
+            "driverRating": 986.9049655070495,
+            "carRating": 968.3091962869295,
+            "formShift": -0.3547325956596183,
+            "teammateFormShift": 0.09656471473870881,
+            "fullHeadStrength": -1.0861761242430021
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0009094692280728226,
+            "driverRating": 972.8066470617943,
+            "carRating": 968.3091962869295,
+            "formShift": -0.5478620251370359,
+            "teammateFormShift": -0.09656471473870876,
+            "fullHeadStrength": -1.4656893429177318
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.008250794371763308,
+            "driverRating": 997.2444903006161,
+            "carRating": 1015.6994346268846,
+            "formShift": 0.05991851853522314,
+            "teammateFormShift": 0.050355524519207905,
+            "fullHeadStrength": 0.21112841400622884
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.001215180895793873,
+            "driverRating": 1016.2917748562614,
+            "carRating": 934.2630377897295,
+            "formShift": -0.6688895790438658,
+            "teammateFormShift": 0.06201376318702989,
+            "fullHeadStrength": -1.630458685512732
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.002541205798720084,
+            "driverRating": 995.0753362309283,
+            "carRating": 979.5093942473411,
+            "formShift": -0.44087195001341756,
+            "teammateFormShift": -0.08945306600036645,
+            "fullHeadStrength": -0.9155168161136974
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.00009685916655231906,
+            "driverRating": 988.3727080129333,
+            "carRating": 879.7945892202533,
+            "formShift": -1.2980385037623106,
+            "teammateFormShift": 0.28884175110262644,
+            "fullHeadStrength": -3.3105659491850914
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.21685385814927718,
+            "driverRating": 1016.3573740167341,
+            "carRating": 1103.0619051330634,
+            "formShift": 1.1545307814551764,
+            "teammateFormShift": -0.03632573866914468,
+            "fullHeadStrength": 3.031520250213897
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0006035479892880496,
+            "driverRating": 993.4970904193284,
+            "carRating": 934.2630377897295,
+            "formShift": -0.7929171054179256,
+            "teammateFormShift": -0.06201376318702989,
+            "fullHeadStrength": -1.9675633808319946
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00006184043550863788,
+            "driverRating": 973.757593889292,
+            "carRating": 879.7945892202533,
+            "formShift": -1.8757220059675637,
+            "teammateFormShift": -0.28884175110262666,
+            "fullHeadStrength": -4.089262193044921
+          }
+        ]
+      },
+      "postQualifying": {
+        "asOf": "2026-10-11T09:00:00.000Z",
+        "excludedPriorDriverIds": [],
+        "gridSource": "qualifying position, not the subsequently published race-result grid",
+        "roster": [
+          {
+            "driverId": "830",
+            "constructorId": "9",
+            "name": "Max Verstappen",
+            "baselineProbability": 0.16048302728172276,
+            "driverRating": 1066.9231316083574,
+            "carRating": 1042.6907941517036,
+            "formShift": 0.8932490777597875,
+            "teammateFormShift": 0.163150551490717,
+            "fullHeadStrength": 3.899568111293274
+          },
+          {
+            "driverId": "863",
+            "constructorId": "131",
+            "name": "Andrea Kimi Antonelli",
+            "baselineProbability": 0.13331893707698853,
+            "driverRating": 1000.5117257048555,
+            "carRating": 1103.0619051330634,
+            "formShift": 0.8011436119548463,
+            "teammateFormShift": 0.00860042182998888,
+            "fullHeadStrength": 2.9486529162544444
+          },
+          {
+            "driverId": "1",
+            "constructorId": "6",
+            "name": "Lewis Hamilton",
+            "baselineProbability": 0.08677058999239522,
+            "driverRating": 1009.7659402136469,
+            "carRating": 1079.818743721238,
+            "formShift": 0.5805868889770814,
+            "teammateFormShift": -0.022720255595730654,
+            "fullHeadStrength": 3.0796121095704057
+          },
+          {
+            "driverId": "844",
+            "constructorId": "6",
+            "name": "Charles Leclerc",
+            "baselineProbability": 0.17695410521043092,
+            "driverRating": 1032.9775471129024,
+            "carRating": 1079.818743721238,
+            "formShift": 0.6260274001685427,
+            "teammateFormShift": 0.022720255595730654,
+            "fullHeadStrength": 3.320847000354679
+          },
+          {
+            "driverId": "865",
+            "constructorId": "9",
+            "name": "Isack Hadjar",
+            "baselineProbability": 0.03402202321875138,
+            "driverRating": 1016.3979587485882,
+            "carRating": 1042.6907941517036,
+            "formShift": 0.5669479747783533,
+            "teammateFormShift": -0.1631505514907171,
+            "fullHeadStrength": 0.6932405578236741
+          },
+          {
+            "driverId": "857",
+            "constructorId": "1",
+            "name": "Oscar Piastri",
+            "baselineProbability": 0.05760823129373813,
+            "driverRating": 1003.6192261303854,
+            "carRating": 1072.6238571413298,
+            "formShift": 0.39646499803640906,
+            "teammateFormShift": -0.07413776697338431,
+            "fullHeadStrength": 1.7437829731282797
+          },
+          {
+            "driverId": "859",
+            "constructorId": "215",
+            "name": "Liam Lawson",
+            "baselineProbability": 0.005465472781266107,
+            "driverRating": 977.3427594990011,
+            "carRating": 1022.1860633391888,
+            "formShift": -0.07608315598344527,
+            "teammateFormShift": 0.030641661399957762,
+            "fullHeadStrength": 0.2549577924191404
+          },
+          {
+            "driverId": "4",
+            "constructorId": "117",
+            "name": "Fernando Alonso",
+            "baselineProbability": 0.0003527788245381704,
+            "driverRating": 1008.2264464723291,
+            "carRating": 902.0429843423383,
+            "formShift": -0.4915111562555667,
+            "teammateFormShift": 0.08896674120898634,
+            "fullHeadStrength": -2.174109327289502
+          },
+          {
+            "driverId": "846",
+            "constructorId": "1",
+            "name": "Lando Norris",
+            "baselineProbability": 0.10074768176664053,
+            "driverRating": 1021.8255151380718,
+            "carRating": 1072.6238571413298,
+            "formShift": 0.5447405319831777,
+            "teammateFormShift": 0.07413776697338437,
+            "fullHeadStrength": 2.451394790647539
+          },
+          {
+            "driverId": "866",
+            "constructorId": "215",
+            "name": "Arvid Lindblad",
+            "baselineProbability": 0.0052775423931206095,
+            "driverRating": 976.2030591063414,
+            "carRating": 1022.1860633391888,
+            "formShift": -0.13736647878336078,
+            "teammateFormShift": -0.030641661399957748,
+            "fullHeadStrength": -0.12669760565409358
+          },
+          {
+            "driverId": "807",
+            "constructorId": "217",
+            "name": "Nico Hülkenberg",
+            "baselineProbability": 0.0029950840244075466,
+            "driverRating": 1000.4280242036002,
+            "carRating": 979.5093942473411,
+            "formShift": -0.16550718661580802,
+            "teammateFormShift": 0.02672475517938183,
+            "fullHeadStrength": -0.5026139043159993
+          },
+          {
+            "driverId": "840",
+            "constructorId": "117",
+            "name": "Lance Stroll",
+            "baselineProbability": 0.00011669883351670845,
+            "driverRating": 972.1937469357298,
+            "carRating": 902.0429843423383,
+            "formShift": -0.6694446386735394,
+            "teammateFormShift": -0.0889667412089864,
+            "fullHeadStrength": -2.856552119005066
+          },
+          {
+            "driverId": "861",
+            "constructorId": "214",
+            "name": "Franco Colapinto",
+            "baselineProbability": 0.003953014530586157,
+            "driverRating": 973.2769388312536,
+            "carRating": 1015.6994346268846,
+            "formShift": 0.008542712324432367,
+            "teammateFormShift": -0.02948641292786604,
+            "fullHeadStrength": -0.8688774500620489
+          },
+          {
+            "driverId": "860",
+            "constructorId": "210",
+            "name": "Oliver Bearman",
+            "baselineProbability": 0.0014020567369208703,
+            "driverRating": 986.9049655070495,
+            "carRating": 968.3091962869295,
+            "formShift": -0.18185257381699332,
+            "teammateFormShift": 0.06400285677630249,
+            "fullHeadStrength": -0.8907767902573411
+          },
+          {
+            "driverId": "839",
+            "constructorId": "210",
+            "name": "Esteban Ocon",
+            "baselineProbability": 0.0009094692280728226,
+            "driverRating": 972.8066470617943,
+            "carRating": 968.3091962869295,
+            "formShift": -0.3098582873695983,
+            "teammateFormShift": -0.06400285677630249,
+            "fullHeadStrength": -1.3940176379426554
+          },
+          {
+            "driverId": "842",
+            "constructorId": "214",
+            "name": "Pierre Gasly",
+            "baselineProbability": 0.008250794371763308,
+            "driverRating": 997.2444903006161,
+            "carRating": 1015.6994346268846,
+            "formShift": 0.06751553818016445,
+            "teammateFormShift": 0.029486412927866044,
+            "fullHeadStrength": 0.3873080297608839
+          },
+          {
+            "driverId": "832",
+            "constructorId": "3",
+            "name": "Carlos Sainz",
+            "baselineProbability": 0.001215180895793873,
+            "driverRating": 1016.2917748562614,
+            "carRating": 934.2630377897295,
+            "formShift": -0.32802812828577044,
+            "teammateFormShift": 0.09058249368158844,
+            "fullHeadStrength": -1.6842861311651318
+          },
+          {
+            "driverId": "864",
+            "constructorId": "217",
+            "name": "Gabriel Bortoleto",
+            "baselineProbability": 0.002541205798720084,
+            "driverRating": 995.0753362309283,
+            "carRating": 979.5093942473411,
+            "formShift": -0.21895669697457168,
+            "teammateFormShift": -0.02672475517938183,
+            "fullHeadStrength": -1.3423263827142444
+          },
+          {
+            "driverId": "815",
+            "constructorId": "216",
+            "name": "Sergio Pérez",
+            "baselineProbability": 0.00009685916655231906,
+            "driverRating": 988.3727080129333,
+            "carRating": 879.7945892202533,
+            "formShift": -0.7796517776889627,
+            "teammateFormShift": 0.31102826433606845,
+            "fullHeadStrength": -3.252437011086627
+          },
+          {
+            "driverId": "847",
+            "constructorId": "131",
+            "name": "George Russell",
+            "baselineProbability": 0.21685385814927718,
+            "driverRating": 1016.3573740167341,
+            "carRating": 1103.0619051330634,
+            "formShift": 0.7839427682948685,
+            "teammateFormShift": -0.00860042182998888,
+            "fullHeadStrength": 2.6062502222583217
+          },
+          {
+            "driverId": "848",
+            "constructorId": "3",
+            "name": "Alexander Albon",
+            "baselineProbability": 0.0006035479892880496,
+            "driverRating": 993.4970904193284,
+            "carRating": 934.2630377897295,
+            "formShift": -0.5091931156489473,
+            "teammateFormShift": -0.09058249368158844,
+            "fullHeadStrength": -2.0923843042597543
+          },
+          {
+            "driverId": "822",
+            "constructorId": "216",
+            "name": "Valtteri Bottas",
+            "baselineProbability": 0.00006184043550863788,
+            "driverRating": 973.757593889292,
+            "carRating": 879.7945892202533,
+            "formShift": -1.4017083063610996,
+            "teammateFormShift": -0.31102826433606845,
+            "fullHeadStrength": -4.200535839758178
+          }
+        ]
+      },
+      "scores": {
+        "preQualifying": {
+          "withoutForm": {
+            "winnerId": "830",
+            "winnerInRoster": true,
+            "winnerProbability": 0.1246982458938859,
+            "logLoss": 2.081858493003856,
+            "brier": 0.8465384352912017
+          },
+          "withForm": {
+            "winnerId": "830",
+            "winnerInRoster": true,
+            "winnerProbability": 0.20980577205840623,
+            "logLoss": 1.561573071203893,
+            "brier": 0.7177437091282951
+          }
+        },
+        "postQualifying": {
+          "withoutForm": {
+            "winnerId": "830",
+            "winnerInRoster": true,
+            "winnerProbability": 0.25071859172556754,
+            "logLoss": 1.3834241173111987,
+            "brier": 0.6454909174703293
+          },
+          "withForm": {
+            "winnerId": "830",
+            "winnerInRoster": true,
+            "winnerProbability": 0.314751635673858,
+            "logLoss": 1.1559714093313647,
+            "brier": 0.5493546704975956
+          }
+        }
+      }
+    }
+  ],
+  "failures": [],
+  "pairedFormComparison": {
+    "preQualifying": {
+      "races": 8,
+      "meanBrierDifferenceWithMinusWithout": -0.023426323551794997,
+      "brierImproved": 6,
+      "finiteLogLossPairs": 8,
+      "meanLogLossDifferenceWithMinusWithout": -0.21801952198988692,
+      "logLossImproved": 8
+    },
+    "postQualifying": {
+      "races": 8,
+      "meanBrierDifferenceWithMinusWithout": -0.01259103290117744,
+      "brierImproved": 4,
+      "finiteLogLossPairs": 8,
+      "meanLogLossDifferenceWithMinusWithout": -0.07013087409776192,
+      "logLossImproved": 4
+    }
+  }
+}

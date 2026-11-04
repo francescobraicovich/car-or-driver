@@ -1,0 +1,141 @@
+{
+  "source": "Polymarket Gamma API",
+  "requestUrl": "https://gamma-api.polymarket.com/events/slug/f1-canadian-grand-prix-winner-2026-05-24",
+  "retrievedAt": "2026-11-02T18:24:00.309308+00:00",
+  "originalResponseSha256": "005171928fa9935c092ef6af7e5e2dd9c626b2bafd447f8682a335e20c314e69",
+  "note": "Retrospective settlement metadata; historical tick and minimum not verified.",
+  "event": {
+    "id": "416480",
+    "slug": "f1-canadian-grand-prix-winner-2026-05-24",
+    "closed": true,
+    "updatedAt": "2026-08-13T14:57:09.057343Z",
+    "negRisk": true
+  },
+  "markets": [
+    {
+      "slug": "f1-canadian-grand-prix-winner-leclerc-2026-05-24",
+      "conditionId": "0x8dc119f994fdc4d8a122ad4c0694064c468c816afa851abe71a984ee4762ac23",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "12679154599849290462597168535376407118072090739234526221671371370835787044037",
+        "103088965436897752679941133915643672905083462496852145849227680139769688560633"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-05-25 03:54:44+00",
+      "creationTime": "2026-04-25T11:30:01.947125Z",
+      "startDate": "2026-04-25T11:42:11.74403Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-canadian-grand-prix-winner-norris-2026-05-24",
+      "conditionId": "0x2e02b9a5ae52309ae2feaf2d8b06e6c755a20d6e450ddfa694bd28c71bf3ce22",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "40180641219601478815887433281571244694769407595806488599226628942018306912120",
+        "9708848129986444194174349262215145165894323036179298328025274713040947970261"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-05-25 03:53:41+00",
+      "creationTime": "2026-04-25T11:30:02.193347Z",
+      "startDate": "2026-04-25T11:42:21.929539Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-canadian-grand-prix-winner-antonelli-2026-05-24",
+      "conditionId": "0x9eedeb932613962b660f2cd627c8dc62055d3d3752fff4353f75fda37004543c",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "1",
+        "0"
+      ],
+      "clobTokenIds": [
+        "43190617432750983994359118324237318981718980712935563041650855565813942612236",
+        "48079946007747291257862262484884269515824599281600267455290337668720320279426"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-05-25 03:59:48+00",
+      "creationTime": "2026-04-25T11:30:02.299042Z",
+      "startDate": "2026-04-25T11:42:37.779441Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-canadian-grand-prix-winner-hamilton-2026-05-24",
+      "conditionId": "0x8a1eeb981075fa48acd539263d947c6ef586ee3d911a0e7624def290b2b2a970",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "8291411514978040123874884172714081225687727110190543430970180523413935139704",
+        "101493687068647239765648841122932935931121730210356960516721337128323584329682"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-05-25 04:01:19+00",
+      "creationTime": "2026-04-25T11:30:02.980358Z",
+      "startDate": "2026-04-25T11:43:10.001512Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-canadian-grand-prix-winner-piastri-2026-05-24",
+      "conditionId": "0x75a5dcd03cd57999053d983f04415fd08b160aa31a3b60e791a2df1ecdf42007",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "16152976233435781351096567699177954525999098447570421417192217975868292536548",
+        "53162259660170277716356127702910065563475549354659838823898533756925143811280"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-05-25 03:55:01+00",
+      "creationTime": "2026-04-25T11:30:03.195358Z",
+      "startDate": "2026-04-25T11:43:22.238447Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { splitSegments, entityColor, timeOf } from '../site/js/chart-renderer.js';
-import { smoothSeries, carContinuitySeries, metricValue, metricLabel } from '../site/js/charts.js';
+import { smoothSeries, carContinuitySeries, metricValue, metricLabel, prepareChartSeries } from '../site/js/charts.js';
+import { createHistoryView } from '../site/js/history-view.js';
+import { METRICS, DESCRIPTIONS } from '../site/js/metric-text.js';
 
 const snap = (date, year, raceId, extra = {}) => ({ date, year, raceId, v: 1000, ...extra });
 const h = [
@@ -53,6 +55,39 @@ assert.equal(metricValue(h[0], 'reliability', 'car'), 1000);
 assert.ok(Number.isNaN(metricValue(h[0], 'survival', 'driver')));
 assert.equal(metricLabel('survival').includes('60-lap'), true);
 assert.equal(metricLabel('unknown'), 'unknown');
+assert.equal(metricValue(h[1], 'combined', 'driver'), h[1].race, 'legacy chart links use race, not the stored blend');
+assert.equal(metricLabel('combined'), metricLabel('race'));
+assert(!METRICS.driver.includes('combined') && !METRICS.car.includes('combined'));
+assert.match(DESCRIPTIONS.effective, /blend of race and qualifying/);
+const history = createHistoryView({ onChange() {} });
+assert.equal(history.state.driverMetric, 'race');
+assert.equal(history.state.carMetric, 'race');
+history.readURL(new URLSearchParams('dm=combined&cm=combined'));
+const parameters = new URLSearchParams();
+history.writeURL(parameters);
+assert.equal(parameters.get('dm'), 'race');
+assert.equal(parameters.get('cm'), 'race');
+history.compare({ entity: 'driver', ids: ['1', '2'], metric: 'combined' }, 2024);
+assert.equal(history.state.driverMetric, 'race', 'old compare events select race');
+for (const entity of ['driver', 'car']) {
+  assert.ok(METRICS[entity].includes('qual'), `${entity} History retains qualifying`);
+  assert.deepEqual(
+    prepareChartSeries(h, 'race', entity).map((point) => point.v),
+    h.map((point) => point.race),
+    `${entity} History uses unsmoothed race values by default`,
+  );
+  assert.deepEqual(
+    prepareChartSeries(h, 'qual', entity).map((point) => point.v),
+    h.map((point) => point.qual),
+    `${entity} History uses qualifying values when selected`,
+  );
+  assert.equal(metricValue(h[1], 'combined', entity), h[1].race, `${entity} old combined links use race values`);
+  history.compare({ entity, ids: ['1', '2'], metric: 'qual' }, 2024);
+  assert.equal(history.state[`${entity}Metric`], 'qual', `${entity} qualifying comparison remains qualifying`);
+}
+history.readURL(new URLSearchParams('dm=qual&cm=qual'));
+assert.equal(history.state.driverMetric, 'qual');
+assert.equal(history.state.carMetric, 'qual');
 
 assert.deepEqual(splitSegments([]), []);
 assert.equal(splitSegments([h[1]]).length, 1);

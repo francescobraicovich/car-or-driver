@@ -63,9 +63,9 @@ export function drawUncertaintyByExperience(container, model) {
   const byRaces = new Map();
   for (const snap of model.snaps)
     for (const row of snap.drivers) {
-      if (!Number.isFinite(row.combinedSd) || row.races < 1 || row.races > LAST_RACE_COUNT) continue;
+      if (!Number.isFinite(row.raceSd) || row.races < 1 || row.races > LAST_RACE_COUNT) continue;
       if (!byRaces.has(row.races)) byRaces.set(row.races, []);
-      byRaces.get(row.races).push(row.combinedSd);
+      byRaces.get(row.races).push(row.raceSd);
     }
   const points = [...byRaces]
     .filter(([, values]) => values.length >= 20)
@@ -74,16 +74,19 @@ export function drawUncertaintyByExperience(container, model) {
       const sorted = values.slice().sort((a, b) => a - b);
       return [races, percentile(sorted, 0.1), percentile(sorted, 0.9), sorted.reduce((sum, value) => sum + value, 0) / sorted.length];
     });
+  const minimum = Math.floor(Math.min(...points.map((point) => point[1]), 0) / 5) * 5;
+  const maximum = Math.max(5, Math.ceil(Math.max(...points.map((point) => point[2]), 0) / 5) * 5);
+  const ticks = Array.from({ length: (maximum - minimum) / 5 + 1 }, (_, index) => minimum + index * 5);
   mountChart(
     container,
     (svg, width, height) => {
       const axes = drawAxes(svg, width, height, {
         xDomain: [1, LAST_RACE_COUNT],
-        yDomain: [10, 28],
+        yDomain: [minimum, maximum + (maximum - minimum) * 0.08],
         xTicks: [1, 10, 20, 30, 40, 50, 60],
-        yTicks: [10, 15, 20, 25],
+        yTicks: ticks,
         xTitle: 'Races driven so far',
-        yTitle: 'Approximate filter standard deviation, in points',
+        yTitle: 'Race rating: approximate filter standard deviation, in points',
         marginLeft: 40,
       });
       drawBand(
@@ -115,20 +118,13 @@ const fractionalYear = (isoDate) => {
 export function drawRatingThroughTime(container, model) {
   const WEEKENDS = 48;
   const latest = model.snaps.at(-1);
-  const subject = latest.drivers
-    .filter((row) => row.races >= 100 && Number.isFinite(row.combined))
-    .sort((a, b) => b.combined - a.combined)[0];
+  const subject = latest.drivers.filter((row) => row.races >= 100 && Number.isFinite(row.race)).sort((a, b) => b.race - a.race)[0];
   if (!subject) return null;
   const history = model.dh
     .get(String(subject.driverId))
-    .filter((point) => Number.isFinite(point.combined) && Number.isFinite(point.combinedSd))
+    .filter((point) => Number.isFinite(point.race) && Number.isFinite(point.raceSd))
     .slice(-WEEKENDS);
-  const points = history.map((point) => [
-    fractionalYear(point.date),
-    point.combined - point.combinedSd,
-    point.combined + point.combinedSd,
-    point.combined,
-  ]);
+  const points = history.map((point) => [fractionalYear(point.date), point.race - point.raceSd, point.race + point.raceSd, point.race]);
   const lows = points.map((point) => point[1]);
   const highs = points.map((point) => point[2]);
   const floor = Math.floor(Math.min(...lows) / 20) * 20;
@@ -143,7 +139,7 @@ export function drawRatingThroughTime(container, model) {
         yDomain: [floor, ceiling + 8],
         xTicks: ticksOf(firstYear, Math.floor(points.at(-1)[0]), 1),
         yTicks: ticksOf(floor, ceiling, 20),
-        yTitle: 'Combined pace rating (1,000 = the field’s average)',
+        yTitle: 'Race rating (1,000 = the field’s average)',
         marginLeft: 52,
       });
       drawBand(

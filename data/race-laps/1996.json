@@ -1,6 +1,6 @@
 {
  "format": 2,
- "dataVersion": "8019dfda05c831c6",
+ "dataVersion": "491b695e2c2870e3",
  "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 1996,
  "codes": {"14":"COU","21":"FIS","22":"BAR","30":"MSC","35":"VIL","44":"PAN","49":"FRE","50":"VER","55":"ALE","56":"IRV","57":"HAK","58":"MAR","63":"SAL","64":"DIN","65":"HER","69":"BAD","71":"HIL","73":"ROS","77":"BER","79":"KAT","83":"LAM","84":"BRU","85":"MON","86":"LAV"},

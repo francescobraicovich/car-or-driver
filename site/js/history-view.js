@@ -17,8 +17,8 @@ const ID = /^[A-Za-z0-9_-]{1,64}$/;
 export function createHistoryView({ onChange }) {
   const hist = {
     entity: 'driver',
-    driverMetric: 'combined',
-    carMetric: 'combined',
+    driverMetric: 'race',
+    carMetric: 'race',
     from: null,
     to: null,
     drivers: null,
@@ -162,7 +162,7 @@ export function createHistoryView({ onChange }) {
       .map(([id, points]) => ({
         id: String(id),
         name: names().get(id) || String(id),
-        last: points[points.length - 1]?.combined ?? NaN,
+        last: points[points.length - 1]?.race ?? NaN,
         first: points[0]?.year,
         latest: points[points.length - 1]?.year,
         active: activeIds.has(String(id)),
@@ -399,7 +399,8 @@ export function createHistoryView({ onChange }) {
                 .filter((id) => ID.test(id)),
             ),
           ].slice(0, MAX_SERIES);
-        const m = params.get(type === 'driver' ? 'dm' : 'cm');
+        const selected = params.get(type === 'driver' ? 'dm' : 'cm');
+        const m = selected === 'combined' ? 'race' : selected;
         if (METRICS[type].includes(m)) hist[`${type}Metric`] = m;
       }
       for (const k of ['from', 'to']) {
@@ -409,8 +410,8 @@ export function createHistoryView({ onChange }) {
     },
     writeURL(params) {
       params.set('h', hist.entity);
-      params.set('dm', hist.driverMetric);
-      params.set('cm', hist.carMetric);
+      params.set('dm', hist.driverMetric === 'combined' ? 'race' : hist.driverMetric);
+      params.set('cm', hist.carMetric === 'combined' ? 'race' : hist.carMetric);
       for (const k of ['drivers', 'cars']) if (hist[k] !== null) params.set(k, hist[k].join(','));
       for (const k of ['from', 'to']) if (hist[k] !== null) params.set(k, String(hist[k]));
     },
@@ -424,7 +425,7 @@ export function createHistoryView({ onChange }) {
       hist[entity === 'driver' ? 'drivers' : 'cars'] = [
         ...new Set(ids.map((id) => (entity === 'car' ? carIdentity(id) : String(id)))),
       ].slice(0, MAX_SERIES);
-      hist[`${entity}Metric`] = m;
+      hist[`${entity}Metric`] = m === 'combined' ? 'race' : m;
       hist.to = year;
       hist.from = Math.max(seasons[0] ?? 2000, year - 9);
     },

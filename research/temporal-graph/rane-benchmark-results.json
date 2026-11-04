@@ -1,0 +1,4019 @@
+{
+  "paper": "https://arxiv.org/abs/2508.00200",
+  "period": "2014–2024",
+  "modelSource": {
+    "sourceHash": "7a44023e0b230847",
+    "lastRace": {
+      "year": 2026,
+      "round": 18,
+      "name": "United States Grand Prix",
+      "date": "2026-10-25"
+    }
+  },
+  "method": "Production portable pre-weekend driver rating plus pre-weekend car rating; finishers include Finished and +N Lap(s).",
+  "caveat": "Finisher and ranking conventions, entrant eligibility, historical data and MAE aggregation may differ from the paper; its per-race predictions were not available.",
+  "finishers": {
+    "races": 228,
+    "entrants": 3825,
+    "kendallTau": 0.6337786452378266,
+    "meanAbsoluteError": 2.262483660130719,
+    "meanRaceAbsoluteError": 2.247696512904473
+  },
+  "allEntrants": {
+    "races": 228,
+    "entrants": 4626,
+    "kendallTau": 0.4815965410759285,
+    "meanAbsoluteError": 3.7408127972330307,
+    "meanRaceAbsoluteError": 3.739811800234237
+  },
+  "seasons": [
+    {
+      "year": 2014,
+      "finishers": {
+        "races": 19,
+        "entrants": 321,
+        "kendallTau": 0.6808812428496314,
+        "meanAbsoluteError": 2.0249221183800623,
+        "meanRaceAbsoluteError": 2.0351845993160964
+      }
+    },
+    {
+      "year": 2015,
+      "finishers": {
+        "races": 19,
+        "entrants": 297,
+        "kendallTau": 0.6302510590273341,
+        "meanAbsoluteError": 2.1077441077441077,
+        "meanRaceAbsoluteError": 2.0725236525464648
+      }
+    },
+    {
+      "year": 2016,
+      "finishers": {
+        "races": 21,
+        "entrants": 378,
+        "kendallTau": 0.6997112614317392,
+        "meanAbsoluteError": 2.0423280423280423,
+        "meanRaceAbsoluteError": 2.029917740620969
+      }
+    },
+    {
+      "year": 2017,
+      "finishers": {
+        "races": 20,
+        "entrants": 305,
+        "kendallTau": 0.6763912068323833,
+        "meanAbsoluteError": 1.862295081967213,
+        "meanRaceAbsoluteError": 1.858617395676219
+      }
+    },
+    {
+      "year": 2018,
+      "finishers": {
+        "races": 21,
+        "entrants": 335,
+        "kendallTau": 0.6190560434700195,
+        "meanAbsoluteError": 2.274626865671642,
+        "meanRaceAbsoluteError": 2.2427150527327444
+      }
+    },
+    {
+      "year": 2019,
+      "finishers": {
+        "races": 21,
+        "entrants": 360,
+        "kendallTau": 0.6488061621409699,
+        "meanAbsoluteError": 2.2111111111111112,
+        "meanRaceAbsoluteError": 2.216808833294902
+      }
+    },
+    {
+      "year": 2020,
+      "finishers": {
+        "races": 17,
+        "entrants": 283,
+        "kendallTau": 0.6027368936128724,
+        "meanAbsoluteError": 2.395759717314488,
+        "meanRaceAbsoluteError": 2.380611708047512
+      }
+    },
+    {
+      "year": 2021,
+      "finishers": {
+        "races": 22,
+        "entrants": 381,
+        "kendallTau": 0.6413692774373888,
+        "meanAbsoluteError": 2.257217847769029,
+        "meanRaceAbsoluteError": 2.2568347845824626
+      }
+    },
+    {
+      "year": 2022,
+      "finishers": {
+        "races": 22,
+        "entrants": 366,
+        "kendallTau": 0.6011049322194832,
+        "meanAbsoluteError": 2.4153005464480874,
+        "meanRaceAbsoluteError": 2.4114259364646364
+      }
+    },
+    {
+      "year": 2023,
+      "finishers": {
+        "races": 22,
+        "entrants": 374,
+        "kendallTau": 0.5768919114472166,
+        "meanAbsoluteError": 2.588235294117647,
+        "meanRaceAbsoluteError": 2.571167222870009
+      }
+    },
+    {
+      "year": 2024,
+      "finishers": {
+        "races": 24,
+        "entrants": 425,
+        "kendallTau": 0.6029403574295216,
+        "meanAbsoluteError": 2.5647058823529414,
+        "meanRaceAbsoluteError": 2.5516630116959065
+      }
+    }
+  ],
+  "races": [
+    {
+      "raceId": "900",
+      "year": 2014,
+      "round": 1,
+      "name": "Australian Grand Prix",
+      "excluded": 8,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.4945054945054945,
+        "meanAbsoluteError": 2.7142857142857144
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.08225108225108226,
+        "meanAbsoluteError": 7
+      }
+    },
+    {
+      "raceId": "901",
+      "year": 2014,
+      "round": 2,
+      "name": "Malaysian Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6571428571428571,
+        "meanAbsoluteError": 1.8666666666666667
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.42857142857142855,
+        "meanAbsoluteError": 4.636363636363637
+      }
+    },
+    {
+      "raceId": "902",
+      "year": 2014,
+      "round": 3,
+      "name": "Bahrain Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.5666666666666667,
+        "meanAbsoluteError": 2.875
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.4458874458874459,
+        "meanAbsoluteError": 4.636363636363637
+      }
+    },
+    {
+      "raceId": "903",
+      "year": 2014,
+      "round": 4,
+      "name": "Chinese Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.7368421052631579,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.6623376623376623,
+        "meanAbsoluteError": 2.909090909090909
+      }
+    },
+    {
+      "raceId": "904",
+      "year": 2014,
+      "round": 5,
+      "name": "Spanish Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.7578947368421053,
+        "meanAbsoluteError": 1.9
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.7056277056277056,
+        "meanAbsoluteError": 2.4545454545454546
+      }
+    },
+    {
+      "raceId": "905",
+      "year": 2014,
+      "round": 6,
+      "name": "Monaco Grand Prix",
+      "excluded": 8,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.7362637362637363,
+        "meanAbsoluteError": 1.5714285714285714
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.35064935064935066,
+        "meanAbsoluteError": 5
+      }
+    },
+    {
+      "raceId": "906",
+      "year": 2014,
+      "round": 7,
+      "name": "Canadian Grand Prix",
+      "excluded": 11,
+      "finishers": {
+        "entrants": 11,
+        "kendallTau": 0.5272727272727272,
+        "meanAbsoluteError": 1.8181818181818181
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.6017316017316018,
+        "meanAbsoluteError": 3.1818181818181817
+      }
+    },
+    {
+      "raceId": "907",
+      "year": 2014,
+      "round": 8,
+      "name": "Austrian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.6374269005847953,
+        "meanAbsoluteError": 2.6315789473684212
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.45454545454545453,
+        "meanAbsoluteError": 4.2727272727272725
+      }
+    },
+    {
+      "raceId": "908",
+      "year": 2014,
+      "round": 9,
+      "name": "British Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.7058823529411765,
+        "meanAbsoluteError": 2.1176470588235294
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.37662337662337664,
+        "meanAbsoluteError": 4.818181818181818
+      }
+    },
+    {
+      "raceId": "909",
+      "year": 2014,
+      "round": 10,
+      "name": "German Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.8431372549019608,
+        "meanAbsoluteError": 1.2222222222222223
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.5757575757575758,
+        "meanAbsoluteError": 3.6363636363636362
+      }
+    },
+    {
+      "raceId": "910",
+      "year": 2014,
+      "round": 11,
+      "name": "Hungarian Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.6017316017316018,
+        "meanAbsoluteError": 3.3636363636363638
+      }
+    },
+    {
+      "raceId": "911",
+      "year": 2014,
+      "round": 12,
+      "name": "Belgian Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6617647058823529,
+        "meanAbsoluteError": 2.3529411764705883
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.5324675324675324,
+        "meanAbsoluteError": 3.909090909090909
+      }
+    },
+    {
+      "raceId": "912",
+      "year": 2014,
+      "round": 13,
+      "name": "Italian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.8105263157894737,
+        "meanAbsoluteError": 1.4
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.696969696969697,
+        "meanAbsoluteError": 2.3636363636363638
+      }
+    },
+    {
+      "raceId": "913",
+      "year": 2014,
+      "round": 14,
+      "name": "Singapore Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.7352941176470589,
+        "meanAbsoluteError": 1.5294117647058822
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.5064935064935064,
+        "meanAbsoluteError": 3.727272727272727
+      }
+    },
+    {
+      "raceId": "914",
+      "year": 2014,
+      "round": 15,
+      "name": "Japanese Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7777777777777778,
+        "meanAbsoluteError": 1.5789473684210527
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.6103896103896104,
+        "meanAbsoluteError": 2.8181818181818183
+      }
+    },
+    {
+      "raceId": "915",
+      "year": 2014,
+      "round": 16,
+      "name": "Russian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7192982456140351,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 21,
+        "kendallTau": 0.7619047619047619,
+        "meanAbsoluteError": 1.9047619047619047
+      }
+    },
+    {
+      "raceId": "916",
+      "year": 2014,
+      "round": 17,
+      "name": "United States Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6190476190476191,
+        "meanAbsoluteError": 2.2666666666666666
+      },
+      "allEntrants": {
+        "entrants": 18,
+        "kendallTau": 0.5816993464052288,
+        "meanAbsoluteError": 3
+      }
+    },
+    {
+      "raceId": "917",
+      "year": 2014,
+      "round": 18,
+      "name": "Brazilian Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.7058823529411765,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 18,
+        "kendallTau": 0.5555555555555556,
+        "meanAbsoluteError": 2.888888888888889
+      }
+    },
+    {
+      "raceId": "918",
+      "year": 2014,
+      "round": 19,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.5441176470588235,
+        "meanAbsoluteError": 2.823529411764706
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5578947368421052,
+        "meanAbsoluteError": 3.2
+      }
+    },
+    {
+      "raceId": "926",
+      "year": 2015,
+      "round": 1,
+      "name": "Australian Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 11,
+        "kendallTau": 0.38181818181818183,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 18,
+        "kendallTau": 0.20915032679738563,
+        "meanAbsoluteError": 4.444444444444445
+      }
+    },
+    {
+      "raceId": "927",
+      "year": 2015,
+      "round": 2,
+      "name": "Malaysian Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.4857142857142857,
+        "meanAbsoluteError": 2.8
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.43157894736842106,
+        "meanAbsoluteError": 3.9
+      }
+    },
+    {
+      "raceId": "928",
+      "year": 2015,
+      "round": 3,
+      "name": "Chinese Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.6333333333333333,
+        "meanAbsoluteError": 2.25
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.47368421052631576,
+        "meanAbsoluteError": 3.8
+      }
+    },
+    {
+      "raceId": "929",
+      "year": 2015,
+      "round": 4,
+      "name": "Bahrain Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.7058823529411765,
+        "meanAbsoluteError": 1.8823529411764706
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5789473684210527,
+        "meanAbsoluteError": 3.4
+      }
+    },
+    {
+      "raceId": "930",
+      "year": 2015,
+      "round": 5,
+      "name": "Spanish Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.8562091503267973,
+        "meanAbsoluteError": 1.1111111111111112
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.7157894736842105,
+        "meanAbsoluteError": 2.2
+      }
+    },
+    {
+      "raceId": "931",
+      "year": 2015,
+      "round": 6,
+      "name": "Monaco Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.45588235294117646,
+        "meanAbsoluteError": 3.0588235294117645
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3473684210526316,
+        "meanAbsoluteError": 4.8
+      }
+    },
+    {
+      "raceId": "932",
+      "year": 2015,
+      "round": 7,
+      "name": "Canadian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6029411764705882,
+        "meanAbsoluteError": 2.4705882352941178
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5684210526315789,
+        "meanAbsoluteError": 3
+      }
+    },
+    {
+      "raceId": "933",
+      "year": 2015,
+      "round": 8,
+      "name": "Austrian Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.6703296703296703,
+        "meanAbsoluteError": 1.7142857142857142
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3894736842105263,
+        "meanAbsoluteError": 4.5
+      }
+    },
+    {
+      "raceId": "934",
+      "year": 2015,
+      "round": 9,
+      "name": "British Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 13,
+        "kendallTau": 0.7948717948717948,
+        "meanAbsoluteError": 1.0769230769230769
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5263157894736842,
+        "meanAbsoluteError": 3.7
+      }
+    },
+    {
+      "raceId": "936",
+      "year": 2015,
+      "round": 10,
+      "name": "Hungarian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.36666666666666664,
+        "meanAbsoluteError": 3.875
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.23157894736842105,
+        "meanAbsoluteError": 5.7
+      }
+    },
+    {
+      "raceId": "937",
+      "year": 2015,
+      "round": 11,
+      "name": "Belgian Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.6483516483516484,
+        "meanAbsoluteError": 1.7142857142857142
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.35789473684210527,
+        "meanAbsoluteError": 4.7
+      }
+    },
+    {
+      "raceId": "938",
+      "year": 2015,
+      "round": 12,
+      "name": "Italian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5032679738562091,
+        "meanAbsoluteError": 3.111111111111111
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.43157894736842106,
+        "meanAbsoluteError": 4.2
+      }
+    },
+    {
+      "raceId": "939",
+      "year": 2015,
+      "round": 13,
+      "name": "Singapore Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.7582417582417582,
+        "meanAbsoluteError": 1.4285714285714286
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3368421052631579,
+        "meanAbsoluteError": 4.7
+      }
+    },
+    {
+      "raceId": "940",
+      "year": 2015,
+      "round": 14,
+      "name": "Japanese Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.5672514619883041,
+        "meanAbsoluteError": 2.6315789473684212
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5684210526315789,
+        "meanAbsoluteError": 2.8
+      }
+    },
+    {
+      "raceId": "941",
+      "year": 2015,
+      "round": 15,
+      "name": "Russian Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 13,
+        "kendallTau": 0.6153846153846154,
+        "meanAbsoluteError": 1.8461538461538463
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.23157894736842105,
+        "meanAbsoluteError": 5.7
+      }
+    },
+    {
+      "raceId": "942",
+      "year": 2015,
+      "round": 16,
+      "name": "United States Grand Prix",
+      "excluded": 8,
+      "finishers": {
+        "entrants": 12,
+        "kendallTau": 0.6363636363636364,
+        "meanAbsoluteError": 1.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.17894736842105263,
+        "meanAbsoluteError": 5.8
+      }
+    },
+    {
+      "raceId": "943",
+      "year": 2015,
+      "round": 17,
+      "name": "Mexican Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.8,
+        "meanAbsoluteError": 1.375
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4631578947368421,
+        "meanAbsoluteError": 3.8
+      }
+    },
+    {
+      "raceId": "944",
+      "year": 2015,
+      "round": 18,
+      "name": "Brazilian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.8431372549019608,
+        "meanAbsoluteError": 1.1111111111111112
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6526315789473685,
+        "meanAbsoluteError": 2.5
+      }
+    },
+    {
+      "raceId": "945",
+      "year": 2015,
+      "round": 19,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.6491228070175439,
+        "meanAbsoluteError": 2.4210526315789473
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6210526315789474,
+        "meanAbsoluteError": 2.8
+      }
+    },
+    {
+      "raceId": "948",
+      "year": 2016,
+      "round": 1,
+      "name": "Australian Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7166666666666667,
+        "meanAbsoluteError": 1.75
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.5194805194805194,
+        "meanAbsoluteError": 3.6363636363636362
+      }
+    },
+    {
+      "raceId": "949",
+      "year": 2016,
+      "round": 2,
+      "name": "Bahrain Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.5294117647058824,
+        "meanAbsoluteError": 2.7058823529411766
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.36796536796536794,
+        "meanAbsoluteError": 4.7272727272727275
+      }
+    },
+    {
+      "raceId": "950",
+      "year": 2016,
+      "round": 3,
+      "name": "Chinese Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 22,
+        "kendallTau": 0.696969696969697,
+        "meanAbsoluteError": 2.8181818181818183
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.696969696969697,
+        "meanAbsoluteError": 2.8181818181818183
+      }
+    },
+    {
+      "raceId": "951",
+      "year": 2016,
+      "round": 4,
+      "name": "Russian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5294117647058824,
+        "meanAbsoluteError": 3.111111111111111
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.35064935064935066,
+        "meanAbsoluteError": 5.181818181818182
+      }
+    },
+    {
+      "raceId": "952",
+      "year": 2016,
+      "round": 5,
+      "name": "Spanish Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.75,
+        "meanAbsoluteError": 1.7647058823529411
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.23809523809523808,
+        "meanAbsoluteError": 5.818181818181818
+      }
+    },
+    {
+      "raceId": "953",
+      "year": 2016,
+      "round": 6,
+      "name": "Monaco Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.5238095238095238,
+        "meanAbsoluteError": 2.533333333333333
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.30735930735930733,
+        "meanAbsoluteError": 5.363636363636363
+      }
+    },
+    {
+      "raceId": "954",
+      "year": 2016,
+      "round": 7,
+      "name": "Canadian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.8128654970760234,
+        "meanAbsoluteError": 1.5789473684210527
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.670995670995671,
+        "meanAbsoluteError": 2.727272727272727
+      }
+    },
+    {
+      "raceId": "955",
+      "year": 2016,
+      "round": 8,
+      "name": "European Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.7516339869281046,
+        "meanAbsoluteError": 1.6666666666666667
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.5670995670995671,
+        "meanAbsoluteError": 3.4545454545454546
+      }
+    },
+    {
+      "raceId": "956",
+      "year": 2016,
+      "round": 9,
+      "name": "Austrian Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7,
+        "meanAbsoluteError": 1.625
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.22077922077922077,
+        "meanAbsoluteError": 6
+      }
+    },
+    {
+      "raceId": "957",
+      "year": 2016,
+      "round": 10,
+      "name": "British Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.6,
+        "meanAbsoluteError": 2.375
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.7056277056277056,
+        "meanAbsoluteError": 2.3636363636363638
+      }
+    },
+    {
+      "raceId": "958",
+      "year": 2016,
+      "round": 11,
+      "name": "Hungarian Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 21,
+        "kendallTau": 0.7142857142857143,
+        "meanAbsoluteError": 2.0952380952380953
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.6796536796536796,
+        "meanAbsoluteError": 2.5454545454545454
+      }
+    },
+    {
+      "raceId": "959",
+      "year": 2016,
+      "round": 12,
+      "name": "German Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.7473684210526316,
+        "meanAbsoluteError": 1.9
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.6536796536796536,
+        "meanAbsoluteError": 2.727272727272727
+      }
+    },
+    {
+      "raceId": "960",
+      "year": 2016,
+      "round": 13,
+      "name": "Belgian Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6617647058823529,
+        "meanAbsoluteError": 2.235294117647059
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.6277056277056277,
+        "meanAbsoluteError": 3.090909090909091
+      }
+    },
+    {
+      "raceId": "961",
+      "year": 2016,
+      "round": 14,
+      "name": "Italian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.8431372549019608,
+        "meanAbsoluteError": 1.2222222222222223
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.7835497835497836,
+        "meanAbsoluteError": 2
+      }
+    },
+    {
+      "raceId": "962",
+      "year": 2016,
+      "round": 15,
+      "name": "Singapore Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.7647058823529411,
+        "meanAbsoluteError": 1.7777777777777777
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.48917748917748916,
+        "meanAbsoluteError": 4.2727272727272725
+      }
+    },
+    {
+      "raceId": "963",
+      "year": 2016,
+      "round": 16,
+      "name": "Malaysian Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7333333333333333,
+        "meanAbsoluteError": 1.875
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.36796536796536794,
+        "meanAbsoluteError": 4.909090909090909
+      }
+    },
+    {
+      "raceId": "964",
+      "year": 2016,
+      "round": 17,
+      "name": "Japanese Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 22,
+        "kendallTau": 0.7489177489177489,
+        "meanAbsoluteError": 2.3636363636363638
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.7489177489177489,
+        "meanAbsoluteError": 2.3636363636363638
+      }
+    },
+    {
+      "raceId": "965",
+      "year": 2016,
+      "round": 18,
+      "name": "United States Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.738562091503268,
+        "meanAbsoluteError": 1.5555555555555556
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.3939393939393939,
+        "meanAbsoluteError": 5.2727272727272725
+      }
+    },
+    {
+      "raceId": "966",
+      "year": 2016,
+      "round": 19,
+      "name": "Mexican Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 21,
+        "kendallTau": 0.6761904761904762,
+        "meanAbsoluteError": 2.4761904761904763
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.696969696969697,
+        "meanAbsoluteError": 2.4545454545454546
+      }
+    },
+    {
+      "raceId": "967",
+      "year": 2016,
+      "round": 20,
+      "name": "Brazilian Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.6166666666666667,
+        "meanAbsoluteError": 2.375
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.43722943722943725,
+        "meanAbsoluteError": 4.090909090909091
+      }
+    },
+    {
+      "raceId": "968",
+      "year": 2016,
+      "round": 21,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.8382352941176471,
+        "meanAbsoluteError": 0.8235294117647058
+      },
+      "allEntrants": {
+        "entrants": 22,
+        "kendallTau": 0.5930735930735931,
+        "meanAbsoluteError": 3.090909090909091
+      }
+    },
+    {
+      "raceId": "969",
+      "year": 2017,
+      "round": 1,
+      "name": "Australian Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 13,
+        "kendallTau": 0.8205128205128205,
+        "meanAbsoluteError": 1.0769230769230769
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5052631578947369,
+        "meanAbsoluteError": 3.4
+      }
+    },
+    {
+      "raceId": "970",
+      "year": 2017,
+      "round": 2,
+      "name": "Chinese Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.7142857142857143,
+        "meanAbsoluteError": 1.6
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6736842105263158,
+        "meanAbsoluteError": 2.7
+      }
+    },
+    {
+      "raceId": "971",
+      "year": 2017,
+      "round": 3,
+      "name": "Bahrain Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 13,
+        "kendallTau": 0.8205128205128205,
+        "meanAbsoluteError": 0.9230769230769231
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5263157894736842,
+        "meanAbsoluteError": 3.5
+      }
+    },
+    {
+      "raceId": "972",
+      "year": 2017,
+      "round": 4,
+      "name": "Russian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7666666666666667,
+        "meanAbsoluteError": 1.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5157894736842106,
+        "meanAbsoluteError": 3.5
+      }
+    },
+    {
+      "raceId": "973",
+      "year": 2017,
+      "round": 5,
+      "name": "Spanish Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.55,
+        "meanAbsoluteError": 2.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.23157894736842105,
+        "meanAbsoluteError": 5.1
+      }
+    },
+    {
+      "raceId": "974",
+      "year": 2017,
+      "round": 6,
+      "name": "Monaco Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 13,
+        "kendallTau": 0.5128205128205128,
+        "meanAbsoluteError": 2.4615384615384617
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6,
+        "meanAbsoluteError": 3.1
+      }
+    },
+    {
+      "raceId": "975",
+      "year": 2017,
+      "round": 7,
+      "name": "Canadian Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.7904761904761904,
+        "meanAbsoluteError": 1.4666666666666666
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3473684210526316,
+        "meanAbsoluteError": 4.9
+      }
+    },
+    {
+      "raceId": "976",
+      "year": 2017,
+      "round": 8,
+      "name": "Azerbaijan Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 13,
+        "kendallTau": 0.46153846153846156,
+        "meanAbsoluteError": 2.6153846153846154
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.2,
+        "meanAbsoluteError": 5.8
+      }
+    },
+    {
+      "raceId": "977",
+      "year": 2017,
+      "round": 9,
+      "name": "Austrian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.6666666666666666,
+        "meanAbsoluteError": 2.125
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4105263157894737,
+        "meanAbsoluteError": 4.1
+      }
+    },
+    {
+      "raceId": "978",
+      "year": 2017,
+      "round": 10,
+      "name": "British Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6764705882352942,
+        "meanAbsoluteError": 2.1176470588235294
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5578947368421052,
+        "meanAbsoluteError": 3.1
+      }
+    },
+    {
+      "raceId": "979",
+      "year": 2017,
+      "round": 11,
+      "name": "Hungarian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7333333333333333,
+        "meanAbsoluteError": 1.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4421052631578947,
+        "meanAbsoluteError": 3.8
+      }
+    },
+    {
+      "raceId": "980",
+      "year": 2017,
+      "round": 12,
+      "name": "Belgian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.75,
+        "meanAbsoluteError": 1.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4842105263157895,
+        "meanAbsoluteError": 3.5
+      }
+    },
+    {
+      "raceId": "981",
+      "year": 2017,
+      "round": 13,
+      "name": "Italian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.6166666666666667,
+        "meanAbsoluteError": 2.25
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6526315789473685,
+        "meanAbsoluteError": 2.6
+      }
+    },
+    {
+      "raceId": "982",
+      "year": 2017,
+      "round": 14,
+      "name": "Singapore Grand Prix",
+      "excluded": 8,
+      "finishers": {
+        "entrants": 12,
+        "kendallTau": 0.48484848484848486,
+        "meanAbsoluteError": 2.1666666666666665
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.09473684210526316,
+        "meanAbsoluteError": 5.9
+      }
+    },
+    {
+      "raceId": "983",
+      "year": 2017,
+      "round": 15,
+      "name": "Malaysian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.6339869281045751,
+        "meanAbsoluteError": 2.3333333333333335
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.42105263157894735,
+        "meanAbsoluteError": 3.8
+      }
+    },
+    {
+      "raceId": "984",
+      "year": 2017,
+      "round": 16,
+      "name": "Japanese Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.7523809523809524,
+        "meanAbsoluteError": 1.4666666666666666
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.43157894736842106,
+        "meanAbsoluteError": 3.9
+      }
+    },
+    {
+      "raceId": "985",
+      "year": 2017,
+      "round": 17,
+      "name": "United States Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7833333333333333,
+        "meanAbsoluteError": 1.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5368421052631579,
+        "meanAbsoluteError": 3.1
+      }
+    },
+    {
+      "raceId": "986",
+      "year": 2017,
+      "round": 18,
+      "name": "Mexican Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.5047619047619047,
+        "meanAbsoluteError": 2.6666666666666665
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.37894736842105264,
+        "meanAbsoluteError": 4
+      }
+    },
+    {
+      "raceId": "987",
+      "year": 2017,
+      "round": 19,
+      "name": "Brazilian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.75,
+        "meanAbsoluteError": 1.625
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6421052631578947,
+        "meanAbsoluteError": 2.6
+      }
+    },
+    {
+      "raceId": "988",
+      "year": 2017,
+      "round": 20,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.738562091503268,
+        "meanAbsoluteError": 1.7777777777777777
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5578947368421052,
+        "meanAbsoluteError": 2.9
+      }
+    },
+    {
+      "raceId": "989",
+      "year": 2018,
+      "round": 1,
+      "name": "Australian Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6,
+        "meanAbsoluteError": 2.4
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.631578947368421,
+        "meanAbsoluteError": 2.8
+      }
+    },
+    {
+      "raceId": "990",
+      "year": 2018,
+      "round": 2,
+      "name": "Bahrain Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.36764705882352944,
+        "meanAbsoluteError": 3.764705882352941
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.10526315789473684,
+        "meanAbsoluteError": 5.5
+      }
+    },
+    {
+      "raceId": "991",
+      "year": 2018,
+      "round": 3,
+      "name": "Chinese Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.6842105263157895,
+        "meanAbsoluteError": 2.3157894736842106
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6736842105263158,
+        "meanAbsoluteError": 2.6
+      }
+    },
+    {
+      "raceId": "992",
+      "year": 2018,
+      "round": 4,
+      "name": "Azerbaijan Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 13,
+        "kendallTau": 0.46153846153846156,
+        "meanAbsoluteError": 2.3076923076923075
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.14736842105263157,
+        "meanAbsoluteError": 5.9
+      }
+    },
+    {
+      "raceId": "993",
+      "year": 2018,
+      "round": 5,
+      "name": "Spanish Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.7362637362637363,
+        "meanAbsoluteError": 1.4285714285714286
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3473684210526316,
+        "meanAbsoluteError": 4.5
+      }
+    },
+    {
+      "raceId": "994",
+      "year": 2018,
+      "round": 6,
+      "name": "Monaco Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.5735294117647058,
+        "meanAbsoluteError": 2.588235294117647
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5157894736842106,
+        "meanAbsoluteError": 3
+      }
+    },
+    {
+      "raceId": "995",
+      "year": 2018,
+      "round": 7,
+      "name": "Canadian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6911764705882353,
+        "meanAbsoluteError": 2.1176470588235294
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6,
+        "meanAbsoluteError": 2.8
+      }
+    },
+    {
+      "raceId": "996",
+      "year": 2018,
+      "round": 8,
+      "name": "French Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6761904761904762,
+        "meanAbsoluteError": 2.1333333333333333
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4631578947368421,
+        "meanAbsoluteError": 4
+      }
+    },
+    {
+      "raceId": "997",
+      "year": 2018,
+      "round": 9,
+      "name": "Austrian Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.45054945054945056,
+        "meanAbsoluteError": 2.5714285714285716
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.05263157894736842,
+        "meanAbsoluteError": 6.2
+      }
+    },
+    {
+      "raceId": "998",
+      "year": 2018,
+      "round": 10,
+      "name": "British Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.8241758241758241,
+        "meanAbsoluteError": 1
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5894736842105263,
+        "meanAbsoluteError": 3.3
+      }
+    },
+    {
+      "raceId": "999",
+      "year": 2018,
+      "round": 11,
+      "name": "German Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6571428571428571,
+        "meanAbsoluteError": 1.7333333333333334
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.37894736842105264,
+        "meanAbsoluteError": 3.9
+      }
+    },
+    {
+      "raceId": "1000",
+      "year": 2018,
+      "round": 12,
+      "name": "Hungarian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.5735294117647058,
+        "meanAbsoluteError": 2.3529411764705883
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.45263157894736844,
+        "meanAbsoluteError": 3.4
+      }
+    },
+    {
+      "raceId": "1001",
+      "year": 2018,
+      "round": 13,
+      "name": "Belgian Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6,
+        "meanAbsoluteError": 2.1333333333333333
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.21052631578947367,
+        "meanAbsoluteError": 5.4
+      }
+    },
+    {
+      "raceId": "1002",
+      "year": 2018,
+      "round": 14,
+      "name": "Italian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.5333333333333333,
+        "meanAbsoluteError": 2.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3368421052631579,
+        "meanAbsoluteError": 4.7
+      }
+    },
+    {
+      "raceId": "1003",
+      "year": 2018,
+      "round": 15,
+      "name": "Singapore Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.5555555555555556,
+        "meanAbsoluteError": 3.1578947368421053
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.49473684210526314,
+        "meanAbsoluteError": 3.7
+      }
+    },
+    {
+      "raceId": "1004",
+      "year": 2018,
+      "round": 16,
+      "name": "Russian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.6601307189542484,
+        "meanAbsoluteError": 2.111111111111111
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6421052631578947,
+        "meanAbsoluteError": 2.5
+      }
+    },
+    {
+      "raceId": "1005",
+      "year": 2018,
+      "round": 17,
+      "name": "Japanese Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.7794117647058824,
+        "meanAbsoluteError": 1.5294117647058822
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5578947368421052,
+        "meanAbsoluteError": 3.2
+      }
+    },
+    {
+      "raceId": "1006",
+      "year": 2018,
+      "round": 18,
+      "name": "United States Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.6703296703296703,
+        "meanAbsoluteError": 1.8571428571428572
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.30526315789473685,
+        "meanAbsoluteError": 5
+      }
+    },
+    {
+      "raceId": "1007",
+      "year": 2018,
+      "round": 19,
+      "name": "Mexican Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.45,
+        "meanAbsoluteError": 3.25
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.2736842105263158,
+        "meanAbsoluteError": 5.4
+      }
+    },
+    {
+      "raceId": "1008",
+      "year": 2018,
+      "round": 20,
+      "name": "Brazilian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.6078431372549019,
+        "meanAbsoluteError": 2.7777777777777777
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5368421052631579,
+        "meanAbsoluteError": 3.4
+      }
+    },
+    {
+      "raceId": "1009",
+      "year": 2018,
+      "round": 21,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.8476190476190476,
+        "meanAbsoluteError": 1.0666666666666667
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4631578947368421,
+        "meanAbsoluteError": 3.8
+      }
+    },
+    {
+      "raceId": "1010",
+      "year": 2019,
+      "round": 1,
+      "name": "Australian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6470588235294118,
+        "meanAbsoluteError": 2.235294117647059
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5052631578947369,
+        "meanAbsoluteError": 3.7
+      }
+    },
+    {
+      "raceId": "1011",
+      "year": 2019,
+      "round": 2,
+      "name": "Bahrain Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.5666666666666667,
+        "meanAbsoluteError": 2.25
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3473684210526316,
+        "meanAbsoluteError": 4.2
+      }
+    },
+    {
+      "raceId": "1012",
+      "year": 2019,
+      "round": 3,
+      "name": "Chinese Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.8235294117647058,
+        "meanAbsoluteError": 1.2941176470588236
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6526315789473685,
+        "meanAbsoluteError": 2.4
+      }
+    },
+    {
+      "raceId": "1013",
+      "year": 2019,
+      "round": 4,
+      "name": "Azerbaijan Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.6166666666666667,
+        "meanAbsoluteError": 2.375
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.35789473684210527,
+        "meanAbsoluteError": 4.8
+      }
+    },
+    {
+      "raceId": "1014",
+      "year": 2019,
+      "round": 5,
+      "name": "Spanish Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5947712418300654,
+        "meanAbsoluteError": 2.5555555555555554
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5789473684210527,
+        "meanAbsoluteError": 3
+      }
+    },
+    {
+      "raceId": "1015",
+      "year": 2019,
+      "round": 6,
+      "name": "Monaco Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.695906432748538,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5684210526315789,
+        "meanAbsoluteError": 2.9
+      }
+    },
+    {
+      "raceId": "1016",
+      "year": 2019,
+      "round": 7,
+      "name": "Canadian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.673202614379085,
+        "meanAbsoluteError": 2.4444444444444446
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.631578947368421,
+        "meanAbsoluteError": 3
+      }
+    },
+    {
+      "raceId": "1017",
+      "year": 2019,
+      "round": 8,
+      "name": "French Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7192982456140351,
+        "meanAbsoluteError": 2.1052631578947367
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6526315789473685,
+        "meanAbsoluteError": 2.6
+      }
+    },
+    {
+      "raceId": "1018",
+      "year": 2019,
+      "round": 9,
+      "name": "Austrian Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.6210526315789474,
+        "meanAbsoluteError": 2.7
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6210526315789474,
+        "meanAbsoluteError": 2.7
+      }
+    },
+    {
+      "raceId": "1019",
+      "year": 2019,
+      "round": 10,
+      "name": "British Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6029411764705882,
+        "meanAbsoluteError": 2.7058823529411766
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6105263157894737,
+        "meanAbsoluteError": 3.1
+      }
+    },
+    {
+      "raceId": "1020",
+      "year": 2019,
+      "round": 11,
+      "name": "German Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 13,
+        "kendallTau": 0.38461538461538464,
+        "meanAbsoluteError": 2.769230769230769
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0,
+        "meanAbsoluteError": 7.5
+      }
+    },
+    {
+      "raceId": "1021",
+      "year": 2019,
+      "round": 12,
+      "name": "Hungarian Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7309941520467836,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.7052631578947368,
+        "meanAbsoluteError": 2.2
+      }
+    },
+    {
+      "raceId": "1022",
+      "year": 2019,
+      "round": 13,
+      "name": "Belgian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.6,
+        "meanAbsoluteError": 2.375
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3684210526315789,
+        "meanAbsoluteError": 4.4
+      }
+    },
+    {
+      "raceId": "1023",
+      "year": 2019,
+      "round": 14,
+      "name": "Italian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.5,
+        "meanAbsoluteError": 3.176470588235294
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4,
+        "meanAbsoluteError": 4.4
+      }
+    },
+    {
+      "raceId": "1024",
+      "year": 2019,
+      "round": 15,
+      "name": "Singapore Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6029411764705882,
+        "meanAbsoluteError": 2.7058823529411766
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5578947368421052,
+        "meanAbsoluteError": 3.4
+      }
+    },
+    {
+      "raceId": "1025",
+      "year": 2019,
+      "round": 16,
+      "name": "Russian Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.7714285714285715,
+        "meanAbsoluteError": 1.4666666666666666
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5473684210526316,
+        "meanAbsoluteError": 3.1
+      }
+    },
+    {
+      "raceId": "1026",
+      "year": 2019,
+      "round": 17,
+      "name": "Japanese Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.7647058823529411,
+        "meanAbsoluteError": 1.5294117647058822
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4631578947368421,
+        "meanAbsoluteError": 4
+      }
+    },
+    {
+      "raceId": "1027",
+      "year": 2019,
+      "round": 18,
+      "name": "Mexican Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.7647058823529411,
+        "meanAbsoluteError": 1.5555555555555556
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6105263157894737,
+        "meanAbsoluteError": 2.9
+      }
+    },
+    {
+      "raceId": "1028",
+      "year": 2019,
+      "round": 19,
+      "name": "United States Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.8833333333333333,
+        "meanAbsoluteError": 0.75
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6842105263157895,
+        "meanAbsoluteError": 2.3
+      }
+    },
+    {
+      "raceId": "1029",
+      "year": 2019,
+      "round": 20,
+      "name": "Brazilian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.2833333333333333,
+        "meanAbsoluteError": 3.875
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0,
+        "meanAbsoluteError": 6.9
+      }
+    },
+    {
+      "raceId": "1030",
+      "year": 2019,
+      "round": 21,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7777777777777778,
+        "meanAbsoluteError": 1.6842105263157894
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.7473684210526316,
+        "meanAbsoluteError": 2.1
+      }
+    },
+    {
+      "raceId": "1031",
+      "year": 2020,
+      "round": 1,
+      "name": "Austrian Grand Prix",
+      "excluded": 9,
+      "finishers": {
+        "entrants": 11,
+        "kendallTau": 0.5636363636363636,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.29473684210526313,
+        "meanAbsoluteError": 5
+      }
+    },
+    {
+      "raceId": "1032",
+      "year": 2020,
+      "round": 2,
+      "name": "Styrian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.8088235294117647,
+        "meanAbsoluteError": 1.1764705882352942
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4631578947368421,
+        "meanAbsoluteError": 3.9
+      }
+    },
+    {
+      "raceId": "1033",
+      "year": 2020,
+      "round": 3,
+      "name": "Hungarian Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.6608187134502924,
+        "meanAbsoluteError": 2.210526315789474
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6210526315789474,
+        "meanAbsoluteError": 2.6
+      }
+    },
+    {
+      "raceId": "1034",
+      "year": 2020,
+      "round": 4,
+      "name": "British Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.47058823529411764,
+        "meanAbsoluteError": 3.2941176470588234
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.37894736842105264,
+        "meanAbsoluteError": 4.4
+      }
+    },
+    {
+      "raceId": "1035",
+      "year": 2020,
+      "round": 5,
+      "name": "70th Anniversary Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7426900584795322,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.7263157894736842,
+        "meanAbsoluteError": 2.3
+      }
+    },
+    {
+      "raceId": "1036",
+      "year": 2020,
+      "round": 6,
+      "name": "Spanish Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7543859649122807,
+        "meanAbsoluteError": 1.894736842105263
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6210526315789474,
+        "meanAbsoluteError": 2.8
+      }
+    },
+    {
+      "raceId": "1037",
+      "year": 2020,
+      "round": 7,
+      "name": "Belgian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.5294117647058824,
+        "meanAbsoluteError": 2.7058823529411766
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5263157894736842,
+        "meanAbsoluteError": 3.3
+      }
+    },
+    {
+      "raceId": "1038",
+      "year": 2020,
+      "round": 8,
+      "name": "Italian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.3,
+        "meanAbsoluteError": 3.75
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.08421052631578947,
+        "meanAbsoluteError": 6.7
+      }
+    },
+    {
+      "raceId": "1039",
+      "year": 2020,
+      "round": 9,
+      "name": "Tuscan Grand Prix",
+      "excluded": 8,
+      "finishers": {
+        "entrants": 12,
+        "kendallTau": 0.7878787878787878,
+        "meanAbsoluteError": 1
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4,
+        "meanAbsoluteError": 4
+      }
+    },
+    {
+      "raceId": "1040",
+      "year": 2020,
+      "round": 10,
+      "name": "Russian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.6078431372549019,
+        "meanAbsoluteError": 2.7777777777777777
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.45263157894736844,
+        "meanAbsoluteError": 4.1
+      }
+    },
+    {
+      "raceId": "1041",
+      "year": 2020,
+      "round": 11,
+      "name": "Eifel Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.638095238095238,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.30526315789473685,
+        "meanAbsoluteError": 4.8
+      }
+    },
+    {
+      "raceId": "1042",
+      "year": 2020,
+      "round": 12,
+      "name": "Portuguese Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.5672514619883041,
+        "meanAbsoluteError": 2.736842105263158
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5052631578947369,
+        "meanAbsoluteError": 3.3
+      }
+    },
+    {
+      "raceId": "1043",
+      "year": 2020,
+      "round": 13,
+      "name": "Emilia Romagna Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.42857142857142855,
+        "meanAbsoluteError": 2.933333333333333
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3368421052631579,
+        "meanAbsoluteError": 4.6
+      }
+    },
+    {
+      "raceId": "1044",
+      "year": 2020,
+      "round": 14,
+      "name": "Turkish Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.45,
+        "meanAbsoluteError": 3
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6,
+        "meanAbsoluteError": 2.8
+      }
+    },
+    {
+      "raceId": "1045",
+      "year": 2020,
+      "round": 15,
+      "name": "Bahrain Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6617647058823529,
+        "meanAbsoluteError": 2.3529411764705883
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5052631578947369,
+        "meanAbsoluteError": 3.5
+      }
+    },
+    {
+      "raceId": "1046",
+      "year": 2020,
+      "round": 16,
+      "name": "Sakhir Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.4852941176470588,
+        "meanAbsoluteError": 3.0588235294117645
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3157894736842105,
+        "meanAbsoluteError": 4.6
+      }
+    },
+    {
+      "raceId": "1047",
+      "year": 2020,
+      "round": 17,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7894736842105263,
+        "meanAbsoluteError": 1.5789473684210527
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6526315789473685,
+        "meanAbsoluteError": 2.4
+      }
+    },
+    {
+      "raceId": "1052",
+      "year": 2021,
+      "round": 1,
+      "name": "Bahrain Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7166666666666667,
+        "meanAbsoluteError": 1.875
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6263157894736842,
+        "meanAbsoluteError": 3.05
+      }
+    },
+    {
+      "raceId": "1053",
+      "year": 2021,
+      "round": 2,
+      "name": "Emilia Romagna Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.75,
+        "meanAbsoluteError": 1.625
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5578947368421052,
+        "meanAbsoluteError": 3.5
+      }
+    },
+    {
+      "raceId": "1054",
+      "year": 2021,
+      "round": 3,
+      "name": "Portuguese Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7894736842105263,
+        "meanAbsoluteError": 1.5789473684210527
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.7578947368421053,
+        "meanAbsoluteError": 1.9
+      }
+    },
+    {
+      "raceId": "1055",
+      "year": 2021,
+      "round": 4,
+      "name": "Spanish Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.8245614035087719,
+        "meanAbsoluteError": 1.368421052631579
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.7789473684210526,
+        "meanAbsoluteError": 1.9
+      }
+    },
+    {
+      "raceId": "1056",
+      "year": 2021,
+      "round": 5,
+      "name": "Monaco Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.6078431372549019,
+        "meanAbsoluteError": 2.7777777777777777
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3684210526315789,
+        "meanAbsoluteError": 4.8
+      }
+    },
+    {
+      "raceId": "1057",
+      "year": 2021,
+      "round": 6,
+      "name": "Azerbaijan Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.3,
+        "meanAbsoluteError": 3.875
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.21052631578947367,
+        "meanAbsoluteError": 5.6
+      }
+    },
+    {
+      "raceId": "1059",
+      "year": 2021,
+      "round": 7,
+      "name": "French Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.7578947368421053,
+        "meanAbsoluteError": 1.8
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.7578947368421053,
+        "meanAbsoluteError": 1.8
+      }
+    },
+    {
+      "raceId": "1058",
+      "year": 2021,
+      "round": 8,
+      "name": "Styrian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.803921568627451,
+        "meanAbsoluteError": 1.4444444444444444
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6947368421052632,
+        "meanAbsoluteError": 2.3
+      }
+    },
+    {
+      "raceId": "1060",
+      "year": 2021,
+      "round": 9,
+      "name": "Austrian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.8300653594771242,
+        "meanAbsoluteError": 1.1111111111111112
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.7263157894736842,
+        "meanAbsoluteError": 2
+      }
+    },
+    {
+      "raceId": "1061",
+      "year": 2021,
+      "round": 10,
+      "name": "British Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.673202614379085,
+        "meanAbsoluteError": 2.2222222222222223
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.43157894736842106,
+        "meanAbsoluteError": 4.2
+      }
+    },
+    {
+      "raceId": "1062",
+      "year": 2021,
+      "round": 11,
+      "name": "Hungarian Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 13,
+        "kendallTau": 0.28205128205128205,
+        "meanAbsoluteError": 3.076923076923077
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": -0.010526315789473684,
+        "meanAbsoluteError": 7.7
+      }
+    },
+    {
+      "raceId": "1063",
+      "year": 2021,
+      "round": 12,
+      "name": "Belgian Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.24210526315789474,
+        "meanAbsoluteError": 5.2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.24210526315789474,
+        "meanAbsoluteError": 5.2
+      }
+    },
+    {
+      "raceId": "1064",
+      "year": 2021,
+      "round": 13,
+      "name": "Dutch Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.7058823529411765,
+        "meanAbsoluteError": 1.8823529411764706
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.7052631578947368,
+        "meanAbsoluteError": 2.3
+      }
+    },
+    {
+      "raceId": "1065",
+      "year": 2021,
+      "round": 14,
+      "name": "Italian Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6571428571428571,
+        "meanAbsoluteError": 1.8666666666666667
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.30526315789473685,
+        "meanAbsoluteError": 5.1
+      }
+    },
+    {
+      "raceId": "1066",
+      "year": 2021,
+      "round": 15,
+      "name": "Russian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5294117647058824,
+        "meanAbsoluteError": 3.111111111111111
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6,
+        "meanAbsoluteError": 3
+      }
+    },
+    {
+      "raceId": "1067",
+      "year": 2021,
+      "round": 16,
+      "name": "Turkish Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.6631578947368421,
+        "meanAbsoluteError": 2.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6631578947368421,
+        "meanAbsoluteError": 2.5
+      }
+    },
+    {
+      "raceId": "1069",
+      "year": 2021,
+      "round": 17,
+      "name": "United States Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.8235294117647058,
+        "meanAbsoluteError": 1.2941176470588236
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5894736842105263,
+        "meanAbsoluteError": 3.1
+      }
+    },
+    {
+      "raceId": "1070",
+      "year": 2021,
+      "round": 18,
+      "name": "Mexico City Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5686274509803921,
+        "meanAbsoluteError": 2.6666666666666665
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5789473684210527,
+        "meanAbsoluteError": 2.9
+      }
+    },
+    {
+      "raceId": "1071",
+      "year": 2021,
+      "round": 19,
+      "name": "São Paulo Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.8300653594771242,
+        "meanAbsoluteError": 1.3333333333333333
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6631578947368421,
+        "meanAbsoluteError": 2.7
+      }
+    },
+    {
+      "raceId": "1051",
+      "year": 2021,
+      "round": 20,
+      "name": "Qatar Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.673202614379085,
+        "meanAbsoluteError": 2.2222222222222223
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5368421052631579,
+        "meanAbsoluteError": 3.1
+      }
+    },
+    {
+      "raceId": "1072",
+      "year": 2021,
+      "round": 21,
+      "name": "Saudi Arabian Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.5428571428571428,
+        "meanAbsoluteError": 2.533333333333333
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5052631578947369,
+        "meanAbsoluteError": 3.3
+      }
+    },
+    {
+      "raceId": "1073",
+      "year": 2021,
+      "round": 22,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.5384615384615384,
+        "meanAbsoluteError": 2.2857142857142856
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5684210526315789,
+        "meanAbsoluteError": 2.9
+      }
+    },
+    {
+      "raceId": "1074",
+      "year": 2022,
+      "round": 1,
+      "name": "Bahrain Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.25,
+        "meanAbsoluteError": 4.235294117647059
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": -0.021052631578947368,
+        "meanAbsoluteError": 6.6
+      }
+    },
+    {
+      "raceId": "1075",
+      "year": 2022,
+      "round": 2,
+      "name": "Saudi Arabian Grand Prix",
+      "excluded": 7,
+      "finishers": {
+        "entrants": 13,
+        "kendallTau": 0.5384615384615384,
+        "meanAbsoluteError": 2.1538461538461537
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5263157894736842,
+        "meanAbsoluteError": 3.5
+      }
+    },
+    {
+      "raceId": "1076",
+      "year": 2022,
+      "round": 3,
+      "name": "Australian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.5,
+        "meanAbsoluteError": 2.823529411764706
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.24210526315789474,
+        "meanAbsoluteError": 5.2
+      }
+    },
+    {
+      "raceId": "1077",
+      "year": 2022,
+      "round": 4,
+      "name": "Emilia Romagna Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.46405228758169936,
+        "meanAbsoluteError": 3.888888888888889
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.29473684210526313,
+        "meanAbsoluteError": 5.3
+      }
+    },
+    {
+      "raceId": "1078",
+      "year": 2022,
+      "round": 5,
+      "name": "Miami Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6761904761904762,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4421052631578947,
+        "meanAbsoluteError": 3.8
+      }
+    },
+    {
+      "raceId": "1079",
+      "year": 2022,
+      "round": 6,
+      "name": "Spanish Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.7516339869281046,
+        "meanAbsoluteError": 1.6666666666666667
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5684210526315789,
+        "meanAbsoluteError": 3
+      }
+    },
+    {
+      "raceId": "1080",
+      "year": 2022,
+      "round": 7,
+      "name": "Monaco Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.7352941176470589,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.7263157894736842,
+        "meanAbsoluteError": 2.2
+      }
+    },
+    {
+      "raceId": "1081",
+      "year": 2022,
+      "round": 8,
+      "name": "Azerbaijan Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6952380952380952,
+        "meanAbsoluteError": 1.7333333333333334
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3684210526315789,
+        "meanAbsoluteError": 4
+      }
+    },
+    {
+      "raceId": "1082",
+      "year": 2022,
+      "round": 9,
+      "name": "Canadian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.5441176470588235,
+        "meanAbsoluteError": 2.823529411764706
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4105263157894737,
+        "meanAbsoluteError": 4.2
+      }
+    },
+    {
+      "raceId": "1083",
+      "year": 2022,
+      "round": 10,
+      "name": "British Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.4945054945054945,
+        "meanAbsoluteError": 2.4285714285714284
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3473684210526316,
+        "meanAbsoluteError": 4.3
+      }
+    },
+    {
+      "raceId": "1084",
+      "year": 2022,
+      "round": 11,
+      "name": "Austrian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.4411764705882353,
+        "meanAbsoluteError": 3.176470588235294
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.2736842105263158,
+        "meanAbsoluteError": 4.6
+      }
+    },
+    {
+      "raceId": "1085",
+      "year": 2022,
+      "round": 12,
+      "name": "French Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7,
+        "meanAbsoluteError": 1.75
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5157894736842106,
+        "meanAbsoluteError": 3.4
+      }
+    },
+    {
+      "raceId": "1086",
+      "year": 2022,
+      "round": 13,
+      "name": "Hungarian Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7076023391812866,
+        "meanAbsoluteError": 2.210526315789474
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.631578947368421,
+        "meanAbsoluteError": 2.7
+      }
+    },
+    {
+      "raceId": "1087",
+      "year": 2022,
+      "round": 14,
+      "name": "Belgian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.6339869281045751,
+        "meanAbsoluteError": 2.3333333333333335
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.43157894736842106,
+        "meanAbsoluteError": 3.9
+      }
+    },
+    {
+      "raceId": "1088",
+      "year": 2022,
+      "round": 15,
+      "name": "Dutch Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.673202614379085,
+        "meanAbsoluteError": 2.111111111111111
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6105263157894737,
+        "meanAbsoluteError": 2.7
+      }
+    },
+    {
+      "raceId": "1089",
+      "year": 2022,
+      "round": 16,
+      "name": "Italian Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7,
+        "meanAbsoluteError": 1.875
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5157894736842106,
+        "meanAbsoluteError": 3.4
+      }
+    },
+    {
+      "raceId": "1091",
+      "year": 2022,
+      "round": 17,
+      "name": "Singapore Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.3626373626373626,
+        "meanAbsoluteError": 3.2857142857142856
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4,
+        "meanAbsoluteError": 4.3
+      }
+    },
+    {
+      "raceId": "1092",
+      "year": 2022,
+      "round": 18,
+      "name": "Japanese Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5555555555555556,
+        "meanAbsoluteError": 2.7777777777777777
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4631578947368421,
+        "meanAbsoluteError": 3.4
+      }
+    },
+    {
+      "raceId": "1093",
+      "year": 2022,
+      "round": 19,
+      "name": "United States Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.7058823529411765,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4842105263157895,
+        "meanAbsoluteError": 3.8
+      }
+    },
+    {
+      "raceId": "1094",
+      "year": 2022,
+      "round": 20,
+      "name": "Mexico City Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.7124183006535948,
+        "meanAbsoluteError": 1.7777777777777777
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5894736842105263,
+        "meanAbsoluteError": 2.7
+      }
+    },
+    {
+      "raceId": "1095",
+      "year": 2022,
+      "round": 21,
+      "name": "São Paulo Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6323529411764706,
+        "meanAbsoluteError": 2.3529411764705883
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5052631578947369,
+        "meanAbsoluteError": 3.8
+      }
+    },
+    {
+      "raceId": "1096",
+      "year": 2022,
+      "round": 22,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.75,
+        "meanAbsoluteError": 1.6470588235294117
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5368421052631579,
+        "meanAbsoluteError": 3.5
+      }
+    },
+    {
+      "raceId": "1098",
+      "year": 2023,
+      "round": 1,
+      "name": "Bahrain Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.47058823529411764,
+        "meanAbsoluteError": 3.176470588235294
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.30526315789473685,
+        "meanAbsoluteError": 4.7
+      }
+    },
+    {
+      "raceId": "1099",
+      "year": 2023,
+      "round": 2,
+      "name": "Saudi Arabian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5032679738562091,
+        "meanAbsoluteError": 3.111111111111111
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.47368421052631576,
+        "meanAbsoluteError": 3.7
+      }
+    },
+    {
+      "raceId": "1100",
+      "year": 2023,
+      "round": 3,
+      "name": "Australian Grand Prix",
+      "excluded": 8,
+      "finishers": {
+        "entrants": 12,
+        "kendallTau": 0.36363636363636365,
+        "meanAbsoluteError": 2.6666666666666665
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.22105263157894736,
+        "meanAbsoluteError": 5.3
+      }
+    },
+    {
+      "raceId": "1101",
+      "year": 2023,
+      "round": 4,
+      "name": "Azerbaijan Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.6078431372549019,
+        "meanAbsoluteError": 2.7777777777777777
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.631578947368421,
+        "meanAbsoluteError": 2.9
+      }
+    },
+    {
+      "raceId": "1102",
+      "year": 2023,
+      "round": 5,
+      "name": "Miami Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.6526315789473685,
+        "meanAbsoluteError": 2.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6526315789473685,
+        "meanAbsoluteError": 2.5
+      }
+    },
+    {
+      "raceId": "1104",
+      "year": 2023,
+      "round": 6,
+      "name": "Monaco Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.42483660130718953,
+        "meanAbsoluteError": 3.3333333333333335
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.35789473684210527,
+        "meanAbsoluteError": 4.2
+      }
+    },
+    {
+      "raceId": "1105",
+      "year": 2023,
+      "round": 7,
+      "name": "Spanish Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.5789473684210527,
+        "meanAbsoluteError": 2.7
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5789473684210527,
+        "meanAbsoluteError": 2.7
+      }
+    },
+    {
+      "raceId": "1106",
+      "year": 2023,
+      "round": 8,
+      "name": "Canadian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5555555555555556,
+        "meanAbsoluteError": 3
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5052631578947369,
+        "meanAbsoluteError": 3.3
+      }
+    },
+    {
+      "raceId": "1107",
+      "year": 2023,
+      "round": 9,
+      "name": "Austrian Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.5321637426900585,
+        "meanAbsoluteError": 3.1578947368421053
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5157894736842106,
+        "meanAbsoluteError": 3.4
+      }
+    },
+    {
+      "raceId": "1108",
+      "year": 2023,
+      "round": 10,
+      "name": "British Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.4411764705882353,
+        "meanAbsoluteError": 3.411764705882353
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3473684210526316,
+        "meanAbsoluteError": 4.4
+      }
+    },
+    {
+      "raceId": "1109",
+      "year": 2023,
+      "round": 11,
+      "name": "Hungarian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.7205882352941176,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5894736842105263,
+        "meanAbsoluteError": 3.1
+      }
+    },
+    {
+      "raceId": "1110",
+      "year": 2023,
+      "round": 12,
+      "name": "Belgian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.7647058823529411,
+        "meanAbsoluteError": 1.7777777777777777
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5789473684210527,
+        "meanAbsoluteError": 3
+      }
+    },
+    {
+      "raceId": "1111",
+      "year": 2023,
+      "round": 13,
+      "name": "Dutch Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.5441176470588235,
+        "meanAbsoluteError": 2.7058823529411766
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5157894736842106,
+        "meanAbsoluteError": 3.3
+      }
+    },
+    {
+      "raceId": "1112",
+      "year": 2023,
+      "round": 14,
+      "name": "Italian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5947712418300654,
+        "meanAbsoluteError": 2.6666666666666665
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5157894736842106,
+        "meanAbsoluteError": 3.3
+      }
+    },
+    {
+      "raceId": "1113",
+      "year": 2023,
+      "round": 15,
+      "name": "Singapore Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.44761904761904764,
+        "meanAbsoluteError": 2.933333333333333
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.30526315789473685,
+        "meanAbsoluteError": 5.1
+      }
+    },
+    {
+      "raceId": "1114",
+      "year": 2023,
+      "round": 16,
+      "name": "Japanese Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6761904761904762,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.4631578947368421,
+        "meanAbsoluteError": 3.7
+      }
+    },
+    {
+      "raceId": "1115",
+      "year": 2023,
+      "round": 17,
+      "name": "Qatar Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.4852941176470588,
+        "meanAbsoluteError": 3.0588235294117645
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.30526315789473685,
+        "meanAbsoluteError": 4.6
+      }
+    },
+    {
+      "raceId": "1116",
+      "year": 2023,
+      "round": 18,
+      "name": "United States Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.6952380952380952,
+        "meanAbsoluteError": 1.4666666666666666
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.17894736842105263,
+        "meanAbsoluteError": 5.8
+      }
+    },
+    {
+      "raceId": "1117",
+      "year": 2023,
+      "round": 19,
+      "name": "Mexico City Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.8095238095238095,
+        "meanAbsoluteError": 1.0666666666666667
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5157894736842106,
+        "meanAbsoluteError": 3.3
+      }
+    },
+    {
+      "raceId": "1118",
+      "year": 2023,
+      "round": 20,
+      "name": "São Paulo Grand Prix",
+      "excluded": 6,
+      "finishers": {
+        "entrants": 14,
+        "kendallTau": 0.45054945054945056,
+        "meanAbsoluteError": 2.7142857142857144
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.35789473684210527,
+        "meanAbsoluteError": 4.3
+      }
+    },
+    {
+      "raceId": "1119",
+      "year": 2023,
+      "round": 21,
+      "name": "Las Vegas Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.6764705882352942,
+        "meanAbsoluteError": 2.235294117647059
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5473684210526316,
+        "meanAbsoluteError": 3.1
+      }
+    },
+    {
+      "raceId": "1120",
+      "year": 2023,
+      "round": 22,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.695906432748538,
+        "meanAbsoluteError": 2.1052631578947367
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5894736842105263,
+        "meanAbsoluteError": 3
+      }
+    },
+    {
+      "raceId": "1121",
+      "year": 2024,
+      "round": 1,
+      "name": "Bahrain Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.6105263157894737,
+        "meanAbsoluteError": 2.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6105263157894737,
+        "meanAbsoluteError": 2.5
+      }
+    },
+    {
+      "raceId": "1122",
+      "year": 2024,
+      "round": 2,
+      "name": "Saudi Arabian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.6601307189542484,
+        "meanAbsoluteError": 2.2222222222222223
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5368421052631579,
+        "meanAbsoluteError": 3
+      }
+    },
+    {
+      "raceId": "1123",
+      "year": 2024,
+      "round": 3,
+      "name": "Australian Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.6,
+        "meanAbsoluteError": 2.5
+      },
+      "allEntrants": {
+        "entrants": 19,
+        "kendallTau": 0.2046783625730994,
+        "meanAbsoluteError": 5.052631578947368
+      }
+    },
+    {
+      "raceId": "1124",
+      "year": 2024,
+      "round": 4,
+      "name": "Japanese Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.75,
+        "meanAbsoluteError": 1.6470588235294117
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6631578947368421,
+        "meanAbsoluteError": 2.5
+      }
+    },
+    {
+      "raceId": "1125",
+      "year": 2024,
+      "round": 5,
+      "name": "Chinese Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.75,
+        "meanAbsoluteError": 1.6470588235294117
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6842105263157895,
+        "meanAbsoluteError": 2.4
+      }
+    },
+    {
+      "raceId": "1126",
+      "year": 2024,
+      "round": 6,
+      "name": "Miami Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.5906432748538012,
+        "meanAbsoluteError": 2.9473684210526314
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.631578947368421,
+        "meanAbsoluteError": 2.8
+      }
+    },
+    {
+      "raceId": "1127",
+      "year": 2024,
+      "round": 7,
+      "name": "Emilia Romagna Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.6491228070175439,
+        "meanAbsoluteError": 2.210526315789474
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6105263157894737,
+        "meanAbsoluteError": 2.6
+      }
+    },
+    {
+      "raceId": "1128",
+      "year": 2024,
+      "round": 8,
+      "name": "Monaco Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.6833333333333333,
+        "meanAbsoluteError": 2
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5052631578947369,
+        "meanAbsoluteError": 3.8
+      }
+    },
+    {
+      "raceId": "1129",
+      "year": 2024,
+      "round": 9,
+      "name": "Canadian Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.7714285714285715,
+        "meanAbsoluteError": 1.3333333333333333
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3157894736842105,
+        "meanAbsoluteError": 5.2
+      }
+    },
+    {
+      "raceId": "1130",
+      "year": 2024,
+      "round": 10,
+      "name": "Spanish Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.5894736842105263,
+        "meanAbsoluteError": 3.1
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5894736842105263,
+        "meanAbsoluteError": 3.1
+      }
+    },
+    {
+      "raceId": "1131",
+      "year": 2024,
+      "round": 11,
+      "name": "Austrian Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.3263157894736842,
+        "meanAbsoluteError": 4.6
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3263157894736842,
+        "meanAbsoluteError": 4.6
+      }
+    },
+    {
+      "raceId": "1132",
+      "year": 2024,
+      "round": 12,
+      "name": "British Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.45098039215686275,
+        "meanAbsoluteError": 3.4444444444444446
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3473684210526316,
+        "meanAbsoluteError": 4.8
+      }
+    },
+    {
+      "raceId": "1133",
+      "year": 2024,
+      "round": 13,
+      "name": "Hungarian Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.7426900584795322,
+        "meanAbsoluteError": 1.894736842105263
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6842105263157895,
+        "meanAbsoluteError": 2.4
+      }
+    },
+    {
+      "raceId": "1134",
+      "year": 2024,
+      "round": 14,
+      "name": "Belgian Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5947712418300654,
+        "meanAbsoluteError": 2.5555555555555554
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5263157894736842,
+        "meanAbsoluteError": 3.3
+      }
+    },
+    {
+      "raceId": "1135",
+      "year": 2024,
+      "round": 15,
+      "name": "Dutch Grand Prix",
+      "excluded": 0,
+      "finishers": {
+        "entrants": 20,
+        "kendallTau": 0.8,
+        "meanAbsoluteError": 1.6
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.8,
+        "meanAbsoluteError": 1.6
+      }
+    },
+    {
+      "raceId": "1136",
+      "year": 2024,
+      "round": 16,
+      "name": "Italian Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.5672514619883041,
+        "meanAbsoluteError": 2.8421052631578947
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5578947368421052,
+        "meanAbsoluteError": 3.2
+      }
+    },
+    {
+      "raceId": "1137",
+      "year": 2024,
+      "round": 17,
+      "name": "Azerbaijan Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.5666666666666667,
+        "meanAbsoluteError": 2.875
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3368421052631579,
+        "meanAbsoluteError": 4.7
+      }
+    },
+    {
+      "raceId": "1138",
+      "year": 2024,
+      "round": 18,
+      "name": "Singapore Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.6601307189542484,
+        "meanAbsoluteError": 2.5555555555555554
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.5894736842105263,
+        "meanAbsoluteError": 3.2
+      }
+    },
+    {
+      "raceId": "1139",
+      "year": 2024,
+      "round": 19,
+      "name": "United States Grand Prix",
+      "excluded": 1,
+      "finishers": {
+        "entrants": 19,
+        "kendallTau": 0.6257309941520468,
+        "meanAbsoluteError": 2.736842105263158
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.49473684210526314,
+        "meanAbsoluteError": 3.6
+      }
+    },
+    {
+      "raceId": "1140",
+      "year": 2024,
+      "round": 20,
+      "name": "Mexico City Grand Prix",
+      "excluded": 3,
+      "finishers": {
+        "entrants": 17,
+        "kendallTau": 0.5294117647058824,
+        "meanAbsoluteError": 2.7058823529411766
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.42105263157894735,
+        "meanAbsoluteError": 4.4
+      }
+    },
+    {
+      "raceId": "1141",
+      "year": 2024,
+      "round": 21,
+      "name": "São Paulo Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.3142857142857143,
+        "meanAbsoluteError": 3.3333333333333335
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.2,
+        "meanAbsoluteError": 5.6
+      }
+    },
+    {
+      "raceId": "1142",
+      "year": 2024,
+      "round": 22,
+      "name": "Las Vegas Grand Prix",
+      "excluded": 2,
+      "finishers": {
+        "entrants": 18,
+        "kendallTau": 0.5686274509803921,
+        "meanAbsoluteError": 2.888888888888889
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.49473684210526314,
+        "meanAbsoluteError": 3.5
+      }
+    },
+    {
+      "raceId": "1143",
+      "year": 2024,
+      "round": 23,
+      "name": "Qatar Grand Prix",
+      "excluded": 5,
+      "finishers": {
+        "entrants": 15,
+        "kendallTau": 0.3523809523809524,
+        "meanAbsoluteError": 3.6
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.3684210526315789,
+        "meanAbsoluteError": 4.5
+      }
+    },
+    {
+      "raceId": "1144",
+      "year": 2024,
+      "round": 24,
+      "name": "Abu Dhabi Grand Prix",
+      "excluded": 4,
+      "finishers": {
+        "entrants": 16,
+        "kendallTau": 0.7166666666666667,
+        "meanAbsoluteError": 1.5
+      },
+      "allEntrants": {
+        "entrants": 20,
+        "kendallTau": 0.6210526315789474,
+        "meanAbsoluteError": 2.4
+      }
+    }
+  ]
+}

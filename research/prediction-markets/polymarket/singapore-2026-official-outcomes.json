@@ -1,0 +1,91 @@
+{
+  "source": "Polymarket Gamma public event API",
+  "requestUrl": "https://gamma-api.polymarket.com/events?slug=f1-singapore-grand-prix-winner-2026-10-11",
+  "retrievedAt": "2026-11-02T17:52:52.602395+00:00",
+  "originalResponseSha256": "36ea8ef09897fa9cee9b37470f75576bae76bd38c5f45fdbd05396fad2f00e37",
+  "note": "Current tick, minimum size and fees do not establish historical values; resolved prices are not independent on-chain oracle evidence.",
+  "event": {
+    "id": "1123912",
+    "slug": "f1-singapore-grand-prix-winner-2026-10-11",
+    "closed": true,
+    "updatedAt": "2026-10-12T18:08:35.148423Z",
+    "negRisk": true
+  },
+  "markets": [
+    {
+      "slug": "f1-singapore-grand-prix-winner-norris-2026-10-11",
+      "conditionId": "0x0db778ef36653053b8434e4d934dcafcf4c2a9aed6f1e9786baeccf2c4e2feb1",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "50434279802004157692776355100568844573677746234993201217816404234694902233906",
+        "82977813690489649341195807886227971338596987009971362649627702486177591251082"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-10-11 18:28:03+00",
+      "creationTime": null,
+      "startDate": "2026-10-03T11:30:31Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-singapore-grand-prix-winner-verstappen-2026-10-11",
+      "conditionId": "0xb844ce6f929ea8ed090c4b23c77ef06eae93200b571db36bb714ed382f092e0d",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "1",
+        "0"
+      ],
+      "clobTokenIds": [
+        "105026689771335810478914327541724319323338915766526076386906176141135574302746",
+        "18169266132685133743396945809504334013307326707016878522262902463728560859642"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-10-11 18:28:48+00",
+      "creationTime": null,
+      "startDate": "2026-10-03T11:30:31Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-singapore-grand-prix-winner-hamilton-2026-10-11",
+      "conditionId": "0xbd329c1f994d55ec7f73ffbb8a501a746bbc2e870ec8f9db7d96d1809858f900",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "9518453683994039663103190001640433279731056992400699084747973794695685716810",
+        "35668829211009293309437648336363518152351767550983526694141672795895341168362"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-10-11 18:27:28+00",
+      "creationTime": null,
+      "startDate": "2026-10-03T11:30:31Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    }
+  ]
+}

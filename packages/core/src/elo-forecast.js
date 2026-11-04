@@ -65,6 +65,7 @@ export function buildEloForecast(raw, lapSnapshots, maps, _params, lapPace = nul
   });
   model.params.modelKind = 'elo';
   model.forecastState = {
+    heads: ELO_HEADS,
     form: form.exportState(),
     seen: new Map(form.w.raceSeen),
     nationalities: new Map(raw.drivers.map((d) => [String(d.driverId), d.nationality])),

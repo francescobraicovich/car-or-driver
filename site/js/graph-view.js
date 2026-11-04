@@ -35,7 +35,8 @@ export function initGraph() {
       other: first ? pair.b : pair.a,
       qual: first ? `${pair.qa}–${pair.qb}` : `${pair.qb}–${pair.qa}`,
       race: first ? `${pair.ra}–${pair.rb}` : `${pair.rb}–${pair.ra}`,
-      advantage: first ? pair.qa + 1.5 * pair.ra - pair.qb - 1.5 * pair.rb : pair.qb + 1.5 * pair.rb - pair.qa - 1.5 * pair.ra,
+      advantage: first ? pair.wins - pair.losses : pair.losses - pair.wins,
+      period: pair.firstYear === pair.lastYear ? String(pair.firstYear) : `${pair.firstYear}–${pair.lastYear}`,
     };
   };
   function showDetail() {
@@ -59,21 +60,31 @@ export function initGraph() {
       .map((pair) => record(pair, id))
       .sort((a, b) => Math.abs(b.advantage) - Math.abs(a.advantage));
     detail.innerHTML = `<div class="graph-detail-heading"><div><small>${onGrid ? 'ON THIS GRID' : 'CAREER RECORD'}</small><h3>${esc(nameOf(id))}</h3></div><span>${node[3]} starts</span></div>
-      <div class="graph-detail-metrics"><div><span>${onGrid ? 'Published rating' : 'Last rating'}</span><strong>${published == null ? '—' : Math.round(published)}</strong></div><div><span>Graph only</span><strong>${node[1].toFixed(1)}</strong></div><div><span>Age at date</span><strong>${node[4] ?? 'Unknown'}</strong></div><div><span>Mean season</span><strong>${node[2].toFixed(1)}</strong></div></div>
-      <h4>All teammates through this weekend</h4>
-      <div class="graph-rivals">${rivals.length ? rivals.map((item) => `<div class="graph-rival ${item.advantage > 0 ? 'up' : item.advantage < 0 ? 'down' : 'even'}"><span>${esc(nameOf(item.other))}</span><span>Q ${item.qual}</span><span>R ${item.race}</span></div>`).join('') : '<p>No shared comparison yet.</p>'}</div>
-      <p class="graph-note">The published number is the combined driver rating, last known if retired. The graph score uses teammate evidence alone. Q compares the last qualifying session both entered; R counts classified finishes. Green links favor this driver, pink their teammate.</p>`;
+      <div class="graph-detail-metrics"><div><span>${onGrid ? 'Published race pace' : 'Last race pace'}</span><strong>${published == null ? '—' : Math.round(published)}</strong></div><div><span>Graph only · ${node[5]}</span><strong>${node[1].toFixed(1)}</strong></div><div><span>Age at date</span><strong>${node[4] ?? 'Unknown'}</strong></div><div><span>Mean season</span><strong>${node[2].toFixed(1)}</strong></div></div>
+      <h4>Career comparisons through this weekend</h4>
+      <div class="graph-rivals">${rivals.length ? rivals.map((item) => `<div class="graph-rival ${item.advantage > 0 ? 'up' : item.advantage < 0 ? 'down' : 'even'}"><span><span class="graph-rival-name">${esc(nameOf(item.other))}</span><small>${item.period}</small></span><span>Career Q ${item.qual}</span><span>Career R ${item.race}</span></div>`).join('') : '<p>No shared comparison yet.</p>'}</div>
+      <p class="graph-note">The published number is the driver’s race pace, last known if retired. The graph score estimates the driver’s level in the season shown, using teammate evidence alone. Each comparison connects driver levels in its own season; links between seasons allow gradual change. Q compares the last valid shared qualifying session; R uses valid finishes, or race pace and retirement snapshots when a finish comparison is unavailable. Link colors and ordering use evidence weighted with a ${data.halfLifeYears}-year half-life; career counts are unweighted and their comparison years are shown.</p>`;
   }
 
   function buildAt(index) {
     const snap = data.snapshots[index];
     const own = state.model.snaps[index];
     if (String(snap.raceId) !== String(own.raceId)) throw Error('Graph and ratings weekends do not match');
-    pairById = new Map();
+    pairById = new Map(
+      snap.edges.map(([a, b, wins, losses]) => [
+        `${a}:${b}`,
+        { a, b, wins, losses, qa: 0, qb: 0, ra: 0, rb: 0, firstYear: null, lastYear: null },
+      ]),
+    );
     for (let i = 0; i <= index; i++)
       for (const [a, b, q, r] of data.snapshots[i].duels) {
         const key = `${a}:${b}`;
-        const pair = pairById.get(key) ?? { a, b, qa: 0, qb: 0, ra: 0, rb: 0 };
+        const pair = pairById.get(key);
+        if (!pair) throw Error(`Missing graph evidence for ${key}`);
+        if (q || r) {
+          pair.firstYear ??= state.model.snaps[i].year;
+          pair.lastYear = state.model.snaps[i].year;
+        }
         if (q > 0) pair.qa++;
         else if (q < 0) pair.qb++;
         if (r > 0) pair.ra++;
@@ -81,7 +92,7 @@ export function initGraph() {
         pairById.set(key, pair);
       }
     publishedById = new Map();
-    for (let i = 0; i <= index; i++) for (const row of state.model.snaps[i].drivers) publishedById.set(String(row.driverId), row.combined);
+    for (let i = 0; i <= index; i++) for (const row of state.model.snaps[i].drivers) publishedById.set(String(row.driverId), row.race);
     scoreById = new Map(snap.nodes.map((node) => [node[0], node]));
     view = { nodes: snap.nodes, grid: new Set(own.drivers.map((row) => String(row.driverId))), edges: [...pairById.values()] };
     if (hover && !scoreById.has(hover)) hover = null;
@@ -265,7 +276,7 @@ export function initGraph() {
       const response = await fetch('../data/teammate-graph.json', { cache: 'no-cache' });
       if (!response.ok) throw Error(`HTTP ${response.status}`);
       data = await response.json();
-      if (data.format !== 1 || data.sourceHash !== state.modelSourceHash) throw Error('Graph data does not match the ratings');
+      if (data.format !== 3 || data.sourceHash !== state.modelSourceHash) throw Error('Graph data does not match the ratings');
       sync();
     } catch (error) {
       detail.textContent = `The graph could not load: ${error.message}`;

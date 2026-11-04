@@ -216,7 +216,7 @@ export const INSIGHT_CARDS = [
     lead: (data) => {
       const eras = data.exchangeRate;
       const pairs = eras.map((era) => `${era.placesPerTenDriverPoints} vs ${era.placesPerTenCarPoints}`).join(', ');
-      return `A rating point of driver talent buys about as many finishing places as a point of car (${pairs} places per 10 points, driver against car, by era). The car wins on spread: the grid's cars differ by ${eras[0].carSpreadPlaces} to ${eras[1].carSpreadPlaces} places, its drivers by ${eras[0].driverSpreadPlaces} to ${eras[1].driverSpreadPlaces}.`;
+      return `Estimated finishing places per 10 rating points vary by era (${pairs}, driver against car). The car wins on spread: the grid's cars differ by ${eras[0].carSpreadPlaces} to ${eras[1].carSpreadPlaces} places, its drivers by ${eras[0].driverSpreadPlaces} to ${eras[1].driverSpreadPlaces}.`;
     },
     body: () =>
       legendHtml([
@@ -278,7 +278,7 @@ export const INSIGHT_CARDS = [
         const row = findCircuit(rows, label);
         return `${row.carWeight} car against ${row.driverWeight} driver`;
       };
-      return `Barcelona and Suzuka reward the car more than the ratings suggest (${pair('Barcelona')}; ${pair('Suzuka')}). Singapore, Mexico City and Imola reward the driver (${pair('Singapore')}; ${pair('Mexico City')}; ${pair('Imola')}). Monaco is not the driver's track people say it is.`;
+      return `Barcelona and Suzuka show larger car than driver weights (${pair('Barcelona')}; ${pair('Suzuka')}). Singapore, Mexico City and Imola show the reverse (${pair('Singapore')}; ${pair('Mexico City')}; ${pair('Imola')}). Monaco's weights are ${pair('Monaco')}.`;
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
@@ -429,7 +429,7 @@ export const INSIGHT_CARDS = [
     lead: (data) => {
       const hamilton = data.careerDriverAndCar.find((row) => row.name === 'Lewis Hamilton');
       const alonso = data.careerDriverAndCar.find((row) => row.name === 'Fernando Alonso');
-      return `Hamilton has driven the best cars of anyone with 60 or more starts (average car ${formatInteger(hamilton.carRating)} points above the field). Alonso's average car was only ${formatInteger(alonso.carRating)} points above it, with a driver rating of ${formatInteger(alonso.driverRating)}.`;
+      return `Hamilton's average car rating was ${formatInteger(hamilton.carRating)} points above the field. Alonso's average car was ${formatInteger(alonso.carRating)} points above it, with a driver rating of ${formatInteger(alonso.driverRating)}.`;
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
@@ -517,7 +517,7 @@ export const INSIGHT_CARDS = [
         ['var(--ink)', 'Package'],
       ]) + '<div class="insight-chart" data-chart="main"></div>',
     how: (data) =>
-      `Current published hybrid ratings after round ${data.dataThrough.round} of ${data.dataThrough.year}, relative to the field, sorted by package. Driver ratings are portable levels without the fit to the current car. The ratings panel shows approximate filter error bars; they do not include uncertainty from the complete blend.`,
+      `Current published race pace ratings after round ${data.dataThrough.round} of ${data.dataThrough.year}, relative to the field, sorted by package. Driver ratings are portable levels without the fit to the current car. The ratings panel shows approximate filter error bars; they do not include uncertainty from the complete blend.`,
     draw: (data, root) => {
       const items = [...data.currentGrid]
         .sort((a, b) => b.driverRating + b.carRating - (a.driverRating + a.carRating))
@@ -641,7 +641,8 @@ export const INSIGHT_CARDS = [
         .sort((a, b) => a.difference - b.difference)
         .slice(0, 4)
         .map((row) => surname(row.name));
-      return `Some drivers are consistently quicker over one lap than over a race distance (${saturday.join(', ')}) and some the reverse (${sunday.join(', ')}). The pattern is stable: a driver's even-numbered seasons predict their odd-numbered ones with a correlation of ${data.qualifyingVersusRace.splitHalfCorrelation}. Cars show it too: McLaren 2012 qualified far better than it raced.`;
+      const car = data.qualifyingVersusRace.cars.reduce((best, row) => (row.difference > best.difference ? row : best));
+      return `Some drivers have higher qualifying than race ratings (${saturday.join(', ')}) and some the reverse (${sunday.join(', ')}). A driver's even-numbered seasons predict their odd-numbered ones with a correlation of ${data.qualifyingVersusRace.splitHalfCorrelation}. For cars, ${car.team} ${car.year} has the largest qualifying-to-race difference in this comparison (+${formatOneDecimal(car.difference)} points).`;
     },
     body: () =>
       legendHtml([
@@ -715,7 +716,8 @@ export const INSIGHT_CARDS = [
       const career = data.ageing.careers['Michael Schumacher'];
       const ferrari = career.filter((season) => season.year >= 1996 && season.year <= 2006);
       const comeback = career.filter((season) => season.year >= 2010);
-      return `Drivers improve quickly into their mid-twenties, hold a plateau until about 29, then lose around 3 to 5 rating points a year. Schumacher's comeback at 41 to 43 averaged ${formatInteger(average(comeback.map((season) => season.rating)))} points above the field, compared with ${formatInteger(average(ferrari.map((season) => season.rating)))} in his Ferrari years.`;
+      const earlyThirties = data.ageing.yearlyChange.filter((row) => row.age >= 30 && row.age <= 33);
+      return `Drivers improve quickly into their mid-twenties, then change more slowly until about 29. From ages 30 to 33, the average annual change is ${formatSigned(average(earlyThirties.map((row) => row.mean)))} rating points. Schumacher's comeback at 41 to 43 averaged ${formatInteger(average(comeback.map((season) => season.rating)))} points above the field, compared with ${formatInteger(average(ferrari.map((season) => season.rating)))} in his Ferrari years.`;
     },
     body: () =>
       legendHtml([
@@ -775,14 +777,17 @@ export const INSIGHT_CARDS = [
         'Sebastian Vettel': 'var(--s5)',
         'Kimi Räikkönen': 'var(--s4)',
       };
+      const careerRatings = Object.values(data.ageing.careers).flatMap((seasons) => seasons.map((season) => season.rating));
+      const ratingLowerBound = Math.floor(Math.min(-10, ...careerRatings) / 25) * 25;
+      const ratingUpperBound = Math.ceil(Math.max(90, ...careerRatings) / 25) * 25;
       mountChart(
         chartIn(root, 'careers'),
         (svg, width, height) =>
           drawLines(svg, width, height, {
             xDomain: [18, 46],
-            yDomain: [-10, 90],
+            yDomain: [ratingLowerBound, ratingUpperBound],
             xTicks: [20, 25, 30, 35, 40, 45],
-            yTicks: [0, 25, 50, 75],
+            yTicks: Array.from({ length: (ratingUpperBound - ratingLowerBound) / 25 + 1 }, (_, index) => ratingLowerBound + index * 25),
             xTitle: 'age',
             series: Object.entries(data.ageing.careers).map(([name, seasons]) => ({
               name,
@@ -804,7 +809,7 @@ export const INSIGHT_CARDS = [
     label: 'Home advantage',
     lead: (data) => {
       const { points, low, high } = data.homeAdvantage;
-      return `Racing at home is worth ${formatSigned(points)} rating points, with a 90% range from ${formatSigned(low)} to ${formatSigned(high)}. That is nothing: 10 points would be an 8 percentage-point edge in a duel, and the data rule out anything much above +6 points.`;
+      return `Racing at home is worth ${formatSigned(points)} rating points, with a 90% range from ${formatSigned(low)} to ${formatSigned(high)}. The interval includes zero. For comparison, 10 points would be an 8 percentage-point edge in a duel.`;
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: (data) =>
@@ -872,7 +877,7 @@ export const INSIGHT_CARDS = [
         ['var(--ink)', 'Largest single-weekend lead'],
       ]) + '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
-      'At every weekend the gap between the highest- and second-highest-rated car (combined race and qualifying rating, after that weekend), averaged over the season. 75 points is 10:1 odds in a head-to-head between the cars.',
+      'At every weekend the gap between the highest- and second-highest-rated car (race pace rating after that weekend), averaged over the season. 75 points is 10:1 odds in a head-to-head between the cars.',
     draw: (data, root) => {
       const rows = data.dominance;
       mountChart(
@@ -942,7 +947,7 @@ export const INSIGHT_CARDS = [
       const rows = data.winterOrder.correlations;
       const lowest = rows.reduce((best, row) => (row.correlation < best.correlation ? row : best));
       const ruleChange = rows.find((row) => row.year === 2022);
-      return `The order of the cars at the end of one season usually predicts the next almost perfectly. The exception is ${lowest.year} (rank correlation ${lowest.correlation}): Brawn and Red Bull rewrote the order. The 2022 rule change barely did (${ruleChange.correlation}).`;
+      return `The order of the cars at the end of one season often resembles the next. The lowest rank correlation is ${lowest.year} (${lowest.correlation}); for the 2022 rule change it is ${ruleChange.correlation}.`;
     },
     body: () =>
       '<div class="insight-chart" data-chart="main"></div><div class="insight-grid"><div><h4>Biggest falls over a winter (points above the field, before → after)</h4><div data-chart="falls"></div></div><div><h4>Biggest rises</h4><div data-chart="rises"></div></div></div>',
@@ -987,7 +992,7 @@ export const INSIGHT_CARDS = [
     lead: (data) => {
       const slide = data.development.slides[0];
       const climb = data.development.climbs[0];
-      return `${slide.team} lost ${formatInteger(-slide.change)} rating points over the ${slide.year} season, the largest in-season slide. The biggest climb was ${climb.team} ${climb.year} (+${formatInteger(climb.change)}); McLaren 2023 (+${formatInteger(data.development.mclaren2023)}) is the standout among established front-runners.`;
+      return `${slide.team} lost ${formatInteger(-slide.change)} rating points over the ${slide.year} season, the largest in-season slide. The biggest climb was ${climb.team} ${climb.year} (+${formatInteger(climb.change)}); McLaren rose ${formatInteger(data.development.mclaren2023)} points in 2023.`;
     },
     body: () =>
       legendHtml([
@@ -998,7 +1003,7 @@ export const INSIGHT_CARDS = [
       ]) +
       '<div class="insight-chart" data-chart="main"></div><div class="insight-grid"><div><h4>Largest in-season slides</h4><div data-chart="slides"></div></div><div><h4>Largest in-season climbs</h4><div data-chart="climbs"></div></div></div>',
     how: () =>
-      'Car combined rating, relative to the field, after each round of 2024. Tables compare the average of rounds 3 to 5 with the last three rounds, for cars with 12 or more races. Early-season values rest on little data, which is why the first two rounds are skipped.',
+      'Car race pace rating, relative to the field, after each round of 2024. Tables compare the average of rounds 3 to 5 with the last three rounds, for cars with 12 or more races. Early-season values rest on little data, which is why the first two rounds are skipped.',
     draw: (data, root) => {
       const colors = { 'Red Bull': 'var(--s2)', McLaren: 'var(--s1)', Ferrari: 'var(--s5)', Mercedes: 'var(--s3)' };
       mountChart(
@@ -1042,7 +1047,7 @@ export const INSIGHT_CARDS = [
         .filter((row) => row.year < data.dataThrough.year)
         .reduce((best, row) => (row.percent < best.percent ? row : best));
       const latest = rows.at(-1);
-      return `In ${peak.year}, ${formatInteger(peak.percent)}% of starters retired with a mechanical failure; in ${lowest.year}, ${formatInteger(lowest.percent)}%. New engine rules reset the clock: ${formatInteger(latest.percent)}% in ${latest.year}, levels last seen around 2017.`;
+      return `In ${peak.year}, ${formatInteger(peak.percent)}% of starters retired with a mechanical failure; in ${lowest.year}, ${formatInteger(lowest.percent)}%. The latest season has ${formatInteger(latest.percent)}% in ${latest.year}, a level similar to 2017.`;
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
@@ -1083,7 +1088,7 @@ export const INSIGHT_CARDS = [
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
-      'Each dot is a team-season with at least 30 starts. Vertical axis: mechanical retirements per hundred starts, minus the rate of the whole field in the same season, so that the long improvement in reliability does not hide the comparison. Horizontal axis: the average combined rating of the car.',
+      'Each dot is a team-season with at least 30 starts. Vertical axis: mechanical retirements per hundred starts, minus the rate of the whole field in the same season, so that the long improvement in reliability does not hide the comparison. Horizontal axis: the average race pace rating of the car.',
     draw: (data, root) => {
       const rows = data.fastButFragile;
       const notable = new Set(
@@ -1136,7 +1141,7 @@ export const INSIGHT_CARDS = [
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
-      "Before each race, each entry's strength is its driver plus car combined rating from the previous weekend; win probability is the logistic (softmax) share across the field (Plackett 1975). It ignores retirements, which makes favourites look a little stronger than they were, so the true odds of an upset are somewhat shorter than shown.",
+      "Before each race, each entry's strength is its driver plus car race pace rating from the previous weekend; win probability is the logistic (softmax) share across the field (Plackett 1975). It ignores retirements, which makes favourites look a little stronger than they were, so the true odds of an upset are somewhat shorter than shown.",
     draw: (data, root) => {
       const items = data.upsets.map((row) => ({
         label: `${row.year} ${row.grandPrix}, ${surname(row.driver)}`,

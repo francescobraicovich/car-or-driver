@@ -1,10 +1,9 @@
-import { FormFeatures, withoutForm } from './form.js';
-import { ELO_HEADS } from '../elo-forecast-heads.js';
+import { withoutCarForm, withoutDriverForm, withoutForm } from './form.js';
+import { createFormFeatures } from './form-method.js';
 import { scoreHead, selectHeads } from './inference.js';
 import { gapToP, pToRating } from '../math.js';
 import { headToHeadWithHazard } from '../hazard.js';
 import { isHomeRace } from '../geography.js';
-import { STATE_SPACE_HEADS } from '../state-space/forecast-heads.js';
 import { levelsFromLatest, ssBaseline, ssGap, ssPace } from '../state-space/inputs.js';
 
 /**
@@ -44,9 +43,10 @@ function ssLevelMaps(model) {
 export function prepareForecast(model, { circuitId = '', qrows = [], year, round } = {}) {
   const s = forecastSnap(model);
   if (!s) return null;
+  if (!model.forecastState?.heads) throw Error('Forecast definitions missing; rebuild the model file.');
   const params = model.params;
   const rows = s.drivers.map((d) => ({ driverId: d.driverId, constructorId: d.constructorId, grid: 0 }));
-  const form = new FormFeatures(null);
+  const form = createFormFeatures(null, model.forecastState.form.method ?? 'legacy');
   form.importState(model.forecastState.form);
   const info = { ...s, year: year ?? s.year, round: round ?? s.round + 1, circuitId };
   const stateSpace = isStateSpace(model);
@@ -59,7 +59,7 @@ export function prepareForecast(model, { circuitId = '', qrows = [], year, round
         QC: new Map(s.cars.map((c) => [c.constructorId, c.qual])),
       };
   form.beforeWeekend({ info, rows, qrows, ...levels, raceSeen: model.forecastState.seen });
-  const heads = selectHeads(stateSpace ? STATE_SPACE_HEADS : ELO_HEADS, info.year);
+  const heads = selectHeads(model.forecastState.heads, info.year);
 
   return function forecast(idA, idB, { L = 60, gridA, gridB } = {}) {
     const a = s.drivers.find((d) => d.driverId === idA);
@@ -96,6 +96,8 @@ export function prepareForecast(model, { circuitId = '', qrows = [], year, round
     const hasGrid = Number.isFinite(gridA) && Number.isFinite(gridB) && gridA > 0 && gridB > 0;
     const mode = qrows.length >= 2 && hasGrid ? 'post' : hasGrid ? 'grid' : 'pre';
     const p = heads ? scoreHead(heads[mode], f) : prior;
+    const driverFormOff = heads ? scoreHead(heads[mode], withoutDriverForm(f)) : pPace;
+    const carFormOff = heads ? scoreHead(heads[mode], withoutCarForm(f)) : pPace;
     return {
       snap: s,
       a,
@@ -109,10 +111,15 @@ export function prepareForecast(model, { circuitId = '', qrows = [], year, round
       L,
       forecastMode: mode,
       edge: pToRating(p, params.scale) - 1000,
-      // How the headline is built up: ratings alone, then the fitted model with
-      // recent form switched off, then the full forecast.
+      // The breakdown separates ratings, all-form-off, driver-form-off, and full forecasts.
       gap: diff,
-      breakdown: { ratings: pPace, calibrated: heads ? scoreHead(heads[mode], withoutForm(f)) : pPace, full: p },
+      breakdown: {
+        ratings: pPace,
+        calibrated: heads ? scoreHead(heads[mode], withoutForm(f)) : pPace,
+        driverFormOff,
+        carFormOff,
+        full: p,
+      },
       gridNote: ` · ${mode === 'post' ? 'full qualifying evidence' : mode === 'grid' ? 'grid-only forecast' : 'Thursday forecast'}; predicts the pace/finishing-order benchmark, conditional on its coverage`,
     };
   };

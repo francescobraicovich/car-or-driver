@@ -1,0 +1,116 @@
+{
+  "source": "Polymarket Gamma API",
+  "requestUrl": "https://gamma-api.polymarket.com/events/slug/f1-dutch-grand-prix-winner-2026-08-23",
+  "retrievedAt": "2026-11-02T18:17:13.212922+00:00",
+  "originalResponseSha256": "f9269c7f4b962468132efdc86a74bebd23624604822d85934bdcec68dcd69eff",
+  "note": "Current retrospective settlement metadata; original historical tick, minimums and timestamps unverified.",
+  "event": {
+    "id": "868800",
+    "slug": "f1-dutch-grand-prix-winner-2026-08-23",
+    "closed": true,
+    "updatedAt": "2026-08-25T00:08:01.50391Z",
+    "negRisk": true
+  },
+  "markets": [
+    {
+      "slug": "f1-dutch-grand-prix-winner-leclerc-2026-08-23",
+      "conditionId": "0x4face88ac93c15df1036e3709d52b7d1ffec391ff5940ed7a09417019fa8248e",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "31263743301627381333570992450287951758339293131802704535103858760348714098729",
+        "68476514758524711926311197576159085808329838238377412530059063357335125368335"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-08-24 01:29:12+00",
+      "creationTime": "2026-08-18T03:35:01.639561Z",
+      "startDate": "2026-08-18T03:35:39Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-dutch-grand-prix-winner-norris-2026-08-23",
+      "conditionId": "0xa927be9f2b123bc602c336738ea2fbf4730a6a8ef2d2676f50d967e12d0c163c",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "1",
+        "0"
+      ],
+      "clobTokenIds": [
+        "61632483259791156388118428310258844217648412995334767231217680481104935845277",
+        "89444855244294640837648181259220918872223826010387778280899149919605832340866"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-08-24 01:31:40+00",
+      "creationTime": "2026-08-18T03:35:02.377174Z",
+      "startDate": "2026-08-18T03:35:39Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-dutch-grand-prix-winner-hamilton-2026-08-23",
+      "conditionId": "0xc7bf80a13d95230833ed5fe12398197aa68441bcfcd729d6a153fb0a3129414d",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "68070681267453227644979843063596962102048622706439430091863269060786263117307",
+        "96115249820826156316227134083020597606108552868173572836131346750650626111466"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-08-24 01:28:13+00",
+      "creationTime": "2026-08-18T03:35:05.104525Z",
+      "startDate": "2026-08-18T03:35:39Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    },
+    {
+      "slug": "f1-dutch-grand-prix-winner-piastri-2026-08-23",
+      "conditionId": "0x51ee5318c0603f554df96e1f2889f4e24a7835bd2d22363d2c57c42451e5fecb",
+      "outcomes": [
+        "Yes",
+        "No"
+      ],
+      "outcomePrices": [
+        "0",
+        "1"
+      ],
+      "clobTokenIds": [
+        "7252743452994692813116289796445450724484256296641659671065342572529017089122",
+        "1916749042567035630543888635667334388470093432005465989827960061426448897449"
+      ],
+      "closed": true,
+      "umaResolutionStatus": "resolved",
+      "closedTime": "2026-08-24 01:28:13+00",
+      "creationTime": "2026-08-18T03:35:05.932505Z",
+      "startDate": "2026-08-18T03:35:39Z",
+      "currentOrderPriceMinTickSize": 0.001,
+      "currentOrderMinSize": 5,
+      "currentFeesEnabled": true,
+      "negRisk": true
+    }
+  ]
+}

@@ -1,0 +1,342 @@
+{
+  "classification": "conditional retrospective sensitivity, not a validated historical backtest",
+  "assumptions": [
+    "model inputs and fitted parameters are retrospective and their historical publication vintage is unverified",
+    "Gamma closedTime is used as an assumed redemption time; actual redeemability at that time is unverified",
+    "source receipt order is used despite exchange timestamp reversals and incomplete capture",
+    "initial snapshot timestamp ties are excluded and may contain trades",
+    "maker fees and rebates are zero; liquidation uses a category-level taker fee scenario not verified for each order",
+    "one-hour window, tick size, minimum size, queue, cancel latency, inventory and capital are researcher assumptions",
+    "a print only fills an order at the exact price; trade-through adverse fills can be omitted",
+    "no conversion between negative-risk markets, dynamic tick changes or liquidity rewards"
+  ],
+  "parameters": {
+    "initialCapital": 100,
+    "orderSize": 5,
+    "minimumOrderSize": 5,
+    "maxInventory": 10,
+    "tickSize": 0.01,
+    "latencyMs": 1000,
+    "maxBookAgeMs": 60000,
+    "maxSourceAgeMs": 60000,
+    "minimumEdgeTicks": 1,
+    "inventorySkewTicks": 0.1,
+    "allowUnverifiedData": true,
+    "allowSourceTimestampDisorder": true
+  },
+  "races": [
+    {
+      "race": "austrian",
+      "strictRejection": "Verified coverage is required; conditional sensitivity requires explicit opt-in",
+      "tradingWindowStart": 1782396000000,
+      "tradingWindowEnd": 1782399600000,
+      "firstSnapshotTimes": [
+        {
+          "driver": "Lando Norris",
+          "timestamp": 1782396306967
+        },
+        {
+          "driver": "Lewis Hamilton",
+          "timestamp": 1782396359482
+        }
+      ],
+      "normalizedEvents": 1873,
+      "normalizedTradeLegs": 6,
+      "observedTransactionCount": 5,
+      "categoryFeeScenario": 0.03,
+      "officialClosedTimeAssumedRedeemable": 1782674330000,
+      "raceEndBoundEvidence": "https://www.formula1.com/en/latest/article/russell-seals-victory-in-thrilling-austrian-grand-prix-ahead-of-verstappen-and-antonelli.5kjw8LmvWRcsaFgjCr8aWw",
+      "provenance": {
+        "pmxt": [
+          {
+            "url": "https://r2v2.pmxt.dev/polymarket_orderbook_2026-06-25T14.parquet",
+            "sha256": "b14013f8cfb4addf4865667e7ec2d15a27b299e744d3cb6cdf1fed195ca670f5"
+          },
+          {
+            "url": "https://r2v2.pmxt.dev/polymarket_orderbook_2026-06-25T15.parquet",
+            "sha256": "50a97585f2de6db09fd2b58b0b4df3bbdf4279ee99e22766e7343ab972f9a684"
+          }
+        ],
+        "historicalCoverageVerified": false,
+        "forecastDescription": "Retrospective uncalibrated pace-only proxy, assuming the previous race roster and team mapping. See forecast README.",
+        "forecastAsOfAssumed": "2026-06-25T14:00:00.000Z",
+        "dataThroughAssumed": 1782396000000,
+        "historicalForecastVintageVerified": false,
+        "officialRetrieval": "2026-11-02T16:35:13Z",
+        "officialResponseHash": "abcd4d1dfb1d9eab90c236edf40f41acaf2d3076df4fd34df01e245647c9b1e0",
+        "droppedAtInitialTimestamp": {
+          "price_change": 12,
+          "last_trade_price": 1,
+          "book": 1
+        },
+        "warning": "Retrospective roster-normalized forecast with no Other probability, unverified capture and maker-level timestamps inferred from trade prints; not a validated backtest."
+      },
+      "liquidationSensitivity": {
+        "independentStartingCapital": 100,
+        "race": "Austrian Grand Prix",
+        "dataClassification": "conditional sensitivity: unverified coverage, source order or crossed book",
+        "warning": "Simulation only: execution, queue, model provenance, fee eligibility and historical completeness are not established by this program.",
+        "executionAssumptions": [
+          "one second or configured submission latency",
+          "immediate cancellation and requoting",
+          "maker fees and rebates zero",
+          "single YES book per market; no negative-risk conversion"
+        ],
+        "coverageAttested": false,
+        "sourceTimestampOrderEnforced": false,
+        "sourceTimestampReversals": 328,
+        "worstSourceTimestampReversalMs": 424,
+        "preactivationTradeEvents": 0,
+        "crossedBookIntervals": [],
+        "exitMode": "liquidation",
+        "complete": true,
+        "initialCapital": 100,
+        "cashBeforeSettlement": 89.923435,
+        "settlementCash": 0,
+        "profit": -0.07656500000000221,
+        "fees": 0.026565,
+        "fills": [
+          {
+            "market": "0xecb91145f7ed41128c538bd4828072c8e3f47f11253f80b252123c6890a3a94f",
+            "timestamp": 1782396994990,
+            "side": "sell",
+            "price": 0.22,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x024d44b559d8df60dd7635a9d0dc93664f45faf48a2304cfc11bdae020cd1730|BUY|0.2200",
+            "transactionHash": "0x024d44b559d8df60dd7635a9d0dc93664f45faf48a2304cfc11bdae020cd1730"
+          },
+          {
+            "market": "0xecb91145f7ed41128c538bd4828072c8e3f47f11253f80b252123c6890a3a94f",
+            "timestamp": 1782399600000,
+            "side": "buy",
+            "price": 0.23,
+            "quantity": 5,
+            "fee": 0.026565,
+            "kind": "liquidation"
+          }
+        ],
+        "markets": [
+          {
+            "id": "0x4660332081e4aca6fe2456ceb6370f49366257ee43ed138cdb14ced55158a3b5",
+            "driver": "Lando Norris",
+            "yes": 5,
+            "no": 5,
+            "inventory": 0
+          },
+          {
+            "id": "0xecb91145f7ed41128c538bd4828072c8e3f47f11253f80b252123c6890a3a94f",
+            "driver": "Lewis Hamilton",
+            "yes": 5,
+            "no": 5,
+            "inventory": 0
+          }
+        ]
+      }
+    },
+    {
+      "race": "british",
+      "strictRejection": "Verified coverage is required; conditional sensitivity requires explicit opt-in",
+      "tradingWindowStart": 1783000800000,
+      "tradingWindowEnd": 1783004400000,
+      "firstSnapshotTimes": [
+        {
+          "driver": "Lando Norris",
+          "timestamp": 1783001265405
+        },
+        {
+          "driver": "Lewis Hamilton",
+          "timestamp": 1783001056772
+        }
+      ],
+      "normalizedEvents": 1284,
+      "normalizedTradeLegs": 1,
+      "observedTransactionCount": 1,
+      "categoryFeeScenario": 0.03,
+      "officialClosedTimeAssumedRedeemable": 1783288135000,
+      "raceEndBoundEvidence": "https://www.formula1.com/en/latest/article/leclerc-wins-dramatic-british-grand-prix.3bGl6laB38GIr1PfxJTNmY",
+      "provenance": {
+        "pmxt": [
+          {
+            "url": "https://r2v2.pmxt.dev/polymarket_orderbook_2026-07-02T14.parquet",
+            "sha256": "d614dd63d78aad3c7ffad86d66b6d14435cb0970a79ae41875c9619a529d905e"
+          },
+          {
+            "url": "https://r2v2.pmxt.dev/polymarket_orderbook_2026-07-02T15.parquet",
+            "sha256": "9fb63697d8c58448c21870f539af189d5613c42cb55f3a68f9c6b7a64291bb8d"
+          }
+        ],
+        "historicalCoverageVerified": false,
+        "forecastDescription": "Retrospective uncalibrated pace-only proxy, assuming the previous race roster and team mapping. See forecast README.",
+        "forecastAsOfAssumed": "2026-07-02T14:00:00.000Z",
+        "dataThroughAssumed": 1783000800000,
+        "historicalForecastVintageVerified": false,
+        "officialRetrieval": "2026-11-02T16:44:14Z",
+        "officialResponseHash": "5deec9c9c88078c18600935afde2c82a2d7410af0770344090da319e9fb4ec64",
+        "droppedAtInitialTimestamp": {
+          "price_change": 2,
+          "book": 1
+        },
+        "warning": "Retrospective roster-normalized forecast with no Other probability, unverified capture and maker-level timestamps inferred from trade prints; not a validated backtest."
+      },
+      "liquidationSensitivity": {
+        "independentStartingCapital": 100,
+        "race": "British Grand Prix",
+        "dataClassification": "conditional sensitivity: unverified coverage, source order or crossed book",
+        "warning": "Simulation only: execution, queue, model provenance, fee eligibility and historical completeness are not established by this program.",
+        "executionAssumptions": [
+          "one second or configured submission latency",
+          "immediate cancellation and requoting",
+          "maker fees and rebates zero",
+          "single YES book per market; no negative-risk conversion"
+        ],
+        "coverageAttested": false,
+        "sourceTimestampOrderEnforced": false,
+        "sourceTimestampReversals": 133,
+        "worstSourceTimestampReversalMs": 1187,
+        "preactivationTradeEvents": 0,
+        "crossedBookIntervals": [],
+        "exitMode": "liquidation",
+        "complete": true,
+        "initialCapital": 100,
+        "cashBeforeSettlement": 90,
+        "settlementCash": 0,
+        "profit": 0,
+        "fees": 0,
+        "fills": [],
+        "markets": [
+          {
+            "id": "0x1db5a5491de96ac6ca50275331426e6df630aed16a54757a2d8ea46c07a4cf66",
+            "driver": "Lando Norris",
+            "yes": 5,
+            "no": 5,
+            "inventory": 0
+          },
+          {
+            "id": "0x83edde07b222f24d64b6afb1009c3982835294a3f349ae8c07c784b9ebfeeb93",
+            "driver": "Lewis Hamilton",
+            "yes": 5,
+            "no": 5,
+            "inventory": 0
+          }
+        ]
+      }
+    }
+  ],
+  "settlementSeries": {
+    "dataClassification": "conditional sensitivity: unverified coverage",
+    "warning": "Non-overlapping races only; settlements, fee eligibility, inputs and execution remain caller-verified assumptions.",
+    "initialCapital": 100,
+    "finalCapital": 101.1,
+    "profit": 1.0999999999999943,
+    "races": [
+      {
+        "tradingStart": 1782396000000,
+        "raceStart": 1782651600000,
+        "raceEnd": 1782658980000,
+        "settledAt": 1782674330000,
+        "capitalBefore": 100,
+        "capitalAfter": 101.1,
+        "race": "Austrian Grand Prix",
+        "dataClassification": "conditional sensitivity: unverified coverage, source order or crossed book",
+        "warning": "Simulation only: execution, queue, model provenance, fee eligibility and historical completeness are not established by this program.",
+        "executionAssumptions": [
+          "one second or configured submission latency",
+          "immediate cancellation and requoting",
+          "maker fees and rebates zero",
+          "single YES book per market; no negative-risk conversion"
+        ],
+        "coverageAttested": false,
+        "sourceTimestampOrderEnforced": false,
+        "sourceTimestampReversals": 328,
+        "worstSourceTimestampReversalMs": 424,
+        "preactivationTradeEvents": 0,
+        "crossedBookIntervals": [],
+        "exitMode": "settlement",
+        "complete": true,
+        "initialCapital": 100,
+        "cashBeforeSettlement": 91.1,
+        "settlementCash": 10,
+        "profit": 1.0999999999999943,
+        "fees": 0,
+        "fills": [
+          {
+            "market": "0xecb91145f7ed41128c538bd4828072c8e3f47f11253f80b252123c6890a3a94f",
+            "timestamp": 1782396994990,
+            "side": "sell",
+            "price": 0.22,
+            "quantity": 5,
+            "fee": 0,
+            "kind": "maker",
+            "eventId": "0x024d44b559d8df60dd7635a9d0dc93664f45faf48a2304cfc11bdae020cd1730|BUY|0.2200",
+            "transactionHash": "0x024d44b559d8df60dd7635a9d0dc93664f45faf48a2304cfc11bdae020cd1730"
+          }
+        ],
+        "markets": [
+          {
+            "id": "0x4660332081e4aca6fe2456ceb6370f49366257ee43ed138cdb14ced55158a3b5",
+            "driver": "Lando Norris",
+            "yes": 5,
+            "no": 5,
+            "inventory": 0
+          },
+          {
+            "id": "0xecb91145f7ed41128c538bd4828072c8e3f47f11253f80b252123c6890a3a94f",
+            "driver": "Lewis Hamilton",
+            "yes": 0,
+            "no": 5,
+            "inventory": -5
+          }
+        ]
+      },
+      {
+        "tradingStart": 1783000800000,
+        "raceStart": 1783260000000,
+        "raceEnd": 1783266780000,
+        "settledAt": 1783288135000,
+        "capitalBefore": 101.1,
+        "capitalAfter": 101.1,
+        "race": "British Grand Prix",
+        "dataClassification": "conditional sensitivity: unverified coverage, source order or crossed book",
+        "warning": "Simulation only: execution, queue, model provenance, fee eligibility and historical completeness are not established by this program.",
+        "executionAssumptions": [
+          "one second or configured submission latency",
+          "immediate cancellation and requoting",
+          "maker fees and rebates zero",
+          "single YES book per market; no negative-risk conversion"
+        ],
+        "coverageAttested": false,
+        "sourceTimestampOrderEnforced": false,
+        "sourceTimestampReversals": 133,
+        "worstSourceTimestampReversalMs": 1187,
+        "preactivationTradeEvents": 0,
+        "crossedBookIntervals": [],
+        "exitMode": "settlement",
+        "complete": true,
+        "initialCapital": 101.1,
+        "cashBeforeSettlement": 91.1,
+        "settlementCash": 10,
+        "profit": 0,
+        "fees": 0,
+        "fills": [],
+        "markets": [
+          {
+            "id": "0x1db5a5491de96ac6ca50275331426e6df630aed16a54757a2d8ea46c07a4cf66",
+            "driver": "Lando Norris",
+            "yes": 5,
+            "no": 5,
+            "inventory": 0
+          },
+          {
+            "id": "0x83edde07b222f24d64b6afb1009c3982835294a3f349ae8c07c784b9ebfeeb93",
+            "driver": "Lewis Hamilton",
+            "yes": 5,
+            "no": 5,
+            "inventory": 0
+          }
+        ]
+      }
+    ]
+  }
+}
