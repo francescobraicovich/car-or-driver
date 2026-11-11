@@ -1,4 +1,4 @@
-// Realism check of the synthetic worlds (research/eval, docs/evaluation.md "Simulator v2"): the shipped filter on a world against the
+// Realism check of the synthetic worlds (docs/backtesting.md): the shipped filter on a world against the
 // real data, by observation source, weather and window, and the likelihood weight that forecasts the world best.
 //
 //   node packages/research/node/simulation-check.mjs [--version 2] [--seeds 3] [--last 2011] [--set key=value ...] [--tau]

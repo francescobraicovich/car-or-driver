@@ -1,4 +1,4 @@
-// How the forecast heads behave on the metric suite (docs/metrics.md, section "forecast layer"): the ratings-alone probability, the Thursday head and the race-day
+// How the forecast heads behave on the metric suite (docs/backtesting.md): the ratings-alone probability, the Thursday head and the race-day
 // head (and the qualifying head) of the SHIPPED model, per observation, scored by window and pair type, calibrated, and on drivers in a new car.
 //   node packages/research/node/heads-metrics.mjs [--holdout]   > research/evaluation/heads-metrics.txt
 // Windows through 2015 only unless --holdout (2016+ is then a labelled second look).

@@ -1,6 +1,6 @@
 # Architecture and maintenance
 
-The website is static HTML, CSS and native JavaScript modules. Node programs generate its data before publication. The browser never rebuilds the rating model.
+The website is static HTML, CSS and native JavaScript modules. Node programs prepare observations and invoke the Python numerical model before publication. The browser never rebuilds the rating model.
 
 ## Website modules
 
@@ -15,21 +15,26 @@ Interface modules live in `site/js/`. Related modules share a prefix so they sta
 | Teammate graph | `graph-view.js` |
 | Race replay | `track-view.js`, `track-geometry.js`, `race-replay.js`, `speed-profile.js` |
 | Insights | `insights-view.js`, `insights-cards.js`, `insights-charts.js`, generated `insights-data.js` |
-| Methodology | `methodology-view.js`, `methodology-content.js`, `methodology-diagram.js`, `methodology-figures.js`, `methodology-interactives.js`, `backtest-figures.js` |
+| Methodology | `methodology-view.js`, `methodology-content.js` |
 | Legal pages and identity | `legal-view.js`, `legal-content.js`, `site-identity.js` |
 | Shared charts and helpers | `charts.js`, `chart-renderer.js`, `chart-math.js`, `utils.js` |
 
 `site/css/styles.css` defines shared controls, chart and prose styles; `stage.css` defines the front page, panels and slide decks. Active artwork and circuit outlines are in `site/assets/`. Fonts and KaTeX are served locally from `site/vendor/`, with their licences.
 
+## Design and accessibility
+
+The site uses a consistent eight-colour categorical palette for compared entries, paired with labels and other visual cues. Controls are designed for keyboard and touch as well as pointer input; motion should respect reduced-motion preferences. Fonts and mathematical rendering are local, and the site does not use browser storage or third-party requests. Preserve these properties when changing the interface and verify them with the browser and publication checks.
+
 ## Model boundaries
 
-- `packages/core/src/state-space/` builds observations and filters race and qualifying evidence.
-- `packages/core/src/hybrid/` applies the published ranking learner and fixed blend; `presets/` holds the settings.
-- `packages/core/src/forecast/` prepares matchups, recent form and what-if forecasts.
-- Shared core modules handle CSV parsing, datasets, backtests, car lineage, retirements and serialization. The Elo benchmark remains necessary for its circuit and wet-weather tracks and for measured comparisons.
+- `packages/core/node/` prepares unified evidence and assembles published snapshots; it reuses the observation and hazard collection in `src/state-space/exam.js`.
+- `packages/core/python/` is the shared production/research numerical implementation, calibration and selected settings. `src/unified/` projects the saved joint posterior into browser forecasts.
+- `src/state-space/`, `src/hybrid/` and the older graph solvers remain archived research references; production does not run their filters, rating blends or forecast heads.
+- `packages/core/src/forecast/moments.js` resolves dated driver and car selections. The other modules in `src/forecast/` retain archived forecasts and dispatch unified models to `src/unified/`.
+- Shared core modules handle CSV parsing, datasets, backtests, car lineage, retirements and serialization. Production forecasts optionally condition on a known grid through a two-coefficient prediction layer; they have no circuit, weather or recent-form adjustment.
 - `packages/eval/src/` evaluates models without interface dependencies. `packages/research/` supplies reproducible analysis and fitting programs; [research/](../research/README.md) contains their evidence.
 
-Core code must run in Node and the browser and cannot import interface or research code. `test-layering.mjs` enforces that boundary.
+Core code cannot import interface or research code. Browser-reachable JavaScript lives in `src/`; build-only Node and Python code lives in its separate directories. `test-layering.mjs` enforces the interface boundary.
 
 ## Maintenance tasks
 
@@ -47,6 +52,8 @@ The Grand Prix workflow fetches into ignored `tmp/`, validates complete new week
 
 ## Verification
 
-`npm test` runs the Node suite, including golden output checks, forecast parity, model/data freshness, source imports, documentation links and deployment contents. `npm run lint` checks JavaScript and formatting. `npm run test:browser` checks the interface with headless Chrome; pass a Chrome path after `--` or set `CHROME` if needed.
+`npm test` runs the Node suite and Python numerical tests, including golden output checks, forecast parity, model/data freshness, source imports, documentation links and deployment contents. `npm run lint` checks JavaScript and formatting. `npm run test:browser` checks the interface with headless Chrome; pass a Chrome path after `--` or set `CHROME` if needed.
 
 `npm run check:publication` checks configured identity and publication requirements. `tools/check-live-site.mjs` checks response headers and published resources after deployment. Generated `dist/`, temporary analysis files and dependencies are ignored by Git.
+
+Model format 3 carries the three ratings, dated overall covariance and calibration bundles. The latest file omits covariance and forecast state for a small initial download. Python is required at build and test time; the published site remains static.

@@ -1,4 +1,4 @@
-// The realism table of docs/evaluation.md ("Simulator v2"): the shipped filter on v2 worlds against the real data, mean and range over seeds.
+// The realism table of packages/research/node/simulation-check.mjs: the shipped filter on v2 worlds against the real data, mean and range over seeds.
 //
 //   node packages/research/node/simulation-table.mjs [--seeds 6] [--tau-seeds 4] [--last 2011] > table.md
 //

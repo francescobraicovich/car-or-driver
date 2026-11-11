@@ -41,7 +41,19 @@ async function buildPages() {
 
   await rm(DIST, { recursive: true, force: true });
   await mkdir(DIST, { recursive: true });
-  await cp(join(ROOT, 'site'), join(DIST, 'site'), { recursive: true });
+  const referenceFiles = [
+    'assets/f1-driver',
+    'assets/f1-mercedes-car',
+    'assets/models',
+    'js/stage-model-assets.js',
+    'js/stage-model-motion.js',
+    'js/stage-model-view.js',
+  ].map((name) => join(ROOT, 'site', name));
+  await cp(join(ROOT, 'site'), join(DIST, 'site'), {
+    recursive: true,
+    // Keep the archived 3D experiment available locally, outside the restored website.
+    filter: (path) => !referenceFiles.includes(path),
+  });
   const entries = scriptEntries(await readFile(join(ROOT, 'site/index.html'), 'utf8'));
   const modules = await browserModules(ROOT, entries);
   for (const path of modules) {
@@ -52,7 +64,7 @@ async function buildPages() {
     await cp(path, destination);
   }
   await mkdir(join(DIST, 'data'));
-  for (const name of ['model-latest.json', 'model.json', 'teammate-graph.json'])
+  for (const name of ['model-latest.json', 'model.json', 'teammate-graph.json', 'rating-reference.json'])
     await cp(join(ROOT, 'data', name), join(DIST, 'data', name)); // the CSVs the model was computed from are not published
   await cp(join(ROOT, 'data/race-laps'), join(DIST, 'data/race-laps'), { recursive: true }); // the laps of each season, for the racing dots
   await writeFile(

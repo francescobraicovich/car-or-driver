@@ -14,7 +14,7 @@ The scheduled `Refresh Grand Prix data` GitHub Action checks those mirrors daily
 
 After a refresh, in this order:
 
-1. `npm run build:data` rebuilds `model-latest.json`, `model.json`, and the dated teammate network in `teammate-graph.json` (about 20 seconds). The ratings files record a fingerprint of the data and `packages/core/src`; the graph file carries the same fingerprint and `tests/test-teammate-graph.mjs` compares it with a fresh forward-only build.
+1. Install `requirements-model.txt`, then run `npm run build:data` to rebuild the unified ratings in `model-latest.json` and `model.json`, the dated teammate network in `teammate-graph.json`, the display references in `rating-reference.json`, and the replay assets. The reference supplement is derived from the saved model with a lagged 20-weekend half-life; `node tools/build-rating-reference.mjs` can rebuild it without fitting or changing the model. The ratings files record a fingerprint of the data and JavaScript, Python and settings under `packages/core`; the graph file carries the same fingerprint and `tests/test-teammate-graph.mjs` compares it with a fresh forward-only build.
 2. `npm run build:findings` rewrites `site/js/insights-data.js`, which `tests/test-insights.mjs` checks against the manifest.
 3. Run `npm test` and `npm run lint`. Update `tests/golden.json` deliberately with `node tests/golden.mjs --update` when accepting a data or model change; never update it just to silence a refactor regression.
-4. Model changes also require reviewing the current evidence in `research/`; `bash research/evaluation/regenerate.sh` regenerates the historical filter comparisons, not a fresh independent validation of the hybrid.
+4. Model changes also require reviewing the current evidence in `research/unified-ratings/`; `npm run evaluate` reproduces that study. `bash research/evaluation/regenerate.sh` regenerates archived filter comparisons, not validation of the production unified model.

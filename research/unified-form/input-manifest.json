@@ -1,0 +1,15 @@
+{
+  "inputHash": "f56d3c1635c70d961fea2616288aba18786c1271df55e7568843010dcd26ac83",
+  "publication": {
+    "sourceHash": "56281bc4ce3eb833",
+    "lastRace": {
+      "year": 2026,
+      "round": 19,
+      "name": "Mexico City Grand Prix",
+      "date": "2026-11-01"
+    }
+  },
+  "weekends": 620,
+  "measurements": 300542,
+  "outcomeCutoff": "All rating features precede the weekend; grid and realized weather are separate conditional inputs."
+}

@@ -113,7 +113,7 @@ export const TAU_GRID = [0.001, 0.003, 0.01, 0.03, 0.1];
  * The likelihood weight `tau` that makes the filter under test forecast a synthetic world best. The observations of a
  * synthetic weekend all derive from one ranking, so how strongly pairs depend on each other differs from the real data,
  * where the shipped `tau` was fitted; on a world with known answers a filter can be tuned to that world, as the project did
- * for its earlier synthetic recovery tests (docs/state-space.md).
+ * for its earlier synthetic recovery tests (docs/hybrid.md).
  */
 export function tuneTau(timeline, ctx, { session = 'race', hyper = {}, worldParams, seed = 9001, grid = TAU_GRID } = {}) {
   const idx0 = indexTimeline(timeline, ctx);

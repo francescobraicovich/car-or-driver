@@ -1,26 +1,33 @@
-// Exports the published hybrid ratings of every weekend, and the retirement-cause table, for the findings computation
+// Exports the published unified ratings of every weekend, and the retirement-cause table, for the findings computation
 // (packages/research/python/compute-findings.py). Writes ratings-table.json and status-causes.json into the directory given as
 // the first argument.
 //   node packages/research/node/export-ratings-table.mjs <output directory>
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { loadData } from './common.mjs';
-import { buildStateSpace } from '../../core/src/state-space/build.js';
+import { deserialize } from '../../core/src/json-serialization.js';
 import { defaultClass } from '../../core/src/status.js';
+import { gapVariance, POINTS } from '../../core/src/unified/forecast.js';
 
 const outputDirectory = process.argv[2];
 if (!outputDirectory) throw new Error('usage: node export-ratings-table.mjs <output directory>');
 await mkdir(outputDirectory, { recursive: true });
 
-const ctx = await loadData();
-const model = buildStateSpace(ctx.raw, ctx.lapSnapshots, ctx.maps, {}, ctx.lapPace);
+const model = deserialize(await readFile('data/model.json', 'utf8')).model;
 const pick = (row, keys) => Object.fromEntries(keys.map((key) => [key, row[key]]));
+// Insights labelled "above the field" use an explicit relative projection,
+// including its covariance, while preserving the published fixed-reference values.
+function fieldOverallSd(snap, kind, identity) {
+  const members = snap.unified.keys.filter(([entityKind]) => entityKind === kind);
+  return POINTS * Math.sqrt(gapVariance(snap.unified, [[kind, identity, 1], ...members.map(([k, id]) => [k, id, -1 / members.length])]));
+}
 const weekends = model.snaps.map((snap) => ({
   ...pick(snap, ['raceId', 'year', 'round', 'name', 'date', 'circuitId']),
-  drivers: snap.drivers.map((d) =>
-    pick(d, [
+  drivers: snap.drivers.map((d) => ({
+    ...pick(d, [
       'driverId',
       'constructorId',
+      'overall',
+      'overallSd',
       'race',
       'qual',
       'combined',
@@ -33,8 +40,12 @@ const weekends = model.snaps.map((snap) => ({
       'races',
       'newDriver',
     ]),
-  ),
-  cars: snap.cars.map((c) => pick(c, ['constructorId', 'race', 'qual', 'combined', 'raceSd', 'qualSd', 'combinedSd', 'effective', 'q'])),
+    fieldOverallSd: fieldOverallSd(snap, 'driver', d.driverId),
+  })),
+  cars: snap.cars.map((c) => ({
+    ...pick(c, ['constructorId', 'overall', 'overallSd', 'race', 'qual', 'combined', 'raceSd', 'qualSd', 'combinedSd', 'effective', 'q']),
+    fieldOverallSd: fieldOverallSd(snap, 'car', c.carId),
+  })),
 }));
 await writeFile(
   join(outputDirectory, 'ratings-table.json'),

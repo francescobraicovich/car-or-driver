@@ -5,8 +5,8 @@ import { renderPlot, renderLegend, splitSegments } from './chart-renderer.js';
 const hiddenSeries = new WeakMap();
 
 export function metricValue(p, m, t) {
-  if (m === 'combined') m = 'race'; // compatibility with links from earlier versions
-  if (['race', 'qual', 'effective'].includes(m)) return p[m];
+  if (m === 'combined') m = 'overall'; // compatibility with links from earlier versions
+  if (['overall', 'race', 'qual', 'effective'].includes(m)) return p[m];
   if (t === 'driver' && m === 'clean') return Number.isFinite(p.clean) ? 100 * p.clean : NaN;
   if (t === 'driver' && m === 'incident') return p.incidentElo;
   if (t === 'car' && m === 'survival') return Number.isFinite(p.survival) ? 100 * p.survival : NaN;
@@ -18,9 +18,10 @@ export function metricLabel(metric) {
   const laps = state.model?.params?.stdLaps || 60;
   return (
     {
+      overall: 'Overall strength (rating)',
       race: 'Race pace (rating)',
       qual: 'Qualifying pace (rating)',
-      combined: 'Race pace (rating)',
+      combined: 'Overall strength (rating)',
       effective: 'Effective pace (rating)',
       clean: `Clean ${laps}-lap race (%)`,
       incident: 'Incident rating',

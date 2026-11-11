@@ -82,6 +82,12 @@ await send('Runtime.enable');
 await send('Log.enable');
 await send('Network.enable');
 await send('Page.enable');
+await send('Page.addScriptToEvaluateOnNewDocument', {
+  source: `window.addEventListener('f1:ratings-ready', async () => {
+    const { state } = await import('/site/js/state.js');
+    window.initialDisplayedRatings = state.displayModel.snaps[0];
+  });`,
+});
 // start from empty browser storage, so that what the site stores by itself is all that is found later
 await send('Storage.clearDataForOrigin', { origin: `http://localhost:${HTTP_PORT}`, storageTypes: 'all' });
 await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/` });
@@ -96,6 +102,16 @@ const ready = await evaluate("document.body.dataset.ready === '1'");
 const checks = [];
 const check = (name, pass, detail = '') => checks.push({ name, pass: !!pass, detail });
 check('model built', ready);
+check(
+  'the first-screen and complete-history ratings agree, while forecast state stays raw',
+  await evaluate(`import('/site/js/state.js').then(({ state }) => {
+    const first = window.initialDisplayedRatings;
+    const full = state.displayModel.snaps.at(-1);
+    return first && ['drivers', 'cars'].every((kind) => JSON.stringify(first[kind]) === JSON.stringify(full[kind])) &&
+      state.model.params.ratingReference === 'model-prior' && !!state.model.forecastState && !state.displayModel.forecastState &&
+      state.model.snaps.at(-1).drivers[0].overall !== full.drivers[0].overall;
+  })`),
+);
 
 // The site is the front page and what opens over it: the links at its top are Ratings, History, Versus, Graph, Insights and Method, and the links at its foot
 // are Privacy, About and the source. Nothing of the old pages (header, loading screen, status line, footer, share button, theme button) is left.
@@ -315,19 +331,23 @@ check(
 check(
   'the ratings explain their default scale in one line',
   (await evaluate("document.getElementById('ratingsGuideLine').textContent")) ===
-    'Estimated pace after this weekend · higher is faster · 1,000 is the average of this grid',
+    'Estimated strength after this weekend · higher is stronger · 1,000 is the recent-era reference',
 );
 await evaluate("document.getElementById('ratingsGuideToggle').click()");
 check(
   'How to read this opens an explanation and reports its state',
   (await evaluate("document.getElementById('ratingsGuideToggle').getAttribute('aria-expanded')")) === 'true' &&
     !(await evaluate("document.getElementById('ratingsGuideDetail').hidden")) &&
-    (await evaluate("document.getElementById('ratingsGuideText').textContent.includes('each driver would be in the same car')")),
+    (await evaluate(
+      "document.getElementById('ratingsGuideText').textContent.includes('each driver’s contribution, holding the car constant')",
+    )),
 );
 await evaluate("document.getElementById('ratingsCars').click()");
 check(
   'the car explanation separates car pace from the driver',
-  await evaluate("document.getElementById('ratingsGuideText').textContent.includes('each car would be with the same driver')"),
+  await evaluate(
+    "document.getElementById('ratingsGuideText').textContent.includes('each car’s contribution, holding the driver constant')",
+  ),
 );
 await evaluate("document.getElementById('ratingsDrivers').click()");
 await evaluate("document.getElementById('ratingsGuideToggle').click()");
@@ -421,18 +441,13 @@ for (const kept of [false, true]) {
     `going from the hands to the panel, across the car, keeps the drivers (${kept ? 'drivers kept open' : 'nothing kept open'})`,
     (await isState(kept ? 'open' : 'peek', 'driver')) &&
       /^Driver ratings/.test(await panelTitle()) &&
-      !(await evaluate("document.getElementById('ratingsLayerForm').disabled")),
+      !(await evaluate("document.getElementById('ratingsSd').disabled")),
     JSON.stringify([await stageState(), await panelTitle()]),
   );
   if (!kept) {
-    // the first press in the panel keeps the drivers open, and the form toggle works from there
-    await pressInPanel('ratingsLayerForm');
-    check(
-      'pressing the form toggle with the mouse shows recent form in red on the drivers',
-      (await isState('open', 'driver')) && (await evaluate("document.querySelectorAll('#ratingsList .bar-form').length")) >= 5,
-      JSON.stringify([await stageState(), await evaluate("document.querySelectorAll('#ratingsList .bar-form').length")]),
-    );
-    await pressInPanel('ratingsLayerForm');
+    await pressInPanel('ratingsSd');
+    check('pressing a rating control keeps the driver panel open', await isState('open', 'driver'));
+    await pressInPanel('ratingsSd');
   }
   await click(8, 300);
   await sleep(500);
@@ -526,9 +541,9 @@ await evaluate("location.hash = '#/ratings'");
 await sleep(1000);
 check('ratings list has a row per driver', (await evaluate("document.querySelectorAll('#ratingsList .ledger-row').length")) > 10);
 check(
-  'driver ratings default to race pace and have no Combined choice',
+  'driver ratings default to overall strength and have no Combined choice',
   await evaluate(
-    "document.getElementById('ratingsMetric').value === 'race' && ![...document.getElementById('ratingsMetric').options].some((option) => option.value === 'combined')",
+    "document.getElementById('ratingsMetric').value === 'overall' && ![...document.getElementById('ratingsMetric').options].some((option) => option.value === 'combined')",
   ),
 );
 const listFits = await evaluate(
@@ -583,12 +598,12 @@ const card = await evaluate(
       blur: style.backdropFilter, left: box.left, panelRight: panel.right, tooltip: !!document.getElementById('chartValueTooltip') && !document.getElementById('chartValueTooltip').hidden }; })()`,
 );
 check(
-  'the row under the pointer opens a card with the name, surname, team, age, rank, race pace, qualifying and race form',
+  'the row under the pointer opens a card with the name, surname, team, age, rank and all three unified ratings',
   card.hidden === false &&
     card.forename === 'Max' &&
     card.surname === 'Verstappen' &&
     /^Red Bull · age \d\d$/.test(card.facts) &&
-    JSON.stringify(card.labels) === JSON.stringify(['Rank', 'Race pace', 'Quali pace', 'Race with form']) &&
+    JSON.stringify(card.labels) === JSON.stringify(['Rank', 'Overall strength', 'Race pace', 'Quali pace']) &&
     card.values.every((value) => /\d/.test(value)) &&
     /blur/.test(card.blur) &&
     card.left >= card.panelRight &&
@@ -597,13 +612,13 @@ check(
 );
 const cardPace = await evaluate(`import('/site/js/state.js').then(({ state }) => {
   const id = document.querySelector('#ratingsList .ledger-row').dataset.id;
-  const row = state.model.snaps.at(-1).drivers.find((driver) => String(driver.driverId) === id);
+  const row = state.displayModel.snaps.at(-1).drivers.find((driver) => String(driver.driverId) === id);
   const displayed = [...document.querySelectorAll('#ratingCard dd')].map((cell) => Number.parseFloat(cell.firstChild.textContent.replaceAll(',', '')));
-  return { pace: displayed[1], form: displayed[3], expectedPace: row.race, expectedForm: row.race + state.model.formShifts.get(id) };
+  return { pace: displayed[2], overall: displayed[1], expectedPace: row.race, expectedOverall: row.overall };
 })`);
 check(
-  'card pace and form totals use the race rating',
-  Math.abs(cardPace.pace - cardPace.expectedPace) <= 0.51 && Math.abs(cardPace.form - cardPace.expectedForm) <= 0.51,
+  'the card shows the separate pace and overall outputs',
+  Math.abs(cardPace.pace - cardPace.expectedPace) <= 0.51 && Math.abs(cardPace.overall - cardPace.expectedOverall) <= 0.51,
   JSON.stringify(cardPace),
 );
 // the race at the bottom right: the circuit of the weekend, the real race replayed on it at ten times the pace (a dot for each driver), the lap counter and
@@ -843,11 +858,11 @@ const teamCard = await evaluate(
     return { hidden: card.hidden, name: card.querySelector('.card-surname')?.textContent, facts: card.querySelector('.card-facts')?.textContent ?? null, labels: [...card.querySelectorAll('dt')].map((dt) => dt.textContent) }; })()`,
 );
 check(
-  'the card of a team has its name, its race pace and recent car form, without a driver age',
+  'the card of a team has its name, its three unified ratings, without a driver age',
   !teamCard.hidden &&
     teamCard.name === 'Mercedes' &&
     teamCard.facts === null &&
-    JSON.stringify(teamCard.labels) === JSON.stringify(['Rank', 'Race pace', 'Quali pace', 'Race with form']),
+    JSON.stringify(teamCard.labels) === JSON.stringify(['Rank', 'Overall strength', 'Race pace', 'Quali pace']),
   JSON.stringify(teamCard),
 );
 await evaluate("document.querySelector('#ratingsList .ledger-row').dispatchEvent(new Event('pointerleave'))");
@@ -946,47 +961,18 @@ const mean = await evaluate(
   "(() => { const list = document.getElementById('ratingsList'); const bar = list.querySelector('.bar'); const line = getComputedStyle(bar, '::after'); return [parseFloat(list.style.getPropertyValue('--mean')), line.width, line.content]; })()",
 );
 check('a vertical line marks the average', mean[0] > 0 && mean[0] < 100 && mean[1] === '2px' && mean[2] !== 'none', JSON.stringify(mean));
-check('no orange shows while recent form is off', (await evaluate("document.querySelectorAll('#ratingsList .bar-form').length")) === 0);
-const ratingsOff = await evaluate("[...document.querySelectorAll('#ratingsList .ledger-row .rating')].map((cell) => cell.textContent)");
-await evaluate("document.getElementById('ratingsLayerForm').click()");
-await sleep(300);
-const ratingsOn = await evaluate("[...document.querySelectorAll('#ratingsList .ledger-row .rating')].map((cell) => cell.textContent)");
 check(
-  'the recent-form toggle shows the ratings with recent form',
-  (await evaluate("document.getElementById('ratingsLayerForm').getAttribute('aria-pressed')")) === 'true' &&
-    ratingsOn.length === ratingsOff.length &&
-    JSON.stringify(ratingsOn) !== JSON.stringify(ratingsOff),
+  'the separate form overlay is absent',
+  await evaluate("!document.getElementById('ratingsLayerForm') && !document.querySelector('#ratingsList .bar-form')"),
 );
-const formBars = await evaluate(
-  "(() => { const bars = [...document.querySelectorAll('#ratingsList .bar-form')]; return [bars.length, bars.filter((bar) => bar.classList.contains('loss')).length, bars.every((bar) => parseFloat(bar.style.width) > 0), getComputedStyle(bars.find((bar) => !bar.classList.contains('loss'))).backgroundColor]; })()",
-);
-check(
-  'with recent form the shift is stacked on the bars in FA1802: solid where it adds, an outline where it takes away',
-  formBars[0] >= 5 && formBars[1] >= 1 && formBars[1] < formBars[0] && formBars[2] && formBars[3] === 'rgb(250, 24, 2)',
-  JSON.stringify(formBars),
-);
-await evaluate("document.getElementById('ratingsLayerForm').click()");
-await sleep(200);
 await evaluate("document.getElementById('ratingsCars').click()");
 await sleep(300);
-check('Cars view retitles the chart', /^Car ratings/.test((await evaluate("document.getElementById('ratingsTitle').textContent")) || ''));
 check(
-  'car ratings default to race pace, omit Combined and offer form',
+  'car ratings expose all three unified outputs',
   await evaluate(
-    "document.getElementById('ratingsMetric').value === 'race' && ![...document.getElementById('ratingsMetric').options].some((option) => option.value === 'combined') && !document.getElementById('ratingsLayerForm').disabled",
+    "document.getElementById('ratingsMetric').value === 'overall' && ['overall','race','qual'].every(metric => [...document.getElementById('ratingsMetric').options].some(option => option.value === metric))",
   ),
 );
-const carRatingsOff = await evaluate("[...document.querySelectorAll('#ratingsList .ledger-row .rating')].map((cell) => cell.textContent)");
-await evaluate("document.getElementById('ratingsLayerForm').click()");
-await sleep(300);
-const carRatingsOn = await evaluate("[...document.querySelectorAll('#ratingsList .ledger-row .rating')].map((cell) => cell.textContent)");
-check(
-  'car form changes latest car ratings',
-  (await evaluate("document.getElementById('ratingsLayerForm').getAttribute('aria-pressed')")) === 'true' &&
-    carRatingsOn.length === carRatingsOff.length &&
-    JSON.stringify(carRatingsOn) !== JSON.stringify(carRatingsOff),
-);
-await evaluate("document.getElementById('ratingsLayerForm').click()");
 
 check(
   'the panel has no Download CSV, Copy link or About these numbers',
@@ -1025,7 +1011,7 @@ check(
 );
 
 // The bar-chart race: the rows stay from one weekend (or one rating) to the next, glide to their new places, their bars grow, a driver who joins
-// fades in, the average line glides; the order in the document follows when they have settled; nothing glides under reduced motion
+// fades in, the reference line glides; the order in the document follows when they have settled; nothing glides under reduced motion
 const slideTo = (index) =>
   evaluate(
     `(() => { const slider = document.getElementById('ratingsScrub'); slider.value = ${index}; slider.dispatchEvent(new Event('input', { bubbles: true })); })()`,
@@ -1324,7 +1310,7 @@ check(
 );
 // What-if: choose a career moment for driver B and wet conditions
 await evaluate(
-  "(() => { const w = document.getElementById('headToHeadWhenB'); w.value = 'prime'; w.dispatchEvent(new Event('change', { bubbles: true })); const c = document.getElementById('headToHeadWet'); c.value = 'wet'; c.dispatchEvent(new Event('change', { bubbles: true })); })()",
+  "(() => { const w = document.getElementById('headToHeadWhenB'); w.value = 'prime'; w.dispatchEvent(new Event('change', { bubbles: true })); })()",
 );
 await sleep(400);
 check(
@@ -1436,7 +1422,7 @@ check(
   JSON.parse(await ledgerState()).view === 'head-to-head' &&
     /\d+%/.test((await evaluate("document.querySelector('.head-to-head-figures')?.textContent || ''")) || '') &&
     (await styleOf('.head-to-head-bar i:first-child', 'backgroundColor')) ===
-      (await styleOf('#headToHeadChart polyline[stroke^="var(--s"]', 'stroke')) &&
+      (await styleOf('#headToHeadChart g[clip-path] polyline[stroke-width="2"]', 'stroke')) &&
     (await evaluate(
       "getComputedStyle(document.querySelector('.head-to-head-bar i:last-child')).backgroundColor === getComputedStyle([...document.querySelectorAll('#headToHeadChart polyline[stroke^=\"var(--s\"]')].find((line) => line.getAttribute('stroke') === 'var(--s2)')).stroke",
     )) &&
@@ -1492,7 +1478,7 @@ check(
 await mouse('mouseMoved', 8, 300);
 // (the checks above left driver B at his prime and the conditions wet: start from the standard setting)
 await evaluate(
-  "(() => { for (const s of ['A', 'B']) { const when = document.getElementById('headToHeadWhen' + s); when.value = 'latest'; when.dispatchEvent(new Event('change', { bubbles: true })); } const wet = document.getElementById('headToHeadWet'); wet.value = 'dry'; wet.dispatchEvent(new Event('change', { bubbles: true })); })()",
+  "(() => { for (const s of ['A', 'B']) { const when = document.getElementById('headToHeadWhen' + s); when.value = 'latest'; when.dispatchEvent(new Event('change', { bubbles: true })); } })()",
 );
 await sleep(500);
 const headToHeadState = () =>
@@ -1503,7 +1489,7 @@ const headToHeadState = () =>
     weekend: document.getElementById('ratingsNow').textContent,
     race: document.getElementById('stageTrack').dataset.raceId,
     raceShown: !document.getElementById('stageTrack').hidden,
-    lines: document.querySelectorAll('#headToHeadChart polyline[stroke^="var("]').length, // (not the dark edges under them)
+    lines: new Set([...document.querySelectorAll('#headToHeadChart g[clip-path] polyline[stroke-width="2"]')].map(line => line.getAttribute('stroke'))).size, // careers may contain several disconnected segments
     markers: [document.querySelectorAll('#headToHeadChart line[stroke="var(--s1)"]').length, document.querySelectorAll('#headToHeadChart line[stroke="var(--s2)"]').length],
     steps: [...document.querySelectorAll('.head-to-head-steps li > span:first-child')].map((label) => label.firstChild.textContent),
     lit: ['versus-a', 'versus-b'].map((name) => { const dot = document.querySelector('#stageTrackDots circle.' + name); return dot ? getComputedStyle(dot).fill : null; }),
@@ -1588,7 +1574,7 @@ check(
 );
 // the plot is not drawn again while it is dragged: the chart element under the pointer stays, and the markers moved
 check('the markers moved with the drag (both at the dragged date, side by side)', dragged.markers[0] >= 1 && dragged.markers[1] >= 1);
-// Same car off, with both drivers at their latest: each in his own car again, and the forecast with recent form for the current grid
+// Same car off, with both drivers at their latest: each in his own car again, and the forecast including retirement risk for the current grid
 await evaluate(
   "(() => { for (const s of ['A', 'B']) { const when = document.getElementById('headToHeadWhen' + s); when.value = 'latest'; when.dispatchEvent(new Event('change', { bubbles: true })); } })()",
 );
@@ -1597,12 +1583,49 @@ await evaluate("document.getElementById('headToHeadSameCar').click()");
 await sleep(700);
 const own = JSON.parse(await headToHeadState());
 check(
-  'with the same car off the cars are offered again, and the forecast with recent form is back at the latest weekends',
-  own.sameCar === 'false' && own.carFields.every((hidden) => !hidden) && own.car === '' && own.steps.includes('With recent form'),
+  'with the same car off the cars are offered again, and the forecast including retirement risk is back at the latest weekends',
+  own.sameCar === 'false' && own.carFields.every((hidden) => !hidden) && own.car === '' && own.steps.includes('Retirement risk'),
   JSON.stringify(own),
+);
+const preGridOutput = await evaluate("document.getElementById('headToHeadOut').innerHTML");
+check(
+  'known-grid controls are offered for a current own-car forecast',
+  await evaluate("!document.getElementById('headToHeadGridFields').hidden"),
+);
+await evaluate(
+  "(() => { const a = document.getElementById('headToHeadGridA'), b = document.getElementById('headToHeadGridB'); a.value = '3'; b.value = '8'; b.dispatchEvent(new Event('input', { bubbles: true })); })()",
+);
+check(
+  'two known starting positions add the grid forecast step and explain its conditional meaning',
+  await evaluate(
+    "document.getElementById('headToHeadOut').textContent.includes('Known grid') && document.getElementById('headToHeadState').textContent.includes('grid 3 vs 8') && document.getElementById('headToHeadGridFields').textContent.includes('With either unknown')",
+  ),
+);
+await evaluate(
+  "(() => { const b = document.getElementById('headToHeadGridB'); b.value = ''; b.dispatchEvent(new Event('input', { bubbles: true })); })()",
+);
+check(
+  'one missing grid position restores the exact pre-weekend forecast',
+  (await evaluate("document.getElementById('headToHeadOut').innerHTML")) === preGridOutput,
+);
+await evaluate(
+  "(() => { const b = document.getElementById('headToHeadGridB'); b.value = '3'; b.dispatchEvent(new Event('input', { bubbles: true })); })()",
+);
+check(
+  'duplicate starting positions do not produce a conditional forecast',
+  (await evaluate("document.getElementById('headToHeadOut').innerHTML")) === preGridOutput,
+);
+await evaluate(
+  "(() => { const a = document.getElementById('headToHeadGridA'), b = document.getElementById('headToHeadGridB'); a.value = ''; b.value = ''; b.dispatchEvent(new Event('input', { bubbles: true })); })()",
 );
 await evaluate("document.getElementById('headToHeadSameCar').click()");
 await sleep(300);
+check(
+  'historical and equal-car scenarios hide actual-grid controls',
+  await evaluate(
+    "document.getElementById('headToHeadGridFields').hidden && getComputedStyle(document.getElementById('headToHeadGridFields')).display === 'none'",
+  ),
+);
 // one driver at two moments (his peak against his latest): one line with the two markers, and two dates
 const keepB = await evaluate("document.getElementById('headToHeadB').value");
 await evaluate(
@@ -1879,117 +1902,37 @@ check('clicking outside the Insights card closes it', (await evaluate('location.
 await evaluate("location.hash = '#/methodology'");
 await sleep(1200);
 check(
-  'methodology fills the accuracy figure',
-  /\d+%/.test((await evaluate("document.getElementById('methodologyAccuracy')?.textContent || ''")) || ''),
+  'methodology has ten coherent parts and no unresolved settings',
+  await evaluate(`
+  document.querySelectorAll('#methodologyCard .method-part').length === 10 &&
+  document.querySelectorAll('#methodologyTrack .deck-slide').length === 11 &&
+  [...document.querySelectorAll('#methodologyCard [data-setting]')].every(node => node.textContent.trim()) &&
+  !/\\{\\{|undefined|NaN/.test(document.getElementById('methodologyCard').textContent)
+`),
 );
 check(
-  'methodology scores the ratings alone against a coin flip',
-  /^0\.\d{3}/.test((await evaluate("document.getElementById('methodologyRatingsValue')?.textContent || ''")) || '') &&
-    /^0\.693/.test((await evaluate("document.getElementById('methodologyCoinValue')?.textContent || ''")) || '') &&
-    (await evaluate("document.querySelectorAll('#methodologyRatingsChart polyline').length")) >= 2,
+  'methodology displays the unified chronological score and publication',
+  await evaluate(`
+  /0.53012/.test(document.getElementById('methodologyValidationSummary').textContent) &&
+  /Model: unified/.test(document.getElementById('methodologyPublication').textContent)
+`),
 );
-check(
-  'methodology draws the odds curve, the error bar by experience and one rating with its band',
-  (await evaluate("document.querySelectorAll('#methodologyOddsChart polyline').length")) === 1 &&
-    (await evaluate("document.querySelectorAll('#methodologyUncertaintyChart polygon').length")) === 1 &&
-    (await evaluate("document.querySelectorAll('#methodologyTimelineChart polygon').length")) === 1,
-);
-check(
-  'the published method does not use the teammate Elo comparison',
-  !(await evaluate(
-    "[...document.querySelectorAll('#methodologyCard .method-part:not(#method-other-studies):not(#method-references)')].some((part) => /\\bElo\\b/i.test(part.textContent))",
-  )),
-);
-check(
-  'the methodology explains the published method without release history',
-  !(await evaluate(
-    "/previous published|original reference|first version|earlier filter|old model/i.test(document.getElementById('methodologyCard').textContent)",
-  )),
-);
-check(
-  'the driver/car split and teammate network react to their controls',
-  await evaluate(`(() => {
-    const split = document.querySelector('#methodologySplitLab input');
-    const graph = document.querySelector('#methodologyCareerGraph input');
-    const before = document.querySelector('#methodologySplitLab [data-value="a"]').textContent;
-    split.value = '25'; split.dispatchEvent(new Event('input', { bubbles: true }));
-    graph.value = '1'; graph.dispatchEvent(new Event('input', { bubbles: true }));
-    return before !== document.querySelector('#methodologySplitLab [data-value="a"]').textContent
-      && document.querySelector('#methodologySplitLab [data-value="package-a"]').textContent === '+100'
-      && document.querySelector('#methodologyCareerGraph .method-lab-reading').textContent.includes('through 1 link')
-      && document.querySelectorAll('#methodologyCareerGraph .method-network-link.active').length === 1;
-  })()`),
-);
-check(
-  'methodology has its nine parts, the overview diagram, the settings tables and no unfilled placeholders',
-  (await evaluate("document.querySelectorAll('#methodologyCard .method-part').length")) === 9 &&
-    (await evaluate("document.querySelectorAll('#methodologyTrack .deck-slide').length")) === 10 &&
-    (await evaluate("document.querySelectorAll('#methodologyCard .flow-stage').length")) >= 6 &&
-    (await evaluate("document.querySelectorAll('#methodologyParams tbody tr').length")) === 20 &&
-    (await evaluate("document.querySelectorAll('#methodologyScoring tbody tr:not(.group)').length")) === 21 &&
-    (await evaluate("document.querySelectorAll('#methodologyWindows tr').length")) === 4 &&
-    !(await evaluate("/\\{\\{|undefined|NaN/.test(document.getElementById('methodologyCard').textContent)")),
-);
-// the Methodology is a card of slides: the contents and a slide for each part; a link in the text that names a part (or a reference)
-// leads to its slide, and the slide is in the address
-check(
-  'the Methodology is a card of slides with a list of its parts, and the links in the text lead to the slide of the part or of the reference',
-  await (async () => {
-    const position = () => evaluate("document.getElementById('methodologyPosition').textContent");
-    const first = await position();
-    await evaluate('document.querySelector(\'#methodologyCard .deck-contents button[data-slide="3"]\').click()');
-    await sleep(700);
-    const third = await position();
-    const centered = await evaluate(`(() => {
-      const slide = document.querySelector('#methodologyCard .deck-slide:not([inert])');
-      const text = slide.querySelector('.deck-text');
-      const s = slide.getBoundingClientRect(), t = text.getBoundingClientRect();
-      return Math.abs((t.left + t.right) / 2 - (s.left + s.right) / 2) < 2;
-    })()`);
-    const slide = await evaluate('(location.hash.match(/slide=([a-z0-9-]*)/) || [])[1]');
-    await evaluate('document.querySelector(\'#methodologyCard [data-jump="method-forecasts"]\').click()');
-    await sleep(700);
-    const linked = await position();
-    await evaluate('document.querySelector(\'#methodologyCard [data-jump^="ref-"]\').click()');
-    await sleep(900);
-    const reference = await evaluate(
-      "JSON.stringify({ position: document.getElementById('methodologyPosition').textContent, shown: !document.getElementById('methodologyCard').querySelector('.deck-slide:not([inert]) .references') ? null : true })",
-    );
-    return (
-      first === '1 / 10' &&
-      third === '4 / 10' &&
-      centered &&
-      slide === 'method-ratings' &&
-      linked === '5 / 10' &&
-      JSON.parse(reference).position === '10 / 10' &&
-      JSON.parse(reference).shown === true &&
-      (await evaluate("document.querySelectorAll('#methodologyList button').length")) === 10
-    );
-  })(),
-);
-await evaluate('document.querySelector(\'#methodologyList button[data-slide="6"]\').click()');
+await evaluate('document.querySelector(\'#methodologyList button[data-slide="3"]\').click()');
+await sleep(500);
+check('the separation explanation has a stable link', (await evaluate('location.hash')).includes('method-separation'));
+await evaluate('document.querySelector(\'#methodologyCard [data-jump="ref-1"]\').click()');
 await sleep(500);
 check(
-  'the methodology comparison is reachable and distinguishes its four sources',
-  (await evaluate("document.querySelector('#methodologyCard .deck-slide:not([inert]) #method-other-studies') !== null")) &&
-    (await evaluate('document.querySelectorAll(\'#method-other-studies [data-jump^="ref-"]\').length')) === 4 &&
-    (await evaluate("document.querySelectorAll('#method-other-studies table').length")) === 2,
+  'a method citation opens the reference slide',
+  await evaluate("!!document.querySelector('#methodologyCard .deck-slide:not([inert]) #ref-1')"),
 );
-await evaluate('document.querySelector(\'#method-other-studies [data-jump="ref-20"]\').click()');
+await evaluate('document.querySelector(\'#methodologyList button[data-slide="8"]\').click()');
 await sleep(500);
 check(
-  'a comparison citation leads to the corresponding reference',
-  await evaluate("!!document.querySelector('#methodologyCard .deck-slide:not([inert]) #ref-20')"),
-);
-// Formulas are typeset by KaTeX, which the site serves itself.
-await sleep(3000);
-const mathTotal = await evaluate("document.querySelectorAll('#methodologyCard .math').length");
-const mathDone = await evaluate("document.querySelectorAll('#methodologyCard .math.typeset .katex').length");
-const mathBad = await evaluate("document.querySelectorAll('#methodologyCard .katex-error').length");
-check(
-  'every formula is typeset without errors',
-  mathTotal > 50 && mathDone === mathTotal && mathBad === 0,
-  `${mathDone}/${mathTotal}, ${mathBad} errors`,
+  'validation describes costs as well as improvements',
+  await evaluate(
+    "/slightly worse/.test(document.querySelector('#method-validation').textContent) && /24%/.test(document.querySelector('#method-validation').textContent)",
+  ),
 );
 
 // The chosen weekend survives a reload, and hashes from the old site land on the pages that replaced them
@@ -2122,27 +2065,17 @@ check(
 );
 await evaluate("location.hash = '#/methodology'");
 await sleep(350);
-await evaluate('document.querySelector(\'#methodologyCard .deck-contents button[data-slide="3"]\').click()');
-await sleep(450);
-check(
-  'the teammate network fits the methodology card vertically on a phone',
-  await evaluate(`(() => {
-    const graph = document.getElementById('methodologyCareerGraph');
-    const svg = graph.querySelector('svg');
-    return svg.viewBox.baseVal.height > svg.viewBox.baseVal.width
-      && svg.getBoundingClientRect().width <= graph.getBoundingClientRect().width + 1
-      && graph.scrollWidth <= graph.clientWidth + 1;
+for (const slide of [1, 3, 7, 8, 9, 10]) {
+  await evaluate(`document.querySelector('#methodologyList button[data-slide="${slide}"]').click()`);
+  await sleep(250);
+  check(
+    `methodology part ${slide} fits a phone`,
+    await evaluate(`(() => {
+    const part = document.querySelector('#methodologyCard .deck-slide:not([inert]) .method-part');
+    return part.scrollWidth <= part.clientWidth + 1;
   })()`),
-);
-await evaluate('document.querySelector(\'#methodologyList button[data-slide="6"]\').click()');
-await sleep(450);
-check(
-  'the study comparison and its tables fit the methodology card on a phone',
-  await evaluate(`(() => {
-    const section = document.querySelector('#methodologyCard .deck-slide:not([inert]) #method-other-studies');
-    return !!section && [...section.querySelectorAll('.table-wrap')].every((wrap) => wrap.scrollWidth <= wrap.clientWidth + 1);
-  })()`),
-);
+  );
+}
 // On a phone the Insights are a card across the screen, with no list beside it, and a swipe turns the slide
 await evaluate("location.hash = '#/insights'");
 await sleep(1200);
@@ -2238,7 +2171,7 @@ check(
   'the graph labels strength seasons and keeps comparison years visible',
   await evaluate(`(() => {
     const periods = [...document.querySelectorAll('#graphDetail .graph-rival small')];
-    return /Graph only · \\d{4}/.test(document.getElementById('graphDetail').textContent) && periods.length > 0 && periods.every((period) => {
+    return /Rating season\\d{4}/.test(document.getElementById('graphDetail').textContent) && periods.length > 0 && periods.every((period) => {
       const box = period.getBoundingClientRect();
       const parent = period.parentElement.getBoundingClientRect();
       return /^\\d{4}(–\\d{4})?$/.test(period.textContent) && getComputedStyle(period).display === 'block' &&
@@ -2259,6 +2192,19 @@ check(
     linkedGraph.table &&
     linkedGraph.hot,
   JSON.stringify(linkedGraph),
+);
+check(
+  'graph details match dated History ratings for current and retired drivers',
+  await evaluate(`import('/site/js/state.js').then(({ state }) => {
+    const picker = document.getElementById('graphDriver');
+    const matches = ['30', '830'].map((id) => {
+      picker.value = id;
+      picker.dispatchEvent(new Event('change', { bubbles: true }));
+      const displayed = Number(document.querySelector('#graphDetail .graph-detail-metrics strong').textContent);
+      return displayed === Math.round(state.displayModel.dh.get(id).at(-1).overall);
+    });
+    return matches.every(Boolean);
+  })`),
 );
 check(
   'the graph uses the same metal surface as Insights and has a visible close button',
@@ -2290,11 +2236,13 @@ const graphHover = JSON.parse(
   await evaluate(`(async () => {
   const source = await (await fetch('../data/teammate-graph.json')).json();
   const snap = source.snapshots.at(-1);
+  const { state } = await import('/site/js/state.js');
+  const published = new Map([...state.displayModel.dh].map(([id, points]) => [id, points.at(-1).overall]));
   const box = document.getElementById('graphPlot').getBoundingClientRect();
   const year = Math.max(2027, Number(document.getElementById('graphLast').textContent) + 1);
   const grid = new Set([...document.querySelectorAll('#stageTrackDots circle[data-id]')].map((dot) => dot.dataset.id));
   const minYear = Number(document.getElementById('graphFirst').textContent) - 1;
-  const points = snap.nodes.map((node) => ({ id: node[0], x: box.x + 55 + (node[2] - minYear) / (year - minYear) * (box.width - 73), y: box.y + 22 + (1110 - node[1]) / 220 * (box.height - 61) }));
+  const points = snap.nodes.map((node) => ({ id: node[0], x: box.x + 55 + (node[2] - minYear) / (year - minYear) * (box.width - 73), y: box.y + 22 + (1110 - published.get(node[0])) / 220 * (box.height - 61) }));
   const best = points.filter((point) => grid.has(point.id) && document.elementFromPoint(point.x, point.y) === document.getElementById('graphPlot')).map((point) => ({ ...point, gap: Math.min(...points.filter((other) => other !== point).map((other) => Math.hypot(other.x - point.x, other.y - point.y))) })).sort((a, b) => b.gap - a.gap)[0];
   window.graphHoverEvents = [];
   window.addEventListener('f1:row-hover', (event) => window.graphHoverEvents.push(event.detail.id));
@@ -2356,16 +2304,16 @@ check('clicking outside the graph card closes it', (await evaluate('location.has
 await evaluate("location.hash = '#/history?v=1&h=driver&dm=combined&cm=combined&drivers=863%2C847&from=2025&to=2026'");
 await sleep(700);
 check(
-  'old Combined history links open the same drivers on Race pace',
+  'old Combined history links open the same drivers on Overall strength',
   await evaluate(
-    "document.getElementById('historyMetric').value === 'race' && ![...document.getElementById('historyMetric').options].some((option) => option.value === 'combined') && document.querySelectorAll('#historyChips .series-chip').length === 2",
+    "document.getElementById('historyMetric').value === 'overall' && ![...document.getElementById('historyMetric').options].some((option) => option.value === 'combined') && document.querySelectorAll('#historyChips .series-chip').length === 2",
   ),
 );
 await evaluate("document.getElementById('historyMetric').dispatchEvent(new Event('change', { bubbles: true }))");
 check(
-  'history writes Race choices into the URL after opening an old Combined link',
+  'history writes Overall choices into the URL after opening an old Combined link',
   await evaluate(
-    "(() => { const params = new URLSearchParams(location.hash.split('?')[1]); return params.get('dm') === 'race' && params.get('cm') === 'race'; })()",
+    "(() => { const params = new URLSearchParams(location.hash.split('?')[1]); return params.get('dm') === 'overall' && params.get('cm') === 'overall'; })()",
   ),
 );
 await send('Emulation.clearDeviceMetricsOverride');

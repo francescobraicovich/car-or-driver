@@ -6,7 +6,7 @@
 //   node packages/research/node/separation-null.mjs [--points baseline,prev-final,new-final] [--seeds 4] [--last 2011] [--v2]
 //
 // `correct` = the baseline's own settings with the likelihood weight tuned to the world (the null T of the harness). `--v2` draws the world
-// from Simulator v2 (informational: it does not pass its realism checks, docs/evaluation.md).
+// from Simulator v2 (informational: it does not pass its realism checks, docs/backtesting.md).
 import { loadData } from './common.mjs';
 import {
   STATE_SPACE_DEFAULTS,

@@ -3,23 +3,21 @@
 //   node packages/research/node/state-space-calibrate.mjs [--write]
 //
 // Everything it fits uses 2015 and earlier only:
-//   slopes     one multiplier on the log-odds of each system's ratings-alone forecast (race and qualifying,
-//              state-space and Elo), fitted on 2002-2007, so the live "ratings alone" diagnostics are honest;
+//   slopes     one multiplier on the log-odds of each session's ratings-alone forecast (race and qualifying), fitted on 2002-2007, so the live "ratings alone" diagnostics are honest;
 //   scenario   the stretch applied to a what-if matchup (different cars, teammates) and the ratio for wet races,
 //              fitted on finishing-order pairs of 2002-2015.
-// It also prints the ratings-alone exam by window so the numbers in docs/state-space.md can be checked.
+// It also prints the ratings-alone exam by window for historical comparisons.
 import { writeFileSync } from 'node:fs';
 import { loadData } from './common.mjs';
-import { collectExamWithElo } from '../../core/src/elo-benchmark.js';
+import { collectExam } from '../../core/src/state-space/exam.js';
 import { runPublishedRatings } from '../../core/src/state-space/build.js';
 import { STATE_SPACE } from '../../core/src/presets/state-space.js';
 
 const WRITE = process.argv.includes('--write');
 const ctx = await loadData('data');
-const { model, weekends } = collectExamWithElo(ctx.raw, ctx.lapSnapshots, ctx.maps, {}, ctx.lapPace);
+const { model, weekends } = collectExam(ctx.raw, ctx.lapSnapshots, ctx.maps, {}, ctx.lapPace);
 const tmBoost = model.params.tmBoost;
 
-const logit = (p) => Math.log(Math.min(1 - 1e-12, Math.max(1e-12, p)) / (1 - Math.min(1 - 1e-12, Math.max(1e-12, p))));
 const nll = (z, o) => -Math.log(Math.min(1 - 1e-12, Math.max(1e-12, 1 / (1 + Math.exp(-(o ? z : -z))))));
 
 // ---- flat observation tables: each carries the raw log-odds of both systems -----------------------------------
@@ -44,7 +42,6 @@ for (const session of ['race', 'qual']) {
         wet: !!model.snaps[i].diag.wet,
         zSS: (k * mean) / Math.sqrt(1 + (Math.PI / 8) * k * k * vari),
         zPlain: k * mean,
-        zElo: logit(o.pElo),
       });
     });
   });
@@ -69,8 +66,6 @@ const fitWindow = (session) => (r) => r.session === session && r.year >= 2002 &&
 const slopes = {
   race: slope(fitWindow('race'), 'zSS'),
   qual: slope(fitWindow('qual'), 'zSS'),
-  eloRace: slope(fitWindow('race'), 'zElo'),
-  eloQual: slope(fitWindow('qual'), 'zElo'),
 };
 
 // ---- what-if constants: finishing-order pairs of 2002-2015, plain ratings gap (a what-if has no variance) -------
@@ -100,13 +95,9 @@ const loss = (pick, key, c) => {
   return sel.reduce((a, r) => a + r.w * nll(c(r) * r[key], r.o), 0) / sel.reduce((a, r) => a + r.w, 0);
 };
 const cSS = (r) => fit.slopes[r.session];
-const cElo = (r) => fit.slopes[r.session === 'race' ? 'eloRace' : 'eloQual'];
 console.log('\nratings-alone exam (weighted log-loss; lower is better)');
 console.log(
-  'window'.padEnd(12) +
-    ['Elo comb.', 'SS comb.', 'Elo race', 'SS race', 'Elo qual', 'SS qual', 'Elo mates', 'SS mates', 'Elo cars', 'SS cars']
-      .map((s) => s.padStart(11))
-      .join(''),
+  'window'.padEnd(12) + ['combined', 'race', 'qualifying', 'teammates', 'other cars'].map((value) => value.padStart(13)).join(''),
 );
 for (const [label, from, to] of [
   ['2002-2007', 2002, 2007],
@@ -116,15 +107,10 @@ for (const [label, from, to] of [
 ]) {
   const p = inYears(from, to);
   const cells = [
-    loss(p, 'zElo', cElo),
     loss(p, 'zSS', cSS),
-    loss((r) => p(r) && r.session === 'race', 'zElo', cElo),
     loss((r) => p(r) && r.session === 'race', 'zSS', cSS),
-    loss((r) => p(r) && r.session === 'qual', 'zElo', cElo),
     loss((r) => p(r) && r.session === 'qual', 'zSS', cSS),
-    loss((r) => p(r) && r.same, 'zElo', cElo),
     loss((r) => p(r) && r.same, 'zSS', cSS),
-    loss((r) => p(r) && !r.same, 'zElo', cElo),
     loss((r) => p(r) && !r.same, 'zSS', cSS),
   ];
   console.log(label.padEnd(12) + cells.map((v) => v.toFixed(4).padStart(11)).join(''));

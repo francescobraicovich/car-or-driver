@@ -43,7 +43,7 @@ async function visit(file, isEager = true) {
   for (const m of text.matchAll(/new URL\(\s*['"](\.{1,2}\/[^'"]+)['"]\s*,\s*import\.meta\.url/g)) specs.push([null, m[1]]);
   for (const [clause, spec] of specs) {
     const target = resolve(dirname(file), spec);
-    if (target.endsWith('/elo-forecast-heads.js') || target.endsWith('/state-space/forecast-heads.js'))
+    if (target.endsWith('/state-space/forecast-heads.js'))
       problems.push(`${where}: forecast definitions must come from the saved model, not a bundled learner`);
     if (!existsSync(target)) {
       problems.push(`${where}: cannot resolve ${spec}`);
@@ -58,7 +58,7 @@ async function visit(file, isEager = true) {
         if (name && !available.has(name)) problems.push(`${where}: ${spec} does not export ${name}`);
       }
     }
-    if (target.endsWith('.js') && !target.endsWith('/elo-forecast-heads.js')) await visit(target, isEager && !lazy.has(spec));
+    if (target.endsWith('.js')) await visit(target, isEager && !lazy.has(spec));
   }
 }
 

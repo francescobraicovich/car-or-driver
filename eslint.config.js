@@ -15,9 +15,10 @@ export default [
       'research/stable-ratings/**',
       'research/temporal-graph/**',
       'research/prediction-markets/**',
+      // Preserved builder: its exact bytes fingerprint the archived 3D assets.
+      'tools/build-stage-models.mjs',
       'dist/**',
       'site/vendor/**',
-      'packages/core/src/elo-forecast-heads.js',
       'packages/core/src/state-space/forecast-heads.js',
       'packages/core/src/presets/tuned-*.js',
     ],

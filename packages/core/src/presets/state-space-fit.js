@@ -7,9 +7,7 @@
 export const STATE_SPACE_FIT = {
   "slopes": {
     "race": 1.0104,
-    "qual": 1.1487,
-    "eloRace": 1.0603,
-    "eloQual": 0.9303
+    "qual": 1.1487
   },
   "scenario": {
     "cars": 0.9861,

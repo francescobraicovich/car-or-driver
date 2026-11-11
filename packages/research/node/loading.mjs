@@ -1,5 +1,5 @@
 // Loading of race skill on qualifying skill within one car: per season, the slope and correlation of teammates' race gap on their qualifying gap, from the
-// independent filters (no car in a teammate difference). The motivation of the cross-session link (docs/detach.md). Output: research/evaluation/detach-loading.txt
+// independent filters (no car in a teammate difference). The motivation of the cross-session link (docs/hybrid.md). Output: research/evaluation/detach-loading.txt
 
 import { loadData } from './common.mjs';
 import { stateSpaceRun, truncateTimeline } from '../../eval/src/index.js';

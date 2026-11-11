@@ -9,6 +9,8 @@ const IDS = [
   'headToHeadB',
   'headToHeadLaps',
   'headToHeadGridFields',
+  'headToHeadGridA',
+  'headToHeadGridB',
   'headToHeadChart',
   'headToHeadChartWrap',
   'headToHeadNote',
@@ -18,14 +20,8 @@ const IDS = [
   'headToHeadSameCar',
   'headToHeadCarName',
   'headToHeadOut',
-  'headToHeadGridA',
-  'headToHeadGridB',
-  'headToHeadSession',
-  'headToHeadCircuit',
   'headToHeadSideA',
   'headToHeadSideB',
-  'headToHeadWet',
-  'headToHeadSessionField',
 ];
 
 export function initDom() {

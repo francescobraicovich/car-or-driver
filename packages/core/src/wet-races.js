@@ -1,4 +1,4 @@
-// Curated wet-weather flag per Grand Prix (2000-2015).
+// Curated wet-weather flag per Grand Prix (2000-2025; 2026 is not yet covered).
 //
 // Source: "Races in the rain or on a wet track in F1",
 // Tudo Sobre Fórmula 1 (tudosobreformula1.com.br/corridas-com-pista-molhada-ou-umida),
@@ -53,4 +53,27 @@ export const WET_RACES = [
   { year: 2014, gp: 'Japanese Grand Prix' },
   { year: 2015, gp: 'British Grand Prix' },
   { year: 2015, gp: 'United States Grand Prix' },
+  { year: 2016, gp: 'Monaco Grand Prix' },
+  { year: 2016, gp: 'British Grand Prix' },
+  { year: 2016, gp: 'Brazilian Grand Prix' },
+  { year: 2017, gp: 'Chinese Grand Prix' },
+  { year: 2017, gp: 'Singapore Grand Prix' },
+  { year: 2018, gp: 'German Grand Prix' },
+  { year: 2019, gp: 'German Grand Prix' },
+  { year: 2020, gp: 'Turkish Grand Prix' },
+  { year: 2021, gp: 'Emilia Romagna Grand Prix' },
+  { year: 2021, gp: 'Russian Grand Prix' },
+  { year: 2021, gp: 'Turkish Grand Prix' },
+  { year: 2022, gp: 'Emilia Romagna Grand Prix' },
+  { year: 2022, gp: 'Monaco Grand Prix' },
+  { year: 2022, gp: 'Singapore Grand Prix' },
+  { year: 2022, gp: 'Japanese Grand Prix' },
+  { year: 2023, gp: 'Monaco Grand Prix' },
+  { year: 2023, gp: 'Dutch Grand Prix' },
+  { year: 2024, gp: 'Canadian Grand Prix' },
+  { year: 2024, gp: 'British Grand Prix' },
+  { year: 2024, gp: 'São Paulo Grand Prix' },
+  { year: 2025, gp: 'Australian Grand Prix' },
+  { year: 2025, gp: 'British Grand Prix' },
+  { year: 2025, gp: 'Belgian Grand Prix' },
 ];

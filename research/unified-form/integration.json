@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-11",
+  "sourceHash": "3ee3edcaf622d5f1",
+  "lastRace": {
+    "year": 2026,
+    "round": 19,
+    "name": "Mexico City Grand Prix",
+    "date": "2026-11-01"
+  },
+  "nodeTestFiles": 58,
+  "numericalTests": 20,
+  "browserChecks": 225,
+  "pythonJavascriptForecastFixtures": 38,
+  "lint": "passed",
+  "publicationChecks": "passed",
+  "publishedRatingParity": {
+    "sourceHash": "3ee3edcaf622d5f1",
+    "weekends": 620,
+    "ratingsCompared": 59667,
+    "unchangedAtPublishedPrecision": true,
+    "maximumSerializationDifference": 0.00499981333246069
+  },
+  "visualChecks": {
+    "desktopWidth": 1440,
+    "mobileWidth": 375,
+    "gridControls": "passed",
+    "missingGridFallback": "exact"
+  },
+  "scope": "Local production integration; no remote deployment performed.",
+  "siteBuild": "passed"
+}

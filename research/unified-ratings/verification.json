@@ -1,0 +1,14 @@
+{
+  "productionSourceHash": "fea98d27eb07cdb7",
+  "savedSourceHash": "fea98d27eb07cdb7",
+  "productionUnchanged": true,
+  "fullNodeSuite": "passed",
+  "testFiles": 56,
+  "numericalTests": 9,
+  "realPrefixWeekends": 120,
+  "realPrefix": "exact",
+  "selectedState": "exact final-history reproduction",
+  "javascriptLint": "passed",
+  "javascriptFormatting": "passed",
+  "scope": "Research steps 1–9; no production integration"
+}

@@ -1,4 +1,4 @@
-// How the state-space settings were chosen (docs/state-space.md). Prints the fitted settings so they can be
+// How the state-space settings were chosen (docs/hybrid.md). Prints the fitted settings so they can be
 // compared with packages/core/src/presets/state-space.js; it does not write the preset.
 //
 //   node packages/research/node/state-space-fit.mjs [--stint]

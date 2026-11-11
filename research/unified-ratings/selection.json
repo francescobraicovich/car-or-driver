@@ -1,0 +1,48 @@
+{
+  "candidate": "refined_all",
+  "refinement": "all",
+  "parameters": {
+    "driver_correlation": 0.85,
+    "car_correlation": 0.5,
+    "noise": [
+      1.9436995118945026,
+      1.62335504595748
+    ],
+    "driver_multiplier": 2.0,
+    "car_multiplier": 2.0
+  },
+  "inputHash": "d17da21e8d6958110aacf776e5450c40727c0b421049edab4408d72e3be80b33",
+  "status": "preferred research baseline",
+  "productionIntegrated": false,
+  "completedScope": "steps 1\u20139",
+  "guards": {
+    "overallPooled": true,
+    "overallBlocks": true,
+    "timingPooled": true,
+    "timingBlocks": true,
+    "frozenTransfers": true,
+    "normalizedStability": true
+  },
+  "allGuardsPass": true,
+  "calibration": {
+    "qual": {
+      "slope": 0.9860094859497694,
+      "noise": 1.565858226512845
+    },
+    "race": {
+      "slope": 0.9906828482897576,
+      "noise": 1.3967101509795377
+    },
+    "overall": {
+      "slope": 1.1783518455550037
+    }
+  },
+  "calibrationThrough": 2025,
+  "frozenTransferDifference": 0.001270718573572295,
+  "frozenTransferInterval95": [
+    -0.024186861250390542,
+    0.023360381689689222
+  ],
+  "normalizedStabilityRatio": 1.2393647244517891,
+  "decision": "Retain all three learned components and the three measurement refinements for a coherent research baseline under the user's explicit theoretical-preference trade-off. This is not a claim that each extension independently improves prediction or that production acceptance has passed."
+}

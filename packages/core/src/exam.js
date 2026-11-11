@@ -10,7 +10,7 @@
 // against ~0.28 for different-car pairs) and this benchmark chooses to weight them heavily.
 import { MODEL_SETTINGS } from './presets/model-settings.js';
 
-export const ELO_EXAM = {
+export const EXAM = {
   alpha: MODEL_SETTINGS.alpha,
   cap: MODEL_SETTINGS.cap,
   tmBoost: MODEL_SETTINGS.tmBoost,
@@ -22,7 +22,7 @@ export const ELO_EXAM = {
 };
 
 /** Keys a search must never change. */
-export const EXAM_KEYS = Object.keys(ELO_EXAM);
+export const EXAM_KEYS = Object.keys(EXAM);
 
 /** Weight of a gap of `g` places: grows with the logarithm of the gap, capped. */
 const margin = (g, { alpha, cap }) => Math.min(cap, 1 + alpha * Math.log2(Math.max(1, g)));

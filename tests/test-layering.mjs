@@ -20,7 +20,6 @@ async function* walk(dir) {
 
 const problems = [];
 for await (const file of walk(CORE)) {
-  if (file.endsWith('/elo-forecast-heads.js')) continue; // generated data, 950 KB
   const text = await readFile(file, 'utf8');
   for (const [, spec] of text.matchAll(/from\s+['"]([^'"]+)['"]/g)) {
     if (!spec.startsWith('.')) continue;

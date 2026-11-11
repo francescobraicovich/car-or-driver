@@ -278,7 +278,7 @@ export const INSIGHT_CARDS = [
         const row = findCircuit(rows, label);
         return `${row.carWeight} car against ${row.driverWeight} driver`;
       };
-      return `Barcelona and Suzuka show larger car than driver weights (${pair('Barcelona')}; ${pair('Suzuka')}). Singapore, Mexico City and Imola show the reverse (${pair('Singapore')}; ${pair('Mexico City')}; ${pair('Imola')}). Monaco's weights are ${pair('Monaco')}.`;
+      return `Barcelona and Suzuka show larger car than driver weights (${pair('Barcelona')}; ${pair('Suzuka')}). Singapore and Imola show the reverse (${pair('Singapore')}; ${pair('Imola')}). Mexico City's weights are ${pair('Mexico City')}, and Monaco's are ${pair('Monaco')}.`;
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
@@ -371,7 +371,7 @@ export const INSIGHT_CARDS = [
       '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="details"></div><div class="insight-extra" data-chart="seasons"></div>',
     how: (data) => {
       const seasons = data.equalCarTitles.seasons;
-      return `The bars compare actual titles with equal-car expectations in the driver's own years and the median over other eras. Each driver's eligible career seasons from ${seasons[0].year}–${seasons.at(-1).year} are moved as a sequence through every other placement that fits in those completed years, preserving gaps. For each season, we estimate the chance of having the highest season-average portable driver rating against that year's field in equal cars; these chances add to expected titles. The table shows the minimum and maximum across alternative placements. Rows are sorted by the equal-car estimate in actual years minus the alternative median, so the least favorable timing appears first. Drivers need at least three eligible seasons, at least one alternative placement, and either an actual title or at least 0.25 expected titles in some alternative. A season is eligible after at least eight races and half its rounds. Careers and titles before ${seasons[0].year} and the incomplete current season are excluded; long careers have fewer possible placements. A driver's own historical entry is removed from each comparison field. Ratings are relative to their original grids and eras are not perfectly comparable; the estimate does not simulate championships or how rivals might change. Rating uncertainty is approximate and omits the hybrid blend, and early seasons have less rating history and incomplete qualifying records. Differences from actual titles also reflect real cars and other factors, so they do not prove luck. The second table lists seasons where the likeliest best driver was not the champion, using 6,000 draws of approximate rating uncertainty.`;
+      return `The bars compare actual titles with equal-car expectations in the driver's own years and the median over other eras. Each driver's eligible career seasons from ${seasons[0].year}–${seasons.at(-1).year} are moved as a sequence through every other placement that fits in those completed years, preserving gaps. For each season, we estimate the chance of having the highest season-average portable driver rating against that year's field in equal cars; these chances add to expected titles. The table shows the minimum and maximum across alternative placements. Rows are sorted by the equal-car estimate in actual years minus the alternative median, so the least favorable timing appears first. Drivers need at least three eligible seasons, at least one alternative placement, and either an actual title or at least 0.25 expected titles in some alternative. A season is eligible after at least eight races and half its rounds. Careers and titles before ${seasons[0].year} and the incomplete current season are excluded; long careers have fewer possible placements. A driver's own historical entry is removed from each comparison field. Ratings are relative to their original grids and eras are not perfectly comparable; the estimate does not simulate championships or how rivals might change. Rating uncertainty is an approximate marginal from the unified posterior; these exploratory draws treat drivers independently, and early seasons have less rating history and incomplete qualifying records. Differences from actual titles also reflect real cars and other factors, so they do not prove luck. The second table lists seasons where the likeliest best driver was not the champion, using 6,000 draws of approximate rating uncertainty.`;
     },
     draw: (data, root) => {
       const rows = data.eraTiming;
@@ -517,7 +517,7 @@ export const INSIGHT_CARDS = [
         ['var(--ink)', 'Package'],
       ]) + '<div class="insight-chart" data-chart="main"></div>',
     how: (data) =>
-      `Current published race pace ratings after round ${data.dataThrough.round} of ${data.dataThrough.year}, relative to the field, sorted by package. Driver ratings are portable levels without the fit to the current car. The ratings panel shows approximate filter error bars; they do not include uncertainty from the complete blend.`,
+      `Current published overall strength ratings after round ${data.dataThrough.round} of ${data.dataThrough.year}, relative to the field, sorted by package. Driver ratings are portable estimates from the unified model. The ratings panel shows approximate joint-model error bars, conditional on its assumptions.`,
     draw: (data, root) => {
       const items = [...data.currentGrid]
         .sort((a, b) => b.driverRating + b.carRating - (a.driverRating + a.carRating))
@@ -651,7 +651,7 @@ export const INSIGHT_CARDS = [
       ]) +
       '<div class="insight-grid"><div><h4>Drivers: qualifying rating minus race rating (4+ seasons)</h4><div data-chart="drivers"></div></div><div><h4>Cars: the five biggest gaps each way (team-seasons)</h4><div data-chart="cars"></div></div></div>',
     how: () =>
-      "Per season, the driver's qualifying rating minus race rating (both relative to the field; the race rating includes the link to qualifying, so true differences are somewhat larger than shown), averaged over seasons, with one standard error. Cars: the same difference per team and season.",
+      "Per season, the driver's qualifying rating minus race rating (both relative to the field and measured on the same timing scale; partial pooling can shrink their differences), averaged over seasons, with one standard error. Cars: the same difference per team and season.",
     draw: (data, root) => {
       const drivers = data.qualifyingVersusRace.drivers.map((row) => ({
         label: row.name,
@@ -717,7 +717,9 @@ export const INSIGHT_CARDS = [
       const ferrari = career.filter((season) => season.year >= 1996 && season.year <= 2006);
       const comeback = career.filter((season) => season.year >= 2010);
       const earlyThirties = data.ageing.yearlyChange.filter((row) => row.age >= 30 && row.age <= 33);
-      return `Drivers improve quickly into their mid-twenties, then change more slowly until about 29. From ages 30 to 33, the average annual change is ${formatSigned(average(earlyThirties.map((row) => row.mean)))} rating points. Schumacher's comeback at 41 to 43 averaged ${formatInteger(average(comeback.map((season) => season.rating)))} points above the field, compared with ${formatInteger(average(ferrari.map((season) => season.rating)))} in his Ferrari years.`;
+      const earlyTwenties = data.ageing.yearlyChange.filter((row) => row.age >= 20 && row.age <= 24);
+      const lateTwenties = data.ageing.yearlyChange.filter((row) => row.age >= 25 && row.age <= 29);
+      return `Average annual rating change is ${formatSigned(average(earlyTwenties.map((row) => row.mean)))} points from ages 20 to 24 and ${formatSigned(average(lateTwenties.map((row) => row.mean)))} from 25 to 29. From ages 30 to 33, the average annual change is ${formatSigned(average(earlyThirties.map((row) => row.mean)))} rating points. Schumacher's comeback at 41 to 43 averaged ${formatInteger(average(comeback.map((season) => season.rating)))} points above the field, compared with ${formatInteger(average(ferrari.map((season) => season.rating)))} in his Ferrari years.`;
     },
     body: () =>
       legendHtml([
@@ -877,7 +879,7 @@ export const INSIGHT_CARDS = [
         ['var(--ink)', 'Largest single-weekend lead'],
       ]) + '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
-      'At every weekend the gap between the highest- and second-highest-rated car (race pace rating after that weekend), averaged over the season. 75 points is 10:1 odds in a head-to-head between the cars.',
+      'At every weekend the gap between the highest- and second-highest-rated car (overall strength rating after that weekend), averaged over the season. 75 overall points is 10:1 odds in the raw comparison rule, before uncertainty, calibration and retirement risk.',
     draw: (data, root) => {
       const rows = data.dominance;
       mountChart(
@@ -960,9 +962,9 @@ export const INSIGHT_CARDS = [
         (svg, width, height) =>
           drawLines(svg, width, height, {
             xDomain: [rows[0].year, rows.at(-1).year],
-            yDomain: [-0.2, 1],
+            yDomain: [-1, 1],
             xTicks: [1995, 2000, 2005, 2010, 2015, 2020, 2025],
-            yTicks: [0, 0.25, 0.5, 0.75, 1],
+            yTicks: [-1, -0.5, 0, 0.5, 1],
             yFormat: (value) => value.toFixed(2),
             series: [
               { name: 'rank correlation', color: 'var(--s1)', markers: true, points: rows.map((row) => [row.year, row.correlation]) },
@@ -1003,7 +1005,7 @@ export const INSIGHT_CARDS = [
       ]) +
       '<div class="insight-chart" data-chart="main"></div><div class="insight-grid"><div><h4>Largest in-season slides</h4><div data-chart="slides"></div></div><div><h4>Largest in-season climbs</h4><div data-chart="climbs"></div></div></div>',
     how: () =>
-      'Car race pace rating, relative to the field, after each round of 2024. Tables compare the average of rounds 3 to 5 with the last three rounds, for cars with 12 or more races. Early-season values rest on little data, which is why the first two rounds are skipped.',
+      'Car overall strength rating, relative to the field, after each round of 2024. Tables compare the average of rounds 3 to 5 with the last three rounds, for cars with 12 or more races. Early-season values rest on little data, which is why the first two rounds are skipped.',
     draw: (data, root) => {
       const colors = { 'Red Bull': 'var(--s2)', McLaren: 'var(--s1)', Ferrari: 'var(--s5)', Mercedes: 'var(--s3)' };
       mountChart(
@@ -1088,7 +1090,7 @@ export const INSIGHT_CARDS = [
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
-      'Each dot is a team-season with at least 30 starts. Vertical axis: mechanical retirements per hundred starts, minus the rate of the whole field in the same season, so that the long improvement in reliability does not hide the comparison. Horizontal axis: the average race pace rating of the car.',
+      'Each dot is a team-season with at least 30 starts. Vertical axis: mechanical retirements per hundred starts, minus the rate of the whole field in the same season, so that the long improvement in reliability does not hide the comparison. Horizontal axis: the average overall strength rating of the car.',
     draw: (data, root) => {
       const rows = data.fastButFragile;
       const notable = new Set(
@@ -1120,7 +1122,7 @@ export const INSIGHT_CARDS = [
             yDomain: [low, high],
             xTicks: [-150, -100, -50, 0, 50, 100],
             yTicks,
-            xTitle: 'car pace (rating points above the field)',
+            xTitle: 'car overall strength (points above the field)',
             yTitle: 'extra mechanical retirements per 100 starts, against the same season',
             points,
           }),
@@ -1141,7 +1143,7 @@ export const INSIGHT_CARDS = [
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
-      "Before each race, each entry's strength is its driver plus car race pace rating from the previous weekend; win probability is the logistic (softmax) share across the field (Plackett 1975). It ignores retirements, which makes favourites look a little stronger than they were, so the true odds of an upset are somewhat shorter than shown.",
+      "Before each race, each entry's strength is its driver plus car overall strength rating from the previous weekend; win probability is the logistic (softmax) share across the field (Plackett 1975). It ignores retirements, which makes favourites look a little stronger than they were, and is an exploratory ranking calculation, not the site’s calibrated head-to-head forecast or a validated winner probability.",
     draw: (data, root) => {
       const items = data.upsets.map((row) => ({
         label: `${row.year} ${row.grandPrix}, ${surname(row.driver)}`,

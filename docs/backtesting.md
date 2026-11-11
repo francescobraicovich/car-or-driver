@@ -1,40 +1,37 @@
-# Chronological model validation
+# Validation of the unified model
 
-`npm run evaluate` evaluates the actual published pipeline, including intrinsic slower learning and the recent teammate graph. Without an output path it prints a compact scorecard. The [dated-graph decision](temporal-graph.md) records the selected settings, predictive costs and original guards that failed.
+The production model is the `refined_all` candidate from the [unified study](../research/unified-ratings/README.md), selected under its [protocol](../research/unified-ratings/protocol.md). The original [results](../research/unified-ratings/results.md) record the research decision before production migration. Older stable-rating, form, graph and scenario studies are archived comparisons, not descriptions of the current website.
 
-```sh
-npm run evaluate
-node research/stable-ratings/evaluate.mjs research/stable-ratings/selected-results.json --models=published --bootstrap=300 --stability-bootstrap=300
-```
+The replay begins in 1994, warms up through 2001, and selects a small number of shared model settings using prequential 2002–2007 predictions. Historical validation uses 2008–2011, 2012–2015, 2016–2020 and 2021–2025. Calibration for each block uses earlier years. All predictions precede each weekend update. 2026 is separate monitoring. Final selection followed inspection of retrospective comparisons, so these blocks are not untouched prospective data.
 
-The reference is the frozen pre-change recipe, source `928427f97ab9daf6`. The matched graph-free control isolates the graph contribution. Its forecast definitions are archived in `research/stable-ratings/reference-forecast-heads.json`, so forecast reproduction does not depend on temporary files. Previous static production remains an explicit frozen comparison, as source `a59e2f6d24b0b9e1`. The production entry point `runPublishedRatings` is shared by the build, evaluator and forecast exports; a full-history parity test checks the selected research candidate against it.
+The main forecast target is actual pairwise classified order including retirements; excluded classifications and non-starters are omitted. Timing exams use fixed common margins. Weekends have equal aggregate weight. The strongest fair comparison applies the same calibration and risk recipe to the old published ratings and the new ones; the old fitted forecast head targeted a different weighted benchmark.
 
-## Temporal validation
+| 2008–2025 metric | Previous ratings | Unified |
+| --- | --- | --- |
+| Actual-result log loss | 0.531721 | 0.530117 |
+| Qualifying margin MAE | 0.008170 | 0.006468 |
+| Race margin MAE | 0.007010 | 0.005939 |
+| Frozen transfer log loss | 0.677990 | 0.679261 |
+| 90th-percentile overall rating movement | 2.406 points | 3.570 points |
 
-The blocks are 2008–2011, 2012–2015, 2016–2020 and 2021–2025. Race and qualifying calibration use only seasons from 2002 through the year before each block. Ratings update causally within blocks. A separate 2026 report is monitoring, not a selection gate. All historical periods informed model development, so these are retrospective tests rather than independent confirmation.
+Timing errors are fractions of lap time. The season-resampled 95% interval for overall loss difference is approximately [−0.003132, −0.000094]. Frozen transfer loss difference is +0.001271 with interval [−0.024187, +0.023360]. Normalised rating movement increases by about 24%. Transfer tests freeze before the final old-team weekend and compare against new teammates at five- and ten-appearance horizons. They test portability more directly than whole-field predictions, but cannot identify causal ability by themselves.
 
-The complete forecast heads use nested chronological ridge selection: the final four earlier training years select regularization, then the head refits on the entire earlier prefix. The forecast design has separate driver and car form, two tracking speeds and fixed qualifying segments. Grid-only forecasts use their own six-feature linear head. All four modes must satisfy pooled and per-block limits. The no-jump forecast refit passes all four point guards. Installed JavaScript heads have 480 Python inference fixtures; the complete regression suite verifies training/serving agreement.
+Synthetic checks cover known driver/car strengths, specialization, car shocks, transfers, heavy noise and persistent fit. Recovery is not uniformly better. Persistent fit produces uncertainty undercoverage; other worlds can be conservative. The model is adopted for a coherent target and joint inference as well as competitive results, with these trade-offs explicit.
 
-## Primary mover metric
+## Recent form and conditional forecasts
 
-A frozen mover's rating and the future teammate's rating are taken before the mover's final old-team weekend. Their gap predicts the first five and ten new-team weekends. The primary score gives every move equal weight, averaging race and qualifying teammate log-loss across those horizons. There are 51 teammate-covered moves; total field/teammate coverage is 69. Row-weighted and field scores are separate diagnostics and can deteriorate more than the primary average.
+The subsequent [recent-form and forecast-layer study](../research/unified-form/README.md) retains the same ratings. External form worsened historical result log loss to 0.531138. Embedded slow/fast form reached 0.529760, an inconclusive improvement of 0.000357 below the declared adoption threshold. Reweighting all six strengths, circuit effects, a nonlinear basis and extra temperature calibration did not justify additional pre-weekend stages.
 
-The freeze uses `pre[ell]`, before the final old-team weekend. It therefore excludes that weekend too, and is earlier than the last information available immediately before the driver joins the new team. Later rating changes for either the mover or the new teammate cannot improve the frozen teammate predictions, and this evaluation supplies no arrival-adaptation offset. The first five- and ten-weekend outcomes test the same frozen prior; they do not measure the speed of adaptation after a move.
+A compact conditional head did improve forecasts when both grid positions were known: 0.528053 to 0.504646 log loss on the same 73,749 grid-covered pairs across 362 races. Every historical block improved; the whole-season 95% interval for the loss difference was [−0.031003, −0.016177]. This is a different information set from Thursday, so its score is not directly comparable with the full pre-weekend benchmark above. It uses two predictors—uncertainty-tempered overall package difference and grid difference—with past-only regularization selection. Missing either grid position preserves the original forecast. Grid values never enter strength updates.
 
-Eligibility requires three new-team appearances by the block end; scored duels must also occur by that boundary. Teammate calibration uses only earlier stayer observations. Field forecasts use the opponents and cars known before each new-team weekend. Reports count missing ratings and compare omitted identities across models. Scored pairs are matched by weekend and observation index; mismatched coverage fails evaluation. Empty monitoring samples are unavailable, not zero loss.
+## Implementation checks
 
-Ordinary loss intervals resample seasons; mover intervals resample whole moves. The report also gives season sensitivity for the primary mover difference. These historical intervals do not prove equivalence or account for all model selection.
+- Shared production/research numerical code, with derivative, symmetry, teammate cancellation, pooling, chronology, covariance and invalid-input tests.
+- Fresh fit versus every saved weekend, history, calibration and forecast state.
+- Python/JavaScript probability and timing parity against a frozen selected-research fixture.
+- Grid-head derivative, chronological fitting, reversal, invalid-grid rejection and exact missing-grid fallback; Python/JavaScript parity for the conditional forecast.
+- Pre-update, equal-weekend result diagnostics in the model file, checked against the selected study.
+- Graph and Insights consistency with the published overall ratings and source fingerprint.
+- Browser rendering of all ratings, history, forecasts and the reader-facing methodology.
 
-The selected production rule adds no portable-driver variance jump, mean penalty or mover-specific likelihood multiplier on a team change; the car-specific fit reset remains separate.
-
-## Stability and acceptance
-
-Stability uses changes between consecutive driver appearances, including season boundaries and team changes. Reports contain raw and field-standard-deviation-normalized changes, field spread and season-bootstrap intervals. This distinguishes slower movement from merely compressing rating scale.
-
-The original strict predictive guards and the user's later acceptance of a stability cost are reported separately. `ratingPass: false` is retained; `userTradeoff.accepted: true` does not turn it into a predictive pass. The graph also fails its original incremental mover gate and is retained as a measured user preference. The no-jump forecast refit passes complete-forecast point guards. Its original raw small-cost guard fails, and `userConstraint` records the explicit identical-learning requirement separately; it does not relabel that loss as a pass. The current candidate sequence and decisions are preserved in [the dated-graph protocol](../research/temporal-graph/protocol.md); the earlier [stability protocol](../research/stable-ratings/protocol.md) remains historical evidence.
-
-## Resilient execution
-
-The evaluator fingerprints core, evaluation and research sources, input CSVs, candidate definitions, protocol and the installed forecast report. It checks the fingerprint before and after scoring. Atomic per-model checkpoints under `tmp/stable-ratings/evaluation-cache` are reused only with identical inputs. Complete forecast acceptance additionally requires a report matching the current core source hash. Fingerprints protect reproducibility of inputs; they are not an archived runtime.
-
-The earlier broader comparison remains available through `npm run research:compare-models`. Its candidate definitions and historical reference belong to the earlier simplification report; it is not the primary current acceptance command.
+Reproduce the full original comparison with `node research/unified-ratings/run.mjs`. Its archived hybrid reference remains in source. This command runs the study; ordinary builds use `npm run build:model` and do not repeat candidate selection. Integration checks run in `npm test`; the browser smoke test is `npm run test:browser`.

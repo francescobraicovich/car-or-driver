@@ -2,7 +2,7 @@
 // belongs to. The published ratings file leaves them out and the site rebuilds them from the weekends on load; this is the same grouping that
 // state-space/build.js performs when it builds the model.
 
-const NOT_WEEKEND_INFORMATION = ['drivers', 'cars', 'audit', 'qualAudit', 'diag', 'ssDiag'];
+const NOT_WEEKEND_INFORMATION = ['drivers', 'cars', 'audit', 'qualAudit', 'diag', 'ssDiag', 'unified', 'evidence'];
 
 function groupRows(snaps, rowsOf, identifier) {
   const histories = new Map();

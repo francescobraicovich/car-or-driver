@@ -1,0 +1,25 @@
+{
+  "selected": "production-reference",
+  "productionSourceHash": "dc909062c7273b74",
+  "productionChanged": false,
+  "reason": "No candidate improved the newcomer targets and preserved acceptable stability and timing accuracy.",
+  "candidates": [
+    "mean-offset-results.json",
+    "estimated-spread-results.json",
+    "results.json"
+  ],
+  "trainingThrough": 2007,
+  "validationThrough": 2025,
+  "monitoringYear": 2026,
+  "newEntities": {
+    "training2002Through2007": {
+      "drivers": 33,
+      "cars": 8
+    },
+    "validation2008Through2025": {
+      "drivers": 64,
+      "cars": 9
+    }
+  },
+  "structuralTests": 7
+}

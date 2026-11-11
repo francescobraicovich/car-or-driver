@@ -53,14 +53,6 @@ export function simulateRanking(strengths, scale, random) {
     .map((entry) => entry.index);
 }
 
-export function eloUpdate(ratings, first, second, outcome) {
-  const a = ratings.get(first) ?? 1500;
-  const b = ratings.get(second) ?? 1500;
-  const adjustment = 24 * (outcome - probability(a - b, 400));
-  ratings.set(first, a + adjustment);
-  ratings.set(second, b - adjustment);
-}
-
 // Resample complete race weekends so their teammate pairs move together.
 export function pairedAccuracyInterval(rows, firstModel, secondModel, draws = 5000) {
   if (!rows.length || !Number.isInteger(draws) || draws < 1) throw Error('Invalid bootstrap sample');

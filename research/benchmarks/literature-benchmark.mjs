@@ -1,4 +1,4 @@
-// Compare published metrics using the production model and a documented teammate Elo baseline.
+// Compare published model metrics with the literature.
 // Usage: node research/benchmarks/literature-benchmark.mjs [output.json]
 import { writeFile } from 'node:fs/promises';
 import { loadData } from '../../packages/research/node/common.mjs';
@@ -11,15 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { resolve } from 'node:path';
 import { STATE_SPACE } from '../../packages/core/src/presets/state-space.js';
 import { modelSourceHash } from '../../tools/model-source-hash.mjs';
-import {
-  eloUpdate,
-  pairedAccuracyInterval,
-  probability,
-  rankingLogProbability,
-  scorePairs,
-  seededRandom,
-  simulateRanking,
-} from './literature-metrics.mjs';
+import { probability, rankingLogProbability, scorePairs, seededRandom, simulateRanking } from './literature-metrics.mjs';
 
 export const benchmarkRatings = runPublishedRatings;
 
@@ -28,7 +20,6 @@ async function main() {
   const exam = collectExam(data.raw, data.lapSnapshots, data.maps, {}, data.lapPace);
   const { race: hybrid, qual: qualifying } = benchmarkRatings(exam.weekends, exam.model.params.tmBoost);
   const names = new Map(data.raw.drivers.map((row) => [String(row.driverId), `${row.forename} ${row.surname}`]));
-  const elo = { race: new Map(), qualifying: new Map() };
   const lastHybrid = { race: new Map(), qualifying: new Map() };
   const paired = [];
   const ranking = [];
@@ -62,23 +53,20 @@ async function main() {
 
   for (const [index, weekend] of exam.weekends.entries()) {
     if (weekend.year < 2014 || weekend.year > 2024) continue;
-    const classified = teammatePairs(weekend.rawRows, (row) => (isFinishStatusName(row.statusName) ? Number(row.positionOrder) : NaN));
     const leadLap = teammatePairs(weekend.rawRows, (row) => {
       const ms = Number(row.milliseconds);
       return row.statusName === 'Finished' && Number.isFinite(ms) && ms > 0 ? ms : NaN;
     });
     const qualifyingPairs = teammatePairs(weekend.qrows, bestTime);
     const sessions = [
-      { name: 'race', train: classified, test: leadLap, pre: hybrid.pre[index].rated, scale: STATE_SPACE.race.s },
-      { name: 'qualifying', train: qualifyingPairs, test: qualifyingPairs, pre: qualifying.pre[index].rated, scale: STATE_SPACE.qual.s },
+      { name: 'race', test: leadLap, pre: hybrid.pre[index].rated, scale: STATE_SPACE.race.s },
+      { name: 'qualifying', test: qualifyingPairs, pre: qualifying.pre[index].rated, scale: STATE_SPACE.qual.s },
     ];
     for (const session of sessions) {
       for (const pair of session.test) {
         const first = session.pre.get(pair.first);
         const second = session.pre.get(pair.second);
         if (!Number.isFinite(first) || !Number.isFinite(second)) throw Error(`Missing rating for ${weekend.info.raceId}`);
-        const ea = elo[session.name].get(pair.first) ?? 1500;
-        const eb = elo[session.name].get(pair.second) ?? 1500;
         const frozenA = lastHybrid[session.name].get(pair.first) ?? 0;
         const frozenB = lastHybrid[session.name].get(pair.second) ?? 0;
         paired.push({
@@ -87,7 +75,6 @@ async function main() {
           session: session.name,
           ...pair,
           hybrid: probability(first - second, session.scale),
-          elo: probability(ea - eb, 400),
           ...(weekend.year === 2023
             ? {
                 frozenHybrid: probability(frozenA - frozenB, session.scale),
@@ -96,20 +83,12 @@ async function main() {
             : {}),
         });
       }
-      // Keep the 2022 snapshot for the entire 2023 holdout; Elo is stored separately below.
+      // Keep the 2022 snapshot for the entire 2023 holdout.
       if (weekend.year < 2023) {
         const post = session.name === 'race' ? hybrid.ratings[index] : qualifying.ratings[index];
         for (const [id, value] of post.drivers) if (value.seen) lastHybrid[session.name].set(id, value.m);
       }
     }
-    if (weekend.year === 2023 && !elo.frozen) elo.frozen = { race: new Map(elo.race), qualifying: new Map(elo.qualifying) };
-    if (weekend.year === 2023) {
-      for (const row of paired.filter((row) => row.raceId === weekend.info.raceId && row.year === 2023)) {
-        const frozen = elo.frozen[row.session];
-        row.frozenElo = probability((frozen.get(row.first) ?? 1500) - (frozen.get(row.second) ?? 1500), 400);
-      }
-    }
-    for (const session of sessions) for (const pair of session.train) eloUpdate(elo[session.name], pair.first, pair.second, pair.outcome);
 
     if (weekend.year < 2014 || weekend.year > 2021) continue;
     const finishers = weekend.rawRows
@@ -154,17 +133,8 @@ async function main() {
     teammate2023: Object.fromEntries(
       ['race', 'qualifying'].map((session) => [
         session,
-        Object.fromEntries(['hybrid', 'elo', 'frozenHybrid', 'frozenElo'].map((model) => [model, pairSummary(session, 2023, model)])),
+        Object.fromEntries(['hybrid', 'frozenHybrid'].map((model) => [model, pairSummary(session, 2023, model)])),
       ]),
-    ),
-    accuracyDifferenceIntervals2023: Object.fromEntries(
-      ['race', 'qualifying'].map((session) => {
-        const rows = paired.filter((row) => row.session === session && row.year === 2023);
-        return [
-          session,
-          { rolling: pairedAccuracyInterval(rows, 'hybrid', 'elo'), frozen: pairedAccuracyInterval(rows, 'frozenHybrid', 'frozenElo') },
-        ];
-      }),
     ),
     ranking2014to2021: {
       races: ranking.length,

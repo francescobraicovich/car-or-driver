@@ -1,0 +1,32 @@
+{
+  "inputHash": "d17da21e8d6958110aacf776e5450c40727c0b421049edab4408d72e3be80b33",
+  "dataFingerprint": "74915f70d16ea9ed6a7c34c1b044247b99a6151fb953a97cb13727c25df7f24e",
+  "productionSource": {
+    "sourceHash": "fea98d27eb07cdb7",
+    "lastRace": {
+      "year": 2026,
+      "round": 19,
+      "name": "Mexico City Grand Prix",
+      "date": "2026-11-01"
+    }
+  },
+  "files": {
+    "research/unified-ratings/evaluate.py": "e5949ad6d0290cad09a247dbf16122b3ace7dfb34dd58604052d7030495122df",
+    "research/unified-ratings/evidence.mjs": "479030da8d6c00ca5456d39f8f20e6d5610144aaf0a892c8955962b74c130b9b",
+    "research/unified-ratings/export.mjs": "189eba7054f51e392b65c10ab9c37a0fbd3f9dc6831692afdbefa1a5894fd939",
+    "research/unified-ratings/fit.py": "62b7247758d9028fcd3e109b506ba4931ff15dc536889a39725db54187034e0b",
+    "research/unified-ratings/forecast.py": "d6b260bc9ab73b8aa88623bab2689af6cc0892941275344a42747696ce6486d2",
+    "research/unified-ratings/model.py": "98d950d2247288f41b44e0f948b7d23b2074df38ce2ecd46da967b9c7945518e",
+    "research/unified-ratings/protocol.md": "b4ae5854a8d2f533ed70432458fa4b4cac54ec95762ac3d6530a8a2af0f286c6",
+    "research/unified-ratings/report.py": "1346f9727eaacd3bde495f205aefc2e25429660b9df5fb7877a6fc6407f1812b",
+    "research/unified-ratings/run.mjs": "d78b1c7c84ddb8ab7c0baa7c4a050d57db2df7fce1d543658e1c4e0a5d54d842",
+    "research/unified-ratings/simulation.py": "4be1ba51d82b3992d286ec649686141f48b9aaace83113cac0997ba8868f15bc",
+    "research/unified-ratings/test_model.py": "9454dcaedd423a612679c798d4083b4056c33677366b23605edb8c0fff7b5f4e",
+    "tests/test-unified-ratings.mjs": "062c61ec2e0d78f2956bf0ee85f658459707079d99a3f174260f92b0253256d7"
+  },
+  "runtime": {
+    "python": "3.13.1 (main, Dec  3 2024, 17:59:52) [Clang 16.0.0 (clang-1600.0.26.4)]",
+    "numpy": "2.1.2",
+    "scipy": "1.14.1"
+  }
+}

@@ -1,26 +1,10 @@
+import { isUnified, prepareUnifiedForecast } from '../unified/forecast.js';
 import { withoutCarForm, withoutDriverForm, withoutForm } from './form.js';
 import { createFormFeatures } from './form-method.js';
 import { scoreHead, selectHeads } from './inference.js';
-import { gapToP, pToRating } from '../math.js';
-import { headToHeadWithHazard } from '../hazard.js';
-import { isHomeRace } from '../geography.js';
+import { pToRating } from '../math.js';
 import { levelsFromLatest, ssBaseline, ssGap, ssPace } from '../state-space/inputs.js';
 
-/**
- * The probability the Elo heads start from (their `baseline` feature).
- *
- * It must be computed exactly as during training, i.e. at the backbone's own
- * scale and with its own hazard weight and standard race length. (Serving once
- * used a fixed scale of 150 and the caller's lap count, which does not match a
- * backbone tuned at 75 and skewed forecasts by ~1.6 points on average.)
- */
-export function baselineProbability(params, diff, qA, qB) {
-  const pPace = gapToP(diff, params.scale);
-  const hazardW = params.hazardW;
-  return { pPace, prior: (1 - hazardW) * pPace + hazardW * headToHeadWithHazard(pPace, qA, qB, params.stdLaps) };
-}
-
-/** Whether a model carries the state-space ratings (otherwise the Elo ratings). */
 export const isStateSpace = (model) => model?.params?.modelKind === 'state-space';
 
 /** The latest weekend: the grid, the teams and the reliability hazards the forecast starts from. */
@@ -40,7 +24,9 @@ function ssLevelMaps(model) {
  * Supply `qrows` for a full race-day forecast. With grid slots only, the
  * separately fitted grid head is used; with neither, the Thursday head.
  */
-export function prepareForecast(model, { circuitId = '', qrows = [], year, round } = {}) {
+export function prepareForecast(model, options = {}) {
+  if (isUnified(model)) return prepareUnifiedForecast(model, options);
+  const { circuitId = '', qrows = [], year, round } = options;
   const s = forecastSnap(model);
   if (!s) return null;
   if (!model.forecastState?.heads) throw Error('Forecast definitions missing; rebuild the model file.');
@@ -49,15 +35,7 @@ export function prepareForecast(model, { circuitId = '', qrows = [], year, round
   const form = createFormFeatures(null, model.forecastState.form.method ?? 'legacy');
   form.importState(model.forecastState.form);
   const info = { ...s, year: year ?? s.year, round: round ?? s.round + 1, circuitId };
-  const stateSpace = isStateSpace(model);
-  const levels = stateSpace
-    ? ssLevelMaps(model)
-    : {
-        D: new Map(s.drivers.map((d) => [d.driverId, d.race])),
-        C: new Map(s.cars.map((c) => [c.constructorId, c.race])),
-        QD: new Map(s.drivers.map((d) => [d.driverId, d.qual])),
-        QC: new Map(s.cars.map((c) => [c.constructorId, c.qual])),
-      };
+  const levels = ssLevelMaps(model);
   form.beforeWeekend({ info, rows, qrows, ...levels, raceSeen: model.forecastState.seen });
   const heads = selectHeads(model.forecastState.heads, info.year);
 
@@ -71,27 +49,9 @@ export function prepareForecast(model, { circuitId = '', qrows = [], year, round
     const y = { driverId: idB, constructorId: b.constructorId, grid: gridB };
     const qA = 1 - (1 - a.q) * (1 - carA.q);
     const qB = 1 - (1 - b.q) * (1 - carB.q);
-    let diff;
-    let pPace;
-    let prior;
-    if (stateSpace) {
-      // state-space gap; the baseline has no circuit term (the heads were trained without one)
-      diff = ssGap('race', levels, x, y);
-      pPace = ssPace('race', diff);
-      prior = ssBaseline('race', diff, qA, qB, params);
-    } else {
-      diff = a.race - b.race + carA.race - carB.race;
-      if (circuitId) {
-        diff += (model.affFinal?.get(idA)?.get(circuitId) || 0) - (model.affFinal?.get(idB)?.get(circuitId) || 0);
-        const country = model.forecastState.countries.get(circuitId);
-        if (country)
-          diff +=
-            params.homeAdv *
-            (+isHomeRace(model.forecastState.nationalities.get(idA), country) -
-              +isHomeRace(model.forecastState.nationalities.get(idB), country));
-      }
-      ({ pPace, prior } = baselineProbability(params, diff, qA, qB));
-    }
+    const diff = ssGap('race', levels, x, y);
+    const pPace = ssPace('race', diff);
+    const prior = ssBaseline('race', diff, qA, qB, params);
     const f = form.features(x, y, 'race', prior, prior);
     const hasGrid = Number.isFinite(gridA) && Number.isFinite(gridB) && gridA > 0 && gridB > 0;
     const mode = qrows.length >= 2 && hasGrid ? 'post' : hasGrid ? 'grid' : 'pre';
@@ -125,7 +85,7 @@ export function prepareForecast(model, { circuitId = '', qrows = [], year, round
   };
 }
 
-export function forecastPair(model, idA, idB, { L = 60, circuitId = '', gridA, gridB, qrows = [], year, round } = {}) {
-  const forecast = prepareForecast(model, { circuitId, qrows, year, round });
-  return forecast ? forecast(idA, idB, { L, gridA, gridB }) : null;
+export function forecastPair(model, idA, idB, options = {}) {
+  const forecast = prepareForecast(model, options);
+  return forecast ? forecast(idA, idB, options) : null;
 }

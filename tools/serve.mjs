@@ -41,4 +41,4 @@ createServer(async (req, res) => {
   } catch {
     res.writeHead(404).end('Not found');
   }
-}).listen(PORT, () => console.log(`http://localhost:${PORT}/  (site at /site/)`));
+}).listen(PORT, '127.0.0.1', () => console.log(`http://localhost:${PORT}/  (site at /site/)`));

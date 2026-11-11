@@ -1,0 +1,191 @@
+{
+  "source": "Python UnifiedModel projected from the frozen selected research state; final grid head fitted through 2025; 60-lap retirement calculation.",
+  "heads": [
+    {
+      "fromYear": 2008,
+      "trainedThrough": 2007,
+      "ratingCoefficient": 1.0693747107583311,
+      "gridCoefficient": 1.6789406321081441,
+      "penalty": 0.001,
+      "innerScore": 0.5455362699834142
+    },
+    {
+      "fromYear": 2012,
+      "trainedThrough": 2011,
+      "ratingCoefficient": 1.032645155834928,
+      "gridCoefficient": 1.6456748592330723,
+      "penalty": 0.001,
+      "innerScore": 0.5222687757812419
+    },
+    {
+      "fromYear": 2016,
+      "trainedThrough": 2015,
+      "ratingCoefficient": 0.9403114346692786,
+      "gridCoefficient": 1.5102017908528145,
+      "penalty": 0.001,
+      "innerScore": 0.5089301648248291
+    },
+    {
+      "fromYear": 2021,
+      "trainedThrough": 2020,
+      "ratingCoefficient": 0.8998156204559196,
+      "gridCoefficient": 1.4582762822051363,
+      "penalty": 0.001,
+      "innerScore": 0.5157417396742331
+    },
+    {
+      "fromYear": 2026,
+      "trainedThrough": 2025,
+      "ratingCoefficient": 0.8937947217720678,
+      "gridCoefficient": 1.5450872564218594,
+      "penalty": 0.001,
+      "innerScore": 0.4837152920323994
+    }
+  ],
+  "fixtures": [
+    {
+      "a": "830",
+      "b": "844",
+      "date": "2026-11-08",
+      "gridA": 3,
+      "gridB": 8,
+      "competitive": 0.7515960681000763,
+      "p": 0.7109317726331972
+    },
+    {
+      "a": "830",
+      "b": "844",
+      "date": "2026-11-08",
+      "gridA": 18,
+      "gridB": 1,
+      "competitive": 0.09178359474451629,
+      "p": 0.15222442403876393
+    },
+    {
+      "a": "846",
+      "b": "857",
+      "date": "2026-11-08",
+      "gridA": 3,
+      "gridB": 8,
+      "competitive": 0.7910889831769667,
+      "p": 0.735762091855891
+    },
+    {
+      "a": "846",
+      "b": "857",
+      "date": "2026-11-08",
+      "gridA": 18,
+      "gridB": 1,
+      "competitive": 0.11227708098692339,
+      "p": 0.1813084922466104
+    },
+    {
+      "a": "1",
+      "b": "844",
+      "date": "2026-11-08",
+      "gridA": 3,
+      "gridB": 8,
+      "competitive": 0.5744181839006223,
+      "p": 0.5693933566172749
+    },
+    {
+      "a": "1",
+      "b": "844",
+      "date": "2026-11-08",
+      "gridA": 18,
+      "gridB": 1,
+      "competitive": 0.04313648927290019,
+      "p": 0.1122120399600455
+    },
+    {
+      "a": "815",
+      "b": "848",
+      "date": "2026-11-08",
+      "gridA": 3,
+      "gridB": 8,
+      "competitive": 0.4785571405993453,
+      "p": 0.4230171658475055
+    },
+    {
+      "a": "815",
+      "b": "848",
+      "date": "2026-11-08",
+      "gridA": 18,
+      "gridB": 1,
+      "competitive": 0.02974158977256339,
+      "p": 0.1271733071322546
+    },
+    {
+      "a": "830",
+      "b": "844",
+      "date": "2027-01-07",
+      "gridA": 3,
+      "gridB": 8,
+      "competitive": 0.740789336605422,
+      "p": 0.7017809903364572
+    },
+    {
+      "a": "830",
+      "b": "844",
+      "date": "2027-01-07",
+      "gridA": 18,
+      "gridB": 1,
+      "competitive": 0.0871360011876981,
+      "p": 0.14828899574916388
+    },
+    {
+      "a": "846",
+      "b": "857",
+      "date": "2027-01-07",
+      "gridA": 3,
+      "gridB": 8,
+      "competitive": 0.7907497901820228,
+      "p": 0.7354850389986824
+    },
+    {
+      "a": "846",
+      "b": "857",
+      "date": "2027-01-07",
+      "gridA": 18,
+      "gridB": 1,
+      "competitive": 0.11207280180581562,
+      "p": 0.1811416370000759
+    },
+    {
+      "a": "1",
+      "b": "844",
+      "date": "2027-01-07",
+      "gridA": 3,
+      "gridB": 8,
+      "competitive": 0.5748406962752185,
+      "p": 0.5697569391868894
+    },
+    {
+      "a": "1",
+      "b": "844",
+      "date": "2027-01-07",
+      "gridA": 18,
+      "gridB": 1,
+      "competitive": 0.04320789317515801,
+      "p": 0.11227348482136632
+    },
+    {
+      "a": "815",
+      "b": "848",
+      "date": "2027-01-07",
+      "gridA": 3,
+      "gridB": 8,
+      "competitive": 0.5092365097767101,
+      "p": 0.4432399565767071
+    },
+    {
+      "a": "815",
+      "b": "848",
+      "date": "2027-01-07",
+      "gridA": 18,
+      "gridB": 1,
+      "competitive": 0.03349657260557245,
+      "p": 0.12964846337111596
+    }
+  ]
+}

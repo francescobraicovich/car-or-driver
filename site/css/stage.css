@@ -1453,8 +1453,18 @@ body {
   gap: 6px 10px;
   margin-top: 6px;
 }
+.head-to-head-more .controls > .field {
+  grid-column: 1 / -1;
+}
 #headToHeadGridFields {
   display: contents;
+}
+.head-to-head-grid-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink-3);
 }
 /* ── the insights ────────────────────────────────────── */
 /* A card in the middle of the picture (grey, as behind the panel), on the panel's metal and denser, because it covers the sketches: the contents, then one

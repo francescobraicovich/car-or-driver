@@ -1,4 +1,5 @@
-// The published ratings combine the state-space filters, a comparison learner,
+// Archived hybrid reference. Production uses core/node/build-unified.mjs.
+// These historical ratings combine the state-space filters, a comparison learner,
 // and a portable teammate graph contribution to the driver levels.
 //
 // buildStateSpace collects the exam (state-space/exam.js: the observations of every weekend, the retirement hazards and the skeleton of the
@@ -8,8 +9,6 @@
 //   - adds `ssDiag` (ratings-alone forecast quality, per weekend),
 //   - replays the forecast layer (form trackers and probability heads) with the hybrid levels, as forecast
 //     before each weekend, as its rating inputs (replay.js, inputs.js), and writes its per-weekend scores to `diag`.
-// A `benchmark` (elo-benchmark.js) can be passed to add the Elo model's ratings on the same exam next to these, so the two
-// rating systems can be compared; without one nothing here reads the Elo core.
 import { MODEL_SETTINGS } from '../presets/model-settings.js';
 import { hybridRatings } from '../hybrid/ratings.js';
 import { graphRatings } from '../graph-ratings.js';
@@ -25,6 +24,7 @@ import { runStateSpace } from './filter.js';
 import { qualLink } from './qualifying-link.js';
 import { replayForecastLayer } from './replay.js';
 import { STATE_SPACE_HEADS } from './forecast-heads.js';
+import { scenarioEffects } from './scenario-effects.js';
 
 // A team continuing under another constructor id (rename or takeover) is the same team for "did the driver move".
 const parent = new Map();
@@ -32,8 +32,7 @@ const find = (x) => (parent.get(x) === undefined || parent.get(x) === x ? x : fi
 for (const t of CONSTRUCTOR_LINEAGE) parent.set(find(t.to), find(t.from));
 export const canonicalTeam = (id) => find(String(id));
 
-// The car carries over only across a rename; after a takeover it starts fresh, as in the Elo core (docs/elo.md,
-// "Rookies and team continuity").
+// The car carries over only across a rename; after a takeover it starts fresh.
 export const carLineage = carIdentity;
 
 /** What the filters need besides their settings: team and car identity, and the exam's teammate boost. */
@@ -57,7 +56,7 @@ export function runSession(weekends, session, tmBoost, qualRun = null) {
   );
 }
 
-/** The published driver/car pipeline, shared by builds and evaluation. */
+/** Archived hybrid reference retained for historical evaluations. */
 export function runPublishedRatings(weekends, tmBoost) {
   const qual = runSession(weekends, 'qual', tmBoost);
   const race = runSession(weekends, 'race', tmBoost, qual);
@@ -67,16 +66,14 @@ export function runPublishedRatings(weekends, tmBoost) {
 
 /**
  * Qualifying first, then the race filter reading it: the race ratings depend on the qualifying run, so the two run one after the other.
- * @param {{ observe, attach }} [options.benchmark]  the Elo benchmark (elo-benchmark.js), or none
  */
-export function buildStateSpace(raw, lapSnapshots, maps, params, lapPace = null, { benchmark = null } = {}) {
+export function buildStateSpace(raw, lapSnapshots, maps, params, lapPace = null) {
   const data = { raw, lapSnapshots, maps, lapPace };
   const exam = collectExam(raw, lapSnapshots, maps, params, lapPace);
-  benchmark?.observe(exam, data);
   const tmBoost = exam.model.params.tmBoost;
   const ratings = runPublishedRatings(exam.weekends, tmBoost);
   const model = finishStateSpace(exam.model, exam.weekends, ratings.race, ratings.qual, data);
-  benchmark?.attach(model, exam, data);
+  Object.assign(model, scenarioEffects(exam.weekends, ratings.race, model.snaps));
   return model;
 }
 
@@ -170,7 +167,7 @@ export function finishStateSpace(model, weekends, race, qual, { raw, lapPace }) 
   });
   model.dh = dh;
   model.ch = ch;
-  model.exportRows = exportRows; // the downloadable table carries the published (state-space) ratings, not the Elo benchmark's
+  model.exportRows = exportRows; // the downloadable table carries the published ratings
   model.ss = {
     latest: { race: race.latest, qual: qual.latest },
     slopes,

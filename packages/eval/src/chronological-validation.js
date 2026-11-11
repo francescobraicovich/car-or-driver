@@ -23,13 +23,15 @@ function score(rows) {
   let weight = 0;
   let loss = 0;
   let brier = 0;
+  let hits = 0;
   for (const row of rows) {
     const probability = 1 / (1 + Math.exp(-row.logit));
     weight += row.w;
     loss += row.w * nll(row.logit, row.o);
     brier += row.w * (probability - row.o) ** 2;
+    hits += row.w * (probability === 0.5 ? 0.5 : Number(probability > 0.5 === !!row.o));
   }
-  return { loss: loss / weight, brier: brier / weight, weight, count: rows.length };
+  return { loss: loss / weight, brier: brier / weight, accuracy: hits / weight, weight, count: rows.length };
 }
 
 function slope(rows, label) {

@@ -5,6 +5,8 @@ import { collectExam } from '../packages/core/src/state-space/exam.js';
 import { teammateGraphExam } from '../packages/core/src/teammate-graph-exam.js';
 import { GRAPH_RATINGS } from '../packages/core/src/presets/graph-ratings.js';
 import { loadData } from '../packages/research/node/common.mjs';
+import { retainedLaps } from '../packages/core/node/unified-evidence.mjs';
+import { buildUnifiedTeammateGraph } from '../tools/unified-teammate-graph.mjs';
 import { buildTeammateGraph } from '../tools/teammate-graph.mjs';
 
 const a = { driverId: 'a', constructorId: 'x' };
@@ -47,16 +49,20 @@ if (!process.env.GRAPH_SYNTHETIC_ONLY) {
   const published = JSON.parse(text);
   const model = deserialize(modelText);
   const collected = collectExam(data.raw, data.lapSnapshots, data.maps, {}, data.lapPace).weekends;
-  assert.equal(published.format, 3);
-  assert.equal(published.temporalResolution, 'season');
-  assert.equal(published.annualDriftPoints, GRAPH_RATINGS.annualDriftPoints);
+  assert.equal(published.format, 4);
+  assert.equal(published.temporalResolution, 'weekend');
+  assert.equal(published.rating, 'overall');
   assert.equal(published.sourceHash, model.sourceHash);
-  assert.equal(published.halfLifeYears, GRAPH_RATINGS.halfLifeYears);
+
   assert.deepEqual(
     published.snapshots.map((snap) => snap.raceId),
     model.model.snaps.map((snap) => snap.raceId),
   );
-  assert.deepEqual(published.snapshots, buildTeammateGraph(collected, data.raw.drivers), 'published graph matches production evidence');
+  assert.deepEqual(
+    published.snapshots,
+    buildUnifiedTeammateGraph(model.model, collected, data.raw.drivers, data.lapPace, await retainedLaps()),
+    'published graph matches production evidence',
+  );
   for (const [raceId, one, two] of [
     ['932', '8', '20'],
     ['1052', '20', '840'],

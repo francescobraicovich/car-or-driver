@@ -10,7 +10,6 @@ import { scrubWeekends, setRace } from './ratings-view.js';
 
 const percent = (x) => `${Math.round(100 * x)}%`;
 const surname = (name) => name.trim().split(/\s+/).slice(-1)[0];
-const sessionNames = { pre: 'Before qualifying', post: 'After qualifying' };
 const signed = (x) => `${x > 0 ? '+' : x < 0 ? '−' : ''}${Math.abs(x).toFixed(0)}`;
 const SIDES = ['A', 'B'];
 const CHART_PADDING = 8; // pixels of the plate (CSS .head-to-head-chart) above and below the chart
@@ -51,9 +50,8 @@ const stepsBlock = (rows, nameA, nameB, why = '') => `
     ${why ? `<p class="head-to-head-why">${esc(why)}</p>` : ''}
   </div>`;
 /** The conditions the forecast is made in, on one line in the title of the folded controls. */
-function conditionsLine(wet, L, timing) {
-  const circuit = el.headToHeadCircuit.value ? el.headToHeadCircuit.selectedOptions[0]?.textContent : '';
-  return [wet ? 'wet' : 'dry', `${L} laps`, timing, circuit].filter(Boolean).join(' · ');
+function conditionsLine(L, timing) {
+  return [`${L} laps`, timing].filter(Boolean).join(' · ');
 }
 const side = {}; // per-side controls, keyed `${name}${A|B}`; built once
 
@@ -67,7 +65,7 @@ function latestGridIds() {
 function optionGroups(selected) {
   const model = state.model;
   const latest = model.snaps[model.snaps.length - 1];
-  const current = latest.drivers.slice().sort((a, b) => b.race - a.race);
+  const current = latest.drivers.slice().sort((a, b) => b.overall - a.overall);
   const option = (id, label) => `<option value="${esc(id)}"${id === selected ? ' selected' : ''}>${esc(label)}</option>`;
   const now = current.map((d) => option(String(d.driverId), `${d.name} · ${d.car}`)).join('');
   const active = latestGridIds();
@@ -173,55 +171,43 @@ function matchup() {
   return sides.map((x) => ({ ...x, ...shared }));
 }
 
-/** The live forecast (with recent form) only applies to today's grid, dry, as things stand. */
-function isLive(sides, wet) {
+/** The pre-weekend forecast applies to the current field in its own cars. */
+function isLive(sides) {
   const grid = latestGridIds();
-  return !wet && sides.every((x) => x.when.kind === 'latest' && !x.carId && grid.has(String(x.driverId)));
+  return sides.every((x) => x.when.kind === 'latest' && !x.carId && grid.has(String(x.driverId)));
 }
 
 /**
  * "How the forecast is built": the same probability (for driver A) after each
  * stage, so a headline that disagrees with the ratings says why.
  */
-function stepsHtml(r, nameA, nameB, teammates, own) {
-  const { full } = r.breakdown;
-  // Hybrid ratings alone use the retained filter covariance for approximate uncertainty.
-  const ratings = own ? own.p : r.breakdown.ratings;
-  const favours = (p) => (p >= 0.5 ? nameA : nameB);
-  const [byRatings, byForecast] = [ratings, full].map(favours);
-  let why = '';
-  if (byRatings !== byForecast)
-    why = own
-      ? `The ratings alone favour ${byRatings}. The forecast also weighs recent form, the grid and the circuit, and favours ${byForecast}.`
-      : `The ratings favour ${byRatings}, but ${byForecast} has had the better recent form${teammates ? ', and the model trusts rating gaps between teammates less' : ''}.`;
-  const rows = [
-    own
-      ? stepRow(
-          'Ratings alone',
-          ratings,
-          `Driver plus car rating, with approximate filter uncertainty: a gap of ${signed(own.gap)} ± ${own.sd.toFixed(0)} points.`,
-        )
-      : stepRow('Ratings alone', ratings, 'Driver rating plus car rating, as they stand.'),
-    // the same ratings go through the forecast model with recent form switched off: that adds retirement risk and the
-    // calibration to how often gaps of this size have held up, so the step to the forecast is not credited to form alone
-    ...(own
-      ? [
-          stepRow(
-            'Calibrated',
-            r.breakdown.calibrated,
-            'Calibrates the rating gaps against historical pairwise performance, before recent form.',
-          ),
-        ]
-      : []),
-    stepRow(
-      'With recent form',
-      full,
-      own
-        ? 'Adds recent driver and car performance, and the grid when known. Forecasts the pairwise performance benchmark; retirement risks are shown separately.'
-        : 'Adds how each driver and car has done over the last few races. This is the forecast.',
-    ),
-  ];
-  return stepsBlock(rows, nameA, nameB, why);
+function stepsHtml(r, nameA, nameB) {
+  return stepsBlock(
+    [
+      stepRow('Overall ratings', r.breakdown.ratings, `Driver plus car overall strength: a gap of ${signed(r.gap)} points.`),
+      stepRow(
+        'Calibrated',
+        r.breakdown.calibrated,
+        `Uses the joint uncertainty (gap ±${r.sd.toFixed(0)} points) and the historical relationship between ratings and outcomes.`,
+      ),
+      ...(Number.isFinite(r.breakdown.grid)
+        ? [
+            stepRow(
+              'Known grid',
+              r.breakdown.grid,
+              'A two-coefficient model uses overall strength and the supplied starting positions, fitted only on earlier races.',
+            ),
+          ]
+        : []),
+      stepRow(
+        'Retirement risk',
+        r.breakdown.full,
+        'Combines competitive strength with driver incident and mechanical failure risks. This is the race-result forecast.',
+      ),
+    ],
+    nameA,
+    nameB,
+  );
 }
 
 export function refreshHeadToHead() {
@@ -229,8 +215,6 @@ export function refreshHeadToHead() {
   el.headToHeadPanel.hidden = false;
   const keepA = el.headToHeadA.value;
   const keepB = el.headToHeadB.value;
-  const keepC = el.headToHeadCircuit.value;
-  const keepS = el.headToHeadSession.value;
   el.headToHeadA.innerHTML = optionGroups(keepA || undefined);
   el.headToHeadB.innerHTML = optionGroups(keepB || undefined);
   if (!keepA) el.headToHeadA.selectedIndex = 0;
@@ -238,17 +222,9 @@ export function refreshHeadToHead() {
   if (!el.headToHeadLaps.value) el.headToHeadLaps.value = 60;
   if (!side.headToHeadWhenA) buildSides();
   fillCars();
-  const sessions = ['pre', 'post'];
-  el.headToHeadSession.innerHTML = sessions
-    .map((s) => `<option value="${s}"${s === keepS ? ' selected' : ''}>${sessionNames[s]}</option>`)
-    .join('');
-  const tracks = state.model.circuitList || [];
-  el.headToHeadCircuit.innerHTML =
-    '<option value="">Any circuit</option>' +
-    tracks.map((t) => `<option value="${esc(t.id)}" ${t.id === keepC ? 'selected' : ''}>${esc(t.name)}</option>`).join('');
 }
 
-/** The two drivers' race ratings over both careers, with a marker for the moment each is taken at. */
+/** The two drivers' overall ratings over both careers, with a marker for the moment each is taken at. */
 function drawHistory() {
   const svg = el.headToHeadChart;
   if (!lastChart) {
@@ -258,7 +234,7 @@ function drawHistory() {
   const { ids, markers } = lastChart;
   const series = new Map(ids.map((id) => [id, state.model.dh.get(id) || []]));
   const dates = [...series.values()].flat().map((p) => Date.parse(p.date));
-  drawChart(svg, null, ids, series, state.model.dname, 'race', 'driver', {
+  drawChart(svg, null, ids, series, state.model.dname, 'overall', 'driver', {
     ...(dates.length ? { xDomain: [Math.min(...dates) - 14 * 864e5, Math.max(...dates) + 14 * 864e5] } : {}),
     legend: false, // the names above the figures have the colours
     casing: true,
@@ -354,13 +330,10 @@ function showChart(ids, markers) {
   else drawHistory();
 }
 
-/** A constructed matchup: any driver and car, at any moment, dry or wet. Ratings only. */
-function renderScenario(sides, wet, L) {
-  el.headToHeadSessionField.hidden = true;
-  el.headToHeadGridFields.hidden = true;
-  const circuitId = el.headToHeadCircuit.value || '';
-  const r = forecasting.scenarioForecast(state.model, sides[0], sides[1], { wet, L, circuitId });
-  el.headToHeadState.textContent = conditionsLine(wet, L, '');
+/** A constructed matchup: any driver and car, at any moment, using overall ratings and retirement risk. */
+function renderScenario(sides, L) {
+  const r = forecasting.scenarioForecast(state.model, sides[0], sides[1], { L });
+  el.headToHeadState.textContent = conditionsLine(L, 'what-if comparison');
   if (r.error) {
     el.headToHeadOut.innerHTML = `<p class="head-to-head-why">${esc(r.error)}</p>`;
     el.headToHeadChartWrap.hidden = true;
@@ -382,34 +355,12 @@ function renderScenario(sides, wet, L) {
   const c = r.components;
   const grid = latestGridIds();
   const onGrid = grid.has(String(a.driverId)) && grid.has(String(b.driverId)) && a.driverId !== b.driverId;
-  const todayKey = `${a.driverId}|${b.driverId}|${L}|${circuitId}`;
+  const todayKey = `${a.driverId}|${b.driverId}|${L}`;
   if (onGrid && todayCache.key !== todayKey)
-    todayCache = { key: todayKey, p: forecasting.forecastPreWeekend(state.model, a.driverId, b.driverId, { L, circuitId }).p };
+    todayCache = { key: todayKey, p: forecasting.forecastPreWeekend(state.model, a.driverId, b.driverId, { L }).p };
   const today = onGrid ? todayCache.p : null;
   const gapParts = [`driver ${signed(c.driver)}`, `car ${signed(c.car)}`];
-  if (wet) gapParts.push(`wet skill ${signed(c.wet)}`);
-  if (circuitId) gapParts.push(`circuit ${signed(c.track)}`);
-  const stateSpace = forecasting.isStateSpace(state.model);
-  const rows = [
-    stepRow('Ratings alone', r.pPace, `Driver rating plus car rating: ${signed(r.gap)} points (${gapParts.join(', ')}).`),
-    stepRow(
-      stateSpace ? 'Calibrated' : 'Sharpened',
-      r.dry,
-      stateSpace
-        ? 'Adjusted to how often gaps of this size have held up in past races.'
-        : 'Gaps of this size have won more often than the raw ratings say.',
-    ),
-    ...(wet
-      ? [
-          stepRow(
-            'In the wet',
-            r.p,
-            `Wet races are harder to call, so the sharpening is cut back by about a fifth (×${forecasting.WET_RATIO}).`,
-          ),
-        ]
-      : []),
-  ];
-  const head = (x) => ({ name: x.name, lines: sameCar ? [] : [carWhen(x)], rating: Math.round(x.driver.race), date: x.driver.to });
+  const head = (x) => ({ name: x.name, lines: sameCar ? [] : [carWhen(x)], rating: Math.round(x.driver.overall), date: x.driver.to });
   const [headA, headB] = [head(a), head(b)];
   resolved = {
     A: { raceId: a.driver.points[0].raceId, date: a.driver.to, rating: headA.rating },
@@ -418,15 +369,15 @@ function renderScenario(sides, wet, L) {
   el.headToHeadCarName.textContent = sameCar ? carWhen(a) : ''; // the shared car, said once
   el.headToHeadOut.innerHTML = `
     ${topHtml(headA, headB, pA, nameA, nameB)}
-    ${stepsBlock(rows, nameA, nameB)}
-    ${today === null ? '' : `<p class="head-to-head-why">Today’s forecast: ${percent(today)} for ${esc(nameA)}${infoHtml('For these two on the current grid, in their own cars and with recent form.')}</p>`}
+    ${stepsHtml(r, nameA, nameB)}
+    ${today === null ? '' : `<p class="head-to-head-why">Own-car forecast: ${percent(today)} for ${esc(nameA)}${infoHtml('For these two on the current grid, in their own cars, before the next weekend.')}</p>`}
     <dl class="head-to-head-facts">
       <div><dt>Rating gap${infoHtml(`${nameA} minus ${nameB}, in points: ${gapParts.join(', ')}.`)}</dt><dd>${signed(r.gap)} <small>points</small></dd></div>
       <div><dt>Retirement risk, ${L} laps${infoHtml(`The chance that each driver retires within ${L} laps: ${nameA} first, ${nameB} second.`)}</dt><dd>${swatches(percent(risk(r.qA)), percent(risk(r.qB)))}</dd></div>
     </dl>`;
   const notes = [a.driver.note, a.car.note, b.driver.note, b.car.note].filter(Boolean);
   setNote(
-    `${sameCar ? 'Both drivers in the same car, so the gap is the drivers’ alone, from ratings only. ' : 'What-if matchup from ratings alone. '}No recent form or qualifying. A rating is measured against the field of its own time, so comparing eras is a thought experiment.${notes.length ? ` ${[...new Set(notes)].join(' ')}` : ''}`,
+    `${sameCar ? 'Both drivers in the same car, so the gap is the drivers’ alone, from ratings only. ' : 'What-if matchup from ratings alone. '}${r.approximate ? 'Cross-date uncertainty treats dated states as independent. ' : ''}This uses current calibration, not a historical backtest. A rating is measured against the field of its own time, so comparing eras is a thought experiment.${notes.length ? ` ${[...new Set(notes)].join(' ')}` : ''}`,
   );
   showMoments();
 }
@@ -442,31 +393,22 @@ export function renderHeadToHead() {
       });
     return;
   }
-  const L = Math.max(1, Math.round(+el.headToHeadLaps.value || 60));
-  const mode = el.headToHeadSession.value || 'pre';
+  const L = Math.min(100, Math.max(1, Math.round(+el.headToHeadLaps.value || 60)));
+  el.headToHeadGridFields.hidden = true;
   if (side.headToHeadWhenA) {
     el.headToHeadSameCar.setAttribute('aria-pressed', String(sameCar));
     for (const s of SIDES) syncSide(s);
     const sides = matchup();
-    const wet = el.headToHeadWet.value === 'wet';
-    if (!isLive(sides, wet)) return renderScenario(sides, wet, L);
+    if (!isLive(sides)) return renderScenario(sides, L);
   }
-  el.headToHeadSessionField.hidden = false;
-  el.headToHeadGridFields.hidden = mode !== 'post';
-  const grid = (elm) => {
-    const v = +elm.value;
-    return Number.isFinite(v) && v > 0 ? v : NaN;
-  };
-  const r =
-    mode === 'post'
-      ? forecasting.forecastH2H(state.model, el.headToHeadA.value, el.headToHeadB.value, L, {
-          gridA: grid(el.headToHeadGridA),
-          gridB: grid(el.headToHeadGridB),
-        })
-      : forecasting.forecastPreWeekend(state.model, el.headToHeadA.value, el.headToHeadB.value, {
-          L,
-          circuitId: el.headToHeadCircuit.value || '',
-        });
+  el.headToHeadGridFields.hidden = false;
+  const gridA = +el.headToHeadGridA.value || null;
+  const gridB = +el.headToHeadGridB.value || null;
+  const validGrid = el.headToHeadGridA.validity.valid && el.headToHeadGridB.validity.valid && (!gridA || !gridB || gridA !== gridB);
+  const r = forecasting.forecastRace(state.model, el.headToHeadA.value, el.headToHeadB.value, {
+    L,
+    ...(validGrid ? { gridA, gridB } : {}),
+  });
   if (!r) {
     el.headToHeadOut.textContent = 'These two drivers never appeared in the same race.';
     el.headToHeadChartWrap.hidden = true;
@@ -478,20 +420,15 @@ export function renderHeadToHead() {
   const same = el.headToHeadA.value === el.headToHeadB.value;
   const pA = same ? 0.5 : r.p;
   const risk = (q) => 1 - (1 - q) ** r.L;
-  // Hybrid ratings alone with approximate filter uncertainty; otherwise the gap the forecast starts from.
-  const own =
-    forecasting.isStateSpace(state.model) && !same
-      ? forecasting.ratingsAlone(state.model, el.headToHeadA.value, el.headToHeadB.value)
-      : null;
-  const gap = own ? own.gap : (r.gap ?? r.a.packagePace - r.b.packagePace);
+  const gap = r.gap;
   const nameA = surname(r.a.name);
   const nameB = surname(r.b.name);
   const teammates = r.a.constructorId === r.b.constructorId;
-  const steps = r.breakdown && !same ? stepsHtml(r, nameA, nameB, teammates, own) : '';
+  const steps = r.breakdown && !same ? stepsHtml(r, nameA, nameB) : '';
   const latestOf = (id) => state.model.dh.get(String(id)).at(-1);
   const sideOf = (x) => {
     const point = latestOf(x.driverId);
-    return { name: x.name, lines: [x.car], rating: Math.round(point.race), date: point.date, raceId: point.raceId };
+    return { name: x.name, lines: [x.car], rating: Math.round(point.overall), date: point.date, raceId: point.raceId };
   };
   const [headA, headB] = [sideOf(r.a), sideOf(r.b)];
   resolved = { A: headA, B: headB };
@@ -500,22 +437,12 @@ export function renderHeadToHead() {
     ${topHtml(headA, headB, pA, r.a.name, r.b.name)}
     ${steps}
     <dl class="head-to-head-facts">
-      <div><dt>Race-rating gap${infoHtml(`${nameA} minus ${nameB}${teammates ? ', same car' : ', car included'}${own ? `, with approximate filter uncertainty (±${own.sd.toFixed(0)}; excludes the full blend)` : ''}.`)}</dt><dd>${same ? '0' : signed(gap)}${own ? ` ± ${own.sd.toFixed(0)}` : ''} <small>points</small></dd></div>
+      <div><dt>Overall rating gap${infoHtml(`${nameA} minus ${nameB}${teammates ? ', same car' : ', car included'}. Approximate joint standard deviation.`)}</dt><dd>${signed(gap)} ± ${r.sd.toFixed(0)} <small>points</small></dd></div>
       <div><dt>Retirement risk, ${r.L} laps${infoHtml(`The chance that each driver retires within ${r.L} laps: ${nameA} first, ${nameB} second.`)}</dt><dd>${swatches(percent(risk(r.qA)), percent(risk(r.qB)))}</dd></div>
     </dl>`;
-  const form =
-    r.forecastMode === 'post'
-      ? 'with the full qualifying result'
-      : r.forecastMode === 'grid'
-        ? 'with the starting grid only'
-        : 'before qualifying';
-  el.headToHeadState.textContent = conditionsLine(
-    false,
-    r.L,
-    { post: 'after qualifying', grid: 'grid only' }[r.forecastMode] ?? 'before qualifying',
-  );
+  el.headToHeadState.textContent = conditionsLine(r.L, r.forecastMode === 'grid' ? `grid ${gridA} vs ${gridB}` : 'before the weekend');
   setNote(
-    `Chance of finishing ahead over ${r.L} laps, ${form}, with results through the ${r.snap.year} ${r.snap.name}. A dry race is assumed; change that under Conditions.`,
+    `Chance of finishing ahead over ${r.L} laps, using ratings through the ${r.snap.year} ${r.snap.name}. Includes retirement risk. ${r.forecastMode === 'grid' ? 'Conditional on the supplied starting positions; these do not update the strength ratings.' : 'Pre-weekend forecast. Enter two valid, different starting positions in Conditions to include the grid.'} No circuit or weather adjustment.`,
   );
   showMoments();
 }
@@ -541,23 +468,20 @@ export function initHeadToHead() {
       renderHeadToHead();
       followMoment(s);
     });
-  for (const node of [
-    el.headToHeadA,
-    el.headToHeadB,
-    el.headToHeadLaps,
-    el.headToHeadSession,
-    el.headToHeadCircuit,
-    el.headToHeadGridA,
-    el.headToHeadGridB,
-    el.headToHeadWet,
-  ]) {
-    node.addEventListener('input', renderHeadToHead);
-    node.addEventListener('change', renderHeadToHead);
+  for (const node of [el.headToHeadA, el.headToHeadB, el.headToHeadLaps]) {
+    const changed = () => {
+      if (node !== el.headToHeadLaps) el.headToHeadGridA.value = el.headToHeadGridB.value = '';
+      renderHeadToHead();
+    };
+    node.addEventListener('input', changed);
+    node.addEventListener('change', changed);
   }
+  for (const node of [el.headToHeadGridA, el.headToHeadGridB]) node.addEventListener('input', renderHeadToHead);
   /** "Head to head" from the ratings page: the two selected drivers become driver A and driver B. */
   window.addEventListener('f1:compare-head-to-head', (event) => {
     const ids = event.detail?.ids;
     if (!state.model || !Array.isArray(ids) || ids.length !== 2) return;
+    el.headToHeadGridA.value = el.headToHeadGridB.value = '';
     ids.forEach((id, i) => {
       const select = [el.headToHeadA, el.headToHeadB][i];
       if ([...select.options].some((option) => option.value === String(id))) select.value = String(id);

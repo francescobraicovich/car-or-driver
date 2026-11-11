@@ -113,6 +113,7 @@ export function exportRowsFor(info, driverRows, carMap) {
       constructor: d.car,
       driverRace: d.race,
       driverQual: d.qual,
+      ...(d.overall === undefined ? {} : { driverOverall: d.overall, carOverall: c?.overall, packageOverall: d.packageOverall }),
       driverCombined: d.combined,
       driverEffective: d.effective,
       driverClean: d.clean,

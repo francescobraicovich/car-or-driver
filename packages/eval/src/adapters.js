@@ -19,8 +19,6 @@ import { runStateSpace, STATE_SPACE_DEFAULTS } from '../../core/src/state-space/
 import { STATE_SPACE } from '../../core/src/presets/state-space.js';
 import { qualLink } from '../../core/src/state-space/qualifying-link.js';
 
-const logit = (p) => Math.log(Math.min(1 - 1e-12, Math.max(1e-12, p)) / (1 - Math.min(1 - 1e-12, Math.max(1e-12, p))));
-
 /**
  * The joint state-space filter on a timeline.
  * @param {object[]} timeline
@@ -57,30 +55,4 @@ export function stateSpaceRun(timeline, session, ctx, hyper = {}, name = 'state-
     drift: { driver: h.raceD ** 2, car: h.raceC ** 2 },
     raw: out, // the filter's own output, for the forecast layer (finishStateSpace)
   };
-}
-
-/**
- * The Elo-style ratings of the benchmark pass, as a rating run.
- * @param {object[]} timeline
- * @param {object[]} weekends   collectExamWithElo(...).weekends (carry the Elo levels before each weekend)
- * @param {object[]} snaps      collectExamWithElo(...).elo.snaps (Elo ratings after each weekend)
- * @param {'race'|'qual'} session
- * @param {number} [scale]      the Elo scale of the likelihood (rating points per factor ten in odds)
- */
-export function eloRun(timeline, weekends, snaps, session, scale = 75) {
-  const field = session === 'race' ? 'race' : 'qual';
-  const strKeys = (m) => new Map([...m].map(([id, v]) => [String(id), v]));
-  const post = snaps.map((s) => ({
-    drivers: new Map(s.drivers.map((d) => [String(d.driverId), { m: d[field], sd: null, seen: true }])),
-    cars: new Map(s.cars.map((c) => [String(c.constructorId), { m: c[field], sd: null }])),
-  }));
-  const pre = weekends.map((w) => ({
-    drivers: strKeys(session === 'race' ? w.eloD : w.eloQD),
-    cars: strKeys(session === 'race' ? w.eloC : w.eloQC),
-  }));
-  const z = timeline.map((w) => {
-    const plain = Float64Array.from(w.obs[session], (o) => logit(o.pElo));
-    return { plain, adj: plain, vari: null };
-  });
-  return { name: 'elo', session, k: Math.LN10 / scale, post, pre, z, drift: null };
 }

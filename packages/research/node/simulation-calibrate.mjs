@@ -1,5 +1,5 @@
 // Calibrate the free noise parameters of the v2 world so that the SHIPPED filter, run on a world, behaves as it does on the real data:
-// the loss by observation source, in the wet, the calibration multiplier, for race and qualifying (research/eval, docs/evaluation.md).
+// the loss by observation source, in the wet, the calibration multiplier, for race and qualifying (docs/backtesting.md).
 //
 //   node packages/research/node/simulation-calibrate.mjs --session race --params sigmaStint,luckDriver [--seeds 3] [--last 2011]
 //

@@ -8,10 +8,10 @@ import { metricLabel, metricValue } from './charts.js';
 import { barScale, barShare } from './ratings-bars.js';
 import { DESCRIPTIONS, NAMES, isProbability } from './metric-text.js';
 
-// Recent form adjusts the race-pace ratings only.
-const PACE_METRICS = ['race', 'qual'];
+// All three outputs are unified posterior means translated onto their dated display references.
+const PACE_METRICS = ['overall', 'race', 'qual'];
 const GUIDE_TEXT = {
-  pace: 'Estimated pace after this weekend · higher is faster · 1,000 is the average of this grid',
+  pace: 'Estimated strength after this weekend · higher is stronger · 1,000 is the recent-era reference',
   effective: 'Effective pace after this weekend · higher is better · includes finishing risk',
   clean: 'Clean-race probability after this weekend · higher % means fewer driver-caused retirements',
   survival: 'Survival probability after this weekend · higher % means fewer mechanical failures',
@@ -20,16 +20,14 @@ const GUIDE_TEXT = {
 };
 
 const preferences = {
-  driver: { metric: 'race', selected: new Set() },
-  car: { metric: 'race', selected: new Set() },
+  driver: { metric: 'overall', selected: new Set() },
+  car: { metric: 'overall', selected: new Set() },
 };
 let entity = 'driver';
-let formOn = false;
 let showSd = true;
 let ratingDecimals = 1;
-// Approximate standard deviations from the state-space filters. The hybrid
-// blend does not propagate uncertainty from its qualifying and online signals.
-const SD_FIELD = { race: 'raceSd', qual: 'qualSd' };
+// Raw posterior standard deviations are unchanged by the deterministic display translation.
+const SD_FIELD = { overall: 'overallSd', race: 'raceSd', qual: 'qualSd' };
 const sdOf = (row, metric) => {
   const v = row[SD_FIELD[metric]];
   return Number.isFinite(v) ? v : NaN;
@@ -77,12 +75,12 @@ const currentIndex = () => state.raceIndex;
 
 /** Show weekend `i` (clamped to the modelled weekends). A change the user made is announced, so the workspace can put it in the URL. */
 export function setRace(i, { announce = true } = {}) {
-  const n = state.model?.snaps.length || 0;
+  const n = state.displayModel?.snaps.length || 0;
   if (!n) return;
   state.raceIndex = clamp(Number.isFinite(+i) ? Math.round(+i) : n - 1, 0, n - 1);
   renderRatings();
   if (!announce) return;
-  const snap = state.model.snaps[state.raceIndex];
+  const snap = state.displayModel.snaps[state.raceIndex];
   window.dispatchEvent(new CustomEvent('f1:race-changed', { detail: { index: state.raceIndex, raceId: snap.raceId, date: snap.date } }));
 }
 
@@ -98,7 +96,7 @@ export function setEntity(next) {
 export function populate() {
   el.ratingsHost.hidden = false;
   el.chartsPanel.hidden = false;
-  setRace(state.model.snaps.length - 1, { announce: false });
+  setRace(state.displayModel.snaps.length - 1, { announce: false });
 }
 
 /** The weekends are going by, as when the slider is held (Head to head sets it while its date is dragged): no card, and the race on the page waits for the weekend they stop at. */
@@ -119,7 +117,7 @@ function stop() {
 }
 
 function play() {
-  const last = (state.model?.snaps.length || 1) - 1;
+  const last = (state.displayModel?.snaps.length || 1) - 1;
   if (currentIndex() >= last) setRace(0);
   controls.ratingsPlay.setAttribute('aria-label', 'Pause');
   controls.ratingsPlay.firstElementChild.firstElementChild.setAttribute('d', PAUSE_PATH);
@@ -148,7 +146,6 @@ function ensurePanel() {
     </header>
     <div class="frame-tools">
       <label class="field"><span class="sr-only">Rating</span><select id="ratingsMetric"></select></label>
-      <button type="button" class="toggle" id="ratingsLayerForm" aria-pressed="false">form</button>
       <button type="button" class="toggle" id="ratingsSd" aria-pressed="true" aria-label="Uncertainty">±</button>
     </div>
     <div class="ratings-guide">
@@ -204,10 +201,6 @@ function ensurePanel() {
     preferences[entity].metric = controls.ratingsMetric.value;
     renderRatings();
   });
-  controls.ratingsLayerForm.addEventListener('click', () => {
-    formOn = !formOn;
-    renderRatings();
-  });
   controls.ratingsSd.addEventListener('click', () => {
     showSd = !showSd;
     renderRatings();
@@ -228,7 +221,7 @@ function ensurePanel() {
   controls.ratingsScrub.addEventListener('input', () => setRace(+controls.ratingsScrub.value));
   controls.ratingsSeason.addEventListener('change', () => {
     stop();
-    const last = state.model.snaps.map((s) => s.year).lastIndexOf(+controls.ratingsSeason.value);
+    const last = state.displayModel.snaps.map((s) => s.year).lastIndexOf(+controls.ratingsSeason.value);
     if (last >= 0) setRace(last);
   });
   controls.ratingsGp.addEventListener('change', () => {
@@ -276,7 +269,6 @@ function ensurePanel() {
 // A rating with a standard deviation of several points is shown without decimals: they would claim precision it does not have.
 const fmt = (value, probability) =>
   Number.isFinite(value) ? `${value.toFixed(probability ? 1 : ratingDecimals)}${probability ? '%' : ''}` : '—';
-const signed = (v) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)}`;
 
 function changeParts(row, probability) {
   if (!row.previous) return { text: 'New', tone: '' };
@@ -286,43 +278,14 @@ function changeParts(row, probability) {
   return { text: `${v > 0 ? '▲' : '▼'} ${Math.abs(v).toFixed(1)}${probability ? ' pp' : ''}`, tone: v > 0 ? 'var(--pos)' : 'var(--neg)' };
 }
 
-/** What the last column of a row says, in as few characters as it can: the shift from recent form when that is on, otherwise the change since the previous appearance. */
-function lastColumn(row, probability, showForm) {
-  if (showForm) {
-    const v = Number((row.shift ?? 0).toFixed(1));
-    return v === 0 ? { text: '', tone: '' } : { text: `${v > 0 ? '▲' : '▼'}${Math.abs(v).toFixed(1)}`, tone: v > 0 ? 'up' : 'down' };
-  }
+/** Change since the previous appearance. */
+function lastColumn(row, probability) {
   const { text } = changeParts(row, probability);
   const tone = text.startsWith('▲') ? 'up' : text.startsWith('▼') ? 'down' : ''; // a class, not an inline colour: an inline colour would stay on the inverted row
   return { text: text === '0.0' ? '' : text === 'New' ? 'new' : text.replace(/([▲▼]) /, '$1').replace(' pp', 'pp'), tone };
 }
 
-/**
- * Whether recent form is on. "With recent form" adds the forecast model's form shift to the pace rating, for drivers or cars, for
- * race pace, on the latest weekend; otherwise it is unavailable and the rating is shown.
- */
-function layerState(pref) {
-  let reason = '';
-  if (pref.metric !== 'race') reason = 'Recent form applies to Race pace.';
-  else if (currentIndex() !== state.model.snaps.length - 1) reason = 'Recent form is only shown for the latest weekend.';
-  const shifts = reason ? null : entity === 'driver' ? state.model.formShifts : state.model.carFormShifts;
-  if (!reason && !shifts) reason = 'Recent form is not available for this model.';
-  return { shifts, reason, showForm: formOn && !reason, sd: false };
-}
-
-/** Rows ranked by what is being shown: with recent form, the form-adjusted value. */
-function withForm(rows, st) {
-  if (!st.showForm) return rows;
-  return rows
-    .map((row) => {
-      const shift = st.shifts.get(row.id) ?? 0;
-      return { ...row, shift, formValue: row.value + shift };
-    })
-    .sort((a, b) => b.formValue - a.formValue || a.name.localeCompare(b.name))
-    .map((row, i) => ({ ...row, rank: i + 1 }));
-}
-
-function description(row, snap, metric, probability, st) {
+function description(row, snap, metric, probability) {
   const change = changeParts(row, probability).text;
   const lines = [
     `${row.name}${entity === 'driver' && row.car ? ` · ${row.car}` : ''}`,
@@ -331,9 +294,8 @@ function description(row, snap, metric, probability, st) {
   if (row.newDriver) lines.push(`New driver: ${row.races} race${row.races === 1 ? '' : 's'} so far, so the rating is provisional`);
   if (Number.isFinite(sdOf(row, metric)))
     lines.push(
-      `Uncertainty: ± ${sdOf(row, metric).toFixed(0)} points (approximate filter standard deviation; excludes the full hybrid blend)`,
+      `Uncertainty: ± ${sdOf(row, metric).toFixed(0)} points (approximate joint standard deviation; assumes the model is correct)`,
     );
-  if (st.showForm) lines.push(`With recent form: ${fmt(row.formValue, probability)} (${signed(row.shift)} from form)`);
   lines.push(`Change since previous appearance: ${change}`, `${snap.year} ${snap.name}`);
   return lines.join('\n');
 }
@@ -390,48 +352,37 @@ function createRow() {
     }
   });
   item.append(line);
-  item._parts = { line, bar, base, cells, form: null, point };
+  item._parts = { line, bar, base, cells, point };
   return item;
 }
 
-/** What a row says for a weekend: the text, the classes, and the bar (blue to the rating, with the form stacked on it in FA1802). */
-function fillRow(item, row, index, { snap, metric, probability, st, share, low, high, names, teams, selected }) {
+/** The text and rating bar for a weekend. */
+function fillRow(item, row, index, { snap, metric, probability, share, names, teams, selected }) {
   item._data = { row, snap };
-  const { line, bar, base, cells } = item._parts;
+  const { line, base, cells } = item._parts;
   item.style.order = String(index); // where the row is on the screen; the order in the document follows once the rows have glided (settle)
   line.dataset.id = row.id;
   line.classList.toggle('selected', selected.has(row.id));
   line.classList.toggle('linked', isLinked(row.id));
   line.setAttribute('aria-pressed', String(selected.has(row.id)));
-  line.setAttribute('aria-label', description(row, snap, metric, probability, st));
-  const last = lastColumn(row, probability, st.showForm);
+  line.setAttribute('aria-label', description(row, snap, metric, probability));
+  const last = lastColumn(row, probability);
   cells.rank.textContent = row.rank;
   cells.name.textContent = names[index];
   cells.team.textContent = teams[index];
-  cells.rating.textContent = fmt(st.showForm ? row.formValue : row.value, probability);
+  cells.rating.textContent = fmt(row.value, probability);
   cells.deviation.textContent = Number.isFinite(sdOf(row, metric)) ? `±${sdOf(row, metric).toFixed(0)}` : '';
   cells.change.className = `change ${last.tone}`.trim();
   cells.change.textContent = last.text;
-  const from = st.showForm ? Math.min(row.value, row.formValue) : row.value;
-  base.style.width = share(from);
-  if (st.showForm && row.shift) {
-    const form = (item._parts.form ??= bar.appendChild(element('i', 'bar-form')));
-    form.classList.toggle('loss', row.shift < 0);
-    form.style.left = share(from);
-    form.style.width = `${(100 * (barShare(Math.max(row.value, row.formValue), low, high) - barShare(from, low, high))).toFixed(2)}%`;
-  } else if (item._parts.form) {
-    item._parts.form.remove();
-    item._parts.form = null;
-  }
+  base.style.width = share(row.value);
 }
 
 /**
  * The ratings, ranked, as rows: rank, name (and team when there is room), rating, error, a bar, and the last column. The bar runs from the left to
- * the rating, in blue; with recent form on, the shift is stacked on it in FA1802 (solid where form adds to the rating, an outline where it takes
- * away from it). A vertical line marks the average, 1,000 on the rating scale, or the mean of what is shown for the probabilities.
+ * the rating. A vertical line marks the fixed 1,000 reference for strengths, or the mean of what is shown for the probabilities.
  *
  * The rows stay from one weekend to the next (and from one rating to another): when the places change they glide to their new ones, the bars grow or
- * shrink, the average line moves, a driver who joins fades in and one who leaves is gone. The glide is FLIP: where each row is now is measured, the
+ * shrink, the reference line moves, a driver who joins fades in and one who leaves is gone. The glide is FLIP: where each row is now is measured, the
  * rows are put in their new places, and each is moved back to where it was and let go. A row is put in its place on the screen with the CSS `order`;
  * the order in the document (for the keyboard and for screen readers) follows once the rows have glided, because moving a node in the document cancels
  * what it is doing. With reduced motion nothing glides.
@@ -459,7 +410,7 @@ function drawList(rows, snap, metric, probability, st) {
   list.classList.toggle('with-sd', st.sd && width >= 400); // a phone has no room for the error beside every rating
   list.setAttribute(
     'aria-label',
-    `${entity === 'driver' ? 'Driver' : 'Car'} ratings, ${NAMES[metric] || metric}${st.showForm ? ', with recent form' : ''}, ranked. Press a row to select it for comparison.`,
+    `${entity === 'driver' ? 'Driver' : 'Car'} ratings, ${NAMES[metric] || metric}, ranked. Press a row to select it for comparison.`,
   );
   if (!rows.length) {
     rowElements.clear();
@@ -477,7 +428,7 @@ function drawList(rows, snap, metric, probability, st) {
       item.style.transition = 'none';
       item.style.transform = 'none';
     }
-  const context = { snap, metric, probability, st, share, low, high, names, teams, selected };
+  const context = { snap, metric, probability, share, names, teams, selected };
   const entering = [];
   rows.forEach((row, index) => {
     let item = rowElements.get(keys[index]);
@@ -581,15 +532,9 @@ function showCard(row, target, snap) {
   };
   const sd = (value) => (Number.isFinite(value) ? { text: ` ±${Math.round(value)}` } : null);
   add('Rank', String(row.rank));
+  add('Overall strength', fmt(row.overall, false), sd(row.overallSd));
   add('Race pace', fmt(row.race, false), sd(row.raceSd));
   add('Quali pace', fmt(row.qual, false), sd(row.qualSd));
-  const shifts = isDriver ? state.model.formShifts : state.model.carFormShifts;
-  const shift = currentIndex() === state.model.snaps.length - 1 ? shifts?.get(row.id) : undefined;
-  if (Number.isFinite(shift) && Number.isFinite(row.race))
-    add('Race with form', fmt(row.race + shift, false), {
-      text: ` ${shift >= 0 ? '▲' : '▼'}${Math.abs(shift).toFixed(1)}`,
-      tone: shift >= 0 ? 'up' : 'down',
-    });
   card.replaceChildren(heading, ...(facts.length ? [element('p', 'card-facts', facts.join(' · '))] : []), grid);
   // beside the panel, level with the row, on a wide screen; under the row (or over it, near the bottom) on a narrow one
   card.hidden = false;
@@ -617,7 +562,9 @@ function announceRow(id) {
 }
 
 function updateSelection() {
-  const names = new Map(ratingRows(state.model, currentIndex(), entity, preferences[entity].metric).map((row) => [row.id, row.name]));
+  const names = new Map(
+    ratingRows(state.displayModel, currentIndex(), entity, preferences[entity].metric).map((row) => [row.id, row.name]),
+  );
   const chosen = [...preferences[entity].selected].filter((id) => names.has(id));
   controls.ratingsSelection.hidden = chosen.length === 0;
   controls.ratingsSelectionNames.textContent = chosen.length
@@ -631,7 +578,7 @@ function updateSelection() {
 }
 
 function syncTimeline(snap) {
-  const snaps = state.model.snaps;
+  const snaps = state.displayModel.snaps;
   const n = snaps.length;
   const index = currentIndex();
   const { ratingsScrub: scrub } = controls;
@@ -658,7 +605,7 @@ export function renderRatings() {
   if (!el.ratingsHost) return;
   ensurePanel();
   const pref = preferences[entity];
-  const metrics = ['race', 'qual', 'effective', entity === 'driver' ? 'clean' : 'survival'];
+  const metrics = ['overall', 'race', 'qual', entity === 'driver' ? 'clean' : 'survival'];
   controls.ratingsMetric.innerHTML = metrics
     .map((m) => `<option value="${m}"${m === pref.metric ? ' selected' : ''}>${esc(NAMES[m])}</option>`)
     .join('');
@@ -667,37 +614,33 @@ export function renderRatings() {
     ['ratingsCars', entity === 'car'],
   ])
     controls[id].setAttribute('aria-pressed', String(on));
-  const snap = state.model?.snaps[currentIndex()];
+  const snap = state.displayModel?.snaps[currentIndex()];
   if (!snap) {
     controls.ratingsTitle.textContent = 'Ratings';
     rowElements.clear();
     controls.ratingsList.replaceChildren();
     return;
   }
-  const st = layerState(pref);
-  const baseRows = ratingRows(state.model, currentIndex(), entity, pref.metric);
+  const st = { sd: false };
+  const baseRows = ratingRows(state.displayModel, currentIndex(), entity, pref.metric);
   const hasSd = baseRows.some((r) => Number.isFinite(sdOf(r, pref.metric)));
   ratingDecimals = hasSd ? 0 : 1;
   st.sd = showSd && hasSd;
   controls.ratingsSd.setAttribute('aria-pressed', String(st.sd));
   controls.ratingsSd.toggleAttribute('disabled', !hasSd);
   controls.ratingsSd.hidden = panel.getBoundingClientRect().width < 400; // a phone has no room for the error beside every rating
-  controls.ratingsSd.title = hasSd ? 'Show approximate filter uncertainty for each rating' : 'This rating has no uncertainty estimate';
-  const rows = withForm(baseRows, st);
+  controls.ratingsSd.title = hasSd ? 'Show approximate joint uncertainty for each rating' : 'This rating has no uncertainty estimate';
+  const rows = baseRows;
   const probability = isProbability(pref.metric);
-  controls.ratingsLayerForm.setAttribute('aria-pressed', String(st.showForm));
-  controls.ratingsLayerForm.toggleAttribute('disabled', Boolean(st.reason));
-  controls.ratingsLayerForm.title =
-    st.reason || `Add recent race form for each ${entity}; an approximate contribution to the race forecast`;
   controls.ratingsMetric.title = DESCRIPTIONS[pref.metric];
   controls.ratingsGuideLine.textContent = PACE_METRICS.includes(pref.metric) ? GUIDE_TEXT.pace : GUIDE_TEXT[pref.metric];
   const paceMeaning =
     entity === 'driver'
-      ? 'These rankings are our model’s estimates of how fast each driver would be in the same car. The model estimates the car’s effect separately.'
-      : 'These rankings are our model’s estimates of how fast each car would be with the same driver. The model estimates the driver’s effect separately.';
+      ? 'These rankings are our model’s estimates of each driver’s contribution, holding the car constant. The model estimates the car’s effect separately.'
+      : 'These rankings are our model’s estimates of each car’s contribution, holding the driver constant. The model estimates the driver’s effect separately.';
   controls.ratingsGuideText.textContent = PACE_METRICS.includes(pref.metric)
-    ? `${paceMeaning} ${DESCRIPTIONS[pref.metric]} They are relative estimates, not lap times or championship points. 1,000 is the average of this grid. The ± value approximates uncertainty in the filter, not the full model.`
-    : `${DESCRIPTIONS[pref.metric]} This ranking estimates the ${entity === 'driver' ? 'driver' : 'car'} separately from the ${entity === 'driver' ? 'car' : 'driver'}. The ± value, where shown, approximates uncertainty in the filter, not the full model.`;
+    ? `${paceMeaning} ${DESCRIPTIONS[pref.metric]} They are strength estimates, not lap times or championship points. 1,000 is a recent-era reference, updated from earlier field averages with a 20-weekend half-life. The current field average can differ from 1,000. The ± value retains the model’s uncertainty, conditional on this display reference; it does not measure cross-era comparability.`
+    : `${DESCRIPTIONS[pref.metric]} This ranking estimates the ${entity === 'driver' ? 'driver' : 'car'} separately from the ${entity === 'driver' ? 'car' : 'driver'}. The ± value, where shown, approximates uncertainty in the joint model, conditional on its assumptions.`;
   // the weekend is in the pickers beside the title, so only a screen reader is told it twice
   controls.ratingsTitle.innerHTML = `${entity === 'driver' ? 'Driver' : 'Car'} ratings<span class="sr-only"> after the ${esc(`${snap.year} ${snap.name}`)}</span>`;
   hideCard();

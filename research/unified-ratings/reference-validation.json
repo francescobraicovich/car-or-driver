@@ -1,0 +1,128 @@
+{
+  "description": "Publication reference change only; inference, calibration and learning settings unchanged.",
+  "previousSourceHash": "3ee3edcaf622d5f1",
+  "sourceHash": "dc909062c7273b74",
+  "weekends": 620,
+  "pairs": 168477,
+  "maximumGapDifference": 0.014999999999986358,
+  "maximumVarianceDifference": 2.3600000176315916e-08,
+  "forecastPairs": 231,
+  "maximumPreWeekendDifference": 6.535752747638401e-05,
+  "maximumGridDifference": 5.045622513988324e-05,
+  "maximumTimingDifference": 1.9071114249792631e-06,
+  "chronologicalDiagnosticsIdentical": true,
+  "forecastStateIdentical": true,
+  "gasly": [
+    {
+      "date": "2021-09-05",
+      "before": 5.057000000000016,
+      "after": 2.689999999999941
+    },
+    {
+      "date": "2024-03-09",
+      "before": 2.643000000000029,
+      "after": 0.4700000000000273
+    },
+    {
+      "date": "2024-03-24",
+      "before": -3.5679999999999836,
+      "after": 0.75
+    }
+  ],
+  "movement": {
+    "drivers": {
+      "qual": {
+        "before": {
+          "count": 7173,
+          "median": 1.07000000000005,
+          "p90": 3.25
+        },
+        "after": {
+          "count": 7173,
+          "median": 0.9699999999999136,
+          "p90": 2.9200000000000728
+        }
+      },
+      "race": {
+        "before": {
+          "count": 7173,
+          "median": 1.0650000000000546,
+          "p90": 3.32000000000005
+        },
+        "after": {
+          "count": 7173,
+          "median": 0.9700000000000273,
+          "p90": 2.990000000000009
+        }
+      },
+      "overall": {
+        "before": {
+          "count": 7173,
+          "median": 1.2350000000000136,
+          "p90": 3.368000000000052
+        },
+        "after": {
+          "count": 7173,
+          "median": 1.1499999999999773,
+          "p90": 3.0599999999999454
+        }
+      }
+    },
+    "cars": {
+      "qual": {
+        "before": {
+          "count": 3622,
+          "median": 3.099999999999909,
+          "p90": 8.896999999999935
+        },
+        "after": {
+          "count": 3622,
+          "median": 3.0699999999999363,
+          "p90": 8.699999999999818
+        }
+      },
+      "race": {
+        "before": {
+          "count": 3622,
+          "median": 3.2409999999999854,
+          "p90": 9.920000000000073
+        },
+        "after": {
+          "count": 3622,
+          "median": 3.230000000000018,
+          "p90": 9.590000000000146
+        }
+      },
+      "overall": {
+        "before": {
+          "count": 3622,
+          "median": 2.6700000000000728,
+          "p90": 7.619999999999891
+        },
+        "after": {
+          "count": 3622,
+          "median": 2.6699999999998454,
+          "p90": 7.579999999999927
+        }
+      }
+    }
+  },
+  "gaslyOverallMovement": {
+    "before": {
+      "count": 168,
+      "median": 1.1330000000000382,
+      "p90": 3.1539999999999964
+    },
+    "after": {
+      "count": 168,
+      "median": 1.0599999999999454,
+      "p90": 3.0200000000000955
+    }
+  },
+  "movementSample": {
+    "fromYear": 2008,
+    "throughYear": 2025,
+    "maximumDaysBetweenAdjacentWeekends": 60,
+    "definition": "Absolute change for an entity present in both adjacent published weekends; quantiles weighted equally per entity-weekend."
+  }
+}

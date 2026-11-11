@@ -1,0 +1,29 @@
+{
+  "form": "none",
+  "strengthModel": "existing unified three-output filter",
+  "preWeekendHead": "existing positive-slope calibration",
+  "gridHead": "two-coefficient overall-gap and grid-gap model",
+  "circuitCorrection": false,
+  "weatherCorrection": false,
+  "additionalTemperature": false,
+  "parametersSelectedThrough": 2007,
+  "historicalYears": [
+    2008,
+    2025
+  ],
+  "monitoringYear": 2026,
+  "noFormLoss": 0.5301171921210698,
+  "gridControlLoss": 0.528053317686035,
+  "gridLoss": 0.5046464521161673,
+  "gridDifferenceInterval95": [
+    -0.03100320782717572,
+    -0.016177224937284306
+  ],
+  "limitations": [
+    "Retrospective model selection; earlier development used these historical eras.",
+    "Grid scores use the same grid-covered pairs on both sides, not the full Thursday sample.",
+    "Known entrants and final grid records are treated as available before the relevant forecast.",
+    "No reliable separate measurement of slow ability and fast form is established.",
+    "Weather checks condition on realized labels and are not tests of a weather forecast."
+  ]
+}

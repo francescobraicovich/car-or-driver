@@ -11,7 +11,7 @@ import { REGULATION_YEARS, driverPost, makeControls } from './events.js';
 
 const byYear = (it) => it.year;
 
-function efficiency(idx, run, controls, { minPrior = 20 } = {}) {
+function efficiency(idx, run, controls, { minPrior = 20, fromYear = -Infinity, toYear = Infinity } = {}) {
   const items = { driver: [], car: [] };
   for (const [d, apps] of idx.appear) {
     const u = []; // net revisions between consecutive appearances, with the year and whether a clean in-team step
@@ -37,7 +37,38 @@ function efficiency(idx, run, controls, { minPrior = 20 } = {}) {
     }
     for (let j = 0; j + 1 < u.length; j++) if (u[j] && u[j + 1]) items.car.push({ year: u[j].year, a: u[j].v, b: u[j + 1].v });
   }
+  for (const kind of Object.keys(items)) items[kind] = items[kind].filter((item) => item.year >= fromYear && item.year <= toYear);
   return items;
+}
+
+/** Consecutive within-team revisions, excluding zero changes from directional proportions. */
+export function revisionMetrics(idx, run, { boot = {}, fromYear = -Infinity, toYear = Infinity } = {}) {
+  const items = efficiency(idx, run, makeControls(idx, run), { fromYear, toYear });
+  return Object.fromEntries(
+    Object.entries(items).map(([kind, rows]) => {
+      const directional = rows.filter((row) => row.a !== 0 && row.b !== 0);
+      const continuation = clusterBootstrap(directional, byYear, (xs) => mean(xs.map((x) => +(Math.sign(x.a) === Math.sign(x.b)))), boot);
+      return [
+        kind,
+        {
+          n: rows.length,
+          directionalN: directional.length,
+          slope: clusterBootstrap(
+            rows,
+            byYear,
+            (xs) =>
+              olsOrigin(
+                xs.map((x) => x.a),
+                xs.map((x) => x.b),
+              ),
+            boot,
+          ),
+          continuation,
+          reversal: { ...continuation, est: 1 - continuation.est, lo: 1 - continuation.hi, hi: 1 - continuation.lo },
+        },
+      ];
+    }),
+  );
 }
 
 function uncertainty(idx, run, { K = 6 } = {}) {

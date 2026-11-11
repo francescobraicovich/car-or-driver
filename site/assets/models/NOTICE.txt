@@ -1,0 +1,18 @@
+The GLBs are modified versions of the user-supplied models below. They retain their original licences; the project's MIT licence applies to the authoring and rendering code, not these third-party models.
+
+Car: F1 Mercedes W13 Concept by Nick Broad
+https://sketchfab.com/3d-models/f1-mercedes-w13-concept-b9e85594aec847f78883343d67ee97fb
+https://sketchfab.com/nickbroad
+Creative Commons Attribution 4.0: https://creativecommons.org/licenses/by/4.0/
+Changes by Car or Driver: reduced hidden mechanical geometry, replaced sponsor and team liveries with brushed titanium, carbon and cobalt materials, removed tyre branding, resized the steering wheel to 28 cm in the metre-scale scene and moved it to the driver's hands, and exported a compact web mesh.
+
+Driver: rhp_bell_hp77_driver_f1 by MattDoesBlender
+https://sketchfab.com/3d-models/rhp-bell-hp77-driver-f1-2916ac047ea84abe9394c38e4fa2d4bd
+https://sketchfab.com/MattDoesBlender
+Creative Commons Attribution-NonCommercial-ShareAlike 4.0: https://creativecommons.org/licenses/by-nc-sa/4.0/
+Changes by Car or Driver: baked and positioned the supplied seated pose above the cockpit; rotated the forearms inward and fitted the palms and curled fingers to the 28 cm steering-wheel grips; removed duplicate, hidden and decal geometry; removed marks from suit colour and normal maps; reduced map dimensions; replaced helmet, visor, gloves and equipment materials; and exported a compact web mesh. The modified driver remains under CC BY-NC-SA 4.0.
+
+car-and-driver.glb includes both actors. Keep both credits and their respective licences when reusing it.
+The supplied originals remain in site/assets/f1-driver and site/assets/f1-mercedes-car. Production builds exclude these large source directories.
+
+Conversion uses ufbx v0.20.0 (https://github.com/ufbx/ufbx), a build-only dependency under the MIT licence. It is not shipped to browsers. No image generation was used.

@@ -1,7 +1,7 @@
-// One backtesting suite for every metric we optimise or guard (docs/metrics.md). computeSuite(env, cfg, qualRun) scores a race configuration on:
+// One backtesting suite for every metric we optimise or guard (docs/backtesting.md). computeSuite(env, cfg, qualRun) scores a race configuration on:
 //   P  overall predictive loss and calibration (the model must stay a good rating system)
 //   S  strict forecasts of drivers in a new car from the rating posted before the move
-//   M  diagnostics of why movers are harder (docs/diagnosis.md): slope ratio, large gaps, early weekends, residual portability, uncertainty
+//   M  diagnostics of why movers are harder (research/evaluation/README.md): slope ratio, large gaps, early weekends, residual portability, uncertainty
 //   T  the separation scorecard and truth-free guards of the earlier climbs
 // Nothing here is tuned to a window: selection windows are chosen by the caller (`sel` = moves through 2015, `late` = 2012+).
 import { indexTimeline, stateSpaceRun, findMoves } from '../../eval/src/index.js';

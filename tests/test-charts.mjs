@@ -9,7 +9,7 @@ const h = [
   snap('2022-03-20', 2022, 1, {
     race: 1000,
     qual: 1000,
-    combined: 1000,
+    overall: 1000,
     effective: 1000,
     clean: 0.9,
     incidentElo: 1000,
@@ -19,7 +19,7 @@ const h = [
   snap('2022-11-20', 2022, 2, {
     race: 1010,
     qual: 1005,
-    combined: 1008,
+    overall: 1008,
     effective: 1006,
     clean: 0.92,
     incidentElo: 1002,
@@ -29,7 +29,7 @@ const h = [
   snap('2023-03-05', 2023, 3, {
     race: 1050,
     qual: 1040,
-    combined: 1046,
+    overall: 1046,
     effective: 1044,
     clean: 0.95,
     incidentElo: 1010,
@@ -39,7 +39,7 @@ const h = [
   snap('2023-04-30', 2023, 4, {
     race: 1060,
     qual: 1055,
-    combined: 1058,
+    overall: 1058,
     effective: 1056,
     clean: 0.96,
     incidentElo: 1012,
@@ -55,20 +55,20 @@ assert.equal(metricValue(h[0], 'reliability', 'car'), 1000);
 assert.ok(Number.isNaN(metricValue(h[0], 'survival', 'driver')));
 assert.equal(metricLabel('survival').includes('60-lap'), true);
 assert.equal(metricLabel('unknown'), 'unknown');
-assert.equal(metricValue(h[1], 'combined', 'driver'), h[1].race, 'legacy chart links use race, not the stored blend');
-assert.equal(metricLabel('combined'), metricLabel('race'));
+assert.equal(metricValue(h[1], 'combined', 'driver'), h[1].overall, 'legacy chart links use overall strength');
+assert.equal(metricLabel('combined'), metricLabel('overall'));
 assert(!METRICS.driver.includes('combined') && !METRICS.car.includes('combined'));
-assert.match(DESCRIPTIONS.effective, /blend of race and qualifying/);
+assert.match(DESCRIPTIONS.effective, /Overall strength/);
 const history = createHistoryView({ onChange() {} });
-assert.equal(history.state.driverMetric, 'race');
-assert.equal(history.state.carMetric, 'race');
+assert.equal(history.state.driverMetric, 'overall');
+assert.equal(history.state.carMetric, 'overall');
 history.readURL(new URLSearchParams('dm=combined&cm=combined'));
 const parameters = new URLSearchParams();
 history.writeURL(parameters);
-assert.equal(parameters.get('dm'), 'race');
-assert.equal(parameters.get('cm'), 'race');
+assert.equal(parameters.get('dm'), 'overall');
+assert.equal(parameters.get('cm'), 'overall');
 history.compare({ entity: 'driver', ids: ['1', '2'], metric: 'combined' }, 2024);
-assert.equal(history.state.driverMetric, 'race', 'old compare events select race');
+assert.equal(history.state.driverMetric, 'overall', 'old compare events select race');
 for (const entity of ['driver', 'car']) {
   assert.ok(METRICS[entity].includes('qual'), `${entity} History retains qualifying`);
   assert.deepEqual(
@@ -81,7 +81,7 @@ for (const entity of ['driver', 'car']) {
     h.map((point) => point.qual),
     `${entity} History uses qualifying values when selected`,
   );
-  assert.equal(metricValue(h[1], 'combined', entity), h[1].race, `${entity} old combined links use race values`);
+  assert.equal(metricValue(h[1], 'combined', entity), h[1].overall, `${entity} old combined links use overall values`);
   history.compare({ entity, ids: ['1', '2'], metric: 'qual' }, 2024);
   assert.equal(history.state[`${entity}Metric`], 'qual', `${entity} qualifying comparison remains qualifying`);
 }

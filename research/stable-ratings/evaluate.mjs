@@ -17,6 +17,10 @@ import { buildTemporalCandidates } from '../temporal-graph/candidates.mjs';
 import { staticGraphExam } from '../temporal-graph/static-graph-exam.mjs';
 import { mixGraph } from './tempered-candidates.mjs';
 import { forecastReport, moverReport, stabilityReport } from './metrics.mjs';
+import { indexTimeline } from '../../packages/eval/src/events.js';
+import { structuralDiagnostics } from '../../packages/eval/src/structural-diagnostics.js';
+import { situationMetrics } from '../../packages/eval/src/situations.js';
+import { MODEL_SETTINGS } from '../../packages/core/src/presets/model-settings.js';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const output = process.argv.slice(2).find((argument) => !argument.startsWith('--'));
@@ -111,15 +115,20 @@ function modelRuns(name) {
 }
 
 function combined(runs) {
+  const weight = MODEL_SETTINGS.qualOn ? MODEL_SETTINGS.qualWeight : 0;
   return {
-    pre: runs.race.pre.map((snapshot, index) => ({
-      rated: new Map([...snapshot.rated].map(([id, value]) => [id, 0.65 * value + 0.35 * (runs.qual.pre[index].rated.get(id) ?? value)])),
-    })),
+    k: runs.race.k,
+    performanceSession: 'race',
+    pre: runs.race.pre.map((snapshot, index) => {
+      const rated = new Map([...snapshot.rated].map(([id, value]) => [id,
+        (1 - weight) * value + weight * (runs.qual.pre[index].rated.get(id) ?? value)]));
+      return { rated, drivers: rated };
+    }),
     post: runs.race.post.map((snapshot, index) => ({
-      drivers: new Map([...snapshot.drivers].map(([id, value]) => {
-        const qual = runs.qual.post[index].drivers.get(id);
-        return [id, { ...value, m: qual && qual.seen !== false ? 0.65 * value.m + 0.35 * qual.m : value.m }];
-      })),
+      ...Object.fromEntries(['drivers', 'cars'].map((kind) => [kind, new Map([...snapshot[kind]].map(([id, value]) => {
+        const qual = runs.qual.post[index][kind].get(id);
+        return [id, { ...value, m: qual && qual.seen !== false ? (1 - weight) * value.m + weight * qual.m : value.m }];
+      }))])),
     })),
   };
 }
@@ -143,6 +152,22 @@ async function evaluate(name) {
   const validation = chronologicalValidation(env.idx, runs, movers);
   const omissions = Object.fromEntries(['race', 'qual'].map((session) => [session, Object.fromEntries([5, 10].map((horizon) => [horizon, movers[session][horizon].items.omitted]))]));
   const monitoring = chronologicalValidation(env.idx, runs, movers, [{ from: 2026, to: 2026 }], { allowUnavailable: true });
+  let diagnostics = null;
+  if (name === 'published') {
+    const timeline = env.timeline.filter((weekend) => weekend.year <= 2025);
+    const idx = indexTimeline(timeline, env.prep.ctx);
+    const views = { race: runs.race, qual: runs.qual, combined: combined(runs) };
+    diagnostics = {
+      period: '2008-2025',
+      structural: Object.fromEntries(Object.entries(views)
+        .map(([session, run]) => [session, structuralDiagnostics(idx, { ...run, session }, { boot: { B: repetitions } })])),
+      monitoringStructural: Object.fromEntries(Object.entries(views)
+        .map(([session, run]) => [session, structuralDiagnostics(env.idx, { ...run, session },
+          { fromYear: 2026, toYear: 2026, boot: { B: 0 } })])),
+      situations: situationMetrics(env.idx, validation.forecasts),
+      monitoringSituations: situationMetrics(env.idx, monitoring.forecasts),
+    };
+  }
   const stability = Object.fromEntries(Object.entries({ race: runs.race, qual: runs.qual, combined: combined(runs) }).map(([session, run]) => [session,
     stabilityReport(env.idx, run, { bootstrap: { B: stabilityRepetitions } }),
   ]));
@@ -156,7 +181,7 @@ async function evaluate(name) {
     const settings = runs[session].raw.hyper;
     return [session, { sdJ: settings.sdJ, shrinkM: settings.shrinkM, mMover: settings.mMover }];
   }));
-  const result = { name, fingerprint: initialFingerprint, validation, monitoring, omissions, stability, examples, driverLearningRules };
+  const result = { name, fingerprint: initialFingerprint, validation, monitoring, omissions, stability, diagnostics, examples, driverLearningRules };
   if (await fingerprint() !== initialFingerprint) throw Error('Source, data or protocol changed while evaluating');
   const temporary = `${path}.${process.pid}.tmp`;
   await writeFile(temporary, JSON.stringify(result));
@@ -244,6 +269,20 @@ for (const name of names) {
   else console.log(`${name}: mover loss ${movers.pooled.primary.candidate.toFixed(5)} (Δ ${compact.primaryMoverDelta.toFixed(5)}); ` +
     `rating |Δ| median/p90/p99 ${s.median.toFixed(2)}/${s.p90.toFixed(2)}/${s.p99.toFixed(2)}; ` +
     `earlier cost guard ${compact.userTradeoffAccepted ? 'passed' : 'failed'}; identical transfer learning ${identicalDriverLearning ? 'yes' : 'reference'}; full forecast validation ${forecastPass === true ? 'passed' : 'separate'}`);
+  if (!output && result.diagnostics) {
+    const fmt = (value) => Number.isFinite(value) ? value.toFixed(3) : 'n/a';
+    for (const [session, diagnostic] of Object.entries(result.diagnostics.structural)) {
+      const shock = diagnostic.shocks.groups['in-season windows'];
+      const mate = diagnostic.teammateArrivals[5].all;
+      console.log(`  ${session}: teammate change (5 weekends) n=${mate.n}, mean=${fmt(mate.mean.est)}, movement/control=${fmt(mate.rmsRatio.est)}; ` +
+        `driver/car correlation=${fmt(shock.corr)}, slope=${fmt(shock.slope.est)}, performance slope=${fmt(shock.slopeFree.est)}; ` +
+        `driver/car revision continuation=${fmt(diagnostic.revisions.driver.continuation.est)}/${fmt(diagnostic.revisions.car.continuation.est)}`);
+    }
+    for (const [session, situations] of Object.entries(result.diagnostics.situations)) for (const [label, scores] of Object.entries(situations)) {
+      if (scores.unweighted) console.log(`  ${session} ${label}: n=${scores.unweighted.count}, weighted/unweighted loss=${fmt(scores.weighted.loss)}/${fmt(scores.unweighted.loss)}, ` +
+        `unweighted calibration slope=${fmt(scores.unweighted.calibrationSlope)}`);
+    }
+  }
 }
 if (await fingerprint() !== initialFingerprint) throw Error('Source, data or protocol changed during comparison');
 const report = {
@@ -253,7 +292,7 @@ const report = {
   family,
   comparisons,
   models: Object.fromEntries(Object.entries(results).map(([name, result]) => [name, {
-    folds: result.validation.folds, monitoring: result.monitoring.folds, stability: result.stability, driverLearningRules: result.driverLearningRules,
+    folds: result.validation.folds, monitoring: result.monitoring.folds, stability: result.stability, diagnostics: result.diagnostics, driverLearningRules: result.driverLearningRules,
     examples: result.examples, omissions: Object.fromEntries(Object.entries(result.omissions).map(([session, horizons]) => [session,
       Object.fromEntries(Object.entries(horizons).map(([horizon, values]) => [horizon, values.length])),
     ])),

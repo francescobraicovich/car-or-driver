@@ -1,6 +1,6 @@
 import { INFORMATION_FRACTION } from './learning.js';
 
-// Settings of the joint state-space ratings. See docs/state-space.md for how they were chosen.
+// Settings of the joint state-space ratings. See docs/hybrid.md for the published model.
 //
 // The original settings were selected through 2011 with later historical gates.
 // Rounded on 3 November 2026 under the retrospective chronological comparison
@@ -28,7 +28,7 @@ export const STATE_SPACE = {
     s: 75,
     iters: 3,
     sdA: 12,
-    rhoA: 0.97, // persistent driver-team term: reset at a team change, so a driver's portable level D never carries the old team's fit (docs/detach.md)
+    rhoA: 0.97, // persistent driver-team term: reset at a team change, so a driver's portable level D never carries the old team's fit (docs/hybrid.md)
     // the posted rating is the portable level D (+ the qualifying offset): the team-fit term A is internal to the filter, so a team change moves nobody's displayed rating
     rateA: false,
     // the variance the filter reports is multiplied by this: the likelihood is tempered (`tau`) because the pairs of a weekend are dependent,

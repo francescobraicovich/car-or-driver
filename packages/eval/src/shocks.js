@@ -35,7 +35,7 @@ export function teamPerformance(idx, run, team, i, K = 3) {
   let won = 0;
   let w = 0;
   for (const wk of weeks.slice(Math.max(0, pos - K + 1), pos + 1)) {
-    for (const ob of idx.timeline[wk].obs[run.session]) {
+    for (const ob of idx.timeline[wk].obs[run.performanceSession ?? run.session]) {
       if (ob.same) continue;
       const xIn = idx.teamAt[wk].get(ob.x) === team;
       const yIn = idx.teamAt[wk].get(ob.y) === team;
@@ -122,8 +122,8 @@ const slopeFree = (xs) => {
   ).b;
 };
 
-export function shockMetrics(idx, run, { boot = {}, ...rest } = {}) {
-  const recs = shockRecords(idx, run, rest);
+export function shockMetrics(idx, run, { boot = {}, fromYear = -Infinity, toYear = Infinity, ...rest } = {}) {
+  const recs = shockRecords(idx, run, rest).filter((row) => row.year >= fromYear && row.year <= toYear);
   const pre = `shocks.${run.session}`;
   const H = {};
   const out = { n: recs.length, groups: {}, headline: H };

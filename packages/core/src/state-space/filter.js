@@ -31,7 +31,7 @@ export const STATE_SPACE_DEFAULTS = {
   thetaT: 1, // extra weight of teammate pairs in the likelihood
   mPace: 1, // learning weight of lap-pace pairs relative to the exam's
   mPart: 1, // learning weight of retirement-snapshot pairs relative to the exam's
-  s: 75, // Elo scale of the likelihood (rating points per factor ten in odds)
+  s: 75, // scale of the likelihood (rating points per factor ten in odds)
   iters: 3, // Laplace iterations per weekend
   shrinkM: 1, // at a team change the driver's level is multiplied by this (1 = off)
   sdJ: 0, // jump sd of a driver level at a team change

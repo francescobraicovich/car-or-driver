@@ -6,13 +6,10 @@ import { runStateSpace, STATE_SPACE_DEFAULTS } from '../packages/core/src/state-
 import { qualLink } from '../packages/core/src/state-space/qualifying-link.js';
 import { buildStateSpace, canonicalTeam, carLineage, ssContext } from '../packages/core/src/state-space/build.js';
 import { collectExam } from '../packages/core/src/state-space/exam.js';
-import { eloBenchmark } from '../packages/core/src/elo-benchmark.js';
 import { ratingsAlone } from '../packages/core/src/state-space/forecast.js';
-import { buildEloForecast } from '../packages/core/src/elo-forecast.js';
 import { forecastPair } from '../packages/core/src/forecast/prepare.js';
 import { formShifts } from '../packages/core/src/forecast/form-shift.js';
 import { scenarioForecast } from '../packages/core/src/forecast/scenario.js';
-import { summarizeBacktest } from '../packages/core/src/backtest.js';
 import { STATE_SPACE } from '../packages/core/src/presets/state-space.js';
 
 // ---- 1) a small world with known strengths ----------------------------------------------------------------
@@ -310,9 +307,8 @@ import { STATE_SPACE } from '../packages/core/src/presets/state-space.js';
 // ---- 2) the state-space model on the real data ----------------------------------------------------------------------
 const ctx = await loadData('data');
 const args = [ctx.raw, ctx.lapSnapshots, ctx.maps, {}, ctx.lapPace];
-const eloModel = buildEloForecast(...args);
 const t0 = performance.now();
-const ssModel = buildStateSpace(...args, { benchmark: eloBenchmark });
+const ssModel = buildStateSpace(...args);
 console.log(`state-space build ${((performance.now() - t0) / 1000).toFixed(1)} s`);
 
 // A wide prior must not throw a rating far from the data. Widening car and new-driver priors (as a takeover or a
@@ -339,31 +335,26 @@ console.log(`state-space build ${((performance.now() - t0) / 1000).toFixed(1)} s
 }
 
 assert.equal(ssModel.params.modelKind, 'state-space');
-assert.equal(ssModel.snaps.length, eloModel.snaps.length);
+assert.ok(ssModel.snaps.length > 0);
 
-// Production uses observation-based continuous form; the historical Elo
-// benchmark retains its original form algorithm. Full-calendar numerical
+// Production uses observation-based continuous form. Full-calendar numerical
 // parity with the evaluated prototype is checked in test-continuous-form.mjs.
 assert.equal(ssModel.forecastState.form.method, 'continuous');
-assert.equal(eloModel.forecastState.form.method, undefined, 'the historical benchmark retains legacy form');
 for (const form of Object.values(ssModel.forecastState.form.forms)) {
   assert.ok(form.d instanceof Map && form.c instanceof Map, 'both driver and car form are saved');
   assert.ok([...form.d.values(), ...form.c.values()].every(Number.isFinite), 'saved form is finite');
   assert.equal(form.track, undefined, 'production does not persist unused circuit form');
 }
-const grid = eloModel.snaps
+const grid = ssModel.snaps
   .at(-1)
   .drivers.slice(0, 6)
   .map((d) => String(d.driverId));
-let differs = 0;
 for (const a of grid)
   for (const b of grid) {
     if (a === b) continue;
     const pSs = forecastPair(ssModel, a, b).p;
     assert.ok(Math.abs(pSs + forecastPair(ssModel, b, a).p - 1) < 1e-9, `forecast is symmetric for ${a} vs ${b}`);
-    if (Math.abs(forecastPair(eloModel, a, b).p - pSs) > 1e-6) differs++;
   }
-assert.ok(differs > 0, 'state-space forecasts read the state-space ratings, not the Elo ones');
 {
   // the pieces the pages build on: form-off forecasts are symmetric and shifts are finite and globally centred
   const r = forecastPair(ssModel, grid[0], grid[1]);
@@ -383,15 +374,10 @@ for (const snap of ssModel.snaps) {
     'every row has finite uncertainty and effective pace',
   );
 }
-// the Elo ratings are kept next to the new ones
 const lastSnap = ssModel.snaps.at(-1);
-for (const d of lastSnap.drivers) {
-  const base = eloModel.snaps.at(-1).drivers.find((x) => x.driverId === d.driverId);
-  assert.equal(d.eloRace, base.race, 'Elo race rating kept');
-}
 // histories hold the same values as the snapshots
 for (const d of lastSnap.drivers) assert.equal(ssModel.dh.get(d.driverId).at(-1).race, d.race, 'history ends at the latest rating');
-// the downloadable table carries the published ratings, for every weekend and driver (it once carried the Elo benchmark's)
+// the downloadable table carries the published ratings, for every weekend and driver
 {
   const byWeekend = new Map(ssModel.snaps.map((s) => [`${s.date}|${s.round}`, s]));
   assert.equal(
@@ -429,17 +415,6 @@ assert.equal(carLineage('5'), carLineage('215'), 'Toro Rosso, AlphaTauri and RB 
 assert.notEqual(carLineage('19'), carLineage('9'), "Red Bull did not inherit Jaguar's car");
 assert.notEqual(carLineage('15'), carLineage('217'), "Audi did not inherit Sauber's car");
 
-// ratings alone beat the Elo ratings on the same observations, in every window
-for (const [from, to] of [
-  [2008, 2011],
-  [2012, 2015],
-  [2016, 2100],
-]) {
-  const ss = summarizeBacktest(ssModel, { burnIn: 20, fromYear: from, toYear: to, diag: 'ssDiag' }).overall.combinedLogLoss;
-  const elo = summarizeBacktest(ssModel, { burnIn: 20, fromYear: from, toYear: to, diag: 'eloDiag' }).overall.combinedLogLoss;
-  assert.ok(ss < elo, `state-space ratings beat Elo ratings alone in ${from}-${to} (${ss.toFixed(4)} vs ${elo.toFixed(4)})`);
-}
-
 // pair probabilities from the ratings alone
 const [x, y] = grid;
 const pxy = ratingsAlone(ssModel, x, y);
@@ -472,9 +447,7 @@ assert.ok(scenarioForecast(ssModel, now(x), now(y), { wet: true }).p > 0, 'wet w
 
 // the state-space settings are the preset's
 assert.deepEqual(Object.keys(STATE_SPACE).sort(), ['link', 'qual', 'race']);
-console.log(
-  'PASS state-space: forecast layer on the state-space ratings, ratings centred with uncertainty, ratings alone beat Elo in every window, pair forecasts symmetric',
-);
+console.log('PASS state-space: forecast layer on the state-space ratings, ratings centred with uncertainty, pair forecasts symmetric');
 
 // the arrival adaptation: off by default, a known offset after a team change (no look-ahead, deterministic, only for established drivers)
 {

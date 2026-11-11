@@ -1,0 +1,15 @@
+{
+  "baseline": {
+    "evidence": "joint",
+    "options": {
+      "half_life": 3,
+      "drift": 4,
+      "precision": 2,
+      "resolution": "season",
+      "sessions": false,
+      "covariance": true
+    },
+    "forecastUncertainty": true,
+    "validationFingerprint": "21ca34a8fa98129c76e034c71b2357480e117cd163f497b645f5cdd0e42d56b3"
+  }
+}

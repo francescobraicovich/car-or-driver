@@ -1,0 +1,104 @@
+{
+  "external": {
+    "parameters": {
+      "half_life_days": 84,
+      "driver_sd": 16,
+      "car_sd": 24,
+      "slow_multiplier": 1.0
+    },
+    "trials": [
+      {
+        "parameters": {
+          "half_life_days": 28,
+          "driver_sd": 8,
+          "car_sd": 12,
+          "slow_multiplier": 1.0
+        },
+        "score": 1.8529032398682186
+      },
+      {
+        "parameters": {
+          "half_life_days": 84,
+          "driver_sd": 8,
+          "car_sd": 12,
+          "slow_multiplier": 1.0
+        },
+        "score": 1.8514369238892945
+      },
+      {
+        "parameters": {
+          "half_life_days": 84,
+          "driver_sd": 16,
+          "car_sd": 12,
+          "slow_multiplier": 1.0
+        },
+        "score": 1.8503341281516403
+      },
+      {
+        "parameters": {
+          "half_life_days": 84,
+          "driver_sd": 16,
+          "car_sd": 24,
+          "slow_multiplier": 1.0
+        },
+        "score": 1.8482275137524289
+      }
+    ]
+  },
+  "embedded": {
+    "parameters": {
+      "half_life_days": 84,
+      "driver_sd": 16,
+      "car_sd": 24,
+      "slow_multiplier": 1.0
+    },
+    "trials": [
+      {
+        "parameters": {
+          "half_life_days": 28,
+          "driver_sd": 8,
+          "car_sd": 12,
+          "slow_multiplier": 1.0
+        },
+        "score": 1.8543317692580843
+      },
+      {
+        "parameters": {
+          "half_life_days": 84,
+          "driver_sd": 8,
+          "car_sd": 12,
+          "slow_multiplier": 1.0
+        },
+        "score": 1.8532888422933955
+      },
+      {
+        "parameters": {
+          "half_life_days": 84,
+          "driver_sd": 16,
+          "car_sd": 12,
+          "slow_multiplier": 1.0
+        },
+        "score": 1.8521348853237605
+      },
+      {
+        "parameters": {
+          "half_life_days": 84,
+          "driver_sd": 16,
+          "car_sd": 24,
+          "slow_multiplier": 1.0
+        },
+        "score": 1.8492061929668528
+      },
+      {
+        "parameters": {
+          "half_life_days": 84,
+          "driver_sd": 16,
+          "car_sd": 24,
+          "slow_multiplier": 0.5
+        },
+        "score": 1.8585698660834904
+      }
+    ]
+  },
+  "inputHash": "f56d3c1635c70d961fea2616288aba18786c1271df55e7568843010dcd26ac83"
+}

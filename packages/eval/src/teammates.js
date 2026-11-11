@@ -16,6 +16,60 @@ import { carPost, driverPost, makeControls } from './events.js';
 const byYear = (it) => it.year;
 export const MATE_HORIZONS = [3, 5, 10];
 
+/** Changes in staying drivers' ratings after any incoming teammate, including first appearances. */
+export function arrivalImpact(idx, run, changes, { boot = {} } = {}) {
+  const controls = makeControls(idx, run);
+  return Object.fromEntries(
+    MATE_HORIZONS.map((horizon) => {
+      const rows = [];
+      for (const change of changes) {
+        if (!change.stayers.length || !change.incoming.length || change.weeksAfter.length < horizon) continue;
+        const weeks = change.weeksAfter.slice(0, horizon);
+        if (
+          !weeks.every((i) => {
+            const lineup = idx.lineup[i].get(change.team) ?? [];
+            return [...change.stayers, ...change.incoming].every((driver) => lineup.includes(driver));
+          })
+        )
+          continue;
+        const end = weeks.at(-1);
+        const control = controls.drivers(change.ellT, end);
+        if (!control) continue;
+        const firstAppearance = change.incoming.some((driver) => idx.appear.get(driver)?.[0]?.i === change.t0);
+        for (const driver of change.stayers) {
+          const before = driverPost(run, change.ellT, driver),
+            after = driverPost(run, end, driver);
+          if (Number.isFinite(before) && Number.isFinite(after))
+            rows.push({
+              year: change.year,
+              firstAppearance,
+              delta: after - before - control.mean,
+              controlRms: control.rms,
+            });
+        }
+      }
+      const summarize = (items) => ({
+        n: items.length,
+        mean: clusterBootstrap(items, byYear, (xs) => mean(xs.map((x) => x.delta)), boot),
+        rmsRatio: clusterBootstrap(
+          items,
+          byYear,
+          (xs) => Math.sqrt(mean(xs.map((x) => x.delta ** 2))) / Math.sqrt(mean(xs.map((x) => x.controlRms ** 2))),
+          boot,
+        ),
+      });
+      return [
+        horizon,
+        {
+          all: summarize(rows),
+          firstAppearance: summarize(rows.filter((row) => row.firstAppearance)),
+          other: summarize(rows.filter((row) => !row.firstAppearance)),
+        },
+      ];
+    }),
+  );
+}
+
 export function teammateMetrics(idx, run, changes, { boot = {} } = {}) {
   const controls = makeControls(idx, run);
   const out = { n: changes.filter((c) => c.valid).length, step: {}, alloc: {}, headline: {} };
@@ -27,6 +81,13 @@ export function teammateMetrics(idx, run, changes, { boot = {} } = {}) {
     for (const ch of changes) {
       if (!ch.valid || ch.weeksAfter.length < K) continue;
       const tK = ch.weeksAfter[K - 1];
+      if (
+        !ch.weeksAfter.slice(0, K).every((i) => {
+          const lineup = idx.lineup[i].get(ch.team) ?? [];
+          return [...ch.stayers, ...ch.incoming].every((driver) => lineup.includes(driver));
+        })
+      )
+        continue;
       const ctl = controls.drivers(ch.ellT, tK);
       if (!ctl) continue;
       const inc = ch.movers.map((m) => driverPost(run, m.ell, m.driverId));

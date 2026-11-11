@@ -30,6 +30,12 @@ jobs:
         with:
           node-version: 24
           cache: npm
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements-model.txt
+      - run: python -m pip install -r requirements-model.txt
       - run: npm ci
       - run: npm run lint
       - run: npm test

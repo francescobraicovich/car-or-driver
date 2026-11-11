@@ -1,0 +1,30 @@
+{
+  "inputHash": "f56d3c1635c70d961fea2616288aba18786c1271df55e7568843010dcd26ac83",
+  "trainedThrough": 2007,
+  "objective": 1070.3646784376822,
+  "evaluations": 84,
+  "offsets": {
+    "driver": [
+      -61.92484367016787,
+      -36.59993457476613,
+      -25.231111150450722
+    ],
+    "car": [
+      -61.53821660426636,
+      -55.89511567905833,
+      -44.359296773954114
+    ]
+  },
+  "parameters": {
+    "driver_correlation": 0.85,
+    "car_correlation": 0.5,
+    "noise": [
+      1.9436995118945026,
+      1.62335504595748
+    ],
+    "driver_multiplier": 2.0,
+    "car_multiplier": 2.0
+  },
+  "optimizerMessage": "CONVERGENCE: REL_REDUCTION_OF_F_<=_FACTR*EPSMCH",
+  "maximumGradient": 0.001986388724617646
+}

@@ -1,0 +1,5244 @@
+{
+  "pre": {
+    "selected": "baseline",
+    "keepTemperature": false,
+    "candidates": {
+      "ratings": {
+        "raw": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5422416343560282,
+              "brier": 0.18064290085372828,
+              "calibrationSlope": 1.0017192518509528,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2837,
+                  "predicted": 0.5509713342349867,
+                  "observed": 0.5500073171382506
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3400,
+                  "predicted": 0.6517482312691367,
+                  "observed": 0.6469717082047532
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3848,
+                  "predicted": 0.7530148849026022,
+                  "observed": 0.7618815907714586
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6542,
+                  "predicted": 0.849602908620184,
+                  "observed": 0.8543900508738101
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 488,
+                  "predicted": 0.9110012186035896,
+                  "observed": 0.8564121570096068
+                }
+              ],
+              "difference": 3.730383558142223e-05
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5277409076674049,
+              "brier": 0.1741433978783524,
+              "calibrationSlope": 0.8966335809704734,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2159,
+                  "predicted": 0.5501797215641716,
+                  "observed": 0.5516357434453524
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2583,
+                  "predicted": 0.6506294720760218,
+                  "observed": 0.6169358603338287
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3414,
+                  "predicted": 0.7552956600919197,
+                  "observed": 0.7371646141466617
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7875,
+                  "predicted": 0.8561242661617382,
+                  "observed": 0.833894446680309
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1385,
+                  "predicted": 0.9133766334418812,
+                  "observed": 0.8819210062763301
+                }
+              ],
+              "difference": -0.00014175545855303279
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5302549493605437,
+              "brier": 0.17616214704959124,
+              "calibrationSlope": 0.9330360139160451,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3496,
+                  "predicted": 0.5492256672177112,
+                  "observed": 0.5642742962904321
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3133,
+                  "predicted": 0.650522591570991,
+                  "observed": 0.638192342366922
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3890,
+                  "predicted": 0.7517859782594228,
+                  "observed": 0.7346309822979894
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6966,
+                  "predicted": 0.8556242842495636,
+                  "observed": 0.8351216148736836
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2182,
+                  "predicted": 0.9135894166037946,
+                  "observed": 0.9114084048792003
+                }
+              ],
+              "difference": 0.00010152919721646093
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.524058126941663,
+              "brier": 0.17339008004606282,
+              "calibrationSlope": 0.9926490669202961,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3788,
+                  "predicted": 0.5507279995288719,
+                  "observed": 0.5432490756860944
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3771,
+                  "predicted": 0.650759940756419,
+                  "observed": 0.6445274277187141
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4292,
+                  "predicted": 0.7514130786483126,
+                  "observed": 0.7454317261184215
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7602,
+                  "predicted": 0.856393413261135,
+                  "observed": 0.8634857640750273
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1664,
+                  "predicted": 0.9128019191518096,
+                  "observed": 0.8950133209776441
+                }
+              ],
+              "difference": 0.0002588567210947837
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.5216988288882838,
+              "brier": 0.17009312468593488,
+              "calibrationSlope": 0.851953970081016,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 635,
+                  "predicted": 0.5491088365995672,
+                  "observed": 0.5615516971687784
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 692,
+                  "predicted": 0.6477666442398771,
+                  "observed": 0.6448651749856569
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 523,
+                  "predicted": 0.7511813438045943,
+                  "observed": 0.747867298578199
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1659,
+                  "predicted": 0.8664083540339528,
+                  "observed": 0.8404708991531022
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 859,
+                  "predicted": 0.9136518359456199,
+                  "observed": 0.858039762818277
+                }
+              ],
+              "difference": -0.0013388217959812464
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5302031748728447,
+            "brier": 0.17577208581024664,
+            "calibrationSlope": 0.9540652121762657,
+            "weekends": 363,
+            "pairs": 75315,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 12280,
+                "predicted": 0.5502451278648111,
+                "observed": 0.5522405276919501
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 12887,
+                "predicted": 0.6509149642450198,
+                "observed": 0.6384805309311193
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15444,
+                "predicted": 0.7526622019656087,
+                "observed": 0.7447725922467039
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 28985,
+                "predicted": 0.8548370131532426,
+                "observed": 0.8469163069654373
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 5719,
+                "predicted": 0.9131285093180431,
+                "observed": 0.8962947805464678
+              }
+            ],
+            "difference": 8.598275177470216e-05
+          },
+          "differenceInterval95": [
+            -6.569683321275492e-05,
+            0.00025471555465810414
+          ]
+        },
+        "temperatureComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5433077234039836,
+              "brier": 0.18100077730422426,
+              "calibrationSlope": 0.9350025366297267,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2369,
+                  "predicted": 0.5511558068864101,
+                  "observed": 0.5399071940008934
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3008,
+                  "predicted": 0.6527315687954091,
+                  "observed": 0.638643340426555
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3715,
+                  "predicted": 0.753081227053582,
+                  "observed": 0.7315095811181207
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7484,
+                  "predicted": 0.8509112122712221,
+                  "observed": 0.8440199225971613
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 539,
+                  "predicted": 0.9106414774775724,
+                  "observed": 0.8505793142426528
+                }
+              ],
+              "difference": 0.0010660890479554964
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5276553076837734,
+              "brier": 0.1741150325742876,
+              "calibrationSlope": 0.8988165196272929,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2171,
+                  "predicted": 0.550187595654959,
+                  "observed": 0.5524616578998436
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2596,
+                  "predicted": 0.6505705258749649,
+                  "observed": 0.6168382815162158
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3431,
+                  "predicted": 0.7552995692355085,
+                  "observed": 0.7394161883120592
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7849,
+                  "predicted": 0.8560718093736133,
+                  "observed": 0.8339370937777376
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1369,
+                  "predicted": 0.9133932589805523,
+                  "observed": 0.8811873630079627
+                }
+              ],
+              "difference": -8.559998363149023e-05
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.529649487218511,
+              "brier": 0.17607331725354958,
+              "calibrationSlope": 1.0332089910921705,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 4180,
+                  "predicted": 0.5485381711842963,
+                  "observed": 0.5636160274982726
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3646,
+                  "predicted": 0.6514474391141789,
+                  "observed": 0.6657002067965717
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4121,
+                  "predicted": 0.7530001495031363,
+                  "observed": 0.7700501088476825
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6483,
+                  "predicted": 0.8544151654730753,
+                  "observed": 0.8513781187594547
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1237,
+                  "predicted": 0.9113831963862962,
+                  "observed": 0.9236455719902901
+                }
+              ],
+              "difference": -0.0006054621420327206
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.5249099049146112,
+              "brier": 0.17367413990171113,
+              "calibrationSlope": 1.0979505051115672,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 4362,
+                  "predicted": 0.5499776733221661,
+                  "observed": 0.5468127479042351
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 4272,
+                  "predicted": 0.6498539464981878,
+                  "observed": 0.6648003125128068
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4487,
+                  "predicted": 0.7508035316374557,
+                  "observed": 0.7805341680200966
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7140,
+                  "predicted": 0.850960225953139,
+                  "observed": 0.8732608422245535
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 856,
+                  "predicted": 0.9103797953199263,
+                  "observed": 0.8994137328302114
+                }
+              ],
+              "difference": 0.0008517779729481869
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.5212312951026653,
+              "brier": 0.1700282124294452,
+              "calibrationSlope": 0.8631792079163234,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 653,
+                  "predicted": 0.5492412377092468,
+                  "observed": 0.5660176452692425
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 692,
+                  "predicted": 0.6469299618157027,
+                  "observed": 0.6478348150272442
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 545,
+                  "predicted": 0.7518286598533577,
+                  "observed": 0.7522752093192575
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1692,
+                  "predicted": 0.8660798491226996,
+                  "observed": 0.8430414040874021
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 786,
+                  "predicted": 0.9137118801891693,
+                  "observed": 0.856271444910408
+                }
+              ],
+              "difference": -0.0004675337856184997
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5304977699100374,
+            "brier": 0.1759019938999362,
+            "calibrationSlope": 0.9948797154362395,
+            "weekends": 363,
+            "pairs": 75315,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 13082,
+                "predicted": 0.5497239487732678,
+                "observed": 0.5520834542624868
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 13522,
+                "predicted": 0.651003014196348,
+                "observed": 0.6514724356636628
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15754,
+                "predicted": 0.7527861776159042,
+                "observed": 0.7587611830208937
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 28956,
+                "predicted": 0.8530890971686544,
+                "observed": 0.8514422605511623
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 4001,
+                "predicted": 0.9116992826602148,
+                "observed": 0.8966716296809354
+              }
+            ],
+            "difference": 0.00029459503719283543
+          },
+          "differenceInterval95": [
+            -0.0003872241731811159,
+            0.0009780341565396489
+          ]
+        },
+        "keepTemperature": false,
+        "parent": "baseline",
+        "incrementalComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5422416343560282,
+              "brier": 0.18064290085372828,
+              "calibrationSlope": 1.0017192518509528,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2837,
+                  "predicted": 0.5509713342349867,
+                  "observed": 0.5500073171382506
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3400,
+                  "predicted": 0.6517482312691367,
+                  "observed": 0.6469717082047532
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3848,
+                  "predicted": 0.7530148849026022,
+                  "observed": 0.7618815907714586
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6542,
+                  "predicted": 0.849602908620184,
+                  "observed": 0.8543900508738101
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 488,
+                  "predicted": 0.9110012186035896,
+                  "observed": 0.8564121570096068
+                }
+              ],
+              "difference": 3.730383558142223e-05
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5277409076674049,
+              "brier": 0.1741433978783524,
+              "calibrationSlope": 0.8966335809704734,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2159,
+                  "predicted": 0.5501797215641716,
+                  "observed": 0.5516357434453524
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2583,
+                  "predicted": 0.6506294720760218,
+                  "observed": 0.6169358603338287
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3414,
+                  "predicted": 0.7552956600919197,
+                  "observed": 0.7371646141466617
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7875,
+                  "predicted": 0.8561242661617382,
+                  "observed": 0.833894446680309
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1385,
+                  "predicted": 0.9133766334418812,
+                  "observed": 0.8819210062763301
+                }
+              ],
+              "difference": -0.00014175545855303279
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5302549493605437,
+              "brier": 0.17616214704959124,
+              "calibrationSlope": 0.9330360139160451,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3496,
+                  "predicted": 0.5492256672177112,
+                  "observed": 0.5642742962904321
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3133,
+                  "predicted": 0.650522591570991,
+                  "observed": 0.638192342366922
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3890,
+                  "predicted": 0.7517859782594228,
+                  "observed": 0.7346309822979894
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6966,
+                  "predicted": 0.8556242842495636,
+                  "observed": 0.8351216148736836
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2182,
+                  "predicted": 0.9135894166037946,
+                  "observed": 0.9114084048792003
+                }
+              ],
+              "difference": 0.00010152919721646093
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.524058126941663,
+              "brier": 0.17339008004606282,
+              "calibrationSlope": 0.9926490669202961,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3788,
+                  "predicted": 0.5507279995288719,
+                  "observed": 0.5432490756860944
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3771,
+                  "predicted": 0.650759940756419,
+                  "observed": 0.6445274277187141
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4292,
+                  "predicted": 0.7514130786483126,
+                  "observed": 0.7454317261184215
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7602,
+                  "predicted": 0.856393413261135,
+                  "observed": 0.8634857640750273
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1664,
+                  "predicted": 0.9128019191518096,
+                  "observed": 0.8950133209776441
+                }
+              ],
+              "difference": 0.0002588567210947837
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.5216988288882838,
+              "brier": 0.17009312468593488,
+              "calibrationSlope": 0.851953970081016,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 635,
+                  "predicted": 0.5491088365995672,
+                  "observed": 0.5615516971687784
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 692,
+                  "predicted": 0.6477666442398771,
+                  "observed": 0.6448651749856569
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 523,
+                  "predicted": 0.7511813438045943,
+                  "observed": 0.747867298578199
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1659,
+                  "predicted": 0.8664083540339528,
+                  "observed": 0.8404708991531022
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 859,
+                  "predicted": 0.9136518359456199,
+                  "observed": 0.858039762818277
+                }
+              ],
+              "difference": -0.0013388217959812464
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5302031748728447,
+            "brier": 0.17577208581024664,
+            "calibrationSlope": 0.9540652121762657,
+            "weekends": 363,
+            "pairs": 75315,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 12280,
+                "predicted": 0.5502451278648111,
+                "observed": 0.5522405276919501
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 12887,
+                "predicted": 0.6509149642450198,
+                "observed": 0.6384805309311193
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15444,
+                "predicted": 0.7526622019656087,
+                "observed": 0.7447725922467039
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 28985,
+                "predicted": 0.8548370131532426,
+                "observed": 0.8469163069654373
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 5719,
+                "predicted": 0.9131285093180431,
+                "observed": 0.8962947805464678
+              }
+            ],
+            "difference": 8.598275177470216e-05
+          },
+          "differenceInterval95": [
+            -6.569683321275492e-05,
+            0.00025471555465810414
+          ]
+        },
+        "eligible": false
+      },
+      "context": {
+        "raw": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5423883561346576,
+              "brier": 0.18069314850620352,
+              "calibrationSlope": 1.0038382467838525,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2858,
+                  "predicted": 0.5508660592658038,
+                  "observed": 0.5532487238588973
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3420,
+                  "predicted": 0.6517395082045856,
+                  "observed": 0.6463766770607311
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3863,
+                  "predicted": 0.7530925234498832,
+                  "observed": 0.7640987397560555
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6487,
+                  "predicted": 0.849730745888447,
+                  "observed": 0.8548422572164536
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 487,
+                  "predicted": 0.9110062217648383,
+                  "observed": 0.8561204094012973
+                }
+              ],
+              "difference": 0.0001840256142108163
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5276353746819964,
+              "brier": 0.17410911672241283,
+              "calibrationSlope": 0.8983604983735721,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2171,
+                  "predicted": 0.5502113372794574,
+                  "observed": 0.555678645233981
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2598,
+                  "predicted": 0.650757916271738,
+                  "observed": 0.6160019650262262
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3408,
+                  "predicted": 0.7552408985078063,
+                  "observed": 0.7377819418447241
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7869,
+                  "predicted": 0.8560701857094206,
+                  "observed": 0.8346293625461368
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1370,
+                  "predicted": 0.9134439338184385,
+                  "observed": 0.8793359444973557
+                }
+              ],
+              "difference": -0.0002472884439615882
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5303200394011229,
+              "brier": 0.1761010052818217,
+              "calibrationSlope": 0.9532645290967372,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3606,
+                  "predicted": 0.549088459436839,
+                  "observed": 0.5520697312419015
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3323,
+                  "predicted": 0.6511024491388536,
+                  "observed": 0.6552757604360601
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3857,
+                  "predicted": 0.7515135731471623,
+                  "observed": 0.7400408852232577
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6953,
+                  "predicted": 0.8544103305734023,
+                  "observed": 0.8410422003051371
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1928,
+                  "predicted": 0.9137422961675459,
+                  "observed": 0.9071314656408335
+                }
+              ],
+              "difference": 0.00016661923779553333
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.523493210715093,
+              "brier": 0.1732262357219756,
+              "calibrationSlope": 1.0039659574595312,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3830,
+                  "predicted": 0.5505693786545769,
+                  "observed": 0.5425671171190057
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3836,
+                  "predicted": 0.650831490417413,
+                  "observed": 0.646771374324644
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4284,
+                  "predicted": 0.7516485606053165,
+                  "observed": 0.7490040916438208
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7603,
+                  "predicted": 0.8557649501474452,
+                  "observed": 0.8631228050649006
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1564,
+                  "predicted": 0.9125808377953167,
+                  "observed": 0.901641936968024
+                }
+              ],
+              "difference": -0.00030605950547523585
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.5231856903030762,
+              "brier": 0.1707881991112119,
+              "calibrationSlope": 0.8581426292920823,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 648,
+                  "predicted": 0.5492383484514576,
+                  "observed": 0.5595584853594971
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 703,
+                  "predicted": 0.647490285131209,
+                  "observed": 0.6348377997179125
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 565,
+                  "predicted": 0.7517334991271261,
+                  "observed": 0.7523274196381521
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1657,
+                  "predicted": 0.8668129319852012,
+                  "observed": 0.845802261246091
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 795,
+                  "predicted": 0.9136975706629192,
+                  "observed": 0.8528154851684264
+                }
+              ],
+              "difference": 0.00014803961881110385
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5300523707968638,
+            "brier": 0.17570707160700844,
+            "calibrationSlope": 0.9638807538765266,
+            "weekends": 363,
+            "pairs": 75315,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 12465,
+                "predicted": 0.5501275924651556,
+                "observed": 0.5497042938634241
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 13177,
+                "predicted": 0.6511058820313999,
+                "observed": 0.6434086597004218
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15412,
+                "predicted": 0.7526729202366605,
+                "observed": 0.7479402503539625
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 28912,
+                "predicted": 0.8543549657737002,
+                "observed": 0.8486018300591939
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 5349,
+                "predicted": 0.9131159965585472,
+                "observed": 0.8955007818421058
+              }
+            ],
+            "difference": -6.482132420606348e-05
+          },
+          "differenceInterval95": [
+            -0.00039505009480217466,
+            0.00029372099752205625
+          ]
+        },
+        "temperatureComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5434848875964895,
+              "brier": 0.18105414895024974,
+              "calibrationSlope": 0.9333677829038458,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2375,
+                  "predicted": 0.5513554765607811,
+                  "observed": 0.5461268761657895
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2975,
+                  "predicted": 0.6527155899488623,
+                  "observed": 0.6390297296583549
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3734,
+                  "predicted": 0.7528598847897212,
+                  "observed": 0.7301843813939505
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7492,
+                  "predicted": 0.8510498339394835,
+                  "observed": 0.8437939904849218
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 539,
+                  "predicted": 0.9106485376045372,
+                  "observed": 0.850700998540555
+                }
+              ],
+              "difference": 0.0010965314618318724
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5276596535065944,
+              "brier": 0.17411715640048112,
+              "calibrationSlope": 0.8977427250486368,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2166,
+                  "predicted": 0.5501740828500543,
+                  "observed": 0.5556328001046693
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2594,
+                  "predicted": 0.6506995765754453,
+                  "observed": 0.6163341425864219
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3408,
+                  "predicted": 0.7552430247122903,
+                  "observed": 0.736756163563018
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7873,
+                  "predicted": 0.8561025479884413,
+                  "observed": 0.8345666343070407
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1375,
+                  "predicted": 0.9134283615883461,
+                  "observed": 0.8798480818158702
+                }
+              ],
+              "difference": 2.4278824597977767e-05
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5304136410514989,
+              "brier": 0.17621580761291514,
+              "calibrationSlope": 1.0396146649497227,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 4194,
+                  "predicted": 0.5485273020722656,
+                  "observed": 0.5579131181351937
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3771,
+                  "predicted": 0.6514942194135552,
+                  "observed": 0.6698528612959463
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4059,
+                  "predicted": 0.7535233113859935,
+                  "observed": 0.7714229039936528
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6447,
+                  "predicted": 0.8527300376859908,
+                  "observed": 0.8546226609112443
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1196,
+                  "predicted": 0.9123997375479359,
+                  "observed": 0.9148989979500586
+                }
+              ],
+              "difference": 9.360165037594741e-05
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.524288321321976,
+              "brier": 0.17348467856666291,
+              "calibrationSlope": 1.0972986861237837,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 4346,
+                  "predicted": 0.5500877872539602,
+                  "observed": 0.5459453148783608
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 4233,
+                  "predicted": 0.6498831225981767,
+                  "observed": 0.6632137307984908
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4505,
+                  "predicted": 0.7508333845670431,
+                  "observed": 0.7792745426713492
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7175,
+                  "predicted": 0.8511540585072748,
+                  "observed": 0.8727414121285557
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 858,
+                  "predicted": 0.9105629782598037,
+                  "observed": 0.9065643058854332
+                }
+              ],
+              "difference": 0.0007951106068829366
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.5227226732441954,
+              "brier": 0.17072750500750217,
+              "calibrationSlope": 0.8710472388026836,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 667,
+                  "predicted": 0.549276608896122,
+                  "observed": 0.5631516234733395
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 709,
+                  "predicted": 0.6467964276874227,
+                  "observed": 0.6394015659955258
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 571,
+                  "predicted": 0.7513873746206663,
+                  "observed": 0.7618219749652295
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1694,
+                  "predicted": 0.8656139839407481,
+                  "observed": 0.8444339844669333
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 727,
+                  "predicted": 0.9135773260428873,
+                  "observed": 0.852803738317757
+                }
+              ],
+              "difference": -0.0004630170588807057
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5305513347908669,
+            "brier": 0.17589345277005428,
+            "calibrationSlope": 0.9955896264911531,
+            "weekends": 363,
+            "pairs": 75315,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 13081,
+                "predicted": 0.54978924993321,
+                "observed": 0.5513738549229352
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 13573,
+                "predicted": 0.6510490486770977,
+                "observed": 0.6522325358279418
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15706,
+                "predicted": 0.7528687844072947,
+                "observed": 0.7578959976478983
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 28987,
+                "predicted": 0.8527752427515407,
+                "observed": 0.85220011429357
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 3968,
+                "predicted": 0.9120959630535963,
+                "observed": 0.8947857918156226
+              }
+            ],
+            "difference": 0.0004989639940031332
+          },
+          "differenceInterval95": [
+            -9.086332577393402e-05,
+            0.0011515071264042477
+          ]
+        },
+        "keepTemperature": false,
+        "parent": "baseline",
+        "incrementalComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5423883561346576,
+              "brier": 0.18069314850620352,
+              "calibrationSlope": 1.0038382467838525,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2858,
+                  "predicted": 0.5508660592658038,
+                  "observed": 0.5532487238588973
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3420,
+                  "predicted": 0.6517395082045856,
+                  "observed": 0.6463766770607311
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3863,
+                  "predicted": 0.7530925234498832,
+                  "observed": 0.7640987397560555
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6487,
+                  "predicted": 0.849730745888447,
+                  "observed": 0.8548422572164536
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 487,
+                  "predicted": 0.9110062217648383,
+                  "observed": 0.8561204094012973
+                }
+              ],
+              "difference": 0.0001840256142108163
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5276353746819964,
+              "brier": 0.17410911672241283,
+              "calibrationSlope": 0.8983604983735721,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2171,
+                  "predicted": 0.5502113372794574,
+                  "observed": 0.555678645233981
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2598,
+                  "predicted": 0.650757916271738,
+                  "observed": 0.6160019650262262
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3408,
+                  "predicted": 0.7552408985078063,
+                  "observed": 0.7377819418447241
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7869,
+                  "predicted": 0.8560701857094206,
+                  "observed": 0.8346293625461368
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1370,
+                  "predicted": 0.9134439338184385,
+                  "observed": 0.8793359444973557
+                }
+              ],
+              "difference": -0.0002472884439615882
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5303200394011229,
+              "brier": 0.1761010052818217,
+              "calibrationSlope": 0.9532645290967372,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3606,
+                  "predicted": 0.549088459436839,
+                  "observed": 0.5520697312419015
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3323,
+                  "predicted": 0.6511024491388536,
+                  "observed": 0.6552757604360601
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3857,
+                  "predicted": 0.7515135731471623,
+                  "observed": 0.7400408852232577
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6953,
+                  "predicted": 0.8544103305734023,
+                  "observed": 0.8410422003051371
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1928,
+                  "predicted": 0.9137422961675459,
+                  "observed": 0.9071314656408335
+                }
+              ],
+              "difference": 0.00016661923779553333
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.523493210715093,
+              "brier": 0.1732262357219756,
+              "calibrationSlope": 1.0039659574595312,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3830,
+                  "predicted": 0.5505693786545769,
+                  "observed": 0.5425671171190057
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3836,
+                  "predicted": 0.650831490417413,
+                  "observed": 0.646771374324644
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4284,
+                  "predicted": 0.7516485606053165,
+                  "observed": 0.7490040916438208
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7603,
+                  "predicted": 0.8557649501474452,
+                  "observed": 0.8631228050649006
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1564,
+                  "predicted": 0.9125808377953167,
+                  "observed": 0.901641936968024
+                }
+              ],
+              "difference": -0.00030605950547523585
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.5231856903030762,
+              "brier": 0.1707881991112119,
+              "calibrationSlope": 0.8581426292920823,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 648,
+                  "predicted": 0.5492383484514576,
+                  "observed": 0.5595584853594971
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 703,
+                  "predicted": 0.647490285131209,
+                  "observed": 0.6348377997179125
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 565,
+                  "predicted": 0.7517334991271261,
+                  "observed": 0.7523274196381521
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1657,
+                  "predicted": 0.8668129319852012,
+                  "observed": 0.845802261246091
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 795,
+                  "predicted": 0.9136975706629192,
+                  "observed": 0.8528154851684264
+                }
+              ],
+              "difference": 0.00014803961881110385
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5300523707968638,
+            "brier": 0.17570707160700844,
+            "calibrationSlope": 0.9638807538765266,
+            "weekends": 363,
+            "pairs": 75315,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 12465,
+                "predicted": 0.5501275924651556,
+                "observed": 0.5497042938634241
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 13177,
+                "predicted": 0.6511058820313999,
+                "observed": 0.6434086597004218
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15412,
+                "predicted": 0.7526729202366605,
+                "observed": 0.7479402503539625
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 28912,
+                "predicted": 0.8543549657737002,
+                "observed": 0.8486018300591939
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 5349,
+                "predicted": 0.9131159965585472,
+                "observed": 0.8955007818421058
+              }
+            ],
+            "difference": -6.482132420606348e-05
+          },
+          "differenceInterval95": [
+            -0.00039505009480217466,
+            0.00029372099752205625
+          ]
+        },
+        "eligible": false
+      },
+      "nonlinear": {
+        "raw": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5423894021790919,
+              "brier": 0.18069426270953534,
+              "calibrationSlope": 1.0045270594613307,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2868,
+                  "predicted": 0.5508604811203859,
+                  "observed": 0.5516756126818139
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3425,
+                  "predicted": 0.6517895485124031,
+                  "observed": 0.647715743702006
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3853,
+                  "predicted": 0.753106552228905,
+                  "observed": 0.7647431893853591
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6482,
+                  "predicted": 0.8497059094313792,
+                  "observed": 0.8547213159425707
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 487,
+                  "predicted": 0.9110028384658084,
+                  "observed": 0.8561204094012973
+                }
+              ],
+              "difference": 0.00018507165864527697
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5276057786533307,
+              "brier": 0.1740926104137229,
+              "calibrationSlope": 0.8979488840263686,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2163,
+                  "predicted": 0.5501776157730885,
+                  "observed": 0.5556557441925497
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2598,
+                  "predicted": 0.6507679087476254,
+                  "observed": 0.6170419597413898
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3407,
+                  "predicted": 0.7553048870706859,
+                  "observed": 0.7374544635213499
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7874,
+                  "predicted": 0.856076096974958,
+                  "observed": 0.8345872334875665
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1374,
+                  "predicted": 0.9134131185191043,
+                  "observed": 0.8797621879735684
+                }
+              ],
+              "difference": -0.00027688447262721165
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5303624011505509,
+              "brier": 0.1761044309100242,
+              "calibrationSlope": 0.9517471946654168,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3486,
+                  "predicted": 0.5493508773295424,
+                  "observed": 0.5493881051518803
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3329,
+                  "predicted": 0.6513082490885517,
+                  "observed": 0.6500088457843461
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3954,
+                  "predicted": 0.7516803571604782,
+                  "observed": 0.7386384550382769
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7037,
+                  "predicted": 0.8542352532009816,
+                  "observed": 0.8411077258517908
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1861,
+                  "predicted": 0.9137175065602774,
+                  "observed": 0.9085003046936131
+                }
+              ],
+              "difference": 0.00020898098722348546
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.5234418765053012,
+              "brier": 0.17319995189841006,
+              "calibrationSlope": 0.9985236501041114,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3757,
+                  "predicted": 0.550548360873953,
+                  "observed": 0.5387153311249646
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3828,
+                  "predicted": 0.6510580789583461,
+                  "observed": 0.645481133496809
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4283,
+                  "predicted": 0.7518817190660431,
+                  "observed": 0.7472083437866922
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7662,
+                  "predicted": 0.8558884026722978,
+                  "observed": 0.8624974670878915
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1587,
+                  "predicted": 0.9126312278116238,
+                  "observed": 0.9005870326511611
+                }
+              ],
+              "difference": -0.0003573937152670993
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.5230073634562554,
+              "brier": 0.17068646152895772,
+              "calibrationSlope": 0.8565815207680126,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 634,
+                  "predicted": 0.5489470815997669,
+                  "observed": 0.5642431839548732
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 709,
+                  "predicted": 0.6478142087539448,
+                  "observed": 0.6379527338833728
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 565,
+                  "predicted": 0.7520992300149548,
+                  "observed": 0.7505270555165144
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1662,
+                  "predicted": 0.8669651162255835,
+                  "observed": 0.8468733137478267
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 798,
+                  "predicted": 0.9137312904587602,
+                  "observed": 0.8508640120210368
+                }
+              ],
+              "difference": -3.0287228009556934e-05
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5300419930455491,
+            "brier": 0.17569655601976725,
+            "calibrationSlope": 0.9619286422517819,
+            "weekends": 363,
+            "pairs": 75315,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 12274,
+                "predicted": 0.5501996980792041,
+                "observed": 0.5473112670113182
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 13180,
+                "predicted": 0.6512466644278425,
+                "observed": 0.6421204553826128
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15497,
+                "predicted": 0.7527963298377245,
+                "observed": 0.7470460163436765
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 29055,
+                "predicted": 0.854347696898469,
+                "observed": 0.8484054758049646
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 5309,
+                "predicted": 0.9131054521253634,
+                "observed": 0.8956289561156161
+              }
+            ],
+            "difference": -7.519907552072671e-05
+          },
+          "differenceInterval95": [
+            -0.00044987065265789756,
+            0.0003269273743645954
+          ]
+        },
+        "temperatureComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5435407144477022,
+              "brier": 0.1810732992537088,
+              "calibrationSlope": 0.9317171170426805,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2365,
+                  "predicted": 0.5513234803103816,
+                  "observed": 0.5460247551095508
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2972,
+                  "predicted": 0.6528198978672624,
+                  "observed": 0.6397661461876041
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3725,
+                  "predicted": 0.7530241140636199,
+                  "observed": 0.7282401174782616
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7514,
+                  "predicted": 0.8511458074162577,
+                  "observed": 0.8439686335354926
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 539,
+                  "predicted": 0.9106751589896335,
+                  "observed": 0.850700998540555
+                }
+              ],
+              "difference": 0.0011513122686102305
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5276598201059532,
+              "brier": 0.17411049680524976,
+              "calibrationSlope": 0.8965911193802903,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2156,
+                  "predicted": 0.550176319414762,
+                  "observed": 0.5567245476437653
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2594,
+                  "predicted": 0.6509070100545927,
+                  "observed": 0.6161868202650638
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3393,
+                  "predicted": 0.7554082028636204,
+                  "observed": 0.736936867317535
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7892,
+                  "predicted": 0.8561422028021168,
+                  "observed": 0.8341434422069759
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1381,
+                  "predicted": 0.9134369134416597,
+                  "observed": 0.8803653673519498
+                }
+              ],
+              "difference": 5.4041452622504946e-05
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5303768324534442,
+              "brier": 0.17617744886775216,
+              "calibrationSlope": 1.0379299034257183,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 4085,
+                  "predicted": 0.5491236138666646,
+                  "observed": 0.5600741605010731
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3757,
+                  "predicted": 0.6519389934219502,
+                  "observed": 0.6669399115002537
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4189,
+                  "predicted": 0.7534275643388576,
+                  "observed": 0.77043496736058
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6488,
+                  "predicted": 0.8525090406655208,
+                  "observed": 0.8548612135775306
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1148,
+                  "predicted": 0.9123504369450535,
+                  "observed": 0.9140632468254348
+                }
+              ],
+              "difference": 1.4431302893384944e-05
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.5242076568280283,
+              "brier": 0.17344444225523353,
+              "calibrationSlope": 1.0973553264366185,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 4296,
+                  "predicted": 0.5500002473708429,
+                  "observed": 0.5442847740359944
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 4245,
+                  "predicted": 0.6498264340847664,
+                  "observed": 0.6626206410121548
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4541,
+                  "predicted": 0.7508558467992649,
+                  "observed": 0.7789609218171045
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7196,
+                  "predicted": 0.850975806436101,
+                  "observed": 0.8729932704586779
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 839,
+                  "predicted": 0.9104377471382786,
+                  "observed": 0.9056327039503123
+                }
+              ],
+              "difference": 0.0007657803227271227
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.5224101571353871,
+              "brier": 0.17060763883583854,
+              "calibrationSlope": 0.8732069193649352,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 662,
+                  "predicted": 0.5493290324569788,
+                  "observed": 0.5720288115246099
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 711,
+                  "predicted": 0.6469781051177369,
+                  "observed": 0.6390128276631344
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 574,
+                  "predicted": 0.75135192854384,
+                  "observed": 0.7630577654790729
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1710,
+                  "predicted": 0.8653814959901149,
+                  "observed": 0.8453109517981
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 711,
+                  "predicted": 0.9135746523339874,
+                  "observed": 0.8508784258608572
+                }
+              ],
+              "difference": -0.0005972063208683691
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5305273464731468,
+            "brier": 0.17587279879102366,
+            "calibrationSlope": 0.9945331021294662,
+            "weekends": 363,
+            "pairs": 75315,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 12902,
+                "predicted": 0.5499564098022917,
+                "observed": 0.5515999564567198
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 13568,
+                "predicted": 0.6512119830121839,
+                "observed": 0.6513075552840499
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15848,
+                "predicted": 0.7529161540740078,
+                "observed": 0.7573357558256114
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 29090,
+                "predicted": 0.8527025810187423,
+                "observed": 0.8522629046078216
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 3907,
+                "predicted": 0.9120616999841604,
+                "observed": 0.8941110802125628
+              }
+            ],
+            "difference": 0.0004853534275977488
+          },
+          "differenceInterval95": [
+            -0.0001253918262580518,
+            0.0011543256135643008
+          ]
+        },
+        "keepTemperature": false,
+        "parent": "baseline",
+        "incrementalComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5423894021790919,
+              "brier": 0.18069426270953534,
+              "calibrationSlope": 1.0045270594613307,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2868,
+                  "predicted": 0.5508604811203859,
+                  "observed": 0.5516756126818139
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3425,
+                  "predicted": 0.6517895485124031,
+                  "observed": 0.647715743702006
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3853,
+                  "predicted": 0.753106552228905,
+                  "observed": 0.7647431893853591
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6482,
+                  "predicted": 0.8497059094313792,
+                  "observed": 0.8547213159425707
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 487,
+                  "predicted": 0.9110028384658084,
+                  "observed": 0.8561204094012973
+                }
+              ],
+              "difference": 0.00018507165864527697
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5276057786533307,
+              "brier": 0.1740926104137229,
+              "calibrationSlope": 0.8979488840263686,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2163,
+                  "predicted": 0.5501776157730885,
+                  "observed": 0.5556557441925497
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2598,
+                  "predicted": 0.6507679087476254,
+                  "observed": 0.6170419597413898
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3407,
+                  "predicted": 0.7553048870706859,
+                  "observed": 0.7374544635213499
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7874,
+                  "predicted": 0.856076096974958,
+                  "observed": 0.8345872334875665
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1374,
+                  "predicted": 0.9134131185191043,
+                  "observed": 0.8797621879735684
+                }
+              ],
+              "difference": -0.00027688447262721165
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5303624011505509,
+              "brier": 0.1761044309100242,
+              "calibrationSlope": 0.9517471946654168,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3486,
+                  "predicted": 0.5493508773295424,
+                  "observed": 0.5493881051518803
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3329,
+                  "predicted": 0.6513082490885517,
+                  "observed": 0.6500088457843461
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3954,
+                  "predicted": 0.7516803571604782,
+                  "observed": 0.7386384550382769
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7037,
+                  "predicted": 0.8542352532009816,
+                  "observed": 0.8411077258517908
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1861,
+                  "predicted": 0.9137175065602774,
+                  "observed": 0.9085003046936131
+                }
+              ],
+              "difference": 0.00020898098722348546
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.5234418765053012,
+              "brier": 0.17319995189841006,
+              "calibrationSlope": 0.9985236501041114,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3757,
+                  "predicted": 0.550548360873953,
+                  "observed": 0.5387153311249646
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3828,
+                  "predicted": 0.6510580789583461,
+                  "observed": 0.645481133496809
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4283,
+                  "predicted": 0.7518817190660431,
+                  "observed": 0.7472083437866922
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7662,
+                  "predicted": 0.8558884026722978,
+                  "observed": 0.8624974670878915
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1587,
+                  "predicted": 0.9126312278116238,
+                  "observed": 0.9005870326511611
+                }
+              ],
+              "difference": -0.0003573937152670993
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.5230073634562554,
+              "brier": 0.17068646152895772,
+              "calibrationSlope": 0.8565815207680126,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 634,
+                  "predicted": 0.5489470815997669,
+                  "observed": 0.5642431839548732
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 709,
+                  "predicted": 0.6478142087539448,
+                  "observed": 0.6379527338833728
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 565,
+                  "predicted": 0.7520992300149548,
+                  "observed": 0.7505270555165144
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1662,
+                  "predicted": 0.8669651162255835,
+                  "observed": 0.8468733137478267
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 798,
+                  "predicted": 0.9137312904587602,
+                  "observed": 0.8508640120210368
+                }
+              ],
+              "difference": -3.0287228009556934e-05
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5300419930455491,
+            "brier": 0.17569655601976725,
+            "calibrationSlope": 0.9619286422517819,
+            "weekends": 363,
+            "pairs": 75315,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 12274,
+                "predicted": 0.5501996980792041,
+                "observed": 0.5473112670113182
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 13180,
+                "predicted": 0.6512466644278425,
+                "observed": 0.6421204553826128
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15497,
+                "predicted": 0.7527963298377245,
+                "observed": 0.7470460163436765
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 29055,
+                "predicted": 0.854347696898469,
+                "observed": 0.8484054758049646
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 5309,
+                "predicted": 0.9131054521253634,
+                "observed": 0.8956289561156161
+              }
+            ],
+            "difference": -7.519907552072671e-05
+          },
+          "differenceInterval95": [
+            -0.00044987065265789756,
+            0.0003269273743645954
+          ]
+        },
+        "eligible": false
+      }
+    },
+    "selectedScores": {
+      "blocks": [
+        {
+          "fromYear": 2008,
+          "toYear": 2011,
+          "logLoss": 0.5422043305204468,
+          "brier": 0.18062708225289376,
+          "calibrationSlope": 0.9981580608572856,
+          "weekends": 73,
+          "pairs": 17115,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2807,
+              "predicted": 0.5508761312262404,
+              "observed": 0.5469585304336267
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 3394,
+              "predicted": 0.6516894267154484,
+              "observed": 0.6444943446183631
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 3812,
+              "predicted": 0.7530909837672568,
+              "observed": 0.7608991975088718
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 6612,
+              "predicted": 0.8495738438576402,
+              "observed": 0.8544445019280124
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 490,
+              "predicted": 0.9109720306303483,
+              "observed": 0.8569921170670619
+            }
+          ],
+          "difference": 0.0
+        },
+        {
+          "fromYear": 2012,
+          "toYear": 2015,
+          "logLoss": 0.5278826631259579,
+          "brier": 0.174202406344331,
+          "calibrationSlope": 0.8951938107333314,
+          "weekends": 77,
+          "pairs": 17416,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2149,
+              "predicted": 0.5503262943191385,
+              "observed": 0.5545262110445945
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 2567,
+              "predicted": 0.6506579489443328,
+              "observed": 0.6185228753880689
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 3432,
+              "predicted": 0.7554330359350017,
+              "observed": 0.735254135919707
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 7875,
+              "predicted": 0.8562093135724496,
+              "observed": 0.8333286026283504
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 1393,
+              "predicted": 0.9133796455830901,
+              "observed": 0.8817696762630148
+            }
+          ],
+          "difference": 0.0
+        },
+        {
+          "fromYear": 2016,
+          "toYear": 2020,
+          "logLoss": 0.5301534201633274,
+          "brier": 0.17619610368565852,
+          "calibrationSlope": 0.9471284243450663,
+          "weekends": 100,
+          "pairs": 19667,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 3501,
+              "predicted": 0.5492845787600085,
+              "observed": 0.5636127016700522
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 3221,
+              "predicted": 0.6504542590604026,
+              "observed": 0.6403955534110028
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 4053,
+              "predicted": 0.7516608661501221,
+              "observed": 0.7384317429903378
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 6917,
+              "predicted": 0.855114961678943,
+              "observed": 0.8387947301910278
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 1975,
+              "predicted": 0.9135937033152367,
+              "observed": 0.9136546888449334
+            }
+          ],
+          "difference": 0.0
+        },
+        {
+          "fromYear": 2021,
+          "toYear": 2025,
+          "logLoss": 0.5237992702205683,
+          "brier": 0.17330481767598224,
+          "calibrationSlope": 0.9973647197375186,
+          "weekends": 113,
+          "pairs": 21117,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 3794,
+              "predicted": 0.5506968372966228,
+              "observed": 0.5393595061431654
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 3810,
+              "predicted": 0.6510595131141164,
+              "observed": 0.6456555627968231
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 4306,
+              "predicted": 0.7518368153641594,
+              "observed": 0.7466497928203077
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 7570,
+              "predicted": 0.856032876734907,
+              "observed": 0.8635548946311655
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 1637,
+              "predicted": 0.912743769343645,
+              "observed": 0.899322815924419
+            }
+          ],
+          "difference": 0.0
+        },
+        {
+          "fromYear": 2026,
+          "toYear": 2026,
+          "logLoss": 0.523037650684265,
+          "brier": 0.17075363733045698,
+          "calibrationSlope": 0.8586361824630847,
+          "weekends": 19,
+          "pairs": 4368,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 651,
+              "predicted": 0.5491834381503156,
+              "observed": 0.5524187395086221
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 698,
+              "predicted": 0.6478759135191745,
+              "observed": 0.6352389078498293
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 557,
+              "predicted": 0.750946789753301,
+              "observed": 0.7609973285841496
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 1671,
+              "predicted": 0.8664950181252569,
+              "observed": 0.8416030534351145
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 791,
+              "predicted": 0.9135419079118652,
+              "observed": 0.8547084069679374
+            }
+          ],
+          "difference": 0.0
+        }
+      ],
+      "historical": {
+        "fromYear": 2008,
+        "toYear": 2025,
+        "logLoss": 0.5301171921210699,
+        "brier": 0.17576423432211183,
+        "calibrationSlope": 0.9584768727347827,
+        "weekends": 363,
+        "pairs": 75315,
+        "reliability": [
+          {
+            "fromProbability": 0.5,
+            "count": 12251,
+            "predicted": 0.5502539601338412,
+            "observed": 0.5505635935034346
+          },
+          {
+            "fromProbability": 0.6,
+            "count": 12992,
+            "predicted": 0.6509816755872931,
+            "observed": 0.6391434200544512
+          },
+          {
+            "fromProbability": 0.7,
+            "count": 15603,
+            "predicted": 0.75279340074829,
+            "observed": 0.7454116530241603
+          },
+          {
+            "fromProbability": 0.8,
+            "count": 28974,
+            "predicted": 0.854601225603406,
+            "observed": 0.8477580174791226
+          },
+          {
+            "fromProbability": 0.9,
+            "count": 5495,
+            "predicted": 0.91309367554968,
+            "observed": 0.8979492575648469
+          }
+        ],
+        "difference": 0.0
+      },
+      "differenceInterval95": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "grid": {
+    "selected": "overall_grid",
+    "keepTemperature": false,
+    "candidates": {
+      "ratings": {
+        "raw": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5224666956289538,
+              "brier": 0.1717625710117629,
+              "calibrationSlope": 0.9978223005073544,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2232,
+                  "predicted": 0.5494650432367422,
+                  "observed": 0.5569805038043053
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2766,
+                  "predicted": 0.652296933564941,
+                  "observed": 0.6426532498230723
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3785,
+                  "predicted": 0.7544027439899468,
+                  "observed": 0.7649578470607972
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7808,
+                  "predicted": 0.8505046780812631,
+                  "observed": 0.8524041093370481
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 524,
+                  "predicted": 0.9105823937518067,
+                  "observed": 0.855422047165578
+                }
+              ],
+              "difference": -0.019737634891493022
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5088072751493824,
+              "brier": 0.16600228613252754,
+              "calibrationSlope": 0.9057071650360584,
+              "weekends": 77,
+              "pairs": 17378,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 1836,
+                  "predicted": 0.5506238358220675,
+                  "observed": 0.549691054423476
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2055,
+                  "predicted": 0.6508729140495704,
+                  "observed": 0.6368991037840517
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3121,
+                  "predicted": 0.7547631874951795,
+                  "observed": 0.7191586964425217
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 8670,
+                  "predicted": 0.8584179264619605,
+                  "observed": 0.840566888825876
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1696,
+                  "predicted": 0.9137947892211123,
+                  "observed": 0.8894266096780892
+                }
+              ],
+              "difference": -0.019502464420766995
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5110677790810305,
+              "brier": 0.16762672858801791,
+              "calibrationSlope": 0.9552276120378992,
+              "weekends": 100,
+              "pairs": 19214,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2617,
+                  "predicted": 0.5505908261434903,
+                  "observed": 0.5479878300711354
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2938,
+                  "predicted": 0.6514971456067353,
+                  "observed": 0.6623209587300235
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3976,
+                  "predicted": 0.7533669444627237,
+                  "observed": 0.7497982121410073
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7228,
+                  "predicted": 0.8559106294589182,
+                  "observed": 0.8388748428232045
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2455,
+                  "predicted": 0.9140378747605824,
+                  "observed": 0.907821553786832
+                }
+              ],
+              "difference": -0.016746048968047676
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.48481939995203793,
+              "brier": 0.1567619133519171,
+              "calibrationSlope": 1.0412680215141958,
+              "weekends": 112,
+              "pairs": 20044,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2799,
+                  "predicted": 0.5501022618333823,
+                  "observed": 0.578082770488336
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3026,
+                  "predicted": 0.6510823051265405,
+                  "observed": 0.6718120157036898
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3979,
+                  "predicted": 0.753377822518877,
+                  "observed": 0.7572399830129084
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7476,
+                  "predicted": 0.8572224948930578,
+                  "observed": 0.8719623568888516
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2764,
+                  "predicted": 0.9150801550477586,
+                  "observed": 0.9095648089210561
+                }
+              ],
+              "difference": -0.03411096918410503
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.4919175024639064,
+              "brier": 0.15689180044343176,
+              "calibrationSlope": 0.8907424217937226,
+              "weekends": 18,
+              "pairs": 4137,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 502,
+                  "predicted": 0.5508671967737965,
+                  "observed": 0.5643055005935893
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 573,
+                  "predicted": 0.650976651827253,
+                  "observed": 0.6859719091382002
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 552,
+                  "predicted": 0.7528274280334836,
+                  "observed": 0.796978960618594
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1363,
+                  "predicted": 0.8654593463822791,
+                  "observed": 0.854493684748485
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1147,
+                  "predicted": 0.9150423085255002,
+                  "observed": 0.8592296322058953
+                }
+              ],
+              "difference": -0.029565899669233776
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.504764584724164,
+            "brier": 0.16475373168585583,
+            "calibrationSlope": 0.9766401697433199,
+            "weekends": 362,
+            "pairs": 73751,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 9484,
+                "predicted": 0.5502024190058766,
+                "observed": 0.5600591481888044
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 10785,
+                "predicted": 0.6514432148245363,
+                "observed": 0.6564350414024399
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 14861,
+                "predicted": 0.7538715482234969,
+                "observed": 0.7498514225271937
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 31182,
+                "predicted": 0.8557720308737673,
+                "observed": 0.8514833684151429
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 7439,
+                "predicted": 0.9142322124181969,
+                "observed": 0.9021085371847588
+              }
+            ],
+            "difference": -0.023308205947244687
+          },
+          "differenceInterval95": [
+            -0.03071698009652843,
+            -0.01620150355056818
+          ]
+        },
+        "temperatureComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5240372125082726,
+              "brier": 0.17227376901185756,
+              "calibrationSlope": 0.9314956824580046,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 1836,
+                  "predicted": 0.55020550166547,
+                  "observed": 0.5457470084289526
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2355,
+                  "predicted": 0.6547247624269715,
+                  "observed": 0.627605093972201
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3499,
+                  "predicted": 0.7556474451471847,
+                  "observed": 0.7347876325364595
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 8805,
+                  "predicted": 0.851939336528749,
+                  "observed": 0.8447694932820881
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 620,
+                  "predicted": 0.9100120967545156,
+                  "observed": 0.856240086148695
+                }
+              ],
+              "difference": 0.0015705168793188958
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5084219157506444,
+              "brier": 0.1658801023257768,
+              "calibrationSlope": 0.9169723340898628,
+              "weekends": 77,
+              "pairs": 17378,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 1891,
+                  "predicted": 0.5505409529040505,
+                  "observed": 0.5482550437839264
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2129,
+                  "predicted": 0.6510720785071181,
+                  "observed": 0.6313962699819117
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3203,
+                  "predicted": 0.7548436705362362,
+                  "observed": 0.7305571046289256
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 8552,
+                  "predicted": 0.857935974996154,
+                  "observed": 0.8434377994689483
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1603,
+                  "predicted": 0.9137843817710036,
+                  "observed": 0.8873698546254737
+                }
+              ],
+              "difference": -0.00038535939873801135
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5109720803514981,
+              "brier": 0.16774698391669285,
+              "calibrationSlope": 1.0445791278219718,
+              "weekends": 100,
+              "pairs": 19214,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3193,
+                  "predicted": 0.5507744395656637,
+                  "observed": 0.5634936801802869
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3441,
+                  "predicted": 0.6515752214312569,
+                  "observed": 0.6797712319056856
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4210,
+                  "predicted": 0.7529910427594477,
+                  "observed": 0.7681004429045132
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6786,
+                  "predicted": 0.8547589551371594,
+                  "observed": 0.8593785274333854
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1584,
+                  "predicted": 0.9129387306219177,
+                  "observed": 0.9134278121402204
+                }
+              ],
+              "difference": -9.569872953255632e-05
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.4857500447059111,
+              "brier": 0.15710220600689093,
+              "calibrationSlope": 1.0995452255963654,
+              "weekends": 112,
+              "pairs": 20044,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3086,
+                  "predicted": 0.5500926989666508,
+                  "observed": 0.5783781038084915
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3295,
+                  "predicted": 0.6511729073505415,
+                  "observed": 0.6910930916689997
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4233,
+                  "predicted": 0.7528022668893345,
+                  "observed": 0.7753126838174993
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7283,
+                  "predicted": 0.8560843395636583,
+                  "observed": 0.8781535286093901
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2147,
+                  "predicted": 0.9137407783258288,
+                  "observed": 0.9105830441176024
+                }
+              ],
+              "difference": 0.0009306447538730585
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.49208338978949834,
+              "brier": 0.15684999642914263,
+              "calibrationSlope": 0.8814578695484762,
+              "weekends": 18,
+              "pairs": 4137,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 489,
+                  "predicted": 0.550896999626999,
+                  "observed": 0.5710804224207962
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 562,
+                  "predicted": 0.651288282211821,
+                  "observed": 0.6816333745801663
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 539,
+                  "predicted": 0.7519033431305064,
+                  "observed": 0.7865831183192039
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1342,
+                  "predicted": 0.86528742268121,
+                  "observed": 0.855215360664245
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1205,
+                  "predicted": 0.915246981717586,
+                  "observed": 0.8593181065872229
+                }
+              ],
+              "difference": 0.0001658873255919171
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5052608206301529,
+            "brier": 0.16496933282152343,
+            "calibrationSlope": 1.003885871272149,
+            "weekends": 362,
+            "pairs": 73751,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 10006,
+                "predicted": 0.550412055627678,
+                "observed": 0.5631656968247649
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 11220,
+                "predicted": 0.6519380153390285,
+                "observed": 0.6656674740198559
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15145,
+                "predicted": 0.7538388851699942,
+                "observed": 0.7563110220348385
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 31426,
+                "predicted": 0.8552385725598602,
+                "observed": 0.8569531718728284
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 5954,
+                "predicted": 0.9132247520984655,
+                "observed": 0.901427737971842
+              }
+            ],
+            "difference": 0.0004962359059888926
+          },
+          "differenceInterval95": [
+            -9.609176360719776e-05,
+            0.0010274700792131173
+          ]
+        },
+        "keepTemperature": false,
+        "parent": "baseline",
+        "incrementalComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5224666956289538,
+              "brier": 0.1717625710117629,
+              "calibrationSlope": 0.9978223005073544,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2232,
+                  "predicted": 0.5494650432367422,
+                  "observed": 0.5569805038043053
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2766,
+                  "predicted": 0.652296933564941,
+                  "observed": 0.6426532498230723
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3785,
+                  "predicted": 0.7544027439899468,
+                  "observed": 0.7649578470607972
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7808,
+                  "predicted": 0.8505046780812631,
+                  "observed": 0.8524041093370481
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 524,
+                  "predicted": 0.9105823937518067,
+                  "observed": 0.855422047165578
+                }
+              ],
+              "difference": -0.019737634891493022
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5088072751493824,
+              "brier": 0.16600228613252754,
+              "calibrationSlope": 0.9057071650360584,
+              "weekends": 77,
+              "pairs": 17378,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 1836,
+                  "predicted": 0.5506238358220675,
+                  "observed": 0.549691054423476
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2055,
+                  "predicted": 0.6508729140495704,
+                  "observed": 0.6368991037840517
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3121,
+                  "predicted": 0.7547631874951795,
+                  "observed": 0.7191586964425217
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 8670,
+                  "predicted": 0.8584179264619605,
+                  "observed": 0.840566888825876
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1696,
+                  "predicted": 0.9137947892211123,
+                  "observed": 0.8894266096780892
+                }
+              ],
+              "difference": -0.019502464420766995
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5110677790810305,
+              "brier": 0.16762672858801791,
+              "calibrationSlope": 0.9552276120378992,
+              "weekends": 100,
+              "pairs": 19214,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2617,
+                  "predicted": 0.5505908261434903,
+                  "observed": 0.5479878300711354
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2938,
+                  "predicted": 0.6514971456067353,
+                  "observed": 0.6623209587300235
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3976,
+                  "predicted": 0.7533669444627237,
+                  "observed": 0.7497982121410073
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7228,
+                  "predicted": 0.8559106294589182,
+                  "observed": 0.8388748428232045
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2455,
+                  "predicted": 0.9140378747605824,
+                  "observed": 0.907821553786832
+                }
+              ],
+              "difference": -0.016746048968047676
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.48481939995203793,
+              "brier": 0.1567619133519171,
+              "calibrationSlope": 1.0412680215141958,
+              "weekends": 112,
+              "pairs": 20044,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2799,
+                  "predicted": 0.5501022618333823,
+                  "observed": 0.578082770488336
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3026,
+                  "predicted": 0.6510823051265405,
+                  "observed": 0.6718120157036898
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3979,
+                  "predicted": 0.753377822518877,
+                  "observed": 0.7572399830129084
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7476,
+                  "predicted": 0.8572224948930578,
+                  "observed": 0.8719623568888516
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2764,
+                  "predicted": 0.9150801550477586,
+                  "observed": 0.9095648089210561
+                }
+              ],
+              "difference": -0.03411096918410503
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.4919175024639064,
+              "brier": 0.15689180044343176,
+              "calibrationSlope": 0.8907424217937226,
+              "weekends": 18,
+              "pairs": 4137,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 502,
+                  "predicted": 0.5508671967737965,
+                  "observed": 0.5643055005935893
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 573,
+                  "predicted": 0.650976651827253,
+                  "observed": 0.6859719091382002
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 552,
+                  "predicted": 0.7528274280334836,
+                  "observed": 0.796978960618594
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1363,
+                  "predicted": 0.8654593463822791,
+                  "observed": 0.854493684748485
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1147,
+                  "predicted": 0.9150423085255002,
+                  "observed": 0.8592296322058953
+                }
+              ],
+              "difference": -0.029565899669233776
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.504764584724164,
+            "brier": 0.16475373168585583,
+            "calibrationSlope": 0.9766401697433199,
+            "weekends": 362,
+            "pairs": 73751,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 9484,
+                "predicted": 0.5502024190058766,
+                "observed": 0.5600591481888044
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 10785,
+                "predicted": 0.6514432148245363,
+                "observed": 0.6564350414024399
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 14861,
+                "predicted": 0.7538715482234969,
+                "observed": 0.7498514225271937
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 31182,
+                "predicted": 0.8557720308737673,
+                "observed": 0.8514833684151429
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 7439,
+                "predicted": 0.9142322124181969,
+                "observed": 0.9021085371847588
+              }
+            ],
+            "difference": -0.023308205947244687
+          },
+          "differenceInterval95": [
+            -0.03071698009652843,
+            -0.01620150355056818
+          ]
+        },
+        "eligible": true
+      },
+      "context": {
+        "raw": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5356687003927192,
+              "brier": 0.17772410867001132,
+              "calibrationSlope": 1.010125204443319,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2694,
+                  "predicted": 0.5515100433194968,
+                  "observed": 0.5431276867224539
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3297,
+                  "predicted": 0.6523099573240337,
+                  "observed": 0.6568591514568767
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3782,
+                  "predicted": 0.7534276894498333,
+                  "observed": 0.7615075619997287
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6843,
+                  "predicted": 0.8497996255641294,
+                  "observed": 0.8563457200615943
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 499,
+                  "predicted": 0.9109614929141433,
+                  "observed": 0.8546956313435679
+                }
+              ],
+              "difference": -0.006535630127727536
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5181429544197754,
+              "brier": 0.1699255624824389,
+              "calibrationSlope": 0.9024122124658716,
+              "weekends": 77,
+              "pairs": 17378,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 1962,
+                  "predicted": 0.5508101830910476,
+                  "observed": 0.5450405204372237
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2428,
+                  "predicted": 0.6518289514279177,
+                  "observed": 0.6432215517717514
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3239,
+                  "predicted": 0.7538216945360835,
+                  "observed": 0.7309911468975884
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 8130,
+                  "predicted": 0.8575887844260411,
+                  "observed": 0.8366552913503446
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1619,
+                  "predicted": 0.9137797189503144,
+                  "observed": 0.8842382250228442
+                }
+              ],
+              "difference": -0.010166785150373963
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5134840587475592,
+              "brier": 0.1686066174695805,
+              "calibrationSlope": 0.9711085072397871,
+              "weekends": 100,
+              "pairs": 19214,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2938,
+                  "predicted": 0.5496517977810861,
+                  "observed": 0.5431063089572851
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3027,
+                  "predicted": 0.6512173005496918,
+                  "observed": 0.6694608499496947
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3932,
+                  "predicted": 0.753676187906067,
+                  "observed": 0.7503821683018449
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7098,
+                  "predicted": 0.8552783757605699,
+                  "observed": 0.8465818471836932
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2219,
+                  "predicted": 0.9142568985289474,
+                  "observed": 0.903757671917564
+                }
+              ],
+              "difference": -0.01432976930151899
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.48963081904086403,
+              "brier": 0.15897395994848387,
+              "calibrationSlope": 1.0726405754068684,
+              "weekends": 112,
+              "pairs": 20044,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3133,
+                  "predicted": 0.5506236639884353,
+                  "observed": 0.5788002137633936
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3246,
+                  "predicted": 0.6508852246272666,
+                  "observed": 0.663856600940777
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3983,
+                  "predicted": 0.7519562200166999,
+                  "observed": 0.7714064774639413
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7453,
+                  "predicted": 0.8562751236901497,
+                  "observed": 0.8732268945621544
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2229,
+                  "predicted": 0.9141885875716308,
+                  "observed": 0.9155394253447571
+                }
+              ],
+              "difference": -0.029299550095278962
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.49910440786143034,
+              "brier": 0.1595653754569345,
+              "calibrationSlope": 0.8695355416960446,
+              "weekends": 18,
+              "pairs": 4137,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 498,
+                  "predicted": 0.5510330296465582,
+                  "observed": 0.5922388059701492
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 567,
+                  "predicted": 0.6515298372598849,
+                  "observed": 0.6777466759972008
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 574,
+                  "predicted": 0.7516747090763428,
+                  "observed": 0.7616168595612369
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1339,
+                  "predicted": 0.8641792089402843,
+                  "observed": 0.8657648283038503
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1159,
+                  "predicted": 0.9168300754204386,
+                  "observed": 0.8481372887202482
+                }
+              ],
+              "difference": -0.022378994271709952
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.511568729906972,
+            "brier": 0.16774550692057144,
+            "calibrationSlope": 0.9909969764683165,
+            "weekends": 362,
+            "pairs": 73751,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 10727,
+                "predicted": 0.5505713197837097,
+                "observed": 0.5550540712217528
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 11998,
+                "predicted": 0.6514976491095202,
+                "observed": 0.6598565138635003
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 14936,
+                "predicted": 0.7531304081243957,
+                "observed": 0.7555142441941908
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 29524,
+                "predicted": 0.8550997245614314,
+                "observed": 0.8538216352415556
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 6566,
+                "predicted": 0.9139436679094474,
+                "observed": 0.9011299584474444
+              }
+            ],
+            "difference": -0.016504060764436595
+          },
+          "differenceInterval95": [
+            -0.022742743578917073,
+            -0.010595548623771553
+          ]
+        },
+        "temperatureComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.536708546700044,
+              "brier": 0.17806029238844753,
+              "calibrationSlope": 0.9404993372408554,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2211,
+                  "predicted": 0.551500700939852,
+                  "observed": 0.5308273325512655
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2854,
+                  "predicted": 0.6527447046512451,
+                  "observed": 0.6356847581337944
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3653,
+                  "predicted": 0.7532672115044281,
+                  "observed": 0.7329514205432353
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7845,
+                  "predicted": 0.8512292018644482,
+                  "observed": 0.8474394414036753
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 552,
+                  "predicted": 0.9105890481452124,
+                  "observed": 0.8576139128807122
+                }
+              ],
+              "difference": 0.0010398463073248965
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5174219696097841,
+              "brier": 0.16971286055225188,
+              "calibrationSlope": 0.9260946171078761,
+              "weekends": 77,
+              "pairs": 17378,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2115,
+                  "predicted": 0.5512644826903608,
+                  "observed": 0.5520102046155944
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2538,
+                  "predicted": 0.6516686315651268,
+                  "observed": 0.6475293890750661
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3412,
+                  "predicted": 0.7538011325580588,
+                  "observed": 0.7417448876148933
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7848,
+                  "predicted": 0.8567361817916337,
+                  "observed": 0.8398188085390585
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1465,
+                  "predicted": 0.9135856924527408,
+                  "observed": 0.8882837065992417
+                }
+              ],
+              "difference": -0.0007209848099912754
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5138279648631051,
+              "brier": 0.16883658480215166,
+              "calibrationSlope": 1.0405488629810786,
+              "weekends": 100,
+              "pairs": 19214,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3369,
+                  "predicted": 0.5492882863556813,
+                  "observed": 0.5582918946453194
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3409,
+                  "predicted": 0.6509727410208763,
+                  "observed": 0.6884338349934168
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4157,
+                  "predicted": 0.7534842712242231,
+                  "observed": 0.7656435092804442
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6688,
+                  "predicted": 0.8543001374983363,
+                  "observed": 0.8599606429170843
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1591,
+                  "predicted": 0.91340683113105,
+                  "observed": 0.9070244512815044
+                }
+              ],
+              "difference": 0.00034390611554587376
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.49034245288151096,
+              "brier": 0.15922285181539328,
+              "calibrationSlope": 1.1107384937002305,
+              "weekends": 112,
+              "pairs": 20044,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3314,
+                  "predicted": 0.5504380721461689,
+                  "observed": 0.5806430080035795
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3419,
+                  "predicted": 0.6507869981769998,
+                  "observed": 0.6769492782199611
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4108,
+                  "predicted": 0.7516030267641468,
+                  "observed": 0.7758744603069007
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7327,
+                  "predicted": 0.8550391385436263,
+                  "observed": 0.8795809603862628
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1876,
+                  "predicted": 0.9134822327723029,
+                  "observed": 0.9147015067420259
+                }
+              ],
+              "difference": 0.0007116338406468945
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.4994081464498379,
+              "brier": 0.15953782440587555,
+              "calibrationSlope": 0.8564927483401312,
+              "weekends": 18,
+              "pairs": 4137,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 477,
+                  "predicted": 0.550996329580709,
+                  "observed": 0.5845802161263507
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 544,
+                  "predicted": 0.6511836472969034,
+                  "observed": 0.6714676390154967
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 573,
+                  "predicted": 0.7510856654712923,
+                  "observed": 0.7595221606648199
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1299,
+                  "predicted": 0.8644379506688028,
+                  "observed": 0.8701945167713279
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1244,
+                  "predicted": 0.9168592998112385,
+                  "observed": 0.8423166519399149
+                }
+              ],
+              "difference": 0.00030373858840758515
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.511940239718498,
+            "brier": 0.16790858975253942,
+            "calibrationSlope": 1.011854133198132,
+            "weekends": 362,
+            "pairs": 73751,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 11009,
+                "predicted": 0.5503989068657772,
+                "observed": 0.5598297490206956
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 12220,
+                "predicted": 0.6514117668064281,
+                "observed": 0.6662592404202645
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 15330,
+                "predicted": 0.7529335904943208,
+                "observed": 0.7568097190487544
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 29708,
+                "predicted": 0.854419076767269,
+                "observed": 0.8579392018322989
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 5484,
+                "predicted": 0.913264777970941,
+                "observed": 0.9016925502828625
+              }
+            ],
+            "difference": 0.00037150981152604565
+          },
+          "differenceInterval95": [
+            -0.00016870704368087102,
+            0.0008981890031827185
+          ]
+        },
+        "keepTemperature": false,
+        "parent": "ratings",
+        "incrementalComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5356687003927192,
+              "brier": 0.17772410867001132,
+              "calibrationSlope": 1.010125204443319,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2694,
+                  "predicted": 0.5515100433194968,
+                  "observed": 0.5431276867224539
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3297,
+                  "predicted": 0.6523099573240337,
+                  "observed": 0.6568591514568767
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3782,
+                  "predicted": 0.7534276894498333,
+                  "observed": 0.7615075619997287
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6843,
+                  "predicted": 0.8497996255641294,
+                  "observed": 0.8563457200615943
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 499,
+                  "predicted": 0.9109614929141433,
+                  "observed": 0.8546956313435679
+                }
+              ],
+              "difference": 0.013202004763765488
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5181429544197754,
+              "brier": 0.1699255624824389,
+              "calibrationSlope": 0.9024122124658716,
+              "weekends": 77,
+              "pairs": 17378,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 1962,
+                  "predicted": 0.5508101830910476,
+                  "observed": 0.5450405204372237
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2428,
+                  "predicted": 0.6518289514279177,
+                  "observed": 0.6432215517717514
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3239,
+                  "predicted": 0.7538216945360835,
+                  "observed": 0.7309911468975884
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 8130,
+                  "predicted": 0.8575887844260411,
+                  "observed": 0.8366552913503446
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1619,
+                  "predicted": 0.9137797189503144,
+                  "observed": 0.8842382250228442
+                }
+              ],
+              "difference": 0.009335679270393034
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5134840587475592,
+              "brier": 0.1686066174695805,
+              "calibrationSlope": 0.9711085072397871,
+              "weekends": 100,
+              "pairs": 19214,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2938,
+                  "predicted": 0.5496517977810861,
+                  "observed": 0.5431063089572851
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3027,
+                  "predicted": 0.6512173005496918,
+                  "observed": 0.6694608499496947
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3932,
+                  "predicted": 0.753676187906067,
+                  "observed": 0.7503821683018449
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7098,
+                  "predicted": 0.8552783757605699,
+                  "observed": 0.8465818471836932
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2219,
+                  "predicted": 0.9142568985289474,
+                  "observed": 0.903757671917564
+                }
+              ],
+              "difference": 0.0024162796665286846
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.48963081904086403,
+              "brier": 0.15897395994848387,
+              "calibrationSlope": 1.0726405754068684,
+              "weekends": 112,
+              "pairs": 20044,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3133,
+                  "predicted": 0.5506236639884353,
+                  "observed": 0.5788002137633936
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3246,
+                  "predicted": 0.6508852246272666,
+                  "observed": 0.663856600940777
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3983,
+                  "predicted": 0.7519562200166999,
+                  "observed": 0.7714064774639413
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7453,
+                  "predicted": 0.8562751236901497,
+                  "observed": 0.8732268945621544
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2229,
+                  "predicted": 0.9141885875716308,
+                  "observed": 0.9155394253447571
+                }
+              ],
+              "difference": 0.004811419088826066
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.49910440786143034,
+              "brier": 0.1595653754569345,
+              "calibrationSlope": 0.8695355416960446,
+              "weekends": 18,
+              "pairs": 4137,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 498,
+                  "predicted": 0.5510330296465582,
+                  "observed": 0.5922388059701492
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 567,
+                  "predicted": 0.6515298372598849,
+                  "observed": 0.6777466759972008
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 574,
+                  "predicted": 0.7516747090763428,
+                  "observed": 0.7616168595612369
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1339,
+                  "predicted": 0.8641792089402843,
+                  "observed": 0.8657648283038503
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1159,
+                  "predicted": 0.9168300754204386,
+                  "observed": 0.8481372887202482
+                }
+              ],
+              "difference": 0.007186905397523819
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.511568729906972,
+            "brier": 0.16774550692057144,
+            "calibrationSlope": 0.9909969764683165,
+            "weekends": 362,
+            "pairs": 73751,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 10727,
+                "predicted": 0.5505713197837097,
+                "observed": 0.5550540712217528
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 11998,
+                "predicted": 0.6514976491095202,
+                "observed": 0.6598565138635003
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 14936,
+                "predicted": 0.7531304081243957,
+                "observed": 0.7555142441941908
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 29524,
+                "predicted": 0.8550997245614314,
+                "observed": 0.8538216352415556
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 6566,
+                "predicted": 0.9139436679094474,
+                "observed": 0.9011299584474444
+              }
+            ],
+            "difference": 0.006804145182808098
+          },
+          "differenceInterval95": [
+            0.0035815833752711654,
+            0.01076757465216367
+          ]
+        },
+        "eligible": false
+      },
+      "nonlinear": {
+        "raw": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5328825016887383,
+              "brier": 0.17647420003981182,
+              "calibrationSlope": 1.0212179481182238,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2729,
+                  "predicted": 0.5511199701815788,
+                  "observed": 0.5364672514568165
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3239,
+                  "predicted": 0.6515234202356386,
+                  "observed": 0.6695067249798082
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3757,
+                  "predicted": 0.7528660245365173,
+                  "observed": 0.7644289947172588
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6889,
+                  "predicted": 0.8499535909557572,
+                  "observed": 0.8561665027056946
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 501,
+                  "predicted": 0.9109685751133317,
+                  "observed": 0.85539470572114
+                }
+              ],
+              "difference": -0.009321828831708442
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5126472911089052,
+              "brier": 0.16756204302048014,
+              "calibrationSlope": 0.9221458764636997,
+              "weekends": 77,
+              "pairs": 17378,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2108,
+                  "predicted": 0.5503814296384769,
+                  "observed": 0.5601117484054977
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2398,
+                  "predicted": 0.6510575756213975,
+                  "observed": 0.6360011003712803
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3129,
+                  "predicted": 0.7547668275462548,
+                  "observed": 0.7522236961674803
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 8140,
+                  "predicted": 0.8579840927088848,
+                  "observed": 0.8390926815862441
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1603,
+                  "predicted": 0.9137552963984005,
+                  "observed": 0.887077425456528
+                }
+              ],
+              "difference": -0.01566244846124422
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5124470649649001,
+              "brier": 0.1680948570435633,
+              "calibrationSlope": 0.9668276554869324,
+              "weekends": 100,
+              "pairs": 19214,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2887,
+                  "predicted": 0.5502199384792843,
+                  "observed": 0.5512439861575078
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3003,
+                  "predicted": 0.650986727492014,
+                  "observed": 0.6729764785588196
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3886,
+                  "predicted": 0.7529116766806127,
+                  "observed": 0.7486120124336821
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7093,
+                  "predicted": 0.8555502432449823,
+                  "observed": 0.8467376215309033
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2345,
+                  "predicted": 0.9144973784163455,
+                  "observed": 0.8999974770001304
+                }
+              ],
+              "difference": -0.01536676308417803
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.48675462290770943,
+              "brier": 0.15768501079527872,
+              "calibrationSlope": 1.07276117882791,
+              "weekends": 112,
+              "pairs": 20044,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3052,
+                  "predicted": 0.5497445802374524,
+                  "observed": 0.576158595225404
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3266,
+                  "predicted": 0.6506800933923914,
+                  "observed": 0.6775286104153102
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3961,
+                  "predicted": 0.7524978217641429,
+                  "observed": 0.7725247569612453
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7378,
+                  "predicted": 0.857171387439371,
+                  "observed": 0.8728566246494417
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2387,
+                  "predicted": 0.9145164283274214,
+                  "observed": 0.9141787358959226
+                }
+              ],
+              "difference": -0.03217574622843355
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.49694744153325665,
+              "brier": 0.15878557313274239,
+              "calibrationSlope": 0.8838795098628839,
+              "weekends": 18,
+              "pairs": 4137,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 520,
+                  "predicted": 0.5507286218444496,
+                  "observed": 0.5755725190839694
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 593,
+                  "predicted": 0.649580127001637,
+                  "observed": 0.6830125523012552
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 556,
+                  "predicted": 0.7513403636905692,
+                  "observed": 0.7900552486187846
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1329,
+                  "predicted": 0.8650404812886259,
+                  "observed": 0.8617204462079807
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1139,
+                  "predicted": 0.9157008021666602,
+                  "observed": 0.8497850311485479
+                }
+              ],
+              "difference": -0.024535960599883524
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5086615698917598,
+            "brier": 0.1664505547759966,
+            "calibrationSlope": 0.9970588891313598,
+            "weekends": 362,
+            "pairs": 73751,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 10776,
+                "predicted": 0.5503000983988098,
+                "observed": 0.5573761217534773
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 11906,
+                "predicted": 0.6510361975473966,
+                "observed": 0.6668135618132782
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 14733,
+                "predicted": 0.7531257853081228,
+                "observed": 0.7602257707325936
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 29500,
+                "predicted": 0.8555532514074857,
+                "observed": 0.8542697988517689
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 6836,
+                "predicted": 0.9141622787555691,
+                "observed": 0.9003594462518296
+              }
+            ],
+            "difference": -0.019411220779648842
+          },
+          "differenceInterval95": [
+            -0.026033461582860566,
+            -0.013583053047097672
+          ]
+        },
+        "temperatureComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5338063236064904,
+              "brier": 0.17674974152547945,
+              "calibrationSlope": 0.9423828359133379,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2199,
+                  "predicted": 0.5515774751483212,
+                  "observed": 0.5315050291865785
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2786,
+                  "predicted": 0.6534972225218703,
+                  "observed": 0.6348043079760844
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3557,
+                  "predicted": 0.7537953113357672,
+                  "observed": 0.7394703647429526
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 8014,
+                  "predicted": 0.8516744105568653,
+                  "observed": 0.8462505396764074
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 559,
+                  "predicted": 0.9106017845799255,
+                  "observed": 0.8575344971388611
+                }
+              ],
+              "difference": 0.0009238219177521936
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5134236660571971,
+              "brier": 0.1677914043106707,
+              "calibrationSlope": 0.896624782230363,
+              "weekends": 77,
+              "pairs": 17378,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 1968,
+                  "predicted": 0.5507188902197985,
+                  "observed": 0.5617116830835308
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2232,
+                  "predicted": 0.6516687362187801,
+                  "observed": 0.6263343232218268
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 2967,
+                  "predicted": 0.7544942935563163,
+                  "observed": 0.734250646179612
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 8415,
+                  "predicted": 0.8589801828659762,
+                  "observed": 0.8373576097319917
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1796,
+                  "predicted": 0.9138775449200587,
+                  "observed": 0.8824605852715864
+                }
+              ],
+              "difference": 0.0007763749482919575
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5125754923446849,
+              "brier": 0.16825012951883644,
+              "calibrationSlope": 1.0209698902497384,
+              "weekends": 100,
+              "pairs": 19214,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3213,
+                  "predicted": 0.5494381405228763,
+                  "observed": 0.5581833377858638
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3362,
+                  "predicted": 0.6505864498915148,
+                  "observed": 0.686972065841388
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4038,
+                  "predicted": 0.7532649689432503,
+                  "observed": 0.7617751259643593
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6767,
+                  "predicted": 0.8549341204541593,
+                  "observed": 0.8552801632818448
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1834,
+                  "predicted": 0.9138048710228398,
+                  "observed": 0.9054549862894281
+                }
+              ],
+              "difference": 0.00012842737978470804
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.4875495337327381,
+              "brier": 0.15797661492703552,
+              "calibrationSlope": 1.1124817722077285,
+              "weekends": 112,
+              "pairs": 20044,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3268,
+                  "predicted": 0.5499892225173573,
+                  "observed": 0.5814263234979045
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3422,
+                  "predicted": 0.6508297881105244,
+                  "observed": 0.6871227761228557
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4052,
+                  "predicted": 0.7516533465709285,
+                  "observed": 0.7776968066568959
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7283,
+                  "predicted": 0.855632653258627,
+                  "observed": 0.8788955115098485
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2019,
+                  "predicted": 0.9136230646102238,
+                  "observed": 0.9146197451022592
+                }
+              ],
+              "difference": 0.0007949108250286452
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.497296302922871,
+              "brier": 0.15865988350136775,
+              "calibrationSlope": 0.8611251216555457,
+              "weekends": 18,
+              "pairs": 4137,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 479,
+                  "predicted": 0.5501095108305395,
+                  "observed": 0.5663973482494301
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 571,
+                  "predicted": 0.6500272112795656,
+                  "observed": 0.6830031282586029
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 531,
+                  "predicted": 0.7499015006089041,
+                  "observed": 0.7650681097219632
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1274,
+                  "predicted": 0.8648883899651709,
+                  "observed": 0.8638244709924261
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1282,
+                  "predicted": 0.9161900861365422,
+                  "observed": 0.8492168627756566
+                }
+              ],
+              "difference": 0.0003488613896142736
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5092944224370528,
+            "brier": 0.16668801957732945,
+            "calibrationSlope": 0.9988355104328799,
+            "weekends": 362,
+            "pairs": 73751,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 10648,
+                "predicted": 0.5502236423853943,
+                "observed": 0.5618271469575369
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 11802,
+                "predicted": 0.6514564672018213,
+                "observed": 0.6658357980123739
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 14614,
+                "predicted": 0.7531039524747163,
+                "observed": 0.7567890988581225
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 30479,
+                "predicted": 0.8554321792824331,
+                "observed": 0.8553238830336898
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 6208,
+                "predicted": 0.9135404394113888,
+                "observed": 0.8995165560097834
+              }
+            ],
+            "difference": 0.0006328525452930108
+          },
+          "differenceInterval95": [
+            0.00020472441510129314,
+            0.001041062385685517
+          ]
+        },
+        "keepTemperature": false,
+        "parent": "ratings",
+        "incrementalComparison": {
+          "blocks": [
+            {
+              "fromYear": 2008,
+              "toYear": 2011,
+              "logLoss": 0.5328825016887383,
+              "brier": 0.17647420003981182,
+              "calibrationSlope": 1.0212179481182238,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2729,
+                  "predicted": 0.5511199701815788,
+                  "observed": 0.5364672514568165
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3239,
+                  "predicted": 0.6515234202356386,
+                  "observed": 0.6695067249798082
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3757,
+                  "predicted": 0.7528660245365173,
+                  "observed": 0.7644289947172588
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6889,
+                  "predicted": 0.8499535909557572,
+                  "observed": 0.8561665027056946
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 501,
+                  "predicted": 0.9109685751133317,
+                  "observed": 0.85539470572114
+                }
+              ],
+              "difference": 0.010415806059784583
+            },
+            {
+              "fromYear": 2012,
+              "toYear": 2015,
+              "logLoss": 0.5126472911089052,
+              "brier": 0.16756204302048014,
+              "calibrationSlope": 0.9221458764636997,
+              "weekends": 77,
+              "pairs": 17378,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2108,
+                  "predicted": 0.5503814296384769,
+                  "observed": 0.5601117484054977
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2398,
+                  "predicted": 0.6510575756213975,
+                  "observed": 0.6360011003712803
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3129,
+                  "predicted": 0.7547668275462548,
+                  "observed": 0.7522236961674803
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 8140,
+                  "predicted": 0.8579840927088848,
+                  "observed": 0.8390926815862441
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1603,
+                  "predicted": 0.9137552963984005,
+                  "observed": 0.887077425456528
+                }
+              ],
+              "difference": 0.0038400159595227746
+            },
+            {
+              "fromYear": 2016,
+              "toYear": 2020,
+              "logLoss": 0.5124470649649001,
+              "brier": 0.1680948570435633,
+              "calibrationSlope": 0.9668276554869324,
+              "weekends": 100,
+              "pairs": 19214,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2887,
+                  "predicted": 0.5502199384792843,
+                  "observed": 0.5512439861575078
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3003,
+                  "predicted": 0.650986727492014,
+                  "observed": 0.6729764785588196
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3886,
+                  "predicted": 0.7529116766806127,
+                  "observed": 0.7486120124336821
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7093,
+                  "predicted": 0.8555502432449823,
+                  "observed": 0.8467376215309033
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2345,
+                  "predicted": 0.9144973784163455,
+                  "observed": 0.8999974770001304
+                }
+              ],
+              "difference": 0.0013792858838696453
+            },
+            {
+              "fromYear": 2021,
+              "toYear": 2025,
+              "logLoss": 0.48675462290770943,
+              "brier": 0.15768501079527872,
+              "calibrationSlope": 1.07276117882791,
+              "weekends": 112,
+              "pairs": 20044,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3052,
+                  "predicted": 0.5497445802374524,
+                  "observed": 0.576158595225404
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3266,
+                  "predicted": 0.6506800933923914,
+                  "observed": 0.6775286104153102
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3961,
+                  "predicted": 0.7524978217641429,
+                  "observed": 0.7725247569612453
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7378,
+                  "predicted": 0.857171387439371,
+                  "observed": 0.8728566246494417
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2387,
+                  "predicted": 0.9145164283274214,
+                  "observed": 0.9141787358959226
+                }
+              ],
+              "difference": 0.001935222955671482
+            },
+            {
+              "fromYear": 2026,
+              "toYear": 2026,
+              "logLoss": 0.49694744153325665,
+              "brier": 0.15878557313274239,
+              "calibrationSlope": 0.8838795098628839,
+              "weekends": 18,
+              "pairs": 4137,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 520,
+                  "predicted": 0.5507286218444496,
+                  "observed": 0.5755725190839694
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 593,
+                  "predicted": 0.649580127001637,
+                  "observed": 0.6830125523012552
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 556,
+                  "predicted": 0.7513403636905692,
+                  "observed": 0.7900552486187846
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1329,
+                  "predicted": 0.8650404812886259,
+                  "observed": 0.8617204462079807
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1139,
+                  "predicted": 0.9157008021666602,
+                  "observed": 0.8497850311485479
+                }
+              ],
+              "difference": 0.00502993906935025
+            }
+          ],
+          "historical": {
+            "fromYear": 2008,
+            "toYear": 2025,
+            "logLoss": 0.5086615698917598,
+            "brier": 0.1664505547759966,
+            "calibrationSlope": 0.9970588891313598,
+            "weekends": 362,
+            "pairs": 73751,
+            "reliability": [
+              {
+                "fromProbability": 0.5,
+                "count": 10776,
+                "predicted": 0.5503000983988098,
+                "observed": 0.5573761217534773
+              },
+              {
+                "fromProbability": 0.6,
+                "count": 11906,
+                "predicted": 0.6510361975473966,
+                "observed": 0.6668135618132782
+              },
+              {
+                "fromProbability": 0.7,
+                "count": 14733,
+                "predicted": 0.7531257853081228,
+                "observed": 0.7602257707325936
+              },
+              {
+                "fromProbability": 0.8,
+                "count": 29500,
+                "predicted": 0.8555532514074857,
+                "observed": 0.8542697988517689
+              },
+              {
+                "fromProbability": 0.9,
+                "count": 6836,
+                "predicted": 0.9141622787555691,
+                "observed": 0.9003594462518296
+              }
+            ],
+            "difference": 0.003896985167595849
+          },
+          "differenceInterval95": [
+            0.0011292015926991496,
+            0.007448345338196936
+          ]
+        },
+        "eligible": false
+      }
+    },
+    "selectedScores": {
+      "blocks": [
+        {
+          "fromYear": 2008,
+          "toYear": 2011,
+          "logLoss": 0.5224132137135382,
+          "brier": 0.17171678827082293,
+          "calibrationSlope": 0.985271631116505,
+          "weekends": 73,
+          "pairs": 17115,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2169,
+              "predicted": 0.5497540002342901,
+              "observed": 0.5509007990855136
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 2675,
+              "predicted": 0.6532998178543947,
+              "observed": 0.6395257995229484
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 3706,
+              "predicted": 0.7540617878003874,
+              "observed": 0.7594425512289533
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 8014,
+              "predicted": 0.850733644401509,
+              "observed": 0.8509860181201043
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 551,
+              "predicted": 0.9103697209406301,
+              "observed": 0.8592316702711834
+            }
+          ],
+          "difference": -0.019791116806908513
+        },
+        {
+          "fromYear": 2012,
+          "toYear": 2015,
+          "logLoss": 0.5091972945578178,
+          "brier": 0.16610303390040843,
+          "calibrationSlope": 0.8948079547980857,
+          "weekends": 77,
+          "pairs": 17378,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 1775,
+              "predicted": 0.5510076829568654,
+              "observed": 0.5388962902010507
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 2003,
+              "predicted": 0.6508746177770736,
+              "observed": 0.6407168687040896
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 3044,
+              "predicted": 0.7553185954960081,
+              "observed": 0.7163150069195724
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 8761,
+              "predicted": 0.8590095629482508,
+              "observed": 0.8386588189380648
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 1795,
+              "predicted": 0.9138193103473957,
+              "observed": 0.8861747815075102
+            }
+          ],
+          "difference": -0.019112445012331634
+        },
+        {
+          "fromYear": 2016,
+          "toYear": 2020,
+          "logLoss": 0.5113632439021941,
+          "brier": 0.1677642777073185,
+          "calibrationSlope": 0.9520915919066838,
+          "weekends": 100,
+          "pairs": 19214,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2600,
+              "predicted": 0.5508042839626791,
+              "observed": 0.5464208537337173
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 2866,
+              "predicted": 0.6510337433105317,
+              "observed": 0.6572805030224527
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 4045,
+              "predicted": 0.7529979449353463,
+              "observed": 0.7488835751198417
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 7213,
+              "predicted": 0.8557750182694162,
+              "observed": 0.8385941583035073
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 2490,
+              "predicted": 0.914161202663016,
+              "observed": 0.9066596794055343
+            }
+          ],
+          "difference": -0.01645058414688414
+        },
+        {
+          "fromYear": 2021,
+          "toYear": 2025,
+          "logLoss": 0.48436410174554395,
+          "brier": 0.15659370300139777,
+          "calibrationSlope": 1.0416453059380406,
+          "weekends": 112,
+          "pairs": 20044,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2809,
+              "predicted": 0.5501828966664712,
+              "observed": 0.5727745140524549
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 3010,
+              "predicted": 0.6514128110207978,
+              "observed": 0.673029555170159
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 3968,
+              "predicted": 0.7539023851531247,
+              "observed": 0.7583807107139748
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 7498,
+              "predicted": 0.8571895578403066,
+              "observed": 0.8726210830947757
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 2759,
+              "predicted": 0.9153330193127182,
+              "observed": 0.9089125127709745
+            }
+          ],
+          "difference": -0.03456626739059906
+        },
+        {
+          "fromYear": 2026,
+          "toYear": 2026,
+          "logLoss": 0.4923465641517938,
+          "brier": 0.15707156195648642,
+          "calibrationSlope": 0.8909772096257008,
+          "weekends": 18,
+          "pairs": 4137,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 518,
+              "predicted": 0.5521267540475129,
+              "observed": 0.5683867254939574
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 554,
+              "predicted": 0.6510860646163031,
+              "observed": 0.6896737181785586
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 557,
+              "predicted": 0.7519961661975474,
+              "observed": 0.7970420527441197
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 1372,
+              "predicted": 0.865461288226267,
+              "observed": 0.8539928918546456
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 1136,
+              "predicted": 0.9149858276718539,
+              "observed": 0.8587357330992099
+            }
+          ],
+          "difference": -0.029136837981346485
+        }
+      ],
+      "historical": {
+        "fromYear": 2008,
+        "toYear": 2025,
+        "logLoss": 0.5047775139993387,
+        "brier": 0.16475188304140861,
+        "calibrationSlope": 0.9706144334619435,
+        "weekends": 362,
+        "pairs": 73751,
+        "reliability": [
+          {
+            "fromProbability": 0.5,
+            "count": 9353,
+            "predicted": 0.5504163804637249,
+            "observed": 0.5548687325077509
+          },
+          {
+            "fromProbability": 0.6,
+            "count": 10554,
+            "predicted": 0.6516374782529786,
+            "observed": 0.6554613169578068
+          },
+          {
+            "fromProbability": 0.7,
+            "count": 14763,
+            "predicted": 0.7539390576412405,
+            "observed": 0.7482226429421658
+          },
+          {
+            "fromProbability": 0.8,
+            "count": 31486,
+            "predicted": 0.8559066937623261,
+            "observed": 0.8508044153333755
+          },
+          {
+            "fromProbability": 0.9,
+            "count": 7595,
+            "predicted": 0.9143505466942794,
+            "observed": 0.9007123332577807
+          }
+        ],
+        "difference": -0.02329527667207007
+      },
+      "differenceInterval95": [
+        -0.030837175055391786,
+        -0.016100793888085985
+      ]
+    }
+  }
+}

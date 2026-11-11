@@ -1,0 +1,43 @@
+{
+  "input": {
+    "inputHash": "f56d3c1635c70d961fea2616288aba18786c1271df55e7568843010dcd26ac83",
+    "publication": {
+      "sourceHash": "56281bc4ce3eb833",
+      "lastRace": {
+        "year": 2026,
+        "round": 19,
+        "name": "Mexico City Grand Prix",
+        "date": "2026-11-01"
+      }
+    },
+    "weekends": 620,
+    "measurements": 300542,
+    "outcomeCutoff": "All rating features precede the weekend; grid and realized weather are separate conditional inputs."
+  },
+  "sourceFiles": {
+    "packages/core/python/unified_calibration.py": "dab1976b305a2afedbdbc375abf7ed4490cee680f399498a67c6cf9dce800d4a",
+    "packages/core/python/unified_grid.py": "030c2c1b5d8b6c795bf9fed4e3be7e3e21d0fddf5aa55532f430ff484a35667f",
+    "packages/core/python/unified_model.py": "5dd37a14ff00626f2a2a3a083f22776594a24dee6ac446d8bd76f75c36356d6e",
+    "research/unified-form/check_grid.py": "87b357db31b4661b497dec824974cefd9af0e49c8ddd5a1d94c00871ae019bda",
+    "research/unified-form/check_heads.py": "8751335801b3efe2807b68db611531363a0998576581104877755b1d0a3093fb",
+    "research/unified-form/evaluate.py": "c8105b9a11f83f37724e0cc747c1c35e2dd485b89dfd452d1e7db1b26562ea41",
+    "research/unified-form/export.mjs": "89bac01660ab5d33dd65735c4e40a7223f7bfd4ad463117a33104b1345f229f5",
+    "research/unified-form/fit.py": "b7cc6fa0dc6f81485821f1d4ffa91fca72254bb310a456dcb4badf8b72da590a",
+    "research/unified-form/heads.py": "a89bf6ab7c38d5ff8be14e03e8731cb8223d25b8b153f68603be6385244b05da",
+    "research/unified-form/model.py": "dff5be65b82a92e0787a26cc3927546f76bf2b47cda503365e8c099e9b485fc8",
+    "research/unified-form/protocol.md": "7e65525201e5950dd73ae98ce2fbe94dcab77419dc63be3cf3d0359ef3c0fc0b",
+    "research/unified-form/report.py": "19d5cb41380d274a424c5b70b42e5846c584bae417c4bd4b068ee154e59cdc3c",
+    "research/unified-form/run.mjs": "35392f12b22089e58075152a21f19b1142af99c150c48b19508b36dd37e52b2c",
+    "research/unified-form/simulation.py": "8ae768c86f4912d6651ee3d9d91add6f2238d5ec2770567cd6ac06e7d51baf7e",
+    "research/unified-form/test_form.py": "573c2023323dd4e209d4436856d9f4ab1f1df9cf7256856aaaec8a7ac8864445",
+    "research/unified-form/test_grid.py": "3888555b212fc2f2f49d8417ab9bcb4f21ecb0fc52674f057de889dc32d16928",
+    "research/unified-form/test_heads.py": "f4209b651d8e12a3aa9eef1d40c68d781746765ee557fb000dae246e6df48944",
+    "research/unified-form/validate_grid.py": "f4a8c34925bc40f42402baaa90e2020f65d15affc90a2c5b098c5cd83dd688be",
+    "research/unified-form/weather.py": "0da34a9c39f6d93bfc7e6ff7eab450727aec39df9b161fc0c9284fdf4536c04a"
+  },
+  "runtime": {
+    "python": "3.13.1 (main, Dec  3 2024, 17:59:52) [Clang 16.0.0 (clang-1600.0.26.4)]",
+    "numpy": "2.1.2",
+    "scipy": "1.14.1"
+  }
+}

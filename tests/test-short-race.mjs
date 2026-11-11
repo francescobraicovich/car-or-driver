@@ -11,6 +11,7 @@ assert.deepEqual(buildRaceObservations({ ...options, maxLaps: 1 }).observations,
 assert.equal(buildRaceObservations({ ...options, maxLaps: 2 }).observations.length, 1, 'a real short race retains finish evidence');
 const model = JSON.parse(await readFile('data/model.json', 'utf8'));
 const spa = model.model.snaps.find((snap) => snap.raceId === '1063');
-assert.equal(spa?.diag.obsCount, 0, 'the published 2021 Belgian GP has no race observations');
-assert.ok(spa.diag.q.obsCount > 0, 'qualifying evidence remains');
+assert.equal(spa?.evidence.race, 0, 'the published 2021 Belgian GP has no lap-pace observations');
+assert.equal(spa?.evidence.overall, 0, 'the classification supplies no overall evidence');
+assert.ok(spa.evidence.qual > 0, 'qualifying evidence remains');
 console.log('PASS one-lap safety-car classification is not treated as race pace');

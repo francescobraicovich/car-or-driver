@@ -1,6 +1,6 @@
 // Simulator v2 (packages/eval/src/synthetic-v2.js): opt-in, deterministic, built on the real calendar, with observations made by the
 // exam's own code from simulated results, lap times and snapshots, and a shipped filter that forecasts it about as well as it forecasts
-// the real data (the loose bands below; the full comparison is in docs/evaluation.md and packages/research/node/simulation-check.mjs).
+// the real data (the loose bands below; the full comparison is in docs/backtesting.md and packages/research/node/simulation-check.mjs).
 import assert from 'node:assert/strict';
 import { loadData } from '../packages/research/node/common.mjs';
 import {

@@ -1,0 +1,77 @@
+{
+  "results": [
+    {
+      "world": "persistent_only",
+      "seed": 61,
+      "model": "baseline",
+      "slowRMSE": 25.69401835709919,
+      "totalRMSE": 25.69401835709919,
+      "fastRMSE": 0.0,
+      "predictionLogLoss": 0.42044134251913257
+    },
+    {
+      "world": "persistent_only",
+      "seed": 61,
+      "model": "embedded",
+      "slowRMSE": 26.315457053495873,
+      "totalRMSE": 26.09782470265767,
+      "fastRMSE": 4.870637830990017,
+      "predictionLogLoss": 0.4239587124400854
+    },
+    {
+      "world": "persistent_only",
+      "seed": 62,
+      "model": "baseline",
+      "slowRMSE": 16.105154185438003,
+      "totalRMSE": 16.105154185438003,
+      "fastRMSE": 0.0,
+      "predictionLogLoss": 0.39146325487602196
+    },
+    {
+      "world": "persistent_only",
+      "seed": 62,
+      "model": "embedded",
+      "slowRMSE": 16.42083830618588,
+      "totalRMSE": 16.702582801924468,
+      "fastRMSE": 4.232126240596503,
+      "predictionLogLoss": 0.3976286500867927
+    },
+    {
+      "world": "transient_form",
+      "seed": 61,
+      "model": "baseline",
+      "slowRMSE": 17.389448956223294,
+      "totalRMSE": 20.576151918546543,
+      "fastRMSE": 14.943121948807129,
+      "predictionLogLoss": 0.5276396912213602
+    },
+    {
+      "world": "transient_form",
+      "seed": 61,
+      "model": "embedded",
+      "slowRMSE": 17.568165201042586,
+      "totalRMSE": 20.47506133664604,
+      "fastRMSE": 14.084356885231887,
+      "predictionLogLoss": 0.5308795881313496
+    },
+    {
+      "world": "transient_form",
+      "seed": 62,
+      "model": "baseline",
+      "slowRMSE": 18.49340694645096,
+      "totalRMSE": 19.843092212833433,
+      "fastRMSE": 15.543078601021886,
+      "predictionLogLoss": 0.4494537452130771
+    },
+    {
+      "world": "transient_form",
+      "seed": 62,
+      "model": "embedded",
+      "slowRMSE": 17.570445242881778,
+      "totalRMSE": 18.59258824871423,
+      "fastRMSE": 14.497570018133809,
+      "predictionLogLoss": 0.45276616325263813
+    }
+  ],
+  "interpretation": "Two paired seeds in two illustrative worlds, including a transfer and permanent car improvement. This checks decomposition behavior, not real-world causal identification."
+}

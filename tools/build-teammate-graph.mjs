@@ -1,9 +1,9 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { deserialize } from '../packages/core/src/json-serialization.js';
 import { collectExam } from '../packages/core/src/state-space/exam.js';
-import { GRAPH_RATINGS } from '../packages/core/src/presets/graph-ratings.js';
+import { retainedLaps } from '../packages/core/node/unified-evidence.mjs';
 import { loadData } from '../packages/research/node/common.mjs';
-import { buildTeammateGraph } from './teammate-graph.mjs';
+import { buildUnifiedTeammateGraph } from './unified-teammate-graph.mjs';
 
 const [modelText, data] = await Promise.all([readFile('data/model.json', 'utf8'), loadData()]);
 const model = deserialize(modelText);
@@ -14,15 +14,14 @@ if (
 ) {
   throw Error('Graph and published rating weekends do not match');
 }
-const snapshots = buildTeammateGraph(weekends, data.raw.drivers);
+const snapshots = buildUnifiedTeammateGraph(model.model, weekends, data.raw.drivers, data.lapPace, await retainedLaps());
 const output = {
-  format: 3,
+  format: 4,
   sourceHash: model.sourceHash,
   licence: model.licence,
-  halfLifeYears: GRAPH_RATINGS.halfLifeYears,
-  annualDriftPoints: GRAPH_RATINGS.annualDriftPoints,
-  temporalResolution: 'season',
-  description: 'Time-linked driver-season graph scores, observed duels and decayed edge evidence through each weekend.',
+  rating: 'overall',
+  temporalResolution: 'weekend',
+  description: 'Published unified overall ratings at latest appearance, connected by cumulative weighted teammate evidence.',
   snapshots,
 };
 await writeFile('data/teammate-graph.json', JSON.stringify(output));

@@ -1,7 +1,7 @@
 // Golden-master regression test: refactors must not change any model output.
 //
-// Hashes the *complete* build (every snapshot, diag, export row, history) for the Elo core, the Elo model and the
-// state-space model, not just the log-loss, so a change to any stage of a build is caught even when the headline
+// Hashes the complete state-space build (every snapshot, diagnostic, export row and history), not just the log-loss,
+// so a change to any stage of a build is caught even when the headline
 // score happens not to move.
 //
 //   node tests/golden.mjs            compare against tests/golden.json
@@ -9,14 +9,11 @@
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { loadData, evaluate } from '../packages/research/node/common.mjs';
-import { buildEloCore } from '../packages/core/src/elo-core.js';
-import { buildEloForecast } from '../packages/core/src/elo-forecast.js';
+import { loadData } from '../packages/research/node/common.mjs';
+import { buildUnified } from '../packages/core/node/build-unified.mjs';
 import { buildStateSpace } from '../packages/core/src/state-space/build.js';
 import { collectExam } from '../packages/core/src/state-space/exam.js';
-import { eloBenchmark } from '../packages/core/src/elo-benchmark.js';
 import { forecastPair } from '../packages/core/src/forecast/prepare.js';
-import { TUNED_ELO } from '../packages/core/src/presets/tuned-elo.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const GOLDEN = fileURLToPath(new URL('./golden.json', import.meta.url));
@@ -92,7 +89,7 @@ function forecasts(model) {
   const out = [];
   for (let i = 0; i < grid.length; i++)
     for (let j = i + 1; j < grid.length; j++)
-      for (const circuitId of ['', circuit]) {
+      for (const circuitId of model.params.modelKind === 'unified' ? [''] : ['', circuit]) {
         const f = forecastPair(model, grid[i], grid[j], { circuitId });
         out.push(f && [f.p, f.pPace, f.qA, f.qB, f.gap, f.edge]);
       }
@@ -108,17 +105,10 @@ function fingerprint(model) {
     counters: [model.recoveredSnapshots, model.totalRetirements, model.qualWeekends],
     form: model.forecastState ? hash(model.forecastState.form) : null,
     ss: model.ss ? hash({ latest: model.ss.latest, slopes: model.ss.slopes, scenario: model.ss.scenario }) : null,
-    // everything below was added before the migration of the state-space model off the Elo core (it was unguarded)
     params: hash(model.params),
     names: hash([entries(model.dname), entries(model.cname), model.circuitList]),
     tracks: hash({ aff: nested(model.affFinal ?? new Map()), wet: entries(model.wetFinal ?? new Map()) }),
-    forecastState: model.forecastState
-      ? hash({
-          seen: entries(model.forecastState.seen),
-          nationalities: entries(model.forecastState.nationalities),
-          countries: entries(model.forecastState.countries),
-        })
-      : null,
+    forecastState: hash(model.forecastState),
     forecasts: hash(forecasts(model)),
   };
 }
@@ -130,8 +120,8 @@ function examFingerprint(weekends) {
     weekends.map((w) => ({
       info: w.info,
       rows: w.rows,
-      raceObs: w.raceObs.map(({ pElo: _p, ...o }) => o),
-      qualObs: w.qualObs.map(({ pElo: _p, ...o }) => o),
+      raceObs: w.raceObs,
+      qualObs: w.qualObs,
       preQ: { rel: entries(w.preQ.rel), inc: entries(w.preQ.inc) },
       raceSeen: entries(w.raceSeen),
       rawRows: w.rawRows,
@@ -145,14 +135,9 @@ async function main() {
   const ctx = await loadData(`${ROOT}data`);
   const args = [ctx.raw, ctx.lapSnapshots, ctx.maps];
   const out = {};
-  out['elo-core'] = fingerprint(buildEloCore(...args, { ...TUNED_ELO }, ctx.lapPace));
-  out['elo-full'] = fingerprint(buildEloForecast(...args, {}, ctx.lapPace));
-  out['state-space-full'] = fingerprint(buildStateSpace(...args, {}, ctx.lapPace, { benchmark: eloBenchmark }));
-  out['state-space-plain'] = fingerprint(buildStateSpace(...args, {}, ctx.lapPace));
+  out['unified-full'] = fingerprint(await buildUnified(ctx));
+  out['state-space-full'] = fingerprint(buildStateSpace(...args, {}, ctx.lapPace));
   out['state-space-exam'] = examFingerprint(collectExam(...args, {}, ctx.lapPace).weekends);
-  out['elo-score-2008-2011'] = +evaluate(TUNED_ELO, ctx, { fromYear: 2008, toYear: 2011, burnIn: 20, objective: 'full' }).score.toPrecision(
-    7,
-  );
 
   if (process.argv.includes('--update')) {
     await writeFile(GOLDEN, `${JSON.stringify(out, null, 2)}\n`);

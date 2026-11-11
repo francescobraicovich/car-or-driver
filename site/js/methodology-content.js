@@ -1,601 +1,158 @@
-// The text of the Methodology page, as HTML. Formulas are LaTeX inside `.math` (inline) and `.math.block` (display), typeset by KaTeX in methodology-view.js.
-// `{{name}}` is replaced by a value from the shipped presets, so the numbers on the page cannot drift from the model: `{{r.x}}` and `{{q.x}}` are the
-// race and qualifying state-space settings, `{{link.x}}` the driver cross-session link, `{{hybrid.x}}` the published blend, and the rest come from the
-// scoring and reliability settings (presets/model-settings.js) and from presets/state-space-fit.js. Elements with an id are filled from the loaded model by methodology-view.js.
-//
-// Keep this explanation in step with packages/core/src/state-space/{filter,qualifying-link,build}.js,
-// packages/core/src/hybrid/, observations.js, forecast/form.js and docs/metrics.md.
-
+// A guided explanation of the production unified model. Numerical settings
+// marked data-setting are filled from the model file shown elsewhere on the site.
 export const CONTENT_HTML = String.raw`
-<section id="method-overview" class="method-part">
-  <h3>1. Overview</h3>
+<section id="method-questions" class="method-part">
+  <h3>1. Start with three different questions</h3>
+  <p>A Formula 1 result belongs to a driver and a car together. We observe their lap times and finishing positions; we do not observe a separate number for the driver’s ability or the car’s performance. This site estimates those contributions, follows them through time and uses their sum to forecast head-to-head results.</p>
+  <p>There are three ratings for every driver and every car. They answer different questions, so it is possible to be strong in one and weaker in another.</p>
+  <table><thead><tr><th>Rating</th><th>Question it answers</th><th>Direct evidence</th></tr></thead><tbody>
+    <tr><td><b>Qualifying pace</b></td><td>How much does this driver or car contribute to representative qualifying speed?</td><td>Time differences in a shared qualifying phase.</td></tr>
+    <tr><td><b>Race pace</b></td><td>How much does this driver or car contribute to sustained speed on comparable racing laps?</td><td>Time differences on matching retained laps.</td></tr>
+    <tr><td><b>Overall strength</b></td><td>How competitive should this driver or car be in a race, before the weekend has begun?</td><td>Finishing order when both competitors finish normally, with information shared across all three ratings.</td></tr>
+  </tbody></table>
+  <p><b>Overall strength is the default ranking and the starting point for race forecasts.</b> It has its own outcome to learn from. It is not a fixed average of race pace and qualifying pace. It can learn the value of qualifying speed, race speed and other repeatable contributions to race results without assigning an explicit percentage to each.</p>
+  <p>A driver rating aims to describe the contribution that travels with the driver between teams. A car rating describes the car contribution, holding the driver constant. These are model-dependent estimates. The model must make assumptions to divide a result between the two.</p>
+  <p>Retirement risk is a separate part of the forecast. Overall strength describes competitiveness; an engine failure should not by itself teach the model that the driver is slow.</p>
+</section>
 
-  <h4>The problem</h4>
-  <p>
-    A fast result tells us that a driver and car worked well together. It does not tell us how much credit belongs to each. Even a model that predicts the finishing order perfectly could divide that credit incorrectly: adding 20 points to both teammates and subtracting 20 from their shared car leaves both packages unchanged.
-  </p>
-  <p>
-    Teammates and team changes help constrain the split, but only under assumptions about shared machinery, persistent skill and driver–car fit. Our central finding is a contrast between two tests: the ratings predict the field much better than a coin flip, yet frozen ratings struggle to predict a driver against a new teammate. A good forecast of the whole is weaker evidence about its parts than it first appears.
-  </p>
-  <p>
-    This is a familiar problem in evaluating latent traits, from employee performance to AI capabilities: predictive success and the identification of a proposed cause are different claims. We use Formula 1 because its team changes make that distinction unusually concrete. The numbers here are model-dependent estimates of pace, not measurements of innate talent or causal effects of assigning a driver to a car.
-  </p>
+<section id="method-evidence" class="method-part">
+  <h3>2. Turn a weekend into comparable observations</h3>
+  <p>We start with race results, qualifying times, lap times and retirement-status records. <a class="cite" href="#" data-jump="ref-17">[17]</a> Each useful observation compares two entrants in the same weekend. For a time comparison we retain the size of the difference, rather than reducing everything to a win or loss.</p>
+  <h4>Qualifying: compare the same phase</h4>
+  <p>If both drivers have usable Q3 times, we compare those. Otherwise we try Q2, then Q1. We apply the dataset’s rules for missing, invalid and disrupted sessions. In 2006–2009, when Q3 running was affected by race-fuel requirements, we use Q2 or Q1 instead. A time comparison is missing when there is no usable shared phase; missing evidence is not a defeat.</p>
+  <p>We express the advantage as a fraction of the two times’ average. If A takes 90.0 seconds and B takes 90.3, A’s advantage is about 0.33%. This makes a time difference comparable across circuits with different lap lengths. Equal times remain a zero difference.</p>
+  <h4>Race pace: compare matching racing laps</h4>
+  <p>We exclude the first lap and laps more than 5% slower than that driver’s fastest retained candidate lap. For an eligible pair, we then match the same race-lap numbers. At least four matched laps are required. We calculate the fractional time difference on each lap, take the median within eight-lap windows, then take the median across those windows. Shorter coverage receives less weight, reaching full coverage at 16 matched laps.</p>
+  <p>This does not award pace credit for starting or finishing ahead. It also reduces the influence of pit laps, unusually slow laps and isolated outliers. It does <b>not</b> make conditions identical: traffic, tyres, fuel, strategy and weather remain imperfectly observed. Matching lap numbers can also mean different clock times for lapped cars. Race pace is an estimate of sustained speed, not a proven causal measurement independent of the grid.</p>
+  <h4>Overall strength: compare normal finishers</h4>
+  <p>When both drivers finish normally, including classified lapped finishers, their order supplies a binary observation: A ahead or B ahead. The finishing margin is not treated as a lap-speed measurement. We do not update overall strength from a retiree’s final position or an intermediate position before retirement.</p>
+  <p>A mechanical failure alone supplies no negative pace observation. Valid earlier lap comparisons can still be used when the existing eligibility checks permit them; compromised early mechanical retirements are excluded. Driver incidents and mechanical failures update their separate risk records.</p>
+</section>
+
+<section id="method-separation" class="method-part">
+  <h3>3. Separate the driver from the car</h3>
+  <p>For each of the three outputs, the expected advantage of A over B has the same simple structure:</p>
+  <p class="method-equation"><b>driver A − driver B + car A − car B</b></p>
+  <p>Suppose A is 20 points stronger as a driver, but B’s car is 10 points stronger. The package advantage is 10 points for A. The observation constrains that sum; it does not, by itself, tell us whether the driver or the car supplied it.</p>
+  <h4>Why teammates matter</h4>
+  <p>For teammates, the two car terms refer to the same state and cancel exactly. Their comparison therefore constrains the driver difference directly within the model. Across seasons, drivers who change teams connect one teammate group to another. This network helps place drivers on a common scale.</p>
+  <p>The cancellation is an assumption about shared machinery, not a guarantee that real teammates receive identical equipment or circumstances. Unequal upgrades, strategy, team orders and a particular driver’s fit with a car can still enter the observed difference.</p>
+  <h4>How the graph enters this model</h4>
+  <p><b>The teammate graph is inside the observation structure.</b> Its edges are the teammate comparisons the joint model learns from. The model retains correlations between connected drivers, cars and outputs as evidence accumulates. We do not first fit an independent graph rating and then feed that rating back as new evidence from the same races. There is no final graph percentage.</p>
+  <p>The graph page draws these teammate links and uses the same published overall ratings as the rest of the site. A retired driver’s dot holds their rating at their last appearance. The picture is a way to inspect connections, not another rating model.</p>
+  <p>Cross-team comparisons help estimate car differences, while the accumulated teammate connections and assumptions about change constrain the driver–car split. In a poorly connected group, several explanations can remain plausible. A good package prediction does not prove that its driver and car contributions are correctly separated.</p>
+</section>
+
+<section id="method-joint" class="method-part">
+  <h3>4. Learn three related strengths in one model</h3>
+  <p>Each driver and car has three hidden strengths: qualifying, race pace and overall. The model maintains an estimate of each strength and a joint uncertainty distribution over all of them. “Joint” means that uncertainty about one quantity can be related to uncertainty about another.</p>
+  <p>For example, strong qualifying evidence can raise the qualifying estimate and also give some support to that driver’s overall estimate. Repeatedly ordinary race pace can then pull the race estimate away from the qualifying estimate. The channels borrow information without being forced to agree.</p>
+  <p>This is often called <b>partial pooling</b>. The amount of sharing comes from correlations in the prior and in the allowed changes over time. The selected correlations are <span data-setting="driver_correlation"></span> for driver outputs and <span data-setting="car_correlation"></span> for car outputs. They are not percentages of the final rating. How much a particular observation changes each estimate also depends on the current uncertainty and the other evidence.</p>
+  <h4>Two measurement rules, one posterior</h4>
+  <p>Qualifying and race-pace observations use a robust logistic distribution for timing errors. A larger valid timing advantage carries more information about the size of the gap, but an extreme outlier has bounded influence on the update. Overall comparisons use a logistic win-probability rule: a positive package gap makes finishing ahead more likely, without making it certain. <a class="cite" href="#" data-jump="ref-1">[1]</a></p>
+  <p>The observation rules and all previous information are combined in one update after each weekend. Numerically, we find the most probable set of strengths and approximate the distribution around it with a multivariate Gaussian. This is a Laplace approximation. <a class="cite" href="#" data-jump="ref-5">[5]</a> The covariance retains driver–car and cross-output relationships; there is no separate online learner or final blend of competing ratings.</p>
+  <p>The model remains deliberately small. It has no neural network, no driver-specific tuning rule, no special penalty for changing teams and no extra driver–team fit rating. Persistent fit effects are one of its limitations, not a hidden correction.</p>
+</section>
+
+<section id="method-update" class="method-part">
+  <h3>5. Update in time, without counting a weekend hundreds of times</h3>
+  <p>The model processes weekends in chronological order. <a class="cite" href="#" data-jump="ref-4">[4]</a> Before reading a weekend’s performances, it predicts from the state left by earlier weekends. It then reads the new comparisons, updates once, and saves the resulting ratings. Historical ratings shown on the site are these dated estimates; later races do not rewrite them.</p>
   <ol>
-    <li><b>A driver rating and a car rating</b>, in the same units, after every weekend.</li>
-    <li><b>An approximate uncertainty</b> for each rating, with its limits stated where it appears.</li>
-    <li><b>A test against future results.</b> Before reading a weekend, we ask what the existing ratings would have predicted.</li>
+    <li><b>Start with a prior.</b> In the model’s internal coordinates, an unseen driver begins at 1,000 with a 20-point standard deviation; a new car starts at 1,000 with 50 points. This is the estimate before any evidence for that entrant. Its first displayed rating includes its first weekend and the display reference described next, so it need not start at 1,000.</li>
+    <li><b>Allow strengths to change.</b> Uncertainty increases before new evidence arrives. <a class="cite" href="#" data-jump="ref-2">[2]</a> Driver evolution scales with elapsed time: the selected rate is 8 points of standard deviation over a year. Active cars receive 6 points per weekend and an additional 30-point winter component. These components add as variances, not as direct rating bonuses.</li>
+    <li><b>Read the weekend once.</b> A driver pair has at most one observation per output. Conflicting duplicate evidence is removed. Timing observations retain their actual margin.</li>
+    <li><b>Limit the information budget.</b> A teammate qualifying pair has weight 1. Race pace and finishing order share a maximum budget of 1.5 for that pair, allocated by coverage. For cross-team comparisons the same weights are divided by the field size minus one. This prevents the large number of possible pairs from multiplying the apparent information without restraint.</li>
+    <li><b>Balance the evidence against what was known.</b> Uncertain estimates can move more. Well-established estimates resist an isolated surprise, while repeated surprises accumulate. The three outputs update together.</li>
   </ol>
-
-  <h4>The approach in one paragraph</h4>
-  <p>
-    We turn each weekend into comparisons between pairs of drivers. A probabilistic rule converts a difference in hidden pace into a chance that one driver beats another. Two filters follow driver and car pace through time, one for qualifying and one for races <a class="cite" href="#" data-jump="ref-3">[3]</a><a class="cite" href="#" data-jump="ref-4">[4]</a>. The race filter uses the qualifying driver estimate as an input. A separate online learner also reads race comparisons. A recent teammate graph contributes {{graph.share}} of the published driver estimates. A shared information fraction of {{informationFraction}} reduces the learners’ response to individual weekends; consistent evidence still accumulates. The order of operations matters: predict the weekend first, then use it to update the ratings.
-  </p>
-
-  <!--DIAGRAM-->
-
-  <h4>The numbers you will see</h4>
-  <dl class="glossary">
-    <dt>Rating</dt>
-    <dd>
-      Estimated underlying pace, on a scale where 1,000 is the average of those racing that weekend and higher is faster. A driver's rating aims to capture the part that travels with them between cars; a car's rating captures the car contribution. A particular driver–car fit is kept separate. (Part 3)
-    </dd>
-    <dt>Uncertainty</dt>
-    <dd>An approximate standard deviation carried over from the joint filter. It does not include all uncertainty in the hybrid blend. (Part 3)</dd>
-    <dt>Race and qualifying ratings</dt>
-    <dd>Separate estimates of race and qualifying pace. Both inform forecasts. (Parts 3 and 4)</dd>
-    <dt>Package pace</dt>
-    <dd>A retained derived measure adding the driver and car race–qualifying blends. (Part 3)</dd>
-    <dt>Effective pace</dt>
-    <dd>A retained derived race–qualifying blend adjusted for retirement risk. (Part 3)</dd>
-    <dt>Recent form</dt>
-    <dd>Recent driver and car performance used alongside long-term ratings. The ratings panel can show its forecast contribution as an adjustment. (Part 4)</dd>
-    <dt>Win probability</dt>
-    <dd>The chance that one driver finishes ahead of another, on the Head to head page. (Part 4)</dd>
-    <dt>Forecast error</dt>
-    <dd>The log-loss of past forecasts. A coin flip scores 0.693; lower is better. (Part 5)</dd>
-  </dl>
-
-  <h4>Notation</h4>
-  <p>
-    <span class="math">D_i</span> means the underlying level of driver <span class="math">i</span>; <span class="math">C_c</span> means the car level for team <span class="math">c</span>; <span class="math">A_i</span> is the driver's temporary fit with that car; and <span class="math">c(i)</span> identifies their team on this weekend. The superscripts <span class="math">R,Q,O</span> identify the race filter, qualifying filter and online learner. All levels use <b>rating points</b>. We write <span class="math">\sigma(u)=1/(1+e^{-u})</span> for the logistic curve and <span class="math">N(m,v)</span> for a bell-shaped distribution with mean <span class="math">m</span> and variance <span class="math">v</span>. A variance is a squared uncertainty; its square root is the standard deviation, in rating points.
-  </p>
+  <p>A move to another team changes which car accompanies the driver. It does not reset or penalise the driver’s portable strength. A car’s identity continues across a rename; a takeover starts a separate car state under the project’s lineage rules.</p>
+  <p>Timing-noise levels and the rates of change were selected using early, past-only prediction errors. They are fixed production settings, not parameters re-tuned to each new result. The model’s response nevertheless adapts as its uncertainty changes. The global timing-noise scales are <span data-setting="noise"></span> in latent units.</p>
+  <p>Weight budgets reduce repeated information; they do not make all pairs independent. Multiple comparisons share the same drivers, laps and race conditions. The resulting uncertainty is an approximation under a weighted observation model.</p>
 </section>
 
-<section id="method-data" class="method-part">
-  <h3>2. Data</h3>
-
-  <h4>What goes in</h4>
-  <p>
-    Seven public tables: race results, qualifying results, the race calendar, drivers, constructors, finishing statuses, and lap times (circuits are optional).
-    Race results and lap times cover every rated Grand Prix weekend from 1994; qualifying records are incomplete in some early seasons. The tables come from the open collection TracingInsights/RaceData <a class="cite" href="#" data-jump="ref-17">[17]</a>, which lists Jolpica-F1 <a class="cite" href="#" data-jump="ref-18">[18]</a> and two Kaggle datasets <a class="cite" href="#" data-jump="ref-19">[19]</a> among its sources.
-    The ratings are computed from them in advance, when the site is published, and the site shows the result. Their licences, and what that means for how the ratings may be used, are on the <a href="#/about">About page</a>.
-    The model reads the weekends in date order and keeps no information from the future: a rating shown for a weekend uses that weekend and earlier ones only.
-  </p>
-
-  <h4>Why the model compares pairs</h4>
-  <p>
-    Pairwise order is easier to compare across fields of different sizes than finishing position. It is not free of context: retirements, strategy, traffic and selection into the comparison still matter. For drivers
-    <span class="math">x,y</span> in the same session, an observation records an outcome <span class="math">o_{xy}\in\{0,1\}</span> (1 if <span class="math">x</span> was ahead) and a weight <span class="math">w_{xy}</span>.
-    Teammates share a team-level car term in the model; different-team pairs compare packages. Neither comparison is a controlled experiment.
-  </p>
-
-  <h4>The four kinds of observation</h4>
-  <p>
-    <b>Finishing order.</b> For two classified finishers with positions <span class="math">p_x\lt p_y</span> the outcome is <span class="math">o_{xy}=1</span>, the gap is <span class="math">g=p_y-p_x</span>, and the base weight is
-    <span class="math">b=\omega_{\text{ord}}={{orderW}}</span>.
-  </p>
-  <p>
-    <b>Lap pace.</b> A finishing order is blurred by traffic, pit stops, safety cars and strategy, and says nothing about how much faster one car was; lap times do. Lap 1 is dropped. For each driver, laps slower than 1.05 times
-    their own best are discarded (pit laps, safety cars). The rest are grouped into windows of 8 race laps, <span class="math">k=0,1,\dots</span>; <span class="math">m_{ik}</span> is the median of driver <span class="math">i</span>’s kept
-    laps in window <span class="math">k</span>, based on <span class="math">n_{ik}</span> laps. A driver needs at least 3 kept laps to be compared. Two drivers are compared window by window, only where both ran the same window with
-    <span class="math">n\ge 2</span>, so that fuel load and track state roughly match:
-  </p>
-  <div class="math block">\Delta_{xy}=\frac{\sum_k \min(n_{xk},n_{yk})\,\bigl(m_{yk}-m_{xk}\bigr)}{\sum_k \min(n_{xk},n_{yk})},\qquad o_{xy}=\mathbb{1}[\Delta_{xy}\gt 0].</div>
-  <p>
-    The shared windows must hold at least 4 laps; if they do not, the two drivers’ overall medians are compared instead. The base weight is
-    <span class="math">b=\omega_{\text{pace}}\cdot\operatorname{clip}(\ell_{xy}/16,\,0.25,\,1)</span> with <span class="math">\omega_{\text{pace}}={{paceW}}</span> and <span class="math">\ell_{xy}</span> the number of shared laps
-    (the smaller of the two drivers’ lap counts when the overall medians are used, over 8).
-  </p>
-  <p>
-    <b>Retirements.</b> A driver who stops early would otherwise vanish from the data or be ranked last as if they had been slow. A driver without enough laps for the pace comparison is compared at the lap
-    <span class="math">\ell</span> on which they stopped, against everyone’s position on that lap; the gap <span class="math">g</span> is the difference in positions. The base weight falls with how early they stopped:
-    <span class="math">b=(\ell/L_{\max})^{\beta_r}</span> with <span class="math">\beta_r={{partialExp}}</span>, where <span class="math">L_{\max}</span> is the winner’s lap count. Why a driver stopped is tracked separately (Part 3).
-  </p>
-  <p>
-    <b>Qualifying.</b> For each pair, the latest session in which both set a time (Q3, else Q2, else Q1) decides <span class="math">o_{xy}=\mathbb 1[t_x\lt t_y]</span>. A missing time is treated as a disrupted session, never guessed to be a
-    crash or a failure.
-  </p>
-
-  <h4>How much a pair is worth</h4>
-  <p>
-    The model gives a larger observed gap more weight, with diminishing returns so one result cannot dominate without limit. This is a modelling choice, not a guarantee that a large gap is more informative: a penalty or accident can also produce one. With
-    <span class="math">\alpha={{alpha}}</span> and <span class="math">\kappa={{cap}}</span>:
-  </p>
-  <div class="math block">
-    \begin{aligned}
-    \gamma_{xy}&=\min\!\Bigl(\kappa,\;1+\alpha\log_2 g\Bigr) &&\text{(finishing order and retirements)}\\[4pt]
-    \gamma_{xy}&=\min\!\Bigl(\kappa,\;1+\alpha\log_2\bigl(1+\tfrac{|\Delta|}{0.3}\bigr)\Bigr) &&\text{(pace; gap in seconds per lap)}\\[4pt]
-    \gamma_{xy}&=\min\!\Bigl(\kappa,\;1+\alpha\log_2\bigl(1+\tfrac{|t_x-t_y|}{0.25}\bigr)\Bigr) &&\text{(qualifying; gap in seconds)}
-    \end{aligned}
-  </div>
-  <p>
-    The weight a pair carries when the model is <i>scored</i> (Part 5) is <span class="math">w_{xy}=b\,\gamma_{xy}\,\tau_0^{[c(x)=c(y)]}</span> with <span class="math">\tau_0={{tmBoost}}</span> for a pair of teammates, because those pairs are the cleanest
-    test of a driver. The scoring rule and its parameters are fixed before comparing candidates; the realised weights depend on the observed gaps. No candidate can improve its score by changing that rule. The weights the model uses to <i>learn</i> are allowed to differ (Part 3).
-  </p>
-  <p>
-    For a concrete example, two teammates finishing two places apart have <span class="math">\gamma=1+{{alpha}}\log_2(2)=1.55</span>. Their finishing-order score weight is <span class="math">{{orderW}}\times1.55\times{{tmBoost}}=148.8</span>. The same gap between different-team drivers has weight 18.6. Neither number says the teammate result is 8 times as likely to be correct; it says the evaluation deliberately gives that cleaner driver comparison more influence.
-  </p>
+<section id="method-scale" class="method-part">
+  <h3>6. Read the numbers and their uncertainty</h3>
+  <p><b>1,000 means the recent-era reference. Higher is stronger.</b> Ratings, History and Graph show each estimate relative to a slowly moving benchmark, rather than forcing the current field’s average to equal 1,000. This gives historical charts a common interpretation: how strong was this driver or car relative to its recent competitive environment?</p>
+  <h4>A reference that moves gradually</h4>
+  <p>After each weekend, take the unweighted average of the model’s driver estimates and, separately, its car estimates, counting each car once. Keep a separate reference for qualifying pace, race pace and overall strength: six references in total. Before the next weekend, move each reference about 3.4% of the way toward its previous field average.</p>
+  <p>The exact weight is <code>α = 1 − 2^(−1/20)</code>. If <code>Bₜ</code> is the reference used for weekend <code>t</code> and <code>μₜ₋₁</code> is the previous weekend’s field average, then <code>Bₜ = (1 − α)Bₜ₋₁ + αμₜ₋₁</code>. The displayed rating is <code>1,000 + model rating − Bₜ</code>.</p>
+  <p>This is a <b>20-weekend half-life</b>: existing influence on the reference halves over 20 updates. It is not a window that drops its oldest race abruptly. The reference continues across seasons and counts rated weekends, not calendar days. The first recorded field average supplies the initial reference; every later weekend uses only earlier information.</p>
+  <p>The reference is already fixed when a weekend begins. A newcomer, withdrawal or surprising result cannot immediately re-centre everyone else. Its effect on the average enters gradually from the following weekend. The current field average is free to differ from 1,000. Actual revisions to driver and car estimates still appear in full; this does not smooth individual performance or slow the model’s learning.</p>
+  <p>Every historical point uses its own dated reference. A change shown in Ratings compares two displayed appearances, including any gradual reference movement between them. The Graph keeps a retired driver at their last appearance’s rating and reference. Later weekends do not rewrite earlier points.</p>
+  <p>This supports comparisons of <b>strength relative to an era</b>, not proof that equal numbers mean equal absolute ability across decades. The quality of the field, regulations and available evidence can change. These remain strength estimates, not championship points or lap times.</p>
+  <p>To compare two packages from the same weekend, add the driver difference to the car difference, using the same output on both sides. If A has overall ratings of 1,030 for the driver and 1,015 for the car, while B has 1,010 and 1,025, A’s total advantage is 10 points.</p>
+  <h4>The scale depends on the question</h4>
+  <p>For <b>overall strength</b>, a 75-point package advantage corresponds to 10:1 odds in the raw logistic rule. The 10-point example gives about a 58% raw chance. This is a starting calculation: uncertainty, calibration and retirement risk change the final forecast.</p>
+  <p>For <b>qualifying and race pace</b>, points describe expected fractional time differences. One point corresponds to about 0.00921% of lap time before forecast calibration. The 75-point odds statement does not apply to these two timing outputs. We use a familiar display scale for all three, but averaging them would mix different meanings.</p>
+  <h4>What ± means</h4>
+  <p>The number after ± is one approximate standard deviation from the underlying model. We keep it unchanged when translating the rating for display, treating the dated reference as a fixed presentation convention. Under that convention and the Gaussian approximation, roughly 68% of the estimated strength distribution lies within one standard deviation. The bars do not estimate uncertainty in the recent-era benchmark or establish how comparable two eras are. They describe uncertainty about strength, not the much wider range of possible results next weekend.</p>
+  <p>For a matchup, the model uses the covariance between the quantities being added and subtracted. You cannot recover the correct matchup uncertainty by simply adding the displayed error bars. A shared car cancels in uncertainty as well as in the mean.</p>
+  <p>These bars depend on the model being a useful description. They do not include every uncertainty about strategy, fit, measurement selection or the chosen parameters. Simulations with persistent driver–car fit showed that the bars can be too narrow. Treat them as a guide to precision, not a calibrated guarantee.</p>
 </section>
 
-<section id="method-ratings" class="method-part">
-  <h3>3. Ratings</h3>
-
-  <h4>A rating is a number whose differences are odds</h4>
-  <p>
-    Give each entry a positive strength weight <span class="math">a_i=10^{S_i/s}</span>. If x and y meet and each receives a share of the win chance proportional to that weight, then <span class="math">p_{xy}=a_x/(a_x+a_y)</span>. Dividing the numerator and denominator by <span class="math">a_x</span> produces the <b>Bradley–Terry</b> probability <a class="cite" href="#" data-jump="ref-1">[1]</a>:
-  </p>
-  <div class="math block">\Pr(o_{xy}=1)=\sigma_s\bigl(S_x-S_y\bigr),\qquad \sigma_s(u)=\frac{1}{1+10^{-u/s}}=\sigma(k\,u),\qquad k=\frac{\ln 10}{s}.</div>
-  <p>
-    Equal strengths give 50%. A lead of <span class="math">s</span> points gives 10:1 odds (91%), a lead of <span class="math">2s</span> gives 100:1. The unit is arbitrary and the zero is too: only differences mean anything, so every rating on the site is
-    quoted relative to the field of that weekend, with the average of the entrants set to 1,000. Comparing a rating from 2005 with one from 2020 is a thought experiment, not a measurement.
-  </p>
-  <p>
-    With the chosen <span class="math">s={{r.s}}</span>, a 30-point gap means odds of <span class="math">10^{30/75}\approx2.51</span> to 1, or about 71.5%. The logarithm in the exponent is why rating <i>differences</i> add: a 20-point A–B gap and a 10-point B–C gap imply a 30-point A–C gap, before uncertainty is considered.
-  </p>
-  <figure class="method-figure">
-    <div class="method-figure-box" id="methodologyOddsChart"></div>
-    <figcaption>The odds curve. A lead of {{scale}} points is worth 91% and a lead of {{scale2}} points is worth 99%; the curve is steepest where the contest is close.</figcaption>
-  </figure>
-
-  <h4>A strength made of parts</h4>
-  <p>In Formula 1 a competitor is a driver in a car, so the strength is built from parts,</p>
-  <div class="math block">S_i \;=\; D_i + A_i + C_{c(i)} ,</div>
-  <p>
-    where <span class="math">D_i</span> is the portable driver level, <span class="math">C_c</span> the shared team-car level, and <span class="math">A_i</span> a driver–car fit. The fit begins with a zero mean at a team change and can persist during the stint. For teammates, <span class="math">C_c</span> cancels in the model, leaving the driver difference <i>plus the fit difference</i>. Strategy, unequal equipment and session noise can also affect real comparisons. Different-team pairs compare whole packages.
-  </p>
-  <p>
-    At one team, adding <span class="math">\delta</span> to both driver levels and subtracting it from the car leaves both packages unchanged. The model resolves this ambiguity using assumptions about prior spreads, how levels change over time, and what carries across a move. Transfers add constraints, but do not reveal a driver's true level: the mover's prior level and new fit remain uncertain. Even a connected history has a global reference level; the field-centering convention fixes the displayed zero, not the underlying attribution.
-  </p>
-  <figure class="method-figure method-interactive">
-    <div id="methodologySplitLab"></div>
-    <figcaption>Move the slider. The same two package paces admit many driver/car splits. In this simplified illustration, teammate evidence constrains the driver gap; a move can help locate the car level if driver ability transfers. The real model also allows driver–car fit.</figcaption>
-  </figure>
-  <h4>How a career creates a network of evidence</h4>
-  <p>
-    A teammate result is a link between two drivers. When one of those drivers later shares a car with someone else, the links form a path. For example, if A is roughly 20 points ahead of B and B is roughly 10 ahead of C, A is roughly 30 ahead of C even if they never raced as teammates. That is <b>transitivity</b>, but it is uncertain: both links are noisy, so the indirect comparison is less precise than a direct one. A driver who has only one teammate in an isolated team is correspondingly hard to place.
-  </p>
-  <p>
-    The teaching graph turns a small win–loss record into an edge label with <span class="math">g_{xy}=s\log_{10}[(W_{xy}+1)/(L_{xy}+1)]</span>. The added ones keep an undefeated record from implying infinite strength: 7 wins and 3 losses give <span class="math">75\log_{10}(8/4)\approx23</span> points. That is only a way to read this illustration. The actual filters and online learner update from individual dated comparisons, with their weights and uncertainties, rather than inserting a career win percentage. If <span class="math">g_{AC}=g_{AB}+g_{BC}</span>, its variance is <span class="math">v_{AC}=v_{AB}+v_{BC}+2\operatorname{Cov}(g_{AB},g_{BC})</span>; links can be correlated, which is why a full covariance is useful.
-  </p>
-  <figure class="method-figure method-interactive">
-    <div id="methodologyCareerGraph"></div>
-    <figcaption>An illustrative career network, revealed in date order. The labels are smoothed pair scores from a small teaching example, not measured F1 results. The measured graph uses the probability model below and contributes {{graph.share}} of each published driver estimate.</figcaption>
-  </figure>
-  <p>
-    The <a href="#/graph">Graph page</a> shows the measured teammate network through the selected weekend. Its evidence has a {{graph.halfLifeYears}}-year half-life: a comparison that is three years old has half its original weight. Valid qualifying comparisons count 1; a valid race comparison counts up to 1.5. At most one race comparison per pair enters a weekend, preferring a finish and otherwise using valid lap pace or retirement snapshots with coverage weights. A mechanical failure alone is not a pace loss.
-  </p>
-  <p>
-    Each driver has a separate graph level in each season. Alonso’s comparisons with Massa connect their levels in those shared seasons, rather than treating Massa as an unchanged career-long reference. Adjacent seasons of the same driver are linked by a gradual-change prior. The season is a compact approximation: this graph does not resolve ability changes within a season separately.
-  </p>
-  <div class="math block">r(\Delta t)=2^{-\Delta t/{{graph.halfLifeYears}}},\qquad q={{graph.annualDriftPoints}}\frac{\ln10}{75},\qquad G_{d,s}=\frac{75}{\ln10}\theta_{d,s}.</div>
-  <div class="math block">\min_\theta\left[\sum_d\theta_{d,\mathrm{first}}^2+\sum_{d,j}\frac{(\theta_{d,s_j}-\theta_{d,s_{j-1}})^2}{2q^2(s_j-s_{j-1})}+\sum_{i:t_i\le T}w_i r(T-t_i)\log(1+e^{-y_i(\theta_{a_i,s_i}-\theta_{b_i,s_i})})\right].</div>
-  <p>
-    Here, <span class="math">s_i</span> is the comparison season, <span class="math">y_i\in\{-1,+1\}</span> records the winner, and <span class="math">w_i</span> is the evidence-quality weight. The first-season squared term is a fixed ridge prior with precision 2 in log-odds units; it is not repeated every season. The temporal link uses the existing race-driver drift scale, {{graph.annualDriftPoints}} points per square-root year. Both date decay and temporal uncertainty weaken the connection to older evidence. More equally recent valid comparisons add information without a hard cap. A direct edge is more informative than an otherwise equally supported indirect path; many strong indirect comparisons can still outweigh one weak direct result. Paths transmit information through one fit and are not counted as invented observations.
-  </p>
-  <p>
-    Later evidence can refine our current view of a past season, through those uncertain temporal links. It cannot rewrite a graph snapshot already published at that earlier date: every snapshot uses only evidence known then. The displayed graph score is 1,000 plus the driver’s level in their latest observed season, which is labeled beside the score. Disconnected groups rely on the prior for their relative placement. The horizontal coordinate is average year raced. Colors and ordering use decayed evidence; Q/R totals are unweighted career counts with comparison years shown. Before entering the published rating, graph levels are centered on the current field. The graph and filters share evidence, so their blend does not combine independent measurements.
-  </p>
-
-  <h4>Beliefs, and how they move in time</h4>
-  <p>
-    Instead of a single number, the model keeps a <b>belief</b> about every level: a Gaussian with a mean (the rating) and a variance (the uncertainty), and a <b>covariance</b> between levels. A Gaussian is a tractable approximation to many small sources of variation, not a claim that real pace has a perfect bell-shaped distribution. A driver and their car are estimated together: if their package was fast, overestimating the driver often means underestimating the car. Their covariance records that trade-off. The model can therefore be more certain about the package than either part, conditional on its assumptions.
-  </p>
-  <p>
-    Levels are not constant. Cars are developed during a season and rebuilt over the winter; drivers improve, age and change. A rating that never moved would be wrong within a year; one that jumped on every result would be noise. A state-space model
-    makes the compromise explicit: each level starts from a prior, drifts by a stated amount between weekends, and is unsure about whatever it has not seen lately.
-  </p>
-  <ul>
-    <li>
-      <b>Priors.</b> <span class="math">D_i\sim N(0,\sigma_D^2)</span> with <span class="math">\sigma_D={{r.sdD}}</span>, or <span class="math">\sigma_{\text{new}}={{r.sdNew}}</span> for a driver’s first appearance;
-      <span class="math">C_c\sim N(0,\sigma_C^2)</span> with <span class="math">\sigma_C={{r.sdC}}</span>. The wider car prior encodes the assumption that car levels vary more; the observations do not establish that allocation on their own.
-    </li>
-    <li>
-      <b>Within a season</b> a car drifts: <span class="math">C_c\leftarrow C_c+\varepsilon</span>, <span class="math">\operatorname{sd}(\varepsilon)={{r.raceC}}</span> per weekend (development). A driver’s race level does not drift between weekends.
-    </li>
-    <li>
-      <b>Over the winter</b> a car is partly rebuilt and a driver’s level moves a little: <span class="math">C_c\leftarrow\rho\,C_c+\eta</span> with <span class="math">\rho={{r.rho}}</span>,
-      <span class="math">\operatorname{sd}(\eta)={{r.winterC}}</span>; <span class="math">D_i\leftarrow D_i+\xi</span>, <span class="math">\operatorname{sd}(\xi)={{r.yearD}}</span>. The pull towards the average
-      (<span class="math">\rho\lt1</span>) says that last year’s advantage is only partly kept when the regulations or the team change.
-    </li>
-    <li>
-      <b>A new driver</b> (first seen after the first season of data) starts at zero latent level, with a race-residual prior spread of {{r.sdNew}} points and a qualifying prior spread of {{q.sdNew}} points. Zero is the prior centre, not a promise of average field pace after ratings are recentered. Qualifying also carries a temporary debut adjustment,
-      <span class="math">A_i\leftarrow-{{q.dipR}}</span> with spread <span class="math">{{q.sdR}}</span>, fading by a factor <span class="math">{{q.rhoR}}</span> each weekend. The race filter has no such debut adjustment. For a driver's first five races, the ratings panel marks the estimate as provisional (“new”).
-    </li>
-    <li>
-      <b>A team that only changes its name</b> (Racing Point to Aston Martin, Toro Rosso to AlphaTauri to RB) keeps its car: <span class="math">C_c</span> carries on under the new name. After a takeover by a new owner (Jaguar to Red Bull, Honda to Brawn,
-      Sauber to Audi) the car starts again from the prior, a modelling choice that treats the new organisation as a fresh car identity.
-    </li>
-    <li>
-      <b>A driver who changes team</b> keeps the same portable driver learning rules: there is no team-change mean penalty, extra driver variance or learning-rate multiplier. The equipment-specific fit <span class="math">A_i</span> restarts at zero because it describes a different driver–car combination. This does not change the portable driver prior.
-    </li>
-  </ul>
-
-  <p>Two pictures show what these choices do. First, how sure the model is of a driver as their career grows:</p>
-  <figure class="method-figure">
-    <div class="method-figure-box" id="methodologyUncertaintyChart"></div>
-    <figcaption>
-      The displayed race-rating uncertainty against career starts, over drivers since 1994. The line is the mean; the band spans the 10th to 90th percentiles, with at least 20 observations at each experience level. These filter-derived bars are not empirical coverage of the hybrid rating. Process noise and recurring ambiguity keep them from vanishing.
-    </figcaption>
-  </figure>
-  <p>Second, one rating through time, with its error band:</p>
-  <figure class="method-figure">
-    <div class="method-figure-box" id="methodologyTimelineChart"></div>
-    <figcaption id="methodologyTimelineCaption">
-      The published race rating after each of the last 48 weekends, with its approximate filter-derived standard deviation either side. The band omits uncertainty from the full hybrid blend.
-    </figcaption>
-  </figure>
-
-  <h4>Learning from a weekend</h4>
-  <p>
-    Before reading a weekend, the filter has a prior belief: mean vector <span class="math">m</span> and covariance matrix <span class="math">P</span> for all current driver, car and fit levels. A diagonal entry of <span class="math">P</span> is one level's variance; an off-diagonal entry records how two levels have become linked by their shared history. For a pair, let <span class="math">e_{xy}</span> select x's driver, fit and car with +1 and y's with −1. Its predicted gap is <span class="math">e_{xy}^{\top}m</span>, plus any known qualifying input. The filter balances the old belief against a weighted pairwise objective:
-  </p>
-  <div class="math block">\log \tilde p(z\mid\text{weekend})=\text{constant}-\tfrac12(z-m)^\top P^{-1}(z-m)+\sum_{xy}\omega_{xy}\left[o_{xy}\log p_{xy}+(1-o_{xy})\log(1-p_{xy})\right].</div>
-  <p>
-    The first term penalises moves from the prior; the sum rewards levels that fit the observed pairs. The tilde matters: this is a tempered composite likelihood, not a literal posterior from independent observations. Pairs share drivers and conditions, and their weights include observed gaps. Its pair weight is
-  </p>
-  <div class="math block">\omega_{xy}=\tau\;u_{xy}\;\theta^{[c(x)=c(y)]}\;m_{\text{src}},\qquad u_{xy}=\frac{w_{xy}}{\tau_0^{[c(x)=c(y)]}},</div>
-  <p>
-    Here <span class="math">w_{xy}</span> is the fixed scoring weight from Part 2. We remove its teammate factor <span class="math">\tau_0</span> before learning, then apply the learner's factor <span class="math">\theta={{r.thetaT}}</span>. The multiplier <span class="math">\tau={{r.tau}}</span> tempers the whole weekend: 20 drivers produce 190 pairs, yet a single safety car or tyre choice can affect many of them at once. Treating all pairs as independent would make the filter too certain. The source multiplier is 1 for finishing order, {{r.mPace}} for lap pace, and {{r.mPart}} for retirement snapshots. This lets repeated lap evidence influence learning differently from the weights used to define the evaluation score.
-  </p>
-  <p>
-    For one pair, the derivative of log likelihood with respect to its gap is <span class="math">k(o-p)</span>. That is the correction signal: a surprise has a large <span class="math">|o-p|</span>. Its curvature is <span class="math">k^2p(1-p)</span>; a near-50/50 pair is more informative about a small change in the gap than an almost certain one. Summing the weighted derivatives gives the weekend gradient <span class="math">g</span> and information matrix <span class="math">J</span>:
-  </p>
-  <div class="math block">
-    g=\sum_{xy}\omega_{xy}\,k\,(o_{xy}-\hat p_{xy})\,e_{xy},\qquad
-    J=\sum_{xy}\omega_{xy}\,k^{2}\,\hat p_{xy}(1-\hat p_{xy})\,e_{xy}e_{xy}^{\top},
-  </div>
-  <p>
-    The weighted objective does not give a Gaussian distribution. The filter approximates it near its mode with a Gaussian (a Laplace or extended-Kalman step <a class="cite" href="#" data-jump="ref-5">[5]</a>). Let <span class="math">a</span> denote the levels active this weekend. At each of {{r.iters}} iterations, it solves the following local update, recalculating <span class="math">g</span> and <span class="math">J</span> at the current estimate <span class="math">\mu_a</span>:
-  </p>
-  <div class="math block">\mu=m+P_{\cdot a}(I+JP_{aa})^{-1}\bigl[g+J(\mu_a-m_a)\bigr],\qquad P'=P-P_{\cdot a}(I+JP_{aa})^{-1}JP_{a\cdot}.</div>
-  <p>
-    <span class="math">P_{aa}</span> is the covariance block for this weekend's active levels; <span class="math">P_{\cdot a}</span> connects them to every stored level. The matrix inverse balances new evidence against prior uncertainty. Thus a result can change an absent driver's estimate if their past overlap created covariance with a current driver. The covariance update reduces uncertainty where the result supplies information, while leaving linked uncertainties correlated.
-  </p>
-  <ul>
-    <li>
-      <b>Everything is estimated jointly, with the full covariance.</b> A result moves both the driver and the car, and it moves the other drivers and cars that share a history with them.
-    </li>
-    <li>
-      <b>No look-ahead.</b> Every weekend’s pairs are <i>forecast</i> from <span class="math">m</span> and <span class="math">P</span> before this step, so nothing from a weekend is used to forecast it, and a rating after a weekend uses only that
-      weekend and earlier ones. Tests check this by changing every later result and verifying that nothing earlier moves.
-    </li>
-    <li>
-      <b>Numerical safeguards.</b> The covariance update reads columns of <span class="math">P</span> from a copy taken before the update (otherwise <span class="math">P</span> can turn indefinite), and an iteration that would raise the negative log
-      posterior is halved until it does not. Entities not seen for {{window}} weekends (about five seasons) stop carrying correlations with others, which keeps the update fast.
-    </li>
-  </ul>
-
-  <h4>Why qualifying informs race pace</h4>
-  <p>
-    A race is long enough for tyre wear, traffic and strategy to obscure speed. A qualifying lap offers a different, usually cleaner view of the same driver and car. The qualifying filter estimates its own driver and car levels from timed qualifying pairs. The race filter then treats part of the driver level as a <i>known input</i> and learns the remaining race-specific pace. Its car state is estimated from race evidence; the published car blend adds qualifying separately:
-  </p>
-  <div class="math block">S_i^R=\underbrace{\beta D_i^Q+D_i^{R,\mathrm{res}}}_{\text{driver}}+C_{c(i)}^R+A_i,\qquad \beta={{link.beta}}.</div>
-  <p>
-    The word <i>residual</i> means “what race observations still need to explain after the qualifying contribution.” For example, a 20-point qualifying driver level contributes 8 race points when <span class="math">\beta=0.4</span>; the race observations can then move the residual up or down. This link is valuable when race evidence is sparse. For a forecast, the qualifying inputs stop at the <i>end of the preceding weekend</i>. For the rating posted after a weekend, that weekend's qualifying may be used: it was already known by race time. This distinction prevents the starting grid from leaking into a pre-weekend ratings test.
-  </p>
-
-  <h4>Why fit stays inside the model</h4>
-  <p>
-    Some performance belongs to the pairing rather than permanently to either side. The race filter gives that effect its own level <span class="math">A_i</span>, initially zero with a {{r.sdA}}-point prior spread. It persists by a factor {{r.rhoA}} per weekend while the pairing continues and restarts at a new team. The portable race-filter output is <span class="math">D_i^R=D_i^{R,\mathrm{res}}+\beta D_i^Q</span>; the fit is excluded. The race-filter car output contains no qualifying-car offset. A driver therefore carries their own level when changing cars, while the model can still assign a persistent mismatch with one car to fit.
-  </p>
-  <p>
-    Portable driver priors follow the same calendar evolution for movers and stayers. A team change adds no driver variance, mean penalty or learning multiplier. Only the equipment-specific fit restarts for the new pairing.
-  </p>
-
-  <h4>The published blend and slower learning</h4>
-  <p>
-    The two filters and an online comparison learner each provide a driver level in the same units. Call them <span class="math">D^R,D^Q,D^O</span>. The two filters also provide car levels <span class="math">C^R,C^Q</span>. First form the filter/online estimate, then add the graph:
-  </p>
-  <div class="math block">H^R=(1-{{hybrid.rankingDriverShare}})\bigl[(1-{{hybrid.qualifyingDriverShare}})D^R+{{hybrid.qualifyingDriverShare}}D^Q\bigr]+{{hybrid.rankingDriverShare}}D^O
-    =0.48D^R+0.32D^Q+0.20D^O,\qquad C^{\rm pub}=(1-{{hybrid.qualifyingCarShare}})C^R+{{hybrid.qualifyingCarShare}}C^Q.</div>
-  <div class="math block">D^{R,\rm pub}={{graph.otherShare}}H^R+{{graph.share}}G,\qquad D^{Q,\rm pub}={{graph.otherShare}}D^Q+{{graph.share}}G.</div>
-  <p>
-    The graph contributes the same share to both driver estimates. The learners use {{informationFraction}} of their earlier per-weekend information: likelihood weights are {{r.tau}} for race and {{q.tau}} for qualifying, and the online step is {{hybrid.ranking.learningRate}}. This slows estimation itself; the history chart has no smoothing transformation. The effect is not exactly a quarter-sized update because uncertainty also changes. Consistent repeated results can still move a rating, and controlled wins, upsets and moves without new evidence are tested.
-  </p>
-  <p>
-    The weights add to one for each entity, so the unit remains rating points. The race filter carries the largest share because it sees both race and qualifying evidence and estimates the driver/car split jointly. The qualifying level adds a clean one-lap signal; the online level contributes a differently regularised reading of race pairs. The car blend remains mostly a race measure. The same weights apply to every driver, car and date. For a pre-weekend forecast, the formula uses the levels available before that weekend; for the posted rating, it uses the levels after the update. The separately shown qualifying rating includes the same small graph contribution.
-  </p>
-  <p>
-    The online learner writes a strength as <span class="math">s_i=d_i+c_{c(i)}</span>: portable driver level plus car level. Its pair probability is <span class="math">p_{xy}=\sigma((\ln 10/{{r.s}})(s_x-s_y))</span>. Only <span class="math">d_i</span> becomes <span class="math">D^O</span>. The separate car level lets common team evidence inform the car. A retrospective simplification removed this learner's extra fit, wet-weather term and per-weekend shrinkage; the race filter retains its own fit term.
-  </p>
-  <div class="math block">G_j=\frac{\sum_{xy} w_{xy}^{O}(o_{xy}-p_{xy})\,e_{xy,j}}{\sum_{xy} w_{xy}^{O}},\qquad z_j\leftarrow\operatorname{clip}\!\bigl(z_j+{{hybrid.ranking.learningRate}}G_j,-200,200\bigr).</div>
-  <p>
-    Here <span class="math">z_j</span> is an active driver or car coefficient, <span class="math">e_{xy,j}</span> is +1 if it belongs to x, −1 if it belongs to y, and zero otherwise. An upset has <span class="math">o-p</span> large and causes a larger correction; an expected result causes little change. Teammate evidence receives {{hybrid.ranking.teammateWeight}} times its ordinary learning weight. The denominator prevents a weekend with many correlated pairs from taking a proportionally huge step. Both driver and car levels retain {{hybrid.ranking.winterRetention}} across winter. The rule is the same for movers and other drivers.
-  </p>
-  <p>
-    The blend is an empirical combination of correlated estimates, not a single Bayesian posterior. Its fixed shares were chosen from dated forecast tests, including driver transfers. They are useful as a predictive rule; they do not imply that the four sources are independent measurements.
-  </p>
-
-  <h4>From beliefs to the published numbers</h4>
-  <p>
-    <b>Uncertainty.</b> A rating is a level relative to the field of that weekend, <span class="math">1000+(\text{level}_i-\overline{\text{level}})</span>, re-centred so that the entrants average 1,000. The bar on the ratings panel is an <i>approximation</i> carried over from the race filter’s covariance. For that filter alone, the standard deviation of a field-centred level uses the full covariance over the <span class="math">n</span> entrants:
-  </p>
-  <div class="math block">\operatorname{sd}_i=\sqrt{P_{ii}-\frac{2}{n}\sum_{j}P_{ij}+\frac{1}{n^{2}}\sum_{j,k}P_{jk}}\ .</div>
-  <p>
-    The hybrid keeps that covariance while blending the means. It does <b>not</b> propagate the qualifying, online learner and graph uncertainties or their correlations into a new hybrid covariance, so the displayed bar is not a calibrated standard deviation of the final hybrid rating. The retained legacy combined measure uses <span class="math">\sqrt{(1-w)^2\sigma_R^2+w^2\sigma_Q^2}</span>, treating its race and qualifying inputs as independent; that is also only approximate because the race filter reads qualifying.
-    In the filter-only calibration underlying this multiplier, tempering a weekend’s pairs by <span class="math">\tau</span> left its bars too narrow by a factor of about {{r.sqrtVarInfl}}: over six races a driver’s rating revised by that many times the distance its bar said.
-    The carried-over race-filter variances are multiplied by <span class="math">{{r.varInfl}}</span>, a scale fitted on 2002–2007 rating revisions. It has not been recalibrated for the slower-learning graph blend or certified as its interval coverage. A mover's bar can look much like a stayer's even when transfer predictions are less reliable. Treat it as a rough guide to the filter's knowledge of a level, not a promise about its transfer to a new car.
-  </p>
-  <p>
-    <b>Reliability and incidents.</b> Retirements are tracked separately from the ratings, because a retirement is mostly not about pace, and the cause matters: a failure belongs to the car, a collision partly to the driver. For each constructor
-    (mechanical failures) and each driver (incidents) the model keeps decayed counts: <span class="math">\lambda</span>, the laps run, and <span class="math">f</span>, the attributed failures. A fixed table from finishing status to cause gives each retirement a
-    mechanical weight and a driver weight. Each weekend, before adding new laps and events,
-  </p>
-  <div class="math block">(\lambda,f)\leftarrow\delta\,(\lambda,f),\qquad \delta=2^{-1/h},\qquad h=\text{half-life in races}\ ({{relHalf}}\text{ for cars, }{{incHalf}}\text{ for drivers}).</div>
-  <p>The per-lap hazard is shrunk towards the field’s hazard <span class="math">q_F</span>, with <span class="math">n_0</span> laps of prior, so a car with little history is not judged on one failure:</p>
-  <div class="math block">q=\frac{f+q_F\,n_0}{\lambda+f+n_0},\qquad n_0={{relPrior}}\ (\text{cars}),\ {{incPrior}}\ (\text{drivers}).</div>
-  <p>
-    The chance of getting through <span class="math">L</span> laps is <span class="math">(1-q)^L</span>; this is the “Survival” and “Clean race” column. To fold hazards into a pace probability, suppose A and B retire on any lap with probability
-    <span class="math">q_A,q_B</span>, and <span class="math">p</span> is the chance A is faster when both finish. With <span class="math">a=1-q_A</span> and <span class="math">b=1-q_B</span>, a closed form for the chance that A finishes ahead follows by cases. The first term is both reaching the end with A faster; the second is A reaching the end while B does not;
-    the rest counts the cases in which A retires, where A still counts as ahead only if B retired on an earlier lap (a tie on the same lap splits evenly), which is a geometric sum over the lap on which A retires:
-  </p>
-  <div class="math block">
-    H(p,q_A,q_B,L)=a^{L}b^{L}\,p+a^{L}(1-b^{L})+(1-a^{L})-q_A\bigl(1-\tfrac12 q_B\bigr)\frac{1-(ab)^{L}}{1-ab}.
-  </div>
-  <p>
-    <b>Retained package and effective measures.</b> The primary rating choices are Race and Qualifying. Package and effective pace retain a derived legacy race–qualifying blend, weighted towards the race, and fall back to race until qualifying data are available. Package pace adds the driver and car blends. <b>Effective pace</b> is the rating whose pace probability equals the hazard-adjusted chance of finishing ahead of an average entrant over <span class="math">L={{stdLaps}}</span> laps. For a driver
-    <span class="math">q</span> is their incident hazard, for a car its failure hazard, and for a package <span class="math">q=1-(1-q_{\text{driver}})(1-q_{\text{car}})</span>.
-  </p>
-  <div class="math block">
-    \text{Combined}=1000+(1-w)(R-1000)+w(Q-1000),\quad w={{qualWeight}};\qquad
-    \text{Package}=1000+(\text{Combined}_{\text{driver}}-1000)+(\text{Combined}_{\text{car}}-1000);
-  </div>
-  <div class="math block">E=1000+s\log_{10}\frac{P}{1-P},\qquad P=H\bigl(\sigma_s(\text{Combined}-1000),\,q,\,q_F,\,L\bigr).</div>
+<section id="method-forecast" class="method-part">
+  <h3>7. Build a forecast with the information available</h3>
+  <p>The Head to head page asks: <b>what is the chance A finishes ahead of B?</b> It starts from the latest unified overall strengths, not race pace alone. Forecasts always read the underlying model, before display centring. Subtracting the same reference from both sides leaves every same-weekend driver gap and car gap unchanged, so the charts and forecasts agree on those differences. For a current pairing, it carries uncertainty forward by one weekend, using a default seven-day interval for driver evolution. The forecast API can take a specific future date.</p>
+  <ol>
+    <li><b>Calculate the overall gap.</b> Driver A minus driver B, plus car A minus car B.</li>
+    <li><b>Account for uncertainty and calibration.</b> The joint uncertainty tempers the probability. A positive scale fitted only to earlier forecast errors calibrates how strongly rating gaps should translate into outcome probabilities. This changes the probability mapping; it does not change the published ratings.</li>
+    <li><b>Include retirement risk.</b> Separate, smoothed records estimate a driver’s incident risk and a car’s mechanical risk per lap. These are combined for each package and applied over the chosen race distance, 60 laps by default.</li>
+  </ol>
+  <p>If both cars finish, competitive strength determines their relative order. If only one finishes, that entrant wins the comparison. If both retire, a simple constant per-lap hazard model accounts for which lasts longer, splitting simultaneous retirements evenly. This makes reliability part of the result forecast without treating failure itself as evidence of slow pace.</p>
+  <p>The risk records decay over time and shrink toward field-average behaviour. Mechanical risk uses a 35-race half-life and a 100-lap prior; driver incident risk uses a five-race half-life and a 2,000-lap prior. Cars retain 95% of their risk record over winter. These are statistical risk estimates, not mechanical diagnoses.</p>
+  <p>The forecast targets ordinary race classification and includes retirements. Disqualifications, withdrawals and other excluded/non-start classifications are outside its validated target. Hazard rates also simplify reality: failures are not independent of conditions or constant across all laps.</p>
+  <h4>When the starting grid is known</h4>
+  <p>Starting ahead can help a driver finish ahead even when the underlying strengths are unchanged. For two current drivers in their own cars, you can enter their starting positions under <b>Conditions</b>. A small prediction layer then uses two inputs: the overall package gap, tempered by its joint uncertainty, and the difference in starting positions. Two fitted coefficients turn those inputs into competitive odds. The same retirement-risk calculation is applied afterwards.</p>
+  <p>Those coefficients learn from earlier race outcomes. Regularisation pulls the model toward the rating-only forecast when the evidence for a correction is weak; its strength is chosen on an earlier validation period. This layer changes a prediction, <b>not a driver or car rating</b>. It learns the predictive association with grid position, not the causal effect of moving a car to another slot.</p>
+  <p><b>When either grid position is unknown, the pre-weekend calculation is used exactly.</b> Missing positions and pit-lane codes are not treated as pole position. Grid conditioning is available for the current field in its own cars; historical car swaps remain rating-based scenarios. Qualifying times, circuit-specific bonuses, weather corrections and a separate recent-form layer are not added to this forecast.</p>
+  <h4>Historical and same-car comparisons</h4>
+  <p>You can combine a driver at one date with a car at another. These scenarios use the underlying, uncentred overall estimates, the same probability rule and explicit risk calculation. The recent-era display translation does not enter them, so introducing it leaves historical scenarios unchanged. Differences between chart values from different dates are therefore not the gaps used by these scenarios. For parts from one snapshot, joint covariance is retained. Across dates, covariance is approximated by treating the dated states as independent. Current calibration is used, so this is a retrospective thought experiment, not a forecast that was available on that historical date.</p>
+  <p>Ratings are learned through comparisons with the competitors of their time, on a fixed prior reference. A comparison across eras depends on the connections and priors carrying that scale across different fields, rules and machinery. Choosing the same car cancels its rating contribution; it does not establish how a driver would actually adapt to unfamiliar equipment.</p>
 </section>
 
-<section id="method-forecasts" class="method-part">
-  <h3>4. Forecasts</h3>
-
-  <h4>From the ratings alone</h4>
-  <p>
-    For a pairing at the latest weekend, the hybrid supplies the mean <span class="math">\mu</span> of the gap <span class="math">S_A-S_B</span> (with one more weekend of filter drift added). The race filter supplies an approximate variance <span class="math">v</span>. The probability that A
-    finishes ahead folds the uncertainty in, so that a gap that is known poorly is pulled towards 50%:
-  </p>
-  <div class="math block">\Pr(A\succ B)=\sigma\!\Bigl(\frac{c\,k\,\mu}{\sqrt{1+\tfrac{\pi}{8}k^{2}v}}\Bigr),\qquad c={{slopeRace}}\ (\text{race}),\ {{slopeQual}}\ (\text{qualifying}).</div>
-  <p>
-    The square root is the standard approximation to the expected value of a logistic function of a Gaussian gap, <span class="math">\mathbb E\,\sigma(k\Delta)\approx\sigma\bigl(k\mu/\sqrt{1+\pi k^{2}v/8}\bigr)</span>.
-    The multiplier <span class="math">c</span> calibrates how strongly a point gap should affect real-world odds. It was fitted on dated 2002–2007 predictions. A value near one means the rating-point scale already gives approximately the right slope.
-    This is the “ratings alone” figure on the Head to head page, and what the ratings backtest scores.
-  </p>
-
-  <h4>The forecast model</h4>
-  <p>
-    Ratings estimate persistent strength and should remain responsive to sustained evidence. The forecast adds recent performance and, after qualifying, the starting grid and session gaps. It is evaluated on the fixed pair benchmark: valid pace, finishing-order and qualifying comparisons. This is not an unconditional probability of winning a race or finishing ahead after every possible retirement. Retirement risks are estimated and shown separately.
-  </p>
-  <ul>
-    <li>
-      <b>Recent form</b> tracks qualifying gaps, shared-window lap-pace gaps and valid finishing-order or pre-failure snapshot evidence, separately for drivers and cars at fast (0.6) and slow (0.2) rates. A joint regularised fit allocates each weekend’s pair comparisons between driver and car; teammate comparisons cancel the car term. This allocation is a modelling convention, not a direct measurement of each contribution. Both driver and car form decay with a ten-weekend half-life and retain 65% per elapsed winter. Driver form follows the driver across a move; car form follows its lineage. Form updates only after both same-week forecasts. There are no circuit-form trackers.
-    </li>
-    <li>
-      <b>Retirement risk.</b> Reliability remains separate from pace. The retained grid-only model starts from the ratings’ pace probability mixed with retirement risk, with <span class="math">w={{hazardW}}</span>:
-      <span class="math">p_0=(1-w)\,\sigma(c\,k\,g)+w\,H\bigl(\sigma(c\,k\,g),\,q_A,\,q_B,\,L={{stdLaps}}\bigr)</span>, where <span class="math">g</span> is the gap of driver plus car levels (including the fit term, since the forecast is about these two drivers in these cars).
-    </li>
-    <li>
-      <b>Probability models.</b> Small ridge-regularised logistic models forecast performance before qualifying (“Thursday”), after qualifying (“race day”), and qualifying duels. Their inputs are four driver/car rating gaps, separate driver and car form at the two speeds, and bounded versions of those signals. After qualifying they also read that weekend's session gaps and grid. There are no trees, ensembles, circuit effects or context interactions. A separate six-coefficient linear model handles grid slots without qualifying times. Swapping the drivers gives the complementary probability.
-    </li>
-    <li>
-      <b>Training in time order.</b> Models beginning in 2008, 2012, 2016, 2021 and 2026 use data only through 2007, 2011, 2015, 2020 and 2025 respectively. The 2026 head remains trained through 2025 as new weekends are added. Within each training prefix, the final four seasons choose the ridge strength; feature scaling is fitted only on the earlier training portion. The selected strength is then refitted on the full prefix. All these historical periods informed development, so this is retrospective chronological validation, not untouched confirmation.
-    </li>
-  </ul>
-  <p>The Race form display adds a summary of the forecast contribution to the race rating. It does not exactly reproduce the pairwise nonlinear forecast. Changing the rating display does not change forecasts, which still use race and qualifying inputs. The displayed driver-form adjustment measures how the forecast changes when driver-specific form is removed while car form remains. The car-form adjustment removes car form while retaining driver form. Pairwise changes are summarised as globally centred adjustments across drivers or cars. Teammates are not forced to sum to zero; nonlinear effects mean these summaries are approximate.</p>
-  <p>
-    The current form revision preserves all long-term rating histories. In a retrospective test on 51 moves, freezing both drivers’ ratings and form before the mover’s final old-team weekend reduced augmented forecast loss from 0.6758 to 0.6572. Only deterministic aging follows that cutoff; no new-team evidence enters. Ordinary pooled pre-qualifying race-and-qualifying loss improved by 0.00033, missing the initial 0.001 improvement threshold. A subsequent, explicitly post hoc component comparison prioritized the mover result and retained both driver and car form. The original threshold remains failed; these results need future confirmation. The separate frozen-rating score remains 0.6888.
-  </p>
-
-  <h4>What-if matchups</h4>
-  <p>
-    A what-if has no real weekend behind it, so it has no form and no qualifying, and the forecast model is not used. The probability is the ratings gap, stretched by constants fitted on finishing-order pairs of 2002–2015. For a driver in a car other than their own,
-    the published (portable) rating is the one used, which is the point of keeping the fit term out of it:
-  </p>
-  <div class="math block">P=\sigma\!\bigl(\kappa\,\operatorname{logit}\sigma(k\,\text{gap})\bigr),\qquad \kappa=\begin{cases}{{kCars}}&\text{different cars}\\{{kMates}}&\text{teammates}\end{cases},\qquad \kappa_{\text{wet}}={{kWet}}\,\kappa,</div>
-  <p>
-    with each driver’s wet-weather skill and circuit offset (learned separately, from wet races and from results at each circuit) added to the gap when asked for. Both come from a simple per-driver track beside the main ratings: after each weekend, a driver’s offset at that circuit moves a fraction {{circK}} of the way towards how they did there compared with what the ratings expected, and a share {{circCarry}} of every circuit offset is kept over the winter; the wet-weather skill moves the same way after wet races, with a fraction {{wetK}}. They are small corrections, so they are applied only on request. The stretch is near 1 because the ratings are already close to calibrated.
-  </p>
-</section>
-
-<section id="method-backtesting" class="method-part">
-  <h3>5. Backtesting</h3>
-
-  <h4>The principle</h4>
-  <p>
-    For each weekend, we record predictions from earlier ratings before updating on that weekend. This <b>walk-forward</b> evaluation <a class="cite" href="#" data-jump="ref-8">[8]</a> tests dated predictions, though it does not undo model selection on those same years. The historical evaluation uses the recorded lineup and selects eligible observations after the event; it is not a prospective forecast of who starts or finishes. Our principal score averages pairwise log-loss using the weights in Part 2:
-  </p>
-  <div class="math block">
-    \mathcal J=\frac{\sum_{\text{pairs}} w\,\bigl[-o\ln p-(1-o)\ln(1-p)\bigr]}{\sum_{\text{pairs}} w},
-  </div>
-  <p>
-    We skip the first 20 weekends as burn-in. Lower is better: 50% on every pair scores <span class="math">\ln 2=0.693</span>, and correct certainty scores zero. Teammate pairs receive a {{tmBoost}}-fold factor, giving them 25.7% of the historical score weight. Every candidate is scored on the same observations and rules; seasonal scores still reflect different fields and conditions.
-  </p>
-  <p>
-    If a forecast says 80% for A, an A win has unweighted loss <span class="math">-\ln(0.8)=0.223</span>; an A loss has loss <span class="math">-\ln(0.2)=1.609</span>. Ordinary log-loss is a proper scoring rule <a class="cite" href="#" data-jump="ref-7">[7]</a>: in expectation it rewards reporting the true probability. Our weighted version needs a qualification. Some weights depend on the observed gap, which is unknown when the forecast is made. It therefore rewards the probability in a gap-weighted population, not necessarily the ordinary probability of finishing ahead. Fixing the weighting rule across candidates makes comparisons consistent; it does not restore ordinary-probability propriety.
-  </p>
-
-  <h4>Are the ratings right?</h4>
-  <p id="methodologyLead">
-    To judge the ratings alone, every weekend is forecast from the ratings of earlier weekends only, using the odds formula of Part 3 and nothing else: no recent form, no starting grid. The score aggregates race and qualifying weighted log-loss above, set against a coin flip that gives every
-    pair 50%. The figures are computed live from the ratings loaded on this page.
-  </p>
-  <dl class="stats" id="methodologyRatingsStats" hidden>
-    <div>
-      <dt id="methodologyRatingsLabel">These ratings</dt>
-      <dd id="methodologyRatingsValue">—<small>Forecast error from the ratings alone.</small></dd>
-    </div>
-    <div>
-      <dt>A coin flip</dt>
-      <dd id="methodologyCoinValue">—<small>Every pair at 50%.</small></dd>
-    </div>
-    <div>
-      <dt>Weekends scored</dt>
-      <dd id="methodologyRatingsWeekends">—<small>Race and qualifying, each forecast from earlier weekends only.</small></dd>
-    </div>
-  </dl>
-  <div class="method-chart" id="methodologyRatingsChartWrap" hidden>
-    <svg id="methodologyRatingsChart" class="chart" role="group"></svg>
-  </div>
-  <div class="table-wrap">
-    <table class="params">
-      <thead>
-        <tr>
-          <th scope="col" class="left">Window</th>
-          <th scope="col">Coin flip</th>
-          <th scope="col">These ratings</th>
-          <th scope="col">Skill</th>
-        </tr>
-      </thead>
-      <tbody id="methodologyWindows"></tbody>
-    </table>
-  </div>
-  <p>Skill is the share of the coin flip’s error that the ratings remove: 0% is no better than a coin flip, 100% would be a perfect forecaster.</p>
-
-  <h4>And the forecasts?</h4>
-  <p>The Head to head forecast adds recent form to the ratings, and the starting grid once qualifying is done.</p>
-  <dl class="stats" id="methodologyForecastStats" hidden>
-    <div>
-      <dt id="methodologyAccuracyLabel">Favourite finishes ahead</dt>
-      <dd id="methodologyAccuracy">—</dd>
-    </div>
-    <div>
-      <dt>Forecast error</dt>
-      <dd id="methodologyLoss">—<small id="methodologyLossNote"></small></dd>
-    </div>
-    <div>
-      <dt>Weekends scored</dt>
-      <dd id="methodologyWeekends">—<small id="methodologyWeekendsNote"></small></dd>
-    </div>
-  </dl>
-  <div class="method-chart" id="methodologyForecastChartWrap" hidden>
-    <svg id="methodologyForecastChart" class="chart" role="group"></svg>
-  </div>
-
-  <h4>The hardest test: drivers who change team</h4>
-  <p>
-    Freeze both the mover's and future teammate's ratings before the mover's final old-team weekend. This is earlier than joining: none of the new-team results can change that frozen gap. The five- and ten-weekend windows measure its predictive value, not adjustment speed. Use that gap over the first five new-team weekends, excluding comparisons whose teammate lacked a rating at the freeze date. Calibration uses only stayer observations before each block; three new-team appearances must occur by the block’s end, and later duels are excluded. These periods informed development, so chronological calibration does not make them untouched tests.
-  </p>
-  <div class="table-wrap">
-    <table class="params">
-      <thead><tr><th scope="col" class="left">Move period</th><th scope="col">Frozen-rating loss</th></tr></thead>
-      <tbody>
-        <tr><th scope="row" class="left">2008–2011</th><td><b>0.6460</b></td></tr>
-        <tr><th scope="row" class="left">2012–2015</th><td><b>0.7182</b></td></tr>
-        <tr><th scope="row" class="left">2016–2020</th><td><b>0.6391</b></td></tr>
-        <tr><th scope="row" class="left">2021–2025</th><td><b>0.7116</b></td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p>
-    Transfers remain difficult: in 2012–2015 this forecast scores worse than a coin flip (0.693). Most broad comparisons do not test portability. Unequal equipment, adaptation, strategy and pairing-specific fit can affect a teammate duel; a miss does not identify which assumption failed. Moves are selected by real careers, and repeated duels within a move are dependent. Intervals therefore resample moves rather than individual pairs.
-  </p>
-  <h4>Other checks</h4>
-  <ul>
-    <li><b>Ratings-only loss</b>, with calibration fitted before each block, is 0.3857 (2008–2011), 0.3635 (2012–2015), 0.3758 (2016–2020), and 0.4125 (2021–2025).</li>
-    <li><b>Complete forecasts.</b> Across 2008–2025, the selected form model’s aggregate race-and-qualifying loss is 0.3813 before qualifying and 0.3331 after qualifying. These forecasts can exploit recent form and current qualifying evidence.</li>
-    <li><b>Implementation checks</b> cover future-data prefix invariance, pair reversal, teammate direction, mechanical-retirement handling, duplicate evidence and training/serving agreement.</li>
-    <li><b>Recent sample.</b> The evaluation reports 2026 separately as descriptive monitoring; it is excluded from candidate-selection gates.</li>
-    <li><b>Selection caveat.</b> All historical blocks have been inspected. Dated predictions prevent information leakage into an individual forecast, but cannot remove model-selection bias.</li>
-  </ul>
-
-  <h4>What would change our minds?</h4>
-  <p>
-    Stronger evidence for portability would be lower frozen-mover loss than a 50–50 forecast and a simple teammate-only baseline on the same future moves, with uncertainty assessed by resampling moves or seasons. We would fix the protocol and settings before observing those seasons, report all eligible moves and both weighted and unweighted scores, and check calibration as well as accuracy. Persistent failure against the baseline, or large changes in driver rankings under plausible prior and fit assumptions, would weaken our confidence in the split. A single new season is informative but unlikely to settle a question with so few transfers.
-  </p>
-  <h4>Stability and portability</h4>
-  <p>
-    The scale, pair definitions and scoring weights define a fixed exam. The primary mover score gives each move equal weight, averaging race and qualifying over five and ten weekends. The information fraction and 5% recent graph favor steadier estimates. In a retrospective comparison with faster learning, median/p90/p99 changes in the historical combined rating fall by about 50%/46%/49%, while move-balanced loss rises from 0.6749 to 0.6888 over 51 teammate-covered moves. The paired move interval for the loss difference is −0.0096 to +0.0371. Portable driver learning is identical across team changes. This is a stated modeling constraint with a predictive cost; it fails the earlier small-cost guard and does not establish predictive improvement or statistical equivalence. Some subsets deteriorate more: the row-weighted five-week race mover score for 2021–2025 rises from 0.6336 to 0.7116. Synthetic tests also show slower qualifying recovery, especially for car strength. All historical blocks have been inspected; 2026 is monitoring only.
-  </p>
-</section>
-
-<section id="method-other-studies" class="method-part">
-  <h3>6. How we compare to other studies</h3>
-  <p>
-    Other researchers also try to separate driver skill from car performance. We compared their reported results with tests of our ratings. The comparisons answer different questions, and the published figures do not all use the same races or the same information. None establishes a definitive winner.
-  </p>
-  <div class="table-wrap">
-    <table class="params">
-      <thead><tr><th scope="col" class="left">Study</th><th scope="col" class="left">What the comparison shows</th></tr></thead>
-      <tbody>
-        <tr><th scope="row" class="left">Rane (2025) <a class="cite" href="#" data-jump="ref-20">[20]</a></th><td class="left">On race rankings from 2014–2024, our score is <b>0.634</b>; the study reports <b>0.625</b>. The exact samples have not been matched.</td></tr>
-        <tr><th scope="row" class="left">van Kesteren &amp; Bergkamp (2023) <a class="cite" href="#" data-jump="ref-21">[21]</a></th><td class="left">Their Bayesian model checks simulated finishing orders against observed ones. Our forward simulations can be inspected in the same spirit, but their published leave-one-out score is not directly comparable.</td></tr>
-        <tr><th scope="row" class="left">Lindner et al. (2026) <a class="cite" href="#" data-jump="ref-22">[22]</a></th><td class="left">Their simulated 2021 results understate how often Verstappen finished in the top two. Our forward simulation shows a similar pattern; it is not a matched test of the two models.</td></tr>
-        <tr><th scope="row" class="left">Teammate Elo project <a class="cite" href="#" data-jump="ref-23">[23]</a></th><td class="left">A reconstruction of its simpler teammate-only method can be tested on the same 2023 duels as our ratings. The results are below.</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <h4>Reading the race-ranking score</h4>
-  <p>
-    Rane uses <b>Kendall’s tau</b>: the agreement between the predicted order and the order in which drivers finish. Higher is better; 1 is a perfect order and 0 indicates equal numbers of concordant and discordant pairs when there are no ties. We score 228 races, using driver and car ratings from before each weekend and excluding non-finishers. The study also excludes non-finishers, but its exact entrant list is not available for a matched comparison. This score mostly tests the <i>combined</i> driver and car, not whether the split is correct.
-  </p>
-  <h4>Teammates in 2023</h4>
-  <p>
-    Here both methods forecast the same teammate duels before each weekend. For races we keep pairs who both finished on the lead lap with recorded times; for qualifying we compare each driver’s fastest recorded session time. Accuracy is the share of winners picked correctly. The <b>Brier score</b> judges the probabilities as well: lower is better and a 50–50 forecast scores 0.25.
-  </p>
-  <div class="table-wrap">
-    <table class="params">
-      <thead><tr><th scope="col" class="left">Test</th><th scope="col">Our ratings</th><th scope="col">Teammate Elo</th></tr></thead>
-      <tbody>
-        <tr><th scope="row" class="left">Race accuracy · 118 duels</th><td>70.3%</td><td>75.4%</td></tr>
-        <tr><th scope="row" class="left">Race Brier score</th><td>0.190</td><td>0.189</td></tr>
-        <tr><th scope="row" class="left">Qualifying accuracy · 215 duels</th><td>70.2%</td><td>67.0%</td></tr>
-        <tr><th scope="row" class="left">Qualifying Brier score</th><td>0.195</td><td>0.200</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <p>
-    Race uses our portable hybrid driver rating; qualifying uses the published qualifying estimate. The Elo column is our reconstruction from the project’s published rules, not a run of its original code. Both update through the season. A paired weekend bootstrap for the accuracy difference (ours minus the reconstruction) gives −5.1 percentage points, 95% interval −10.9 to 0.0 in races, and +3.3 points, interval −2.3 to +8.8 in qualifying. The same teammates recur across weekends, and the hybrid was selected on historical data; these intervals do not capture all dependence or selection uncertainty. Neither comparison establishes a winner.
-  </p>
-  <h4>What the simulations can and cannot tell us</h4>
-  <p>
-    For a distributional check, we add a Plackett–Luce ranking rule to pre-weekend ratings and simulate orders conditional on the actual finishers. In 2021, Verstappen finished in the top two 18 times in 19 finishes; 2,000 simulations per race average 10.61. This discrepancy is a prompt for investigation, not a measured probability of model failure: the extension omits hybrid and parameter uncertainty, retirement and race-day information. It is not directly comparable with a posterior using later results. Our ratings do not directly predict qualifying times in seconds.
-  </p>
-  <p>
-    Separating driver and constructor effects is established work, not a claim of novelty here. The contribution of this page is the combination of dated, transferable ratings with a direct frozen-move stress test and explicitly qualified comparisons. All these historical periods were inspected while selecting our hybrid. The frozen team-move test in Part 5 is more directly relevant to portability, but it too has limitations.
-  </p>
+<section id="method-validation" class="method-part">
+  <h3>8. Check forecasts and check the driver–car split</h3>
+  <p>A model can forecast packages well while assigning too much credit to their drivers. We therefore evaluated both prediction and separation before adopting this model.</p>
+  <p>The replay starts in 1994. The model settings were selected from past-only predictions in 2002–2007, after an initial warm-up. We then assessed four chronological blocks: 2008–2011, 2012–2015, 2016–2020 and 2021–2025. Each block’s probability calibration used earlier years only. The 2026 season is reported as monitoring, separately from those historical blocks. Later production calibration refreshes at the start of each year using available earlier seasons.</p>
+  <p>Every scored weekend was predicted before its observations updated the model. <a class="cite" href="#" data-jump="ref-8">[8]</a> All candidates faced the same target pairs. Each weekend had equal weight in the aggregate scores, preventing a larger grid from dominating. Because the final candidate was chosen after examining retrospective comparisons, these results are not an untouched prospective trial.</p>
+  <table><thead><tr><th>Historical comparison, 2008–2025</th><th>Previous ratings</th><th>Unified model</th></tr></thead><tbody>
+    <tr><td>Actual-result forecast log loss, with the same calibration and risk treatment; lower is better</td><td>0.53172</td><td>0.53012</td></tr>
+    <tr><td>Qualifying margin error</td><td>Reference</td><td>20.8% lower</td></tr>
+    <tr><td>Race-pace margin error</td><td>Reference</td><td>15.3% lower</td></tr>
+    <tr><td>Frozen team-change comparison log loss; lower is better</td><td>0.67799</td><td>0.67926</td></tr>
+  </tbody></table>
+  <p>Log loss measures the quality of probabilities: confident wrong answers cost more than cautious ones. <a class="cite" href="#" data-jump="ref-7">[7]</a> A constant 50–50 prediction scores about 0.693. We also report the Brier score, the mean squared probability error. <a class="cite" href="#" data-jump="ref-6">[6]</a> The forecast improvement over equally calibrated previous ratings was small; a season-resampled 95% interval for the loss difference was approximately −0.00313 to −0.00009.</p>
+  <p>The timing improvements were larger. Frozen team-change performance was slightly worse, with an uncertainty interval spanning improvements and regressions. In the original, field-centred comparison, ratings also moved more: the 90th-percentile overall change rose from about 2.41 to 3.57 points, or about 24% after normalising by field spread. Those costs are part of the decision, not hidden exceptions.</p>
+  <p>An earlier publication change removed immediate field centring from the saved model. The display now uses the gradual 20-weekend reference described above. This changes chart levels and their dated changes, while retaining the saved model, uncertainty bars, within-weekend gaps and all forecasts, including mixed-date scenarios. It does not refit, slow learning or smooth away individual revisions.</p>
+  <h4>Why we kept one strength timescale</h4>
+  <p>We also compared no recent form, a separately fitted form correction, and a joint filter with slow strengths plus fast deviations that decay toward zero. Without that decay, slow and fast values would be interchangeable: only their sum is observed. The fast-state interpretation therefore depends on the assumed timescale; it is not a second direct measurement of ability.</p>
+  <p>Historical result log loss was 0.53012 without form, 0.53114 with external form, and 0.52976 with embedded form. The embedded gain was small, inconsistent across periods and below the predeclared 0.001 improvement threshold; its season-resampled interval included zero. Timing errors improved slightly, but total ratings moved substantially more. Letting a prediction layer learn how to use form did not change the decision. We retained one evolving strength estimate for each output.</p>
+  <h4>What the grid adds</h4>
+  <p>On the same pairs with two valid, distinct starting positions, historical log loss fell from 0.52805 to 0.50465 with the compact grid model. Every historical block improved; the season-resampled interval for the loss difference was approximately −0.03100 to −0.01618. This is a forecast with extra information, not an improvement in Thursday forecasting. Its comparison uses a smaller, grid-covered sample than the all-pair scores above.</p>
+  <p>Reweighting all six driver/car strengths, adding circuit interactions, adding a small nonlinear extension and applying another probability-calibration stage did not justify their extra complexity. A separate check using known, realized wet-weather labels also failed to establish a useful gain; those labels were never supplied to the unconditional Thursday forecast. No strong claim about future weather forecasts follows from that check.</p>
+  <p>We also used synthetic worlds with known driver and car strengths, including shared conditions, specialisation, car changes, noisy observations and persistent driver–car fit. This checks whether the model can recover the quantities it claims to estimate when the truth is known. It also exposed the uncertainty limitation under persistent fit.</p>
+  <p>The unified model was adopted for a coherent single posterior, explicit targets and clearer treatment of evidence, alongside competitive predictive results. It is not a claim that every diagnostic improved.</p>
+  <div id="methodologyValidationSummary" class="note"></div>
 </section>
 
 <section id="method-limits" class="method-part">
-  <h3>7. Limits and open problems</h3>
-  <ul>
-    <li>The split between driver and car is an assumption, informed by teammates, qualifying and team moves. The hybrid’s bars carry only the filter covariance; they omit uncertainty from the blend and do not flag which ratings travel well.</li>
-    <li>
-      <b>Drivers in a new car remain hard to forecast.</b> Driver–car interaction and adaptation are possible explanations, but the transfer test does not identify their contributions. There are only a few dozen moves to study, and frozen-transfer loss remains close to the coin-flip loss in the periods shown.
-    </li>
-    <li>The filter often assigns wider uncertainty to cross-team gaps than teammate gaps. These model-derived bars omit uncertainty in the complete blend and may understate uncertainty in the split.</li>
-    <li>The ratings see results and lap times. Tyre choice, pit stops, safety cars, penalties, practice sessions and component upgrades enter only through the results they produce. A recorded power-unit replacement by itself does not identify a pace gain.</li>
-    <li>Little is known about a new driver, who takes a few races to find a level. A driver who has only ever raced one team is placed through that team’s other drivers.</li>
-    <li>Retirement risk is tracked separately and does not feed back into the pace ratings, beyond the weight a retirement carries as a comparison.</li>
-    <li>A rating is relative to the field of its time. Ratings from different eras can be compared as a thought experiment, not as a measurement.</li>
-  </ul>
+  <h3>9. Know what remains uncertain</h3>
+  <p><b>Driver and car ability are not separately observable.</b> Shared machinery, stable skill and a connected teammate network are working assumptions. Sparse connections, unequal treatment and persistent fit can undermine the split. Better forecasting alone cannot settle that problem.</p>
+  <p><b>The observations are selective.</b> Useful lap coverage differs by era, and the filtering rules select a subset of racing conditions. Overall learning from normal finishers avoids interpreting mechanical failure as weakness, but it also selects who supplies finishing-order evidence. The separate hazard model helps forecasting; it does not erase every selection effect.</p>
+  <p><b>The uncertainty is conditional and approximate.</b> Pairwise observations are dependent; the Gaussian approximation is local; fitted hyperparameters are treated as fixed. Modelling errors are not fully represented by the bars.</p>
+  <p><b>The outputs have distinct meanings.</b> Overall strength reflects repeatable competitiveness in observed race results, which can include the consequences of qualifying and track position. Race pace seeks a more comparable speed measurement but cannot perfectly remove traffic and strategy. Neither is an innate-talent score.</p>
+  <p><b>Forecasts have a defined scope.</b> They are head-to-head estimates before the weekend or conditional on a supplied starting grid. A set of pairwise probabilities is not automatically a coherent prediction of the whole finishing order or a race-winner market. Historical car swaps and cross-era matchups are exploratory scenarios.</p>
+  <h4>Reproducibility</h4>
+  <p>The published data carries a fingerprint of the inputs and production source. Builds replay the shared measurement definitions through the same numerical implementation used in the validation study. The website reads those saved ratings; it does not run a second model. The latest publication is identified below.</p>
+  <p id="methodologyPublication"></p>
+  <details><summary>Technical specification</summary>
+    <p>Each entity has a three-dimensional latent state. Timing targets use fractional advantage divided by 0.003; a robust logistic observation distribution supplies their loss. Overall uses a Bernoulli logistic likelihood. The update combines the weighted observations with the full Gaussian prior, solves for the posterior mode and uses the inverse Hessian for covariance. Correlations with inactive entities are propagated through conditional Gaussian calculations.</p>
+    <p>One latent unit is displayed as 75 / ln(10) points. Overall forecasts approximate the logistic–Gaussian integral by dividing the latent gap by √(1 + πv/8), where v is its variance, and applying the calibrated slope. Timing forecasts include both latent uncertainty and calibrated observation noise; their 90% prediction interval is wider than uncertainty in the mean pace alone.</p>
+    <p>Source responsibilities: <code>packages/core/node/unified-evidence.mjs</code> defines observations; <code>packages/core/python/unified_model.py</code> updates the state; <code>unified_calibration.py</code> calibrates pre-weekend predictions; <code>unified_grid.py</code> fits the conditional grid layer; <code>packages/core/node/build-unified.mjs</code> publishes the dated ratings; <code>packages/core/src/unified/</code> computes browser forecasts; <code>site/js/rating-reference.js</code> applies the display-only reference. Its dated values are saved separately in <code>data/rating-reference.json</code> so the first-screen ratings and full history agree. The original study and validation protocol are in <code>research/unified-ratings/</code>; the form and prediction-layer comparison is in <code>research/unified-form/</code>.</p>
+  </details>
 </section>
-
-<section id="method-settings" class="method-part">
-  <h3>8. Settings</h3>
-  <p>
-    The hybrid blend uses the shares in Part 3 and an online learner with a {{hybrid.ranking.learningRate}}-point gradient step, teammate weight {{hybrid.ranking.teammateWeight}} and one winter retention of {{hybrid.ranking.winterRetention}}. These values come from the shipped <code>hybrid.js</code> preset. The rounded filter settings and fitted multipliers below also come from shipped code. There is no production arrival penalty. A shared information fraction {{informationFraction}} and graph share {{graph.share}} with {{graph.halfLifeYears}}-year evidence decay define the current stability policy.
-  </p>
-  <div class="table-wrap" id="methodologyParams"></div>
-  <h4>Scoring, reliability and scale</h4>
-  <p>
-    These settings fix what is scored (“Fixed”), how retirements are tracked and the unit of the ratings. They are shared by the qualifying and the race model.
-  </p>
-  <div class="table-wrap" id="methodologyScoring"></div>
-</section>
-
 <section id="method-references" class="method-part">
-  <h3>9. References</h3>
-  <p>Numbers in square brackets in the text refer to this list. Each entry with a DOI links to the publisher’s record of the work.</p>
-  <h4>Reproducing the analysis</h4>
-  <p>
-    The <a href="https://github.com/francescobraicovich/car-or-driver" rel="noopener noreferrer">repository</a> contains the observations, model and evaluation code. In a checkout, <code>docs/hybrid.md</code> describes the published blend and scorecards; <code>packages/research/node/mover-strict.mjs</code> defines the frozen transfer test. Run <code>npm run research:literature-benchmark</code> and <code>npm run research:rane-benchmark</code> for the comparisons in Part 6; their reports in <code>research/</code> document samples, assumptions and fingerprints. The data provenance is in <code>data/README.md</code>.
-  </p>
+<h3>10. Sources and further reading</h3>
+<p>These sources explain the statistical methods and data used here and in Insights. They provide context; no paper validates this particular implementation. The repository’s production specification and study contain the exact model and tests.</p>
   <h4>Methods behind the ratings and the forecasts</h4>
   <ol class="references" start="1">
     <li id="ref-1">Bradley, R. A., &amp; Terry, M. E. (1952). Rank analysis of incomplete block designs: I. The method of paired comparisons. <i>Biometrika</i>, 39(3/4), 324–345. <a href="https://doi.org/10.2307/2334029" rel="noopener noreferrer">https://doi.org/10.2307/2334029</a></li>
@@ -624,12 +181,6 @@ export const CONTENT_HTML = String.raw`
     <li id="ref-18">Jolpica-F1. <i>Jolpica-F1: free and open-source Formula 1 API</i> (data under CC BY-NC-SA 4.0). Retrieved October 2026. <a href="https://github.com/jolpica/jolpica-f1" rel="noopener noreferrer">github.com/jolpica/jolpica-f1</a></li>
     <li id="ref-19">Trotman, J. <i>Formula 1 Race Data</i> and <i>Formula 1 Race Events</i> (Kaggle datasets listed as a source by RaceData). Retrieved October 2026. <a href="https://www.kaggle.com/datasets/jtrotman/formula-1-race-data" rel="noopener noreferrer">kaggle.com/datasets/jtrotman/formula-1-race-data</a></li>
   </ol>
-  <h4>Comparisons with other studies</h4>
-  <ol class="references" start="20">
-    <li id="ref-20">Rane, S. (2025). <i>Predicting Formula 1 Race Outcomes: Decomposing the Roles of Drivers and Constructors through Linear Modeling</i>. arXiv preprint. <a href="https://doi.org/10.48550/arXiv.2508.00200" rel="noopener noreferrer">https://doi.org/10.48550/arXiv.2508.00200</a></li>
-    <li id="ref-21">van Kesteren, E.-J., &amp; Bergkamp, T. (2023). Bayesian analysis of Formula One race results: disentangling driver skill and constructor advantage. <i>Journal of Quantitative Analysis in Sports</i>, 19(4), 273–293. <a href="https://doi.org/10.1515/jqas-2022-0021" rel="noopener noreferrer">https://doi.org/10.1515/jqas-2022-0021</a></li>
-    <li id="ref-22">Lindner, T., Almeida, R. J., Baştürk, N., &amp; Smeekes, S. (2026). <i>Drivers of Success: A Bayesian State-Space Model to Disentangling Latent Driver and Constructor Abilities in Formula One</i>. arXiv preprint. <a href="https://doi.org/10.48550/arXiv.2608.04629" rel="noopener noreferrer">https://doi.org/10.48550/arXiv.2608.04629</a></li>
-    <li id="ref-23">vietandang2512. <i>F1 True Driver Ability Measure</i>, code and methodology. Retrieved October 2026. <a href="https://github.com/vietandang2512/f1-driver-ability" rel="noopener noreferrer">github.com/vietandang2512/f1-driver-ability</a></li>
-  </ol>
+
 </section>
 `;

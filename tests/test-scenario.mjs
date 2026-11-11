@@ -2,9 +2,9 @@
 // with the live forecast's ratings.
 import assert from 'node:assert/strict';
 import { loadData } from '../packages/research/node/common.mjs';
-import { buildEloForecast } from '../packages/core/src/elo-forecast.js';
+import { buildStateSpace } from '../packages/core/src/state-space/build.js';
 import { forecastPair } from '../packages/core/src/forecast/prepare.js';
-import { resolveMoment, scenarioForecast, RATINGS_SCALE } from '../packages/core/src/forecast/scenario.js';
+import { resolveMoment, scenarioForecast } from '../packages/core/src/forecast/scenario.js';
 
 // 1) Moments on a synthetic career.
 {
@@ -38,21 +38,23 @@ import { resolveMoment, scenarioForecast, RATINGS_SCALE } from '../packages/core
 
 // 2) Real model.
 const ctx = await loadData('data');
-const model = buildEloForecast(ctx.raw, ctx.lapSnapshots, ctx.maps, {}, ctx.lapPace);
+const model = buildStateSpace(ctx.raw, ctx.lapSnapshots, ctx.maps, {}, ctx.lapPace);
 const latest = model.snaps.at(-1);
 const [first, second] = latest.drivers;
 const id = (d) => String(d.driverId);
 const now = (d) => ({ driverId: id(d), when: { kind: 'latest' }, carId: '' });
 
-// A scenario made of today's parts reproduces the live forecast's ratings step exactly.
+// A scenario made of today's parts uses the posted driver and car ratings.
 {
   const live = forecastPair(model, id(first), id(second));
   const s = scenarioForecast(model, now(first), now(second));
   assert.ok(!s.error, s.error);
-  assert.ok(Math.abs(s.gap - live.gap) < 1e-9, 'same rating gap as the live forecast');
-  assert.ok(Math.abs(s.pPace - live.breakdown.ratings) < 1e-12, 'same ratings-only probability');
+  const cars = new Map(latest.cars.map((car) => [String(car.constructorId), car]));
+  const postedGap = first.race - second.race + cars.get(String(first.constructorId)).race - cars.get(String(second.constructorId)).race;
+  assert.ok(Math.abs(s.gap - postedGap) < 1e-9, 'scenario uses the posted rating gap');
+  assert.ok(Math.abs(s.pPace - 1 / (1 + 10 ** (-postedGap / model.params.scale))) < 1e-12, 'scenario uses its stated rating scale');
   assert.ok(
-    Math.abs(s.p - 1 / (1 + Math.exp(-RATINGS_SCALE.cars * Math.log(s.prior / (1 - s.prior))))) < 1e-12,
+    Math.abs(s.p - 1 / (1 + Math.exp(-model.ss.scenario.cars * Math.log(s.prior / (1 - s.prior))))) < 1e-12,
     'recalibration is the stated scale',
   );
   assert.equal(Math.sign(s.p - 0.5), Math.sign(live.p - 0.5), 'agrees with the live forecast on who is ahead');
@@ -137,4 +139,4 @@ assert.ok(hamilton && alonso, 'known drivers present');
   const spread = [...model.wetFinal.values()];
   console.log(`wet skill: ${spread.length} drivers, range ${Math.min(...spread).toFixed(0)} to ${Math.max(...spread).toFixed(0)} points`);
 }
-console.log("PASS scenarios: moments resolve, today's parts match the live forecast, wet and cross-car matchups behave");
+console.log('PASS scenarios: moments resolve, posted ratings are used, and wet and cross-car matchups behave');

@@ -1,13 +1,9 @@
 // From the project's data to the harness's inputs, and the forecast layer's scores.
 //
-// The harness evaluates ratings on the exam's own observations (core/state-space/exam.js, collectExam), with the Elo benchmark's ratings on them
-// (core/elo-benchmark.js). Unless the caller opts in
-// to the holdout (data from 2016), the timeline is cut at 2015 BEFORE any filter runs: the filters are forward-only, so
-// cutting the end loses nothing, and no model setting under test can have seen the holdout.
+// The timeline is cut at 2015 before filters run unless holdout data are requested.
 import { finishStateSpace, ssContext, canonicalTeam, carLineage } from '../../core/src/state-space/build.js';
-import { collectExamWithElo } from '../../core/src/elo-benchmark.js';
+import { collectExam } from '../../core/src/state-space/exam.js';
 import { summarizeBacktest } from '../../core/src/backtest.js';
-import { buildEloForecast } from '../../core/src/elo-forecast.js';
 import { HOLDOUT_FROM, timelineFromExam } from './timeline.js';
 
 /**
@@ -15,13 +11,12 @@ import { HOLDOUT_FROM, timelineFromExam } from './timeline.js';
  * @param {{ holdout?: boolean }} [o]
  */
 export function prepareReal(data, { holdout = false } = {}) {
-  const { model, weekends, elo } = collectExamWithElo(data.raw, data.lapSnapshots, data.maps, {}, data.lapPace);
+  const { model, weekends } = collectExam(data.raw, data.lapSnapshots, data.maps, {}, data.lapPace);
   const n = holdout ? weekends.length : weekends.filter((w) => w.year < HOLDOUT_FROM).length;
   const timeline = timelineFromExam(weekends, model.snaps).slice(0, n);
   return {
     data,
     model,
-    elo,
     weekends,
     n,
     timeline,
@@ -56,12 +51,6 @@ export function forecastScores(model, n, { holdout = false } = {}) {
     };
   }
   return out;
-}
-
-/** Scores of the Elo model's own forecast layer (the Elo core plus its heads: a separate build, a few seconds). */
-export function eloForecastScores(prep, { holdout = false } = {}) {
-  const model = buildEloForecast(prep.data.raw, prep.data.lapSnapshots, prep.data.maps, {}, prep.data.lapPace);
-  return forecastScores(model, prep.n, { holdout });
 }
 
 /**

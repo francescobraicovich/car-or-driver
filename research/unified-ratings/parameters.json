@@ -1,0 +1,194 @@
+{
+  "inputHash": "d17da21e8d6958110aacf776e5450c40727c0b421049edab4408d72e3be80b33",
+  "dataFingerprint": "74915f70d16ea9ed6a7c34c1b044247b99a6151fb953a97cb13727c25df7f24e",
+  "trainingThrough": 2007,
+  "configurations": {
+    "control": {
+      "driver_correlation": 0.5,
+      "car_correlation": 0.5,
+      "noise": [
+        1.0,
+        1.0
+      ],
+      "driver_multiplier": 1.0,
+      "car_multiplier": 1.0
+    },
+    "pooling": {
+      "driver_correlation": 0.85,
+      "car_correlation": 0.5,
+      "noise": [
+        1.0,
+        1.0
+      ],
+      "driver_multiplier": 1.0,
+      "car_multiplier": 1.0
+    },
+    "noise": {
+      "driver_correlation": 0.5,
+      "car_correlation": 0.5,
+      "noise": [
+        1.9436995118945026,
+        1.62335504595748
+      ],
+      "driver_multiplier": 1.0,
+      "car_multiplier": 1.0
+    },
+    "adaptation": {
+      "driver_correlation": 0.5,
+      "car_correlation": 0.5,
+      "noise": [
+        1.0,
+        1.0
+      ],
+      "driver_multiplier": 2.0,
+      "car_multiplier": 2.0
+    },
+    "combined": {
+      "driver_correlation": 0.85,
+      "car_correlation": 0.5,
+      "noise": [
+        1.9436995118945026,
+        1.62335504595748
+      ],
+      "driver_multiplier": 2.0,
+      "car_multiplier": 2.0
+    }
+  },
+  "trials": [
+    {
+      "parameters": {
+        "driver_correlation": 0.5,
+        "car_correlation": 0.5,
+        "noise": [
+          1.0,
+          1.0
+        ],
+        "driver_multiplier": 1.0,
+        "car_multiplier": 1.0
+      },
+      "trainingScore": 2.036517273491704
+    },
+    {
+      "parameters": {
+        "driver_correlation": 0.0,
+        "car_correlation": 0.5,
+        "noise": [
+          1.0,
+          1.0
+        ],
+        "driver_multiplier": 1.0,
+        "car_multiplier": 1.0
+      },
+      "trainingScore": 2.0479142995275965
+    },
+    {
+      "parameters": {
+        "driver_correlation": 0.85,
+        "car_correlation": 0.5,
+        "noise": [
+          1.0,
+          1.0
+        ],
+        "driver_multiplier": 1.0,
+        "car_multiplier": 1.0
+      },
+      "trainingScore": 2.034044418653349
+    },
+    {
+      "parameters": {
+        "driver_correlation": 0.85,
+        "car_correlation": 0.0,
+        "noise": [
+          1.0,
+          1.0
+        ],
+        "driver_multiplier": 1.0,
+        "car_multiplier": 1.0
+      },
+      "trainingScore": 2.045427781880703
+    },
+    {
+      "parameters": {
+        "driver_correlation": 0.85,
+        "car_correlation": 0.85,
+        "noise": [
+          1.0,
+          1.0
+        ],
+        "driver_multiplier": 1.0,
+        "car_multiplier": 1.0
+      },
+      "trainingScore": 2.035021697618123
+    },
+    {
+      "parameters": {
+        "driver_correlation": 0.5,
+        "car_correlation": 0.5,
+        "noise": [
+          1.9436995118945026,
+          1.62335504595748
+        ],
+        "driver_multiplier": 1.0,
+        "car_multiplier": 1.0
+      },
+      "trainingScore": 1.8880286324231317
+    },
+    {
+      "parameters": {
+        "driver_correlation": 0.5,
+        "car_correlation": 0.5,
+        "noise": [
+          1.0,
+          1.0
+        ],
+        "driver_multiplier": 0.5,
+        "car_multiplier": 1.0
+      },
+      "trainingScore": 2.047075436492089
+    },
+    {
+      "parameters": {
+        "driver_correlation": 0.5,
+        "car_correlation": 0.5,
+        "noise": [
+          1.0,
+          1.0
+        ],
+        "driver_multiplier": 2.0,
+        "car_multiplier": 1.0
+      },
+      "trainingScore": 2.0234708714530796
+    },
+    {
+      "parameters": {
+        "driver_correlation": 0.5,
+        "car_correlation": 0.5,
+        "noise": [
+          1.0,
+          1.0
+        ],
+        "driver_multiplier": 2.0,
+        "car_multiplier": 0.5
+      },
+      "trainingScore": 2.0660812107316993
+    },
+    {
+      "parameters": {
+        "driver_correlation": 0.5,
+        "car_correlation": 0.5,
+        "noise": [
+          1.0,
+          1.0
+        ],
+        "driver_multiplier": 2.0,
+        "car_multiplier": 2.0
+      },
+      "trainingScore": 1.9869253160082896
+    }
+  ],
+  "runtime": {
+    "python": "3.13.1 (main, Dec  3 2024, 17:59:52) [Clang 16.0.0 (clang-1600.0.26.4)]",
+    "numpy": "2.1.2",
+    "scipy": "1.14.1"
+  }
+}

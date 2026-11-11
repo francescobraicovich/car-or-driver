@@ -1,4 +1,4 @@
-// Diagnosis tools (docs/diagnosis.md): rich duel records for movers and stayers under the strict prior-rating reading, and a logistic regression
+// Diagnosis tools (research/evaluation/README.md): rich duel records for movers and stayers under the strict prior-rating reading, and a logistic regression
 // with cluster-robust standard errors. Nothing here changes a model.
 import { findMoves } from '../../eval/src/index.js';
 

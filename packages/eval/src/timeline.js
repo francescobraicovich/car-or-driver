@@ -4,7 +4,7 @@
 //
 // A weekend: { i, year, round, date, raceId, wet, rows: [{ driverId, constructorId }],
 //              obs: { race: Obs[], qual: Obs[] } }
-// An Obs is the filter's own observation (see state-space/filter.js): { x, y, cx, cy, o, w, same, src, pElo? } where x and y
+// An Obs is the filter's own observation (see state-space/filter.js): { x, y, cx, cy, o, w, same, src } where x and y
 // are driver ids, o = 1 when x finished ahead (or was faster), w the exam's weight and `same` marks teammates.
 
 /**
@@ -29,7 +29,7 @@ export function timelineFromExam(weekends, snaps = null) {
 /** The weekends up to and including `year` (the filters are forward-only, so cutting the end loses nothing). */
 export const truncateTimeline = (timeline, lastYear) => timeline.filter((w) => w.year <= lastYear);
 
-/** The evaluation windows of the project (docs/state-space.md). The last one has been read once: see `holdout`. */
+/** The evaluation windows of the project (docs/hybrid.md). The last one has been read once: see `holdout`. */
 export const WINDOWS = [
   { id: 'fit', label: '2002-2007', from: 2002, to: 2007 },
   { id: 'w2', label: '2008-2011', from: 2008, to: 2011 },

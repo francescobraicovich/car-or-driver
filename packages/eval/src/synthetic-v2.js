@@ -3,7 +3,7 @@
 // v1 (synthetic.js) draws ONE performance per driver per weekend (level plus Gumbel noise) and derives every observation from that
 // ranking. Real weekends have lap times in stints, retirements, rain, safety cars, strategy luck, development steps, a driver-car fit and a
 // qualifying session that is related to the race but not the same. v2 simulates those mechanisms and then builds the observations with the
-// exam's OWN code (buildRaceObservations, buildQualObservations, parseLapPace and the weights of elo-core.js), so the `finish`, `paceW`,
+// exam's OWN code (buildRaceObservations, buildQualObservations, parseLapPace and the fixed exam weights), so the `finish`, `paceW`,
 // `partial` and `qual` observations come out of simulated lap times, results and snapshots exactly as they do from the real files.
 //
 // Opt-in: `syntheticWorld(..., { version: 2, ... })` or syntheticStudy(..., { world: { version: 2 } }). v1 is untouched.
@@ -18,7 +18,7 @@ import { rng } from './stats.js';
 import { buildRaceObservations } from '../../core/src/observations.js';
 import { parseLapPace } from '../../core/src/lap-pace.js';
 import { buildQualObservations } from '../../core/src/qualifying.js';
-import { ELO_EXAM } from '../../core/src/exam.js';
+import { EXAM } from '../../core/src/exam.js';
 
 const SESSIONS = ['race', 'qual'];
 
@@ -93,7 +93,7 @@ const interp = (table, year) => {
 /**
  * The latent dynamics of a v2 world, per session, fixed (not read from the shipped settings, so that the same world is a fair test of any
  * settings, now or after the shipped ones change). They are the shipped settings of the baseline for the process noise, with the spreads
- * (`sdC`, `sdNew`, `yearD`) the calibration against the real data chose (research/eval, docs/evaluation.md "Simulator v2"): the truth is
+ * (`sdC`, `sdNew`, `yearD`) the calibration against the real data chose (docs/backtesting.md): the truth is
  * not the filter's prior.
  */
 export const WORLD_V2_DYNAMICS = {
@@ -147,8 +147,8 @@ const fmtTime = (sec) => {
   return `${m}:${s.toFixed(3).padStart(6, '0')}`;
 };
 
-const CAP = ELO_EXAM.cap;
-const ALPHA = ELO_EXAM.alpha;
+const CAP = EXAM.cap;
+const ALPHA = EXAM.alpha;
 const margin = (g) => Math.min(CAP, 1 + ALPHA * Math.log2(Math.max(1, g)));
 
 const EDGES = [0, 1, 3, 6, 0.2, 0.42, 0.67, 1];
@@ -299,9 +299,9 @@ function simulateRace({ w, parts, p, r, state, covered, wetFlag, year }) {
     maxLaps: Math.max(1, winner ? L : Math.max(...rows.map((x) => x.laps), 1)),
     lapPace,
     lapSnapshots,
-    orderW: ELO_EXAM.orderW,
-    paceW: ELO_EXAM.paceW,
-    beta: ELO_EXAM.partialExp,
+    orderW: EXAM.orderW,
+    paceW: EXAM.paceW,
+    beta: EXAM.partialExp,
   });
   return built.observations.map((ob) => {
     const same = ob.x.constructorId === ob.y.constructorId;
@@ -312,7 +312,7 @@ function simulateRace({ w, parts, p, r, state, covered, wetFlag, year }) {
       cx: ob.x.constructorId,
       cy: ob.y.constructorId,
       o: ob.obs,
-      w: gw * (same ? ELO_EXAM.tmBoost : 1),
+      w: gw * (same ? EXAM.tmBoost : 1),
       same,
       src: ob.source,
       base: ob.base,
@@ -371,7 +371,7 @@ function simulateQual({ parts, p, r, state, year }) {
       cx: ob.x.constructorId,
       cy: ob.y.constructorId,
       o: ob.obs,
-      w: gw * (same ? ELO_EXAM.qTmBoost : 1),
+      w: gw * (same ? EXAM.qTmBoost : 1),
       same,
       src: 'qual',
       seg: ob.seg,

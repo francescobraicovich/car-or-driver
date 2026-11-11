@@ -17,7 +17,7 @@ import { carHazard, createHazards, driverHazard } from '../hazard.js';
 
 /**
  * @param cache  caller-owned object reused across passes over the SAME data: the prepared weekends and the race observations are stored
- *               in it, so another pass over the exam (the Elo benchmark's) does not build them again.
+ *               in it, so repeated passes do not rebuild them.
  * @returns { model, weekends, cache }  model: the skeleton (names, snapshots, counters, params); weekends[i] matches model.snaps[i].
  */
 export function collectExam(raw, lapSnapshots, maps, _params, lapPace = null, cache = {}) {

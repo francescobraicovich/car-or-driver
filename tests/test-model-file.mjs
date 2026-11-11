@@ -6,12 +6,10 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { loadData } from '../packages/research/node/common.mjs';
-import { buildStateSpace } from '../packages/core/src/state-space/build.js';
-import { eloBenchmark } from '../packages/core/src/elo-benchmark.js';
+import { buildUnified } from '../packages/core/node/build-unified.mjs';
 import { deserialize, serialize } from '../packages/core/src/json-serialization.js';
 import { summarizeBacktest } from '../packages/core/src/backtest.js';
 import { forecastH2H, forecastPreWeekend } from '../packages/core/src/forecast/head-to-head.js';
-import { ratingsAlone } from '../packages/core/src/state-space/forecast.js';
 import { scenarioForecast } from '../packages/core/src/forecast/scenario.js';
 import { withHistories } from '../packages/core/src/weekend-histories.js';
 import { FILE_FORMAT, driverProfiles, trimmedModel } from '../tools/build-model.mjs';
@@ -42,11 +40,9 @@ assert.throws(() => serialize({ $: 1 }), TypeError);
 const { sourceHash, lastRace } = await modelSourceHash();
 const file = deserialize(await readFile('data/model.json', 'utf8'));
 assert.equal(file.format, FILE_FORMAT);
-assert.ok(file.model.forecastState.heads, 'the saved model carries its own forecast definitions');
-assert.ok(
-  Object.values(file.model.forecastState.heads).every((bundle) => Object.values(bundle).every((head) => head.family === 'linear')),
-  'production forecasts use only linear heads',
-);
+assert.equal(file.model.params.modelKind, 'unified');
+assert.equal(file.model.forecastState.kind, 'unified');
+assert.ok(!file.model.forecastState.heads && !file.model.formShifts && !file.model.ss, 'no hybrid or form state is published');
 assert.equal(file.sourceHash, sourceHash, 'data/model.json was built from other data or other model code: run node tools/build-model.mjs');
 assert.deepEqual(file.lastRace, lastRace);
 const latestFile = deserialize(await readFile('data/model-latest.json', 'utf8'));
@@ -54,7 +50,7 @@ assert.equal(latestFile.sourceHash, sourceHash, 'data/model-latest.json is out o
 const lastWeekend = file.model.snaps.at(-1);
 assert.deepEqual(
   latestFile.model.snaps,
-  [{ ...lastWeekend, diag: undefined, ssDiag: undefined }].map(({ diag, ssDiag, ...rest }) => rest), // eslint-disable-line no-unused-vars
+  [{ ...lastWeekend, diag: undefined, ssDiag: undefined, unified: undefined }].map(({ diag, ssDiag, unified, ...rest }) => rest), // eslint-disable-line no-unused-vars
   'the first-screen file carries the latest weekend of the full file',
 );
 assert.equal(latestFile.model.dh.size, lastWeekend.drivers.length, 'and one earlier row for each driver on it');
@@ -91,9 +87,7 @@ assert.ok(
   !/\d{4}-\d{2}-\d{2}/.test(JSON.stringify([file.driverProfiles, latestFile.driverProfiles])),
   'no full birth date is in either profile block',
 );
-const fresh = buildStateSpace(data.raw, data.lapSnapshots, data.maps, { modelKind: 'state-space' }, data.lapPace, {
-  benchmark: eloBenchmark,
-});
+const fresh = await buildUnified(data);
 
 const TOLERANCE = 1e-5; // the forecast state is kept to 9 digits, so sums of it move by about 1e-5 points: a thousandth of the 0.01 a page can show
 // Weekend rows keep 6 significant digits (about 0.001 point near 1000), enough for what-if probabilities while the pages display whole points.
@@ -116,8 +110,7 @@ function same(expected, actual, path) {
     compared++;
     assert.ok(Math.abs(actual - expected) <= allowance(path, expected), `${path}: ${expected} against ${actual}`);
   } else if (expected && typeof expected === 'object' && !ArrayBuffer.isView(expected)) {
-    // A forecast quotes the rows it was made from, benchmark ratings included; the file leaves those out (checked separately below).
-    const keysOf = (object) => Object.keys(object).filter((key) => !/^elo[A-Z]/.test(key));
+    const keysOf = (object) => Object.keys(object);
     assert.deepEqual(keysOf(actual).sort(), keysOf(expected).sort(), `${path}: keys`);
     for (const key of keysOf(expected)) same(expected[key], actual[key], `${path}.${key}`);
   } else assert.deepEqual(actual, expected, path);
@@ -126,14 +119,9 @@ same(trimmedModel(fresh), shipped, 'model');
 assert.ok(compared > 100000, 'the comparison covered the whole model');
 for (const snap of shipped.snaps)
   assert.ok(!('audit' in snap) && !('eloDiag' in snap) && !('eloRace' in snap.drivers[0]), 'trimmed fields are absent');
-assert.ok(
-  shipped.wetFinal instanceof Map && shipped.affFinal instanceof Map && shipped.wetFinal.size > 0,
-  'circuit and wet-weather skills are kept',
-);
-
 // what a page computes from the model
 const figures = (model) => ({
-  recent: summarizeBacktest(model, { burnIn: 20, fromYear: 2016, diag: 'ssDiag' }).overall,
+  recent: summarizeBacktest(model, { burnIn: 20, fromYear: 2016 }).overall,
   seasons: summarizeBacktest(model, { burnIn: 20, fromYear: 2008 }).seasons,
 });
 same(figures(fresh), figures(shipped), 'methodology figures');
@@ -141,20 +129,14 @@ const [a, b, c] = shipped.snaps
   .at(-1)
   .drivers.slice(0, 3)
   .map((d) => d.driverId);
-const circuitId = shipped.snaps.at(-1).circuitId;
 // A forecast carries the latest weekend it started from; no page reads its audit tables, which the file leaves out.
 const withoutSnapTables = (result) => (result?.snap ? { ...result, snap: { year: result.snap.year, name: result.snap.name } } : result);
 const forecasts = (model) =>
   [
-    forecastH2H(model, a, b, 60, { gridA: 1, gridB: 8 }),
-    forecastPreWeekend(model, a, c, { L: 60, circuitId }),
-    ratingsAlone(model, b, c),
-    scenarioForecast(
-      model,
-      { driverId: a, when: { kind: 'latest' } },
-      { driverId: b, when: { kind: 'prime' } },
-      { wet: true, circuitId, L: 60 },
-    ),
+    forecastH2H(model, a, b, 60),
+    forecastH2H(model, a, b, 60, { gridA: 3, gridB: 8 }),
+    forecastPreWeekend(model, a, c, { L: 60 }),
+    scenarioForecast(model, { driverId: a, when: { kind: 'latest' } }, { driverId: b, when: { kind: 'prime' } }, { L: 60 }),
   ].map(withoutSnapTables);
 same(forecasts(fresh), forecasts(shipped), 'forecasts');
 console.log(

@@ -1,0 +1,7 @@
+{
+  "researchOnly": true,
+  "productionSourceHash": "dc909062c7273b74",
+  "predictionRows": 359949,
+  "maximumPredictionDifference": 0.0,
+  "maximumPosteriorGradient": 9.992295313399069e-08
+}

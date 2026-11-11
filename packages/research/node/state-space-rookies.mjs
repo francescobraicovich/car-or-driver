@@ -1,4 +1,4 @@
-// How new drivers enter the state-space ratings (docs/state-space.md).
+// How new drivers enter the state-space ratings (docs/hybrid.md).
 //
 //   node packages/research/node/state-space-rookies.mjs scan               grid of rookie settings, both sessions
 //   node packages/research/node/state-space-rookies.mjs fit                coordinate search on 2002-2011, validated on 2012-2015

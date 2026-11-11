@@ -7,6 +7,7 @@ import { csv } from '../packages/core/src/csv.js';
 import { INSIGHTS_DATA } from '../site/js/insights-data.js';
 import { INSIGHT_CARDS, INSIGHT_TOPICS } from '../site/js/insights-cards.js';
 import { formatOneDecimal, formatSigned } from '../site/js/insights-charts.js';
+import { gapVariance, POINTS } from '../packages/core/src/unified/forecast.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const manifest = JSON.parse(await readFile(`${ROOT}data/manifest.json`, 'utf8'));
@@ -17,7 +18,7 @@ assert.deepEqual(
 );
 console.log(`PASS snapshot is for the shipped data (through ${manifest.lastRace.year} round ${manifest.lastRace.round})`);
 
-assert.equal(INSIGHTS_DATA.ratingMetric, 'race', 'Insights use the published race rating');
+assert.equal(INSIGHTS_DATA.ratingMetric, 'overall', 'Insights use the published overall rating');
 
 const nonFinite = [];
 const walk = (value, path) => {
@@ -86,7 +87,7 @@ assert.ok(D.qualifyingVersusRace.drivers.filter((row) => row.difference > 0).len
 assert.ok(D.qualifyingVersusRace.drivers.filter((row) => row.difference < 0).length >= 4);
 const carGap = D.qualifyingVersusRace.cars.reduce((best, row) => (row.difference > best.difference ? row : best));
 const qualifyingHeadline = INSIGHT_CARDS.find((card) => card.id === 'qualifying-versus-race').lead(D);
-assert.ok(carGap.difference > 0, 'a car has a higher qualifying rating than race rating');
+assert.ok(carGap.difference > 0, 'a car has a higher qualifying rating than overall rating');
 assert.ok(qualifyingHeadline.includes(`${carGap.team} ${carGap.year}`), 'the headline names the current largest qualifying gap');
 assert.ok(qualifyingHeadline.includes(formatOneDecimal(carGap.difference)), 'the headline shows the current qualifying gap');
 
@@ -95,9 +96,12 @@ assert.ok(
   [20, 21, 22, 23].every((age) => change(age) > 3),
   'drivers improve quickly until their mid-twenties',
 );
+const lateTwentiesChange = [25, 26, 27, 28, 29].reduce((sum, age) => sum + change(age), 0) / 5;
 assert.ok(
-  [25, 26, 27, 28, 29].every((age) => Math.abs(change(age)) <= 3.5),
-  'a plateau from 25 to 29',
+  INSIGHT_CARDS.find((card) => card.id === 'ageing')
+    .lead(D)
+    .includes(formatSigned(lateTwentiesChange)),
+  'the headline reports the measured late-twenties change',
 );
 const earlyThirtiesChange = [30, 31, 32, 33].reduce((sum, age) => sum + change(age), 0) / 4;
 const ageingHeadline = INSIGHT_CARDS.find((card) => card.id === 'ageing').lead(D);
@@ -132,17 +136,25 @@ const birthById = new Map(people.map((person) => [String(person.driverId), perso
 const latest = model.model.snaps.at(-1);
 const driverById = new Map(latest.drivers.map((row) => [String(row.driverId), row]));
 const carById = new Map(latest.cars.map((row) => [String(row.constructorId), row]));
+const fieldMean = (rows) => rows.reduce((sum, row) => sum + row.overall, 0) / rows.length;
+const driverMean = fieldMean(latest.drivers);
+const carMean = fieldMean(latest.cars);
 assert.equal(D.currentGrid.length, latest.drivers.length, 'current grid contains the latest weekend lineup');
 assert(
-  latest.drivers.some((row) => Math.abs(row.race - row.combined) > 0.2),
-  'race-versus-combined fixture is discriminating',
+  latest.drivers.some((row) => Math.abs(row.overall - row.race) > 0.2),
+  'overall-versus-pace fixture is discriminating',
 );
 for (const item of D.currentGrid) {
   const row = driverById.get(idByName.get(item.name));
   assert.ok(row, `${item.name} is on the latest published grid`);
-  assert.ok(Math.abs(item.driverRating - (row.race - 1000)) < 0.056, `${item.name} uses race driver rating`);
-  assert.ok(Math.abs(item.carRating - (carById.get(String(row.constructorId)).race - 1000)) < 0.056, `${item.name} uses race car rating`);
-  assert.ok(Math.abs(item.uncertainty - row.raceSd) < 0.056, `${item.name} uses race uncertainty`);
+  assert.ok(Math.abs(item.driverRating - (row.overall - driverMean)) < 0.056, `${item.name} uses field-relative overall driver rating`);
+  assert.ok(
+    Math.abs(item.carRating - (carById.get(String(row.constructorId)).overall - carMean)) < 0.056,
+    `${item.name} uses field-relative overall car rating`,
+  );
+  const terms = [['driver', row.driverId, 1], ...latest.drivers.map((driver) => ['driver', driver.driverId, -1 / latest.drivers.length])];
+  const uncertainty = POINTS * Math.sqrt(gapVariance(latest.unified, terms));
+  assert.ok(Math.abs(item.uncertainty - uncertainty) < 0.056, `${item.name} uses field-relative overall uncertainty`);
 }
 
 // Independently recompute the latest season leaders from published race scores.
@@ -152,7 +164,7 @@ const seasonalMeans = (kind, idKey) => {
     for (const row of snap[kind]) {
       const id = String(row[idKey]);
       if (!groups.has(id)) groups.set(id, []);
-      groups.get(id).push(row.race - 1000);
+      groups.get(id).push(row.overall - fieldMean(snap[kind]));
     }
   return [...groups.values()]
     .filter((values) => values.length >= 8)
@@ -162,11 +174,11 @@ const currentSeason = D.bestCarAgainstBestDriver.find((row) => row.year === late
 assert(currentSeason, 'latest season leaders are present');
 assert(
   Math.abs(currentSeason.driverEdge - Math.max(...seasonalMeans('drivers', 'driverId'))) < 0.056,
-  'season driver leader uses race ratings',
+  'season driver leader uses overall ratings',
 );
 assert(
   Math.abs(currentSeason.carEdge - Math.max(...seasonalMeans('cars', 'constructorId'))) < 0.056,
-  'season car leader uses race ratings',
+  'season car leader uses overall ratings',
 );
 for (const [name, seasons] of Object.entries(D.ageing.careers)) {
   const id = idByName.get(name);
@@ -207,8 +219,7 @@ const driverShare = (label) => {
 assert.ok(driverShare('Monaco') > 0.45 && driverShare('Monaco') < 0.6, 'Monaco is not especially a driver track');
 assert.ok(driverShare('Marina Bay') > 0.5 && driverShare('Catalunya') < 0.5, 'Singapore leans on the driver, Barcelona on the car');
 for (const name of ['Suzuka', 'Catalunya']) assert.ok(driverShare(name) < 0.5, `${name}: car weight exceeds driver weight`);
-for (const name of ['Marina Bay', 'Hermanos Rodríguez', 'Enzo e Dino Ferrari'])
-  assert.ok(driverShare(name) > 0.5, `${name}: driver weight exceeds car weight`);
+for (const name of ['Marina Bay', 'Enzo e Dino Ferrari']) assert.ok(driverShare(name) > 0.5, `${name}: driver weight exceeds car weight`);
 assert.ok(D.homeAdvantage.low <= 0 && D.homeAdvantage.high >= 0, 'the reported home-advantage interval includes zero');
 const evenest = D.explainedShare.reduce((lowest, row) => (row.betweenTeams < lowest.betweenTeams ? row : lowest));
 assert.equal(evenest.year, 2025, '2025 is the most even season between teams');

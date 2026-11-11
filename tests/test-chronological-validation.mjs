@@ -38,6 +38,15 @@ const moverRows = Object.fromEntries(
 );
 const folds = [{ from: 2008, to: 2009 }];
 const result = chronologicalValidation(idx, runs, moverRows, folds);
+assert.equal(result.folds[0].sessions.race.all.accuracy, 1, 'weighted accuracy counts correct predictions');
+const previousLogit = runs.race.z[6].adj[0];
+runs.race.z[6].adj[0] = 0;
+assert.equal(
+  chronologicalValidation(idx, runs, moverRows, folds).folds[0].sessions.race.all.accuracy,
+  59.5 / 60,
+  'a tied probability receives half a correct prediction',
+);
+runs.race.z[6].adj[0] = previousLogit;
 const original = result.folds[0].sessions.race.slope;
 runs.race.z.at(-1).adj.fill(-2);
 assert.equal(chronologicalValidation(idx, runs, moverRows, folds).folds[0].sessions.race.slope, original);

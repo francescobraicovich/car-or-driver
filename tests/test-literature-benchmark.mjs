@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import {
-  eloUpdate,
   pairedAccuracyInterval,
   probability,
   rankingLogProbability,
@@ -26,10 +25,6 @@ assert.throws(() => scorePairs([{ probability: 0.5, outcome: 2 }]));
 assert.ok(Math.abs(rankingLogProbability([0, 0, 0], 75) - Math.log(1 / 6)) < 1e-12);
 assert.ok(Math.abs(rankingLogProbability([75, 0], 75) - Math.log(10 / 11)) < 1e-12);
 assert.throws(() => rankingLogProbability([0], 75));
-const ratings = new Map();
-eloUpdate(ratings, 'a', 'b', 1);
-assert.equal(ratings.get('a'), 1512);
-assert.equal(ratings.get('b'), 1488);
 const randomA = seededRandom(9);
 const randomB = seededRandom(9);
 for (let i = 0; i < 10; i++) assert.deepEqual(simulateRanking([0, 20, 40], 75, randomA), simulateRanking([0, 20, 40], 75, randomB));

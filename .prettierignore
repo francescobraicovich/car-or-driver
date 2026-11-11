@@ -10,6 +10,8 @@ package-lock.json
 /research/stable-ratings
 /research/temporal-graph
 /research/prediction-markets
+# Its exact source bytes fingerprint the retained 3D reference assets.
+tools/build-stage-models.mjs
 /dist
 packages/core/src/elo-forecast-heads.js
 packages/core/src/state-space/forecast-heads.js

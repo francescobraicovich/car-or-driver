@@ -36,6 +36,7 @@
     <link rel="modulepreload" href="js/app.js" />
     <link rel="modulepreload" href="js/dom.js" />
     <link rel="modulepreload" href="js/model-loader.js" />
+    <link rel="modulepreload" href="js/rating-reference.js" />
     <link rel="modulepreload" href="js/state.js" />
     <link rel="modulepreload" href="js/utils.js" />
     <link rel="modulepreload" href="js/ratings-view.js" />
@@ -60,13 +61,6 @@
     <link rel="modulepreload" href="js/history-view.js" />
     <link rel="modulepreload" href="../packages/core/src/lineage.js" />
     <link rel="modulepreload" href="js/head-to-head-view.js" />
-    <link rel="modulepreload" href="../packages/core/src/backtest.js" />
-    <link rel="modulepreload" href="../packages/core/src/presets/tuned-elo.js" />
-    <link rel="modulepreload" href="../packages/core/src/presets/model-settings.js" />
-    <link rel="modulepreload" href="../packages/core/src/presets/state-space.js" />
-    <link rel="modulepreload" href="../packages/core/src/presets/learning.js" />
-    <link rel="modulepreload" href="../packages/core/src/presets/state-space-fit.js" />
-    <link rel="modulepreload" href="../packages/core/src/state-space/filter.js" />
     <script src="./js/boot-probe.js"></script>
     <script type="application/ld+json">
       {
@@ -184,7 +178,7 @@
               <div class="ledger-view-body">
                 <div class="head-to-head" id="headToHeadPanel" hidden>
                   <p class="sr-only">
-                    Pairwise performance forecasts from ratings and recent form, with retirement risks shown separately.
+                    Pre-weekend race-result forecasts from unified overall ratings, joint uncertainty and retirement risk.
                   </p>
                   <div class="head-to-head-pick">
                     <div class="head-to-head-side" id="headToHeadSideA">
@@ -222,24 +216,19 @@
                       <summary>Conditions <span class="head-to-head-state" id="headToHeadState"></span></summary>
                       <div class="controls">
                         <label class="field"
-                          >Conditions<select id="headToHeadWet">
-                            <option value="dry">Dry</option>
-                            <option value="wet">Wet</option>
-                          </select></label
-                        >
-                        <label class="field" id="headToHeadSessionField">Forecast timing<select id="headToHeadSession"></select></label>
-                        <label class="field"
                           >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
                         /></label>
-                        <label class="field">Circuit<select id="headToHeadCircuit"></select></label>
-                        <span id="headToHeadGridFields" class="controls" hidden>
+                        <div id="headToHeadGridFields" hidden>
                           <label class="field"
-                            >Grid slot, driver A<input id="headToHeadGridA" type="number" min="1" max="24" step="1" placeholder="1–24"
+                            >Driver A grid<input id="headToHeadGridA" type="number" min="1" max="40" step="1" placeholder="Unknown"
                           /></label>
                           <label class="field"
-                            >Grid slot, driver B<input id="headToHeadGridB" type="number" min="1" max="24" step="1" placeholder="1–24"
+                            >Driver B grid<input id="headToHeadGridB" type="number" min="1" max="40" step="1" placeholder="Unknown"
                           /></label>
-                        </span>
+                          <p class="head-to-head-grid-note">
+                            Optional: enter both starting positions. With either unknown, the forecast uses pre-weekend information.
+                          </p>
+                        </div>
                       </div>
                     </details>
                     <button type="button" class="info" id="headToHeadNote" hidden>i</button>
@@ -285,7 +274,7 @@
                 </select>
               </label>
             </header>
-            <p class="graph-intro">Part of our model ranks drivers by how they performed against their past teammates.</p>
+            <p class="graph-intro">Teammate comparisons connect the unified driver ratings across teams and seasons.</p>
             <details class="graph-guide">
               <summary>How to read this</summary>
               <div class="graph-guide-box">
@@ -294,19 +283,24 @@
                   teammates.
                 </p>
                 <p>
-                  Higher dots have stronger teammate results; left to right shows the average year each driver raced. Select a driver to see
-                  their links and head-to-head record.
+                  Higher dots have greater published overall strength; left to right shows the average year each driver raced. Select a
+                  driver to see their links and head-to-head record.
                 </p>
                 <p>
-                  The vertical score uses teammate results alone and centres around 1,000. The published driver rating also uses the rest of
-                  our model, so the two numbers can differ.
+                  The vertical score is the published overall driver rating at each driver’s latest appearance. Its recent-era reference is
+                  1,000, using earlier field averages with a 20-weekend half-life. The links show teammate evidence in the unified model,
+                  not a separate ranking.
                 </p>
               </div>
             </details>
             <div class="graph-main">
               <div class="graph-chart">
                 <div class="graph-plot-wrap">
-                  <canvas id="graphPlot" role="img" aria-label="Drivers positioned by average year raced and teammate-only score"></canvas>
+                  <canvas
+                    id="graphPlot"
+                    role="img"
+                    aria-label="Drivers positioned by average year raced and unified overall strength"
+                  ></canvas>
                 </div>
                 <div class="graph-time">
                   <label for="graphTimeline">Weekend <strong id="graphWeekend"></strong></label

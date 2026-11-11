@@ -1,0 +1,3844 @@
+{
+  "referenceSourceHash": "dc909062c7273b74",
+  "reference": {
+    "periods": [
+      {
+        "fromYear": 2008,
+        "toYear": 2025,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.0064677802020062505,
+              "coverage90": 0.9440131065681513,
+              "pairs": 74184,
+              "weekends": 364
+            },
+            "racePace": {
+              "mae": 0.0059389192899743344,
+              "coverage90": 0.9481563110017066,
+              "pairs": 67280,
+              "weekends": 363
+            },
+            "overall": {
+              "logLoss": 0.5301171921210698,
+              "brier": 0.17576423432211175,
+              "calibrationSlope": 0.9584768727374954,
+              "weekends": 363,
+              "pairs": 75315,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 12251,
+                  "predicted": 0.5502539601338411,
+                  "observed": 0.5505635935034346
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 12992,
+                  "predicted": 0.6509816755872931,
+                  "observed": 0.6391434200544511
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 15603,
+                  "predicted": 0.75279340074829,
+                  "observed": 0.7454116530241602
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 28974,
+                  "predicted": 0.8546012256034058,
+                  "observed": 0.8477580174791223
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 5495,
+                  "predicted": 0.9130936755496801,
+                  "observed": 0.897949257564847
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.009926363389809751,
+              "coverage90": 0.8576143102256578,
+              "pairs": 1224,
+              "weekends": 35
+            },
+            "racePace": {
+              "mae": 0.00840011901065882,
+              "coverage90": 0.8673801600348621,
+              "pairs": 984,
+              "weekends": 34
+            },
+            "overall": {
+              "logLoss": 0.5746059618046653,
+              "brier": 0.19538652335050635,
+              "calibrationSlope": 0.7945904363110919,
+              "weekends": 35,
+              "pairs": 1185,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 203,
+                  "predicted": 0.5512289557319489,
+                  "observed": 0.5097551087173294
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 216,
+                  "predicted": 0.6499436414793629,
+                  "observed": 0.6050154300855942
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 238,
+                  "predicted": 0.7571847433664601,
+                  "observed": 0.688551352751017
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 450,
+                  "predicted": 0.8561502845838193,
+                  "observed": 0.8003903666872031
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 78,
+                  "predicted": 0.9121358517910597,
+                  "observed": 0.9209202331021076
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.007222350224274303,
+              "coverage90": 0.930440791450748,
+              "pairs": 5692,
+              "weekends": 131
+            },
+            "racePace": {
+              "mae": 0.007151686485866301,
+              "coverage90": 0.9265855938777284,
+              "pairs": 5046,
+              "weekends": 130
+            },
+            "overall": {
+              "logLoss": 0.5227220435946838,
+              "brier": 0.17268782652262807,
+              "calibrationSlope": 0.9589010459357661,
+              "weekends": 133,
+              "pairs": 5916,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 959,
+                  "predicted": 0.549960881314656,
+                  "observed": 0.5348808795877347
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 938,
+                  "predicted": 0.6511044738326822,
+                  "observed": 0.6557479771239695
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 1167,
+                  "predicted": 0.7525663165304274,
+                  "observed": 0.7352366787992147
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 2396,
+                  "predicted": 0.8561939789104225,
+                  "observed": 0.8454669980973962
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 456,
+                  "predicted": 0.9127235529347821,
+                  "observed": 0.9236994610516455
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": {
+              "mae": 0.01627492332411775,
+              "coverage90": 0.7246867167919799,
+              "pairs": 352,
+              "weekends": 5
+            },
+            "racePace": {
+              "mae": 0.014614661249879386,
+              "coverage90": 0.7017765951346508,
+              "pairs": 250,
+              "weekends": 5
+            },
+            "overall": {
+              "logLoss": 0.6416129679526938,
+              "brier": 0.22624633086384288,
+              "calibrationSlope": 0.6591363473641377,
+              "weekends": 5,
+              "pairs": 338,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 84,
+                  "predicted": 0.5539097366376823,
+                  "observed": 0.49464166108506386
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 76,
+                  "predicted": 0.6514915964738314,
+                  "observed": 0.5154277699859744
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 88,
+                  "predicted": 0.7575224872620575,
+                  "observed": 0.6782684995612752
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 86,
+                  "predicted": 0.8517884458477175,
+                  "observed": 0.7615537283810603
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 4,
+                  "predicted": 0.9030998190843698,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "carFirst5": {
+            "qualifying": {
+              "mae": 0.009787442232512596,
+              "coverage90": 0.8740731958100378,
+              "pairs": 1730,
+              "weekends": 25
+            },
+            "racePace": {
+              "mae": 0.010641036533075984,
+              "coverage90": 0.8224638422194441,
+              "pairs": 1333,
+              "weekends": 25
+            },
+            "overall": {
+              "logLoss": 0.5267783036040582,
+              "brier": 0.1751567004749221,
+              "calibrationSlope": 0.9958911727327524,
+              "weekends": 25,
+              "pairs": 1742,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 221,
+                  "predicted": 0.5537812349359237,
+                  "observed": 0.5365944292928922
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 300,
+                  "predicted": 0.6548091970031111,
+                  "observed": 0.586193746523265
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 405,
+                  "predicted": 0.754705260703439,
+                  "observed": 0.756108651183247
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 715,
+                  "predicted": 0.8530787323305339,
+                  "observed": 0.8542166378588368
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 101,
+                  "predicted": 0.9116769273428308,
+                  "observed": 0.9625000000000001
+                }
+              ]
+            }
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.5046464521161673,
+          "brier": 0.16470158813692534,
+          "calibrationSlope": 0.9756822746675974,
+          "weekends": 362,
+          "pairs": 73749,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 9461,
+              "predicted": 0.550282074487348,
+              "observed": 0.5570665520112587
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 10667,
+              "predicted": 0.6514065246019797,
+              "observed": 0.6556568244834219
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 14861,
+              "predicted": 0.7537944384888163,
+              "observed": 0.7498038085817321
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 31284,
+              "predicted": 0.8558659124154488,
+              "observed": 0.8517217047363255
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 7476,
+              "predicted": 0.9142162634468675,
+              "observed": 0.9010454172810964
+            }
+          ]
+        }
+      },
+      {
+        "fromYear": 2008,
+        "toYear": 2011,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.007053857748521131,
+              "coverage90": 0.9522474105488282,
+              "pairs": 16843,
+              "weekends": 73
+            },
+            "racePace": {
+              "mae": 0.007449510416629956,
+              "coverage90": 0.9178199887711093,
+              "pairs": 14784,
+              "weekends": 73
+            },
+            "overall": {
+              "logLoss": 0.5422043305204469,
+              "brier": 0.1806270822528938,
+              "calibrationSlope": 0.9981580608561541,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2807,
+                  "predicted": 0.5508761312262404,
+                  "observed": 0.5469585304336267
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3394,
+                  "predicted": 0.6516894267154486,
+                  "observed": 0.6444943446183631
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3812,
+                  "predicted": 0.7530909837672569,
+                  "observed": 0.7608991975088718
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6612,
+                  "predicted": 0.8495738438576403,
+                  "observed": 0.8544445019280122
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 490,
+                  "predicted": 0.9109720306303483,
+                  "observed": 0.8569921170670619
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.011544698650361777,
+              "coverage90": 0.8725773239110255,
+              "pairs": 330,
+              "weekends": 8
+            },
+            "racePace": {
+              "mae": 0.010079905489769466,
+              "coverage90": 0.8457932631632085,
+              "pairs": 253,
+              "weekends": 8
+            },
+            "overall": {
+              "logLoss": 0.5914797749305215,
+              "brier": 0.2012801042369613,
+              "calibrationSlope": 0.9025400585482528,
+              "weekends": 8,
+              "pairs": 295,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 72,
+                  "predicted": 0.5515548261908931,
+                  "observed": 0.5582628768819532
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 71,
+                  "predicted": 0.6440659799542015,
+                  "observed": 0.6859439030458595
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 71,
+                  "predicted": 0.7573848526402412,
+                  "observed": 0.7555774234128261
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 80,
+                  "predicted": 0.8514576429178413,
+                  "observed": 0.8364950116555427
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1,
+                  "predicted": 0.9022507918240383,
+                  "observed": 0.0
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.008163245866666252,
+              "coverage90": 0.9119432395656045,
+              "pairs": 1704,
+              "weekends": 33
+            },
+            "racePace": {
+              "mae": 0.009284600755828416,
+              "coverage90": 0.8804781964004738,
+              "pairs": 1284,
+              "weekends": 31
+            },
+            "overall": {
+              "logLoss": 0.537998207624094,
+              "brier": 0.17833147930458354,
+              "calibrationSlope": 1.0503684177701538,
+              "weekends": 33,
+              "pairs": 1699,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 304,
+                  "predicted": 0.5535059458728919,
+                  "observed": 0.5713070996025162
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 334,
+                  "predicted": 0.6494817508911809,
+                  "observed": 0.697361744216872
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 380,
+                  "predicted": 0.7547381151515433,
+                  "observed": 0.76135273600685
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 631,
+                  "predicted": 0.852365936651179,
+                  "observed": 0.8614259383583571
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 50,
+                  "predicted": 0.9071915613861793,
+                  "observed": 0.8603858362037394
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": {
+              "mae": 0.018586069159283933,
+              "coverage90": 0.6820175438596493,
+              "pairs": 228,
+              "weekends": 3
+            },
+            "racePace": {
+              "mae": 0.01769064364553305,
+              "coverage90": 0.5719778737182946,
+              "pairs": 159,
+              "weekends": 3
+            },
+            "overall": {
+              "logLoss": 0.6541328724381604,
+              "brier": 0.2316551600591842,
+              "calibrationSlope": 0.7082977743433956,
+              "weekends": 3,
+              "pairs": 224,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 76,
+                  "predicted": 0.5548638209077298,
+                  "observed": 0.4815770081061164
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 56,
+                  "predicted": 0.6496693103566623,
+                  "observed": 0.5842812823164425
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 65,
+                  "predicted": 0.7630657134688608,
+                  "observed": 0.6593736593736592
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 27,
+                  "predicted": 0.8311340163008061,
+                  "observed": 0.8796895213454075
+                }
+              ]
+            }
+          },
+          "carFirst5": {
+            "qualifying": {
+              "mae": 0.01006620390138872,
+              "coverage90": 0.8623706702654073,
+              "pairs": 1114,
+              "weekends": 15
+            },
+            "racePace": {
+              "mae": 0.011726073696579227,
+              "coverage90": 0.7655220250674211,
+              "pairs": 786,
+              "weekends": 15
+            },
+            "overall": {
+              "logLoss": 0.4893915977925233,
+              "brier": 0.1591974269352335,
+              "calibrationSlope": 1.202927693627973,
+              "weekends": 15,
+              "pairs": 1132,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 149,
+                  "predicted": 0.557798157541932,
+                  "observed": 0.54041296716911
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 195,
+                  "predicted": 0.6573000466475406,
+                  "observed": 0.6121447483500444
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 270,
+                  "predicted": 0.7566399381900214,
+                  "observed": 0.7993977256859068
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 456,
+                  "predicted": 0.8510775849717924,
+                  "observed": 0.904732974784327
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 62,
+                  "predicted": 0.9117173039770203,
+                  "observed": 0.9193548387096774
+                }
+              ]
+            }
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.5222687757812422,
+          "brier": 0.171656951162139,
+          "calibrationSlope": 0.9891862132375735,
+          "weekends": 73,
+          "pairs": 17115,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2197,
+              "predicted": 0.5498005932138793,
+              "observed": 0.5529514665081715
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 2693,
+              "predicted": 0.6533228166777585,
+              "observed": 0.6412945533844255
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 3719,
+              "predicted": 0.7539872867446595,
+              "observed": 0.7612491741490068
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 7959,
+              "predicted": 0.8507609229650973,
+              "observed": 0.8515548003962882
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 547,
+              "predicted": 0.9104341584352906,
+              "observed": 0.8598847093678103
+            }
+          ]
+        }
+      },
+      {
+        "fromYear": 2012,
+        "toYear": 2015,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.007363826321792769,
+              "coverage90": 0.9265702290523412,
+              "pairs": 17148,
+              "weekends": 77
+            },
+            "racePace": {
+              "mae": 0.006011979645255163,
+              "coverage90": 0.9601104556799894,
+              "pairs": 15699,
+              "weekends": 77
+            },
+            "overall": {
+              "logLoss": 0.5278826631259579,
+              "brier": 0.17420240634433098,
+              "calibrationSlope": 0.895193810732786,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2149,
+                  "predicted": 0.5503262943191384,
+                  "observed": 0.5545262110445944
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2567,
+                  "predicted": 0.6506579489443328,
+                  "observed": 0.618522875388069
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3432,
+                  "predicted": 0.7554330359350014,
+                  "observed": 0.7352541359197069
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7875,
+                  "predicted": 0.8562093135724494,
+                  "observed": 0.8333286026283502
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1393,
+                  "predicted": 0.9133796455830901,
+                  "observed": 0.881769676263015
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.013932832355855969,
+              "coverage90": 0.7247258771929824,
+              "pairs": 320,
+              "weekends": 8
+            },
+            "racePace": {
+              "mae": 0.010889551572682217,
+              "coverage90": 0.7893550721724095,
+              "pairs": 262,
+              "weekends": 7
+            },
+            "overall": {
+              "logLoss": 0.555661756068602,
+              "brier": 0.18449487686226618,
+              "calibrationSlope": 0.7388513679776727,
+              "weekends": 8,
+              "pairs": 310,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 41,
+                  "predicted": 0.5570025491189631,
+                  "observed": 0.6070985326969884
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 31,
+                  "predicted": 0.6406651077748647,
+                  "observed": 0.40310876126075
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 46,
+                  "predicted": 0.7693068668712252,
+                  "observed": 0.8050540218962365
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 160,
+                  "predicted": 0.8595773152646576,
+                  "observed": 0.7695173944580234
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 32,
+                  "predicted": 0.912460222970477,
+                  "observed": 0.8420684687738328
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.00818784274506384,
+              "coverage90": 0.9080309313754445,
+              "pairs": 1485,
+              "weekends": 27
+            },
+            "racePace": {
+              "mae": 0.007490287620014891,
+              "coverage90": 0.9259325933043188,
+              "pairs": 1400,
+              "weekends": 27
+            },
+            "overall": {
+              "logLoss": 0.4888784800351362,
+              "brier": 0.15726234643194498,
+              "calibrationSlope": 0.921279935615006,
+              "weekends": 28,
+              "pairs": 1516,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 178,
+                  "predicted": 0.5535996855330462,
+                  "observed": 0.5995330483661276
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 151,
+                  "predicted": 0.6430680862763584,
+                  "observed": 0.592618516478848
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 228,
+                  "predicted": 0.7655824147653847,
+                  "observed": 0.7868304582227237
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 789,
+                  "predicted": 0.8571767124925526,
+                  "observed": 0.8307116322103671
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 170,
+                  "predicted": 0.9133909107764941,
+                  "observed": 0.8916000882561035
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": {
+              "mae": 0.015658623291397875,
+              "coverage90": 0.7023809523809522,
+              "pairs": 84,
+              "weekends": 1
+            },
+            "racePace": {
+              "mae": 0.009126912492405444,
+              "coverage90": 0.9245283018867922,
+              "pairs": 53,
+              "weekends": 1
+            },
+            "overall": {
+              "logLoss": 0.591720155304093,
+              "brier": 0.20326605963370384,
+              "calibrationSlope": 0.7013030291750029,
+              "weekends": 1,
+              "pairs": 76,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 8,
+                  "predicted": 0.5443899399137525,
+                  "observed": 0.625
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 13,
+                  "predicted": 0.6625476539987193,
+                  "observed": 0.7692307692307692
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 14,
+                  "predicted": 0.7599494113278621,
+                  "observed": 0.6428571428571428
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 37,
+                  "predicted": 0.8637582522453334,
+                  "observed": 0.7297297297297297
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 4,
+                  "predicted": 0.9030998190843698,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "carFirst5": {
+            "qualifying": {
+              "mae": 0.009495622616799667,
+              "coverage90": 0.907142857142857,
+              "pairs": 420,
+              "weekends": 5
+            },
+            "racePace": {
+              "mae": 0.009398016207063088,
+              "coverage90": 0.8973630430157009,
+              "pairs": 365,
+              "weekends": 5
+            },
+            "overall": {
+              "logLoss": 0.5091814342651584,
+              "brier": 0.16930409471229357,
+              "calibrationSlope": 0.9447839650531511,
+              "weekends": 5,
+              "pairs": 412,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 42,
+                  "predicted": 0.5494063796100058,
+                  "observed": 0.5257985257985259
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 62,
+                  "predicted": 0.654424056808793,
+                  "observed": 0.600498338870432
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 93,
+                  "predicted": 0.7578856138573994,
+                  "observed": 0.6980501392757661
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 176,
+                  "predicted": 0.8570027311506605,
+                  "observed": 0.8329432416617906
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 39,
+                  "predicted": 0.9116418336327409,
+                  "observed": 1.0
+                }
+              ]
+            }
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.5089301648248291,
+          "brier": 0.16600096642417667,
+          "calibrationSlope": 0.8990162197144606,
+          "weekends": 77,
+          "pairs": 17376,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 1802,
+              "predicted": 0.5509689559327489,
+              "observed": 0.5397712617538629
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 2032,
+              "predicted": 0.6508112227005993,
+              "observed": 0.63773987894777
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 3067,
+              "predicted": 0.755258642692173,
+              "observed": 0.7217479466288617
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 8713,
+              "predicted": 0.8589632897134983,
+              "observed": 0.839164331919472
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 1762,
+              "predicted": 0.9138441188992794,
+              "observed": 0.8867499767216729
+            }
+          ]
+        }
+      },
+      {
+        "fromYear": 2016,
+        "toYear": 2020,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.006582502538672798,
+              "coverage90": 0.9422846644239833,
+              "pairs": 19165,
+              "weekends": 100
+            },
+            "racePace": {
+              "mae": 0.00565793801974111,
+              "coverage90": 0.9528005605407923,
+              "pairs": 17480,
+              "weekends": 100
+            },
+            "overall": {
+              "logLoss": 0.5301534201633273,
+              "brier": 0.17619610368565847,
+              "calibrationSlope": 0.9471284243802844,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3501,
+                  "predicted": 0.5492845787600084,
+                  "observed": 0.563612701670052
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3221,
+                  "predicted": 0.6504542590604024,
+                  "observed": 0.6403955534110026
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4053,
+                  "predicted": 0.7516608661501218,
+                  "observed": 0.7384317429903376
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6917,
+                  "predicted": 0.8551149616789431,
+                  "observed": 0.8387947301910279
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1975,
+                  "predicted": 0.9135937033152366,
+                  "observed": 0.9136546888449335
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.008408523590605784,
+              "coverage90": 0.9033740883740885,
+              "pairs": 322,
+              "weekends": 10
+            },
+            "racePace": {
+              "mae": 0.00639187462047316,
+              "coverage90": 0.9251725409620146,
+              "pairs": 288,
+              "weekends": 10
+            },
+            "overall": {
+              "logLoss": 0.5922037726848416,
+              "brier": 0.20472437406421226,
+              "calibrationSlope": 0.7222959734598832,
+              "weekends": 10,
+              "pairs": 321,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 48,
+                  "predicted": 0.5486625018522366,
+                  "observed": 0.49852580584316947
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 51,
+                  "predicted": 0.6554230235184416,
+                  "observed": 0.4660358320618203
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 64,
+                  "predicted": 0.7541412773639337,
+                  "observed": 0.6214295561460262
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 132,
+                  "predicted": 0.8549970270464156,
+                  "observed": 0.782391121240648
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 26,
+                  "predicted": 0.9120696064459944,
+                  "observed": 0.9776383572682534
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.007233534439642664,
+              "coverage90": 0.9466226540195247,
+              "pairs": 1346,
+              "weekends": 37
+            },
+            "racePace": {
+              "mae": 0.006685844880202975,
+              "coverage90": 0.9315836086127472,
+              "pairs": 1256,
+              "weekends": 38
+            },
+            "overall": {
+              "logLoss": 0.5186930755829036,
+              "brier": 0.1712642588536988,
+              "calibrationSlope": 0.9337659839829846,
+              "weekends": 38,
+              "pairs": 1459,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 237,
+                  "predicted": 0.5473394285309826,
+                  "observed": 0.5616458972259012
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 214,
+                  "predicted": 0.6524710084129619,
+                  "observed": 0.6206471495469859
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 303,
+                  "predicted": 0.7516236912598251,
+                  "observed": 0.7405757627646204
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 551,
+                  "predicted": 0.8560404622977157,
+                  "observed": 0.8309117647722395
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 154,
+                  "predicted": 0.9136405779230985,
+                  "observed": 0.9387677455569431
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": {
+              "mae": 0.00995778585133911,
+              "coverage90": 0.875,
+              "pairs": 40,
+              "weekends": 1
+            },
+            "racePace": {
+              "mae": 0.010874462820392379,
+              "coverage90": 0.8684210526315789,
+              "pairs": 38,
+              "weekends": 1
+            },
+            "overall": {
+              "logLoss": 0.6539460671448957,
+              "brier": 0.23300011450795835,
+              "calibrationSlope": 0.559865469074812,
+              "weekends": 1,
+              "pairs": 38,
+              "reliability": [
+                {
+                  "fromProbability": 0.6,
+                  "count": 7,
+                  "predicted": 0.6486292517776227,
+                  "observed": 0.0
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 9,
+                  "predicted": 0.7345217092499964,
+                  "observed": 0.7777777777777777
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 22,
+                  "predicted": 0.8523953025265703,
+                  "observed": 0.7272727272727273
+                }
+              ]
+            }
+          },
+          "carFirst5": {
+            "qualifying": {
+              "mae": 0.009242976841597158,
+              "coverage90": 0.8761111111111113,
+              "pairs": 196,
+              "weekends": 5
+            },
+            "racePace": {
+              "mae": 0.008628945368579149,
+              "coverage90": 0.918390092879257,
+              "pairs": 182,
+              "weekends": 5
+            },
+            "overall": {
+              "logLoss": 0.6565352903775631,
+              "brier": 0.22888712685661652,
+              "calibrationSlope": 0.5779622295631988,
+              "weekends": 5,
+              "pairs": 198,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 30,
+                  "predicted": 0.545602770435927,
+                  "observed": 0.5333333333333333
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 43,
+                  "predicted": 0.6484582820443181,
+                  "observed": 0.5072815533980586
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 42,
+                  "predicted": 0.7435941623522003,
+                  "observed": 0.644361833952912
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 83,
+                  "predicted": 0.8542007940991092,
+                  "observed": 0.7467166979362102
+                }
+              ]
+            }
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.511257473680484,
+          "brier": 0.16773489111143633,
+          "calibrationSlope": 0.9551696445246329,
+          "weekends": 100,
+          "pairs": 19214,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2617,
+              "predicted": 0.5505988016847988,
+              "observed": 0.549703073106965
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 2904,
+              "predicted": 0.6507518353716293,
+              "observed": 0.6549379125057557
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 4046,
+              "predicted": 0.7529629754044112,
+              "observed": 0.7492091361354205
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 7173,
+              "predicted": 0.8558504009666738,
+              "observed": 0.8397801590515345
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 2474,
+              "predicted": 0.9141769488105067,
+              "observed": 0.9075601451843078
+            }
+          ]
+        }
+      },
+      {
+        "fromYear": 2021,
+        "toYear": 2025,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.005386627168797457,
+              "coverage90": 0.9520380328185445,
+              "pairs": 21028,
+              "weekends": 114
+            },
+            "racePace": {
+              "mae": 0.005161922187503885,
+              "coverage90": 0.9554984121406209,
+              "pairs": 19317,
+              "weekends": 113
+            },
+            "overall": {
+              "logLoss": 0.5237992702205683,
+              "brier": 0.17330481767598224,
+              "calibrationSlope": 0.9973647197375232,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3794,
+                  "predicted": 0.5506968372966227,
+                  "observed": 0.5393595061431653
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3810,
+                  "predicted": 0.6510595131141163,
+                  "observed": 0.6456555627968228
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4306,
+                  "predicted": 0.7518368153641592,
+                  "observed": 0.7466497928203077
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7570,
+                  "predicted": 0.856032876734907,
+                  "observed": 0.8635548946311653
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1637,
+                  "predicted": 0.9127437693436452,
+                  "observed": 0.8993228159244189
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.006613026076393499,
+              "coverage90": 0.911592707258342,
+              "pairs": 252,
+              "weekends": 9
+            },
+            "racePace": {
+              "mae": 0.007202132803415226,
+              "coverage90": 0.8830409356725145,
+              "pairs": 181,
+              "weekends": 9
+            },
+            "overall": {
+              "logLoss": 0.5568931875913198,
+              "brier": 0.18945385864797543,
+              "calibrationSlope": 0.8980196476864997,
+              "weekends": 9,
+              "pairs": 259,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 42,
+                  "predicted": 0.5501820106001393,
+                  "observed": 0.38965019834114684
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 63,
+                  "predicted": 0.65372044009246,
+                  "observed": 0.691498611278831
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 57,
+                  "predicted": 0.7519002198873401,
+                  "observed": 0.6104004752840185
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 78,
+                  "predicted": 0.8564437652517897,
+                  "observed": 0.8497008609368161
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 19,
+                  "predicted": 0.911962481205351,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.005530242276366025,
+              "coverage90": 0.9485806890742239,
+              "pairs": 1157,
+              "weekends": 34
+            },
+            "racePace": {
+              "mae": 0.005458727898347733,
+              "coverage90": 0.9635572343879119,
+              "pairs": 1106,
+              "weekends": 34
+            },
+            "overall": {
+              "logLoss": 0.5402693127459912,
+              "brier": 0.18150454629186075,
+              "calibrationSlope": 0.9563161029698785,
+              "weekends": 34,
+              "pairs": 1242,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 240,
+                  "predicted": 0.5473705171760233,
+                  "observed": 0.4529384316904233
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 239,
+                  "predicted": 0.6550799177854598,
+                  "observed": 0.6614585464231033
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 256,
+                  "predicted": 0.7431061861948338,
+                  "observed": 0.6673223008103297
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 425,
+                  "predicted": 0.8588335089907542,
+                  "observed": 0.8690911560915185
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 82,
+                  "predicted": 0.9118889217763388,
+                  "observed": 0.9569501571049536
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": null,
+            "racePace": null,
+            "overall": null
+          },
+          "carFirst5": {
+            "qualifying": null,
+            "racePace": null,
+            "overall": null
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.48431272298626465,
+          "brier": 0.15656655307969267,
+          "calibrationSlope": 1.0504579070657285,
+          "weekends": 112,
+          "pairs": 20044,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2845,
+              "predicted": 0.5499521960845956,
+              "observed": 0.5747694372098892
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 3038,
+              "predicted": 0.6509632053408506,
+              "observed": 0.6761225381745948
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 4029,
+              "predicted": 0.7535467254107904,
+              "observed": 0.7586149957325183
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 7439,
+              "predicted": 0.8569904318306669,
+              "observed": 0.8740053728702669
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 2693,
+              "predicted": 0.9149703767343463,
+              "observed": 0.9086239203855273
+            }
+          ]
+        }
+      },
+      {
+        "fromYear": 2026,
+        "toYear": 2026,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.006449857465904709,
+              "coverage90": 0.9133769831276758,
+              "pairs": 4255,
+              "weekends": 19
+            },
+            "racePace": {
+              "mae": 0.007004580366721442,
+              "coverage90": 0.8607314255159471,
+              "pairs": 3915,
+              "weekends": 19
+            },
+            "overall": {
+              "logLoss": 0.5230376506842651,
+              "brier": 0.170753637330457,
+              "calibrationSlope": 0.858636182462731,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 651,
+                  "predicted": 0.5491834381503155,
+                  "observed": 0.5524187395086221
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 698,
+                  "predicted": 0.6478759135191744,
+                  "observed": 0.6352389078498293
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 557,
+                  "predicted": 0.750946789753301,
+                  "observed": 0.7609973285841496
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1671,
+                  "predicted": 0.8664950181252568,
+                  "observed": 0.8416030534351145
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 791,
+                  "predicted": 0.9135419079118652,
+                  "observed": 0.8547084069679375
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.010564702580576967,
+              "coverage90": 0.75,
+              "pairs": 38,
+              "weekends": 2
+            },
+            "racePace": {
+              "mae": 0.006747048772945637,
+              "coverage90": 0.8947368421052632,
+              "pairs": 38,
+              "weekends": 2
+            },
+            "overall": {
+              "logLoss": 0.469734351197479,
+              "brier": 0.15118800120373668,
+              "calibrationSlope": 1.5209720863988094,
+              "weekends": 2,
+              "pairs": 41,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 10,
+                  "predicted": 0.535475239251437,
+                  "observed": 0.5942028985507246
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 12,
+                  "predicted": 0.6669922673935691,
+                  "observed": 0.8380566801619436
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 5,
+                  "predicted": 0.7643970123190865,
+                  "observed": 0.803921568627451
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 9,
+                  "predicted": 0.8602723846732828,
+                  "observed": 0.8858695652173912
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 5,
+                  "predicted": 0.9081885065265276,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.007716657567429689,
+              "coverage90": 0.8845238095238096,
+              "pairs": 121,
+              "weekends": 6
+            },
+            "racePace": {
+              "mae": 0.0060758057707364895,
+              "coverage90": 0.9248415155535898,
+              "pairs": 93,
+              "weekends": 5
+            },
+            "overall": {
+              "logLoss": 0.5558106203164916,
+              "brier": 0.18901880412201966,
+              "calibrationSlope": 0.942310188785196,
+              "weekends": 6,
+              "pairs": 125,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 36,
+                  "predicted": 0.54536461709433,
+                  "observed": 0.5543328748280603
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 23,
+                  "predicted": 0.6501842373743344,
+                  "observed": 0.6573875802997858
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 16,
+                  "predicted": 0.7422857943690887,
+                  "observed": 0.6273291925465838
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 43,
+                  "predicted": 0.8639072161653728,
+                  "observed": 0.8368055555555557
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 7,
+                  "predicted": 0.9082502167471711,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": {
+              "mae": 0.015024992069112137,
+              "coverage90": 0.625,
+              "pairs": 64,
+              "weekends": 1
+            },
+            "racePace": {
+              "mae": 0.02069657110258194,
+              "coverage90": 0.3584905660377358,
+              "pairs": 53,
+              "weekends": 1
+            },
+            "overall": {
+              "logLoss": 0.5406117946005753,
+              "brier": 0.17887801789383986,
+              "calibrationSlope": 1.0974787175388325,
+              "weekends": 1,
+              "pairs": 72,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 14,
+                  "predicted": 0.5441651502853159,
+                  "observed": 0.5
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 21,
+                  "predicted": 0.6608545657532665,
+                  "observed": 0.8095238095238095
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 17,
+                  "predicted": 0.7414481829960924,
+                  "observed": 0.7647058823529411
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 16,
+                  "predicted": 0.8670876419502528,
+                  "observed": 0.8125
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 4,
+                  "predicted": 0.9026443570636143,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "carFirst5": {
+            "qualifying": {
+              "mae": 0.009766997152077843,
+              "coverage90": 0.8203136265320835,
+              "pairs": 365,
+              "weekends": 5
+            },
+            "racePace": {
+              "mae": 0.009473457049892529,
+              "coverage90": 0.7979050312117776,
+              "pairs": 295,
+              "weekends": 5
+            },
+            "overall": {
+              "logLoss": 0.5974425574331245,
+              "brier": 0.19963002770469668,
+              "calibrationSlope": 0.6601659582987103,
+              "weekends": 5,
+              "pairs": 376,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 46,
+                  "predicted": 0.5547430457628549,
+                  "observed": 0.6923990498812346
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 73,
+                  "predicted": 0.6562103687367368,
+                  "observed": 0.5790262172284647
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 54,
+                  "predicted": 0.741726075192862,
+                  "observed": 0.6683518705763395
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 121,
+                  "predicted": 0.8658955596415416,
+                  "observed": 0.793527803099362
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 82,
+                  "predicted": 0.9186606784970065,
+                  "observed": 0.8054054054054055
+                }
+              ]
+            }
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.49264914589476366,
+          "brier": 0.15714822411818835,
+          "calibrationSlope": 0.8898268395180211,
+          "weekends": 18,
+          "pairs": 4137,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 519,
+              "predicted": 0.552126944330236,
+              "observed": 0.5628352490421457
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 558,
+              "predicted": 0.6509024972120844,
+              "observed": 0.6919928825622775
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 551,
+              "predicted": 0.7519379651523445,
+              "observed": 0.7967201297531085
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 1369,
+              "predicted": 0.8654776184447435,
+              "observed": 0.8536230830728978
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 1140,
+              "predicted": 0.9150543443241171,
+              "observed": 0.859254723582925
+            }
+          ]
+        }
+      }
+    ],
+    "calibration": [
+      {
+        "fromYear": 2008,
+        "channel": 0,
+        "slope": 1.0011374979995342,
+        "noise": 2.1791556265048158
+      },
+      {
+        "fromYear": 2008,
+        "channel": 1,
+        "slope": 0.981126457478694,
+        "noise": 1.8530270894377825
+      },
+      {
+        "fromYear": 2008,
+        "channel": 2,
+        "slope": 1.3648898688384374
+      },
+      {
+        "fromYear": 2012,
+        "channel": 0,
+        "slope": 1.0105050707191485,
+        "noise": 1.8872316660783863
+      },
+      {
+        "fromYear": 2012,
+        "channel": 1,
+        "slope": 1.0040597150627588,
+        "noise": 1.7612691814744266
+      },
+      {
+        "fromYear": 2012,
+        "channel": 2,
+        "slope": 1.352963952535882
+      },
+      {
+        "fromYear": 2016,
+        "channel": 0,
+        "slope": 1.0004920853550427,
+        "noise": 1.804622936981084
+      },
+      {
+        "fromYear": 2016,
+        "channel": 1,
+        "slope": 0.999425008998045,
+        "noise": 1.6132686664574634
+      },
+      {
+        "fromYear": 2016,
+        "channel": 2,
+        "slope": 1.2378712758676462
+      },
+      {
+        "fromYear": 2021,
+        "channel": 0,
+        "slope": 0.9896273588528025,
+        "noise": 1.701755017185695
+      },
+      {
+        "fromYear": 2021,
+        "channel": 1,
+        "slope": 0.9933720123254578,
+        "noise": 1.4972926183616306
+      },
+      {
+        "fromYear": 2021,
+        "channel": 2,
+        "slope": 1.1879001827802627
+      },
+      {
+        "fromYear": 2026,
+        "channel": 0,
+        "slope": 0.9860094859497694,
+        "noise": 1.565858226512845
+      },
+      {
+        "fromYear": 2026,
+        "channel": 1,
+        "slope": 0.9906828482897576,
+        "noise": 1.3967101509795377
+      },
+      {
+        "fromYear": 2026,
+        "channel": 2,
+        "slope": 1.1783518455550037
+      }
+    ],
+    "gridHeads": [
+      {
+        "fromYear": 2008,
+        "trainedThrough": 2007,
+        "ratingCoefficient": 1.0693747107583311,
+        "gridCoefficient": 1.6789406321081441,
+        "penalty": 0.001,
+        "innerScore": 0.5455362699834142
+      },
+      {
+        "fromYear": 2012,
+        "trainedThrough": 2011,
+        "ratingCoefficient": 1.032645155834928,
+        "gridCoefficient": 1.6456748592330723,
+        "penalty": 0.001,
+        "innerScore": 0.5222687757812419
+      },
+      {
+        "fromYear": 2016,
+        "trainedThrough": 2015,
+        "ratingCoefficient": 0.9403114346692786,
+        "gridCoefficient": 1.5102017908528145,
+        "penalty": 0.001,
+        "innerScore": 0.5089301648248291
+      },
+      {
+        "fromYear": 2021,
+        "trainedThrough": 2020,
+        "ratingCoefficient": 0.8998156204559196,
+        "gridCoefficient": 1.4582762822051363,
+        "penalty": 0.001,
+        "innerScore": 0.5157417396742331
+      },
+      {
+        "fromYear": 2026,
+        "trainedThrough": 2025,
+        "ratingCoefficient": 0.8937947217720678,
+        "gridCoefficient": 1.5450872564218594,
+        "penalty": 0.001,
+        "innerScore": 0.4837152920323994
+      }
+    ],
+    "latestMeans": {
+      "drivers": [
+        1027.1046858250106,
+        1026.1819567844352,
+        1025.994008923783
+      ],
+      "cars": [
+        1086.569229335131,
+        1095.1730805378254,
+        1058.8056489505293
+      ]
+    },
+    "overallMovement90": {
+      "drivers": 3.0623167572682823,
+      "cars": 7.580243308262106
+    }
+  },
+  "candidate": {
+    "periods": [
+      {
+        "fromYear": 2008,
+        "toYear": 2025,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.006602329326290094,
+              "coverage90": 0.9440696048999894,
+              "pairs": 74184,
+              "weekends": 364
+            },
+            "racePace": {
+              "mae": 0.005952261804411254,
+              "coverage90": 0.9490301872562663,
+              "pairs": 67280,
+              "weekends": 363
+            },
+            "overall": {
+              "logLoss": 0.5297901544871259,
+              "brier": 0.17561003549775103,
+              "calibrationSlope": 0.9636157727222572,
+              "weekends": 363,
+              "pairs": 75315,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 12697,
+                  "predicted": 0.550459122162406,
+                  "observed": 0.5525305027330686
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 12955,
+                  "predicted": 0.6507484337285683,
+                  "observed": 0.6436435283397862
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 15406,
+                  "predicted": 0.7526220562111436,
+                  "observed": 0.747248290540392
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 28770,
+                  "predicted": 0.854918924213107,
+                  "observed": 0.8482988180365927
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 5487,
+                  "predicted": 0.9129566176526129,
+                  "observed": 0.8971735234674851
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.009887333501708482,
+              "coverage90": 0.8693727343241762,
+              "pairs": 1224,
+              "weekends": 35
+            },
+            "racePace": {
+              "mae": 0.008433613741613336,
+              "coverage90": 0.8662819327244239,
+              "pairs": 984,
+              "weekends": 34
+            },
+            "overall": {
+              "logLoss": 0.5746883755403762,
+              "brier": 0.19527780190528832,
+              "calibrationSlope": 0.7957099873060642,
+              "weekends": 35,
+              "pairs": 1185,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 203,
+                  "predicted": 0.5513979648278526,
+                  "observed": 0.5875854920834586
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 223,
+                  "predicted": 0.6500827690389457,
+                  "observed": 0.5962903109617481
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 234,
+                  "predicted": 0.7550484112063828,
+                  "observed": 0.6810284323110197
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 444,
+                  "predicted": 0.8554571604290856,
+                  "observed": 0.8015052182998361
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 81,
+                  "predicted": 0.9119905070782136,
+                  "observed": 0.9238621081541327
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.007426117500403064,
+              "coverage90": 0.9331841940790002,
+              "pairs": 5692,
+              "weekends": 131
+            },
+            "racePace": {
+              "mae": 0.007242190465557591,
+              "coverage90": 0.9258434361426181,
+              "pairs": 5046,
+              "weekends": 130
+            },
+            "overall": {
+              "logLoss": 0.5251970352960867,
+              "brier": 0.1737290456340575,
+              "calibrationSlope": 0.9612276652121795,
+              "weekends": 133,
+              "pairs": 5916,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 1008,
+                  "predicted": 0.5508708741184717,
+                  "observed": 0.5460209367644294
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 982,
+                  "predicted": 0.649399411227151,
+                  "observed": 0.6482041955515407
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 1138,
+                  "predicted": 0.753153177980471,
+                  "observed": 0.7423955320949157
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 2352,
+                  "predicted": 0.8559062266495875,
+                  "observed": 0.845558949305915
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 436,
+                  "predicted": 0.9129321787352705,
+                  "observed": 0.9190719166014367
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": {
+              "mae": 0.01577521276605496,
+              "coverage90": 0.7301169590643275,
+              "pairs": 352,
+              "weekends": 5
+            },
+            "racePace": {
+              "mae": 0.014102713004961073,
+              "coverage90": 0.7097554771751542,
+              "pairs": 250,
+              "weekends": 5
+            },
+            "overall": {
+              "logLoss": 0.6495762051961814,
+              "brier": 0.22923014200737724,
+              "calibrationSlope": 0.6343634439504892,
+              "weekends": 5,
+              "pairs": 338,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 81,
+                  "predicted": 0.5463512400261288,
+                  "observed": 0.4347826086956521
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 86,
+                  "predicted": 0.6477645210830896,
+                  "observed": 0.5410127331951431
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 87,
+                  "predicted": 0.7601305994497235,
+                  "observed": 0.6880559085133413
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 80,
+                  "predicted": 0.8519876233132455,
+                  "observed": 0.7434693278544173
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 4,
+                  "predicted": 0.9029215254219428,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "carFirst5": {
+            "qualifying": {
+              "mae": 0.009740842384302475,
+              "coverage90": 0.8749143371248633,
+              "pairs": 1730,
+              "weekends": 25
+            },
+            "racePace": {
+              "mae": 0.010854107521568098,
+              "coverage90": 0.8124598462044891,
+              "pairs": 1333,
+              "weekends": 25
+            },
+            "overall": {
+              "logLoss": 0.5378845657671613,
+              "brier": 0.17970909290252032,
+              "calibrationSlope": 0.97909938664458,
+              "weekends": 25,
+              "pairs": 1742,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 231,
+                  "predicted": 0.5510210423942952,
+                  "observed": 0.5627414735203832
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 342,
+                  "predicted": 0.6525039927069114,
+                  "observed": 0.6294574570089564
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 379,
+                  "predicted": 0.7545977896361962,
+                  "observed": 0.7289559379866372
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 696,
+                  "predicted": 0.8533142274346592,
+                  "observed": 0.8533237423348019
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 94,
+                  "predicted": 0.9119994011767558,
+                  "observed": 0.9609229624116116
+                }
+              ]
+            }
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.5044215398306574,
+          "brier": 0.1646054706570279,
+          "calibrationSlope": 0.9785927798547778,
+          "weekends": 362,
+          "pairs": 73749,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 9437,
+              "predicted": 0.5500323619010863,
+              "observed": 0.5555928979121124
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 10914,
+              "predicted": 0.6508653278538544,
+              "observed": 0.6554097340271531
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 14803,
+              "predicted": 0.753909126587257,
+              "observed": 0.7527276191262311
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 31149,
+              "predicted": 0.8560403816853689,
+              "observed": 0.8523798870657213
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 7446,
+              "predicted": 0.9142094901808833,
+              "observed": 0.9009574459264639
+            }
+          ]
+        }
+      },
+      {
+        "fromYear": 2008,
+        "toYear": 2011,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.007252593995878702,
+              "coverage90": 0.9507740504832611,
+              "pairs": 16843,
+              "weekends": 73
+            },
+            "racePace": {
+              "mae": 0.007539953387021762,
+              "coverage90": 0.9150035741678229,
+              "pairs": 14784,
+              "weekends": 73
+            },
+            "overall": {
+              "logLoss": 0.5427702443786115,
+              "brier": 0.18085870235322324,
+              "calibrationSlope": 1.0044236938463758,
+              "weekends": 73,
+              "pairs": 17115,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2891,
+                  "predicted": 0.5516699432306544,
+                  "observed": 0.5579318083852932
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3381,
+                  "predicted": 0.6511997739106479,
+                  "observed": 0.646094293384713
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3940,
+                  "predicted": 0.7526584383462607,
+                  "observed": 0.7626223428843755
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6424,
+                  "predicted": 0.8503195062135921,
+                  "observed": 0.8540856372179132
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 479,
+                  "predicted": 0.9111566385873255,
+                  "observed": 0.8534690676942452
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.01154119801741654,
+              "coverage90": 0.8819420395856346,
+              "pairs": 330,
+              "weekends": 8
+            },
+            "racePace": {
+              "mae": 0.010064476167457813,
+              "coverage90": 0.8457932631632085,
+              "pairs": 253,
+              "weekends": 8
+            },
+            "overall": {
+              "logLoss": 0.5950984301652738,
+              "brier": 0.2024899544453992,
+              "calibrationSlope": 0.9081971095440472,
+              "weekends": 8,
+              "pairs": 295,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 76,
+                  "predicted": 0.5502000190840631,
+                  "observed": 0.5771823361252332
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 76,
+                  "predicted": 0.6444804028544918,
+                  "observed": 0.6321950400321273
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 71,
+                  "predicted": 0.7570785432523334,
+                  "observed": 0.7910618747859361
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 71,
+                  "predicted": 0.8515394485272265,
+                  "observed": 0.8231237816513994
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1,
+                  "predicted": 0.9023806084348269,
+                  "observed": 0.0
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.008560335015778636,
+              "coverage90": 0.9131262935411475,
+              "pairs": 1704,
+              "weekends": 33
+            },
+            "racePace": {
+              "mae": 0.00963921427543134,
+              "coverage90": 0.868666627426843,
+              "pairs": 1284,
+              "weekends": 31
+            },
+            "overall": {
+              "logLoss": 0.5406974589853841,
+              "brier": 0.17924676431558662,
+              "calibrationSlope": 1.0709170646759358,
+              "weekends": 33,
+              "pairs": 1699,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 336,
+                  "predicted": 0.5543768958996268,
+                  "observed": 0.5994605433048954
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 353,
+                  "predicted": 0.6485390979319079,
+                  "observed": 0.6894173044272608
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 389,
+                  "predicted": 0.7561188301707392,
+                  "observed": 0.7949838377176884
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 578,
+                  "predicted": 0.8533337921461479,
+                  "observed": 0.855004463732939
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 43,
+                  "predicted": 0.9072294759971196,
+                  "observed": 0.8480696973737882
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": {
+              "mae": 0.016555692414591486,
+              "coverage90": 0.7446393762183239,
+              "pairs": 228,
+              "weekends": 3
+            },
+            "racePace": {
+              "mae": 0.017624900196032963,
+              "coverage90": 0.5940479402770283,
+              "pairs": 159,
+              "weekends": 3
+            },
+            "overall": {
+              "logLoss": 0.6688492154965338,
+              "brier": 0.23809776222450096,
+              "calibrationSlope": 0.6168137309511891,
+              "weekends": 3,
+              "pairs": 224,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 68,
+                  "predicted": 0.5457615523928191,
+                  "observed": 0.4776785714285714
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 63,
+                  "predicted": 0.6438368655168029,
+                  "observed": 0.4862385321100915
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 69,
+                  "predicted": 0.7611089746506258,
+                  "observed": 0.7101200686106345
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 24,
+                  "predicted": 0.8271783278202495,
+                  "observed": 0.744107744107744
+                }
+              ]
+            }
+          },
+          "carFirst5": {
+            "qualifying": {
+              "mae": 0.010117680418111697,
+              "coverage90": 0.8709154295996402,
+              "pairs": 1114,
+              "weekends": 15
+            },
+            "racePace": {
+              "mae": 0.012450168212907202,
+              "coverage90": 0.7456981115989566,
+              "pairs": 786,
+              "weekends": 15
+            },
+            "overall": {
+              "logLoss": 0.5081850150272303,
+              "brier": 0.1671524310594816,
+              "calibrationSlope": 1.1831296185305544,
+              "weekends": 15,
+              "pairs": 1132,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 155,
+                  "predicted": 0.5521600365583346,
+                  "observed": 0.5721416063842001
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 231,
+                  "predicted": 0.6542575993375543,
+                  "observed": 0.6518183656301564
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 263,
+                  "predicted": 0.7550718723631922,
+                  "observed": 0.7732853419497652
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 430,
+                  "predicted": 0.8505639256257504,
+                  "observed": 0.9022723801854834
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 53,
+                  "predicted": 0.9120549965713383,
+                  "observed": 0.9056603773584906
+                }
+              ]
+            }
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.5223190209964804,
+          "brier": 0.17168123669360538,
+          "calibrationSlope": 0.9938346533720398,
+          "weekends": 73,
+          "pairs": 17115,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2183,
+              "predicted": 0.5496740685147389,
+              "observed": 0.5402697501706697
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 2750,
+              "predicted": 0.6520608606470664,
+              "observed": 0.6469842875614543
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 3798,
+              "predicted": 0.754483497956806,
+              "observed": 0.762128095461629
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 7852,
+              "predicted": 0.8509383525993386,
+              "observed": 0.8529726249662708
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 532,
+              "predicted": 0.9106592481225404,
+              "observed": 0.8547768343865519
+            }
+          ]
+        }
+      },
+      {
+        "fromYear": 2012,
+        "toYear": 2015,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.007448776212382568,
+              "coverage90": 0.9266980983440525,
+              "pairs": 17148,
+              "weekends": 77
+            },
+            "racePace": {
+              "mae": 0.006004133832286652,
+              "coverage90": 0.9611300461633487,
+              "pairs": 15699,
+              "weekends": 77
+            },
+            "overall": {
+              "logLoss": 0.5272625498892737,
+              "brier": 0.17396488581504854,
+              "calibrationSlope": 0.8964052659716781,
+              "weekends": 77,
+              "pairs": 17416,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 2248,
+                  "predicted": 0.5498614717168608,
+                  "observed": 0.5572125488338119
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 2517,
+                  "predicted": 0.6516444940105686,
+                  "observed": 0.6246213184411668
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3277,
+                  "predicted": 0.7545855741359282,
+                  "observed": 0.7315895856585035
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7957,
+                  "predicted": 0.8558529591334787,
+                  "observed": 0.8341476678774781
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1417,
+                  "predicted": 0.9133811753302685,
+                  "observed": 0.884095834441682
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.013838882811996585,
+              "coverage90": 0.7281615497076023,
+              "pairs": 320,
+              "weekends": 8
+            },
+            "racePace": {
+              "mae": 0.01081210429272904,
+              "coverage90": 0.798247568564906,
+              "pairs": 262,
+              "weekends": 7
+            },
+            "overall": {
+              "logLoss": 0.5535425740850313,
+              "brier": 0.1833806324068443,
+              "calibrationSlope": 0.7435369762337376,
+              "weekends": 8,
+              "pairs": 310,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 43,
+                  "predicted": 0.5553404142153429,
+                  "observed": 0.6798470521344065
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 30,
+                  "predicted": 0.6468117024436364,
+                  "observed": 0.5218233944954128
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 47,
+                  "predicted": 0.7685278567030552,
+                  "observed": 0.7571140234254786
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 158,
+                  "predicted": 0.8602850732710853,
+                  "observed": 0.7740713512965756
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 32,
+                  "predicted": 0.9126427085098919,
+                  "observed": 0.8420684687738328
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.008247445532204507,
+              "coverage90": 0.908698280245408,
+              "pairs": 1485,
+              "weekends": 27
+            },
+            "racePace": {
+              "mae": 0.007441465092116917,
+              "coverage90": 0.9248514763640288,
+              "pairs": 1400,
+              "weekends": 27
+            },
+            "overall": {
+              "logLoss": 0.4896801098377712,
+              "brier": 0.1575567772132564,
+              "calibrationSlope": 0.9193087781394429,
+              "weekends": 28,
+              "pairs": 1516,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 184,
+                  "predicted": 0.5500501782353214,
+                  "observed": 0.6479944698673336
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 149,
+                  "predicted": 0.6420163646885196,
+                  "observed": 0.6286682507714949
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 225,
+                  "predicted": 0.7672450653691195,
+                  "observed": 0.7756171666699713
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 791,
+                  "predicted": 0.8575816446180249,
+                  "observed": 0.8302645280809939
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 167,
+                  "predicted": 0.9134664031171895,
+                  "observed": 0.8905681065239195
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": {
+              "mae": 0.015194699829676217,
+              "coverage90": 0.6666666666666664,
+              "pairs": 84,
+              "weekends": 1
+            },
+            "racePace": {
+              "mae": 0.008528841533038827,
+              "coverage90": 0.9245283018867922,
+              "pairs": 53,
+              "weekends": 1
+            },
+            "overall": {
+              "logLoss": 0.6087686349165757,
+              "brier": 0.20991236337113975,
+              "calibrationSlope": 0.6626930744042306,
+              "weekends": 1,
+              "pairs": 76,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 8,
+                  "predicted": 0.5233866956136733,
+                  "observed": 0.625
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 14,
+                  "predicted": 0.6490384863592249,
+                  "observed": 0.7857142857142856
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 12,
+                  "predicted": 0.7445122110826199,
+                  "observed": 0.5833333333333333
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 38,
+                  "predicted": 0.8633381912266939,
+                  "observed": 0.7105263157894737
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 4,
+                  "predicted": 0.9029215254219428,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "carFirst5": {
+            "qualifying": {
+              "mae": 0.00938586927314467,
+              "coverage90": 0.9023809523809523,
+              "pairs": 420,
+              "weekends": 5
+            },
+            "racePace": {
+              "mae": 0.009058186018376617,
+              "coverage90": 0.9061956082998792,
+              "pairs": 365,
+              "weekends": 5
+            },
+            "overall": {
+              "logLoss": 0.5160291357249019,
+              "brier": 0.17206566968741882,
+              "calibrationSlope": 0.9138594738634408,
+              "weekends": 5,
+              "pairs": 412,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 41,
+                  "predicted": 0.5402910073676722,
+                  "observed": 0.610062893081761
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 66,
+                  "predicted": 0.6461207236820892,
+                  "observed": 0.6692667706708266
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 80,
+                  "predicted": 0.757895296919818,
+                  "observed": 0.6366580310880829
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 184,
+                  "predicted": 0.857005995461183,
+                  "observed": 0.8236282194848824
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 41,
+                  "predicted": 0.9119600888043478,
+                  "observed": 1.0
+                }
+              ]
+            }
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.5086421926834032,
+          "brier": 0.16591265956424261,
+          "calibrationSlope": 0.8986024477248842,
+          "weekends": 77,
+          "pairs": 17376,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 1772,
+              "predicted": 0.550396601800348,
+              "observed": 0.5417692415185408
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 2048,
+              "predicted": 0.6504762919376119,
+              "observed": 0.6268239370300299
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 3040,
+              "predicted": 0.7548858073480843,
+              "observed": 0.7192384497194964
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 8731,
+              "predicted": 0.8588917574051406,
+              "observed": 0.8409803690251986
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 1785,
+              "predicted": 0.9137859926145243,
+              "observed": 0.8836407450297625
+            }
+          ]
+        }
+      },
+      {
+        "fromYear": 2016,
+        "toYear": 2020,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.006726607129885884,
+              "coverage90": 0.9421516223714366,
+              "pairs": 19165,
+              "weekends": 100
+            },
+            "racePace": {
+              "mae": 0.005645984442510539,
+              "coverage90": 0.9536149071352483,
+              "pairs": 17480,
+              "weekends": 100
+            },
+            "overall": {
+              "logLoss": 0.5290076230477095,
+              "brier": 0.17569185951395958,
+              "calibrationSlope": 0.9553912785822916,
+              "weekends": 100,
+              "pairs": 19667,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3642,
+                  "predicted": 0.5504797545367819,
+                  "observed": 0.560732104105064
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3315,
+                  "predicted": 0.6494759082337092,
+                  "observed": 0.6487705908917238
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 3862,
+                  "predicted": 0.7526324878681037,
+                  "observed": 0.7435431705555335
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 6840,
+                  "predicted": 0.855698198422921,
+                  "observed": 0.8390427471202798
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 2008,
+                  "predicted": 0.9134464782015232,
+                  "observed": 0.9141255970272756
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.008484256345955472,
+              "coverage90": 0.9112748462748462,
+              "pairs": 322,
+              "weekends": 10
+            },
+            "racePace": {
+              "mae": 0.006488293271489072,
+              "coverage90": 0.9234181549971023,
+              "pairs": 288,
+              "weekends": 10
+            },
+            "overall": {
+              "logLoss": 0.5898049625531755,
+              "brier": 0.20363124735474925,
+              "calibrationSlope": 0.7252946696811453,
+              "weekends": 10,
+              "pairs": 321,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 45,
+                  "predicted": 0.546843061602024,
+                  "observed": 0.5682476496065794
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 51,
+                  "predicted": 0.6530511251999795,
+                  "observed": 0.5380954092820939
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 62,
+                  "predicted": 0.7482718613488613,
+                  "observed": 0.5702578330656206
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 135,
+                  "predicted": 0.8534766351053656,
+                  "observed": 0.7878102449458237
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 28,
+                  "predicted": 0.9114636074812643,
+                  "observed": 0.9796995427824953
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.007273501332341273,
+              "coverage90": 0.9449578080267982,
+              "pairs": 1346,
+              "weekends": 37
+            },
+            "racePace": {
+              "mae": 0.0066955597552973405,
+              "coverage90": 0.9304814379814906,
+              "pairs": 1256,
+              "weekends": 38
+            },
+            "overall": {
+              "logLoss": 0.5220548389663797,
+              "brier": 0.17283932885288428,
+              "calibrationSlope": 0.9286022753803639,
+              "weekends": 38,
+              "pairs": 1459,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 241,
+                  "predicted": 0.5514242150708877,
+                  "observed": 0.5659653604069939
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 226,
+                  "predicted": 0.6502354192865953,
+                  "observed": 0.6347412964947461
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 284,
+                  "predicted": 0.7486371619900372,
+                  "observed": 0.7139521628174387
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 555,
+                  "predicted": 0.8549440557849779,
+                  "observed": 0.8325704650273902
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 153,
+                  "predicted": 0.9136931636507792,
+                  "observed": 0.938483890162898
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": {
+              "mae": 0.014014286756824135,
+              "coverage90": 0.75,
+              "pairs": 40,
+              "weekends": 1
+            },
+            "racePace": {
+              "mae": 0.009110022903667685,
+              "coverage90": 0.8421052631578947,
+              "pairs": 38,
+              "weekends": 1
+            },
+            "overall": {
+              "logLoss": 0.6325647445747307,
+              "brier": 0.22194505999224384,
+              "calibrationSlope": 0.6284557470755675,
+              "weekends": 1,
+              "pairs": 38,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 5,
+                  "predicted": 0.5686078764343694,
+                  "observed": 0.0
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 9,
+                  "predicted": 0.6614638611481072,
+                  "observed": 0.5555555555555556
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 6,
+                  "predicted": 0.7701569021097123,
+                  "observed": 0.6666666666666666
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 18,
+                  "predicted": 0.8580661760420728,
+                  "observed": 0.7777777777777777
+                }
+              ]
+            }
+          },
+          "carFirst5": {
+            "qualifying": {
+              "mae": 0.008965301394032621,
+              "coverage90": 0.8594444444444445,
+              "pairs": 196,
+              "weekends": 5
+            },
+            "racePace": {
+              "mae": 0.007861846950742274,
+              "coverage90": 0.9190092879256966,
+              "pairs": 182,
+              "weekends": 5
+            },
+            "overall": {
+              "logLoss": 0.6488386480292136,
+              "brier": 0.22502250164673804,
+              "calibrationSlope": 0.6019095713857189,
+              "weekends": 5,
+              "pairs": 198,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 35,
+                  "predicted": 0.5539873378949836,
+                  "observed": 0.5104477611940299
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 45,
+                  "predicted": 0.6516999234239584,
+                  "observed": 0.5335648148148151
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 36,
+                  "predicted": 0.7490716473419426,
+                  "observed": 0.6391304347826087
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 82,
+                  "predicted": 0.855902160410078,
+                  "observed": 0.7684010152284263
+                }
+              ]
+            }
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.5107411288663374,
+          "brier": 0.16750364626511036,
+          "calibrationSlope": 0.9591116154824182,
+          "weekends": 100,
+          "pairs": 19214,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2605,
+              "predicted": 0.5500863232669556,
+              "observed": 0.5538069830938939
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 3043,
+              "predicted": 0.6504876724756892,
+              "observed": 0.6592928207129696
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 3936,
+              "predicted": 0.7528443991219795,
+              "observed": 0.7587676659675447
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 7136,
+              "predicted": 0.8558690783496249,
+              "observed": 0.8380786122910976
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 2494,
+              "predicted": 0.9141229487576668,
+              "observed": 0.9083325809135712
+            }
+          ]
+        }
+      },
+      {
+        "fromYear": 2021,
+        "toYear": 2025,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.005505193260775464,
+              "coverage90": 0.9531922341112501,
+              "pairs": 21028,
+              "weekends": 114
+            },
+            "racePace": {
+              "mae": 0.005162280428420984,
+              "coverage90": 0.9587096707227516,
+              "pairs": 19317,
+              "weekends": 113
+            },
+            "overall": {
+              "logLoss": 0.5238196424154249,
+              "brier": 0.17326792437826227,
+              "calibrationSlope": 1.0027485071480575,
+              "weekends": 113,
+              "pairs": 21117,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 3916,
+                  "predicted": 0.5499837154596883,
+                  "observed": 0.539675251252676
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 3742,
+                  "predicted": 0.6509823078391259,
+                  "observed": 0.6480282337314319
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 4327,
+                  "predicted": 0.7513525893006512,
+                  "observed": 0.7483582353500648
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 7549,
+                  "predicted": 0.8563357622943218,
+                  "observed": 0.8648818244655869
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 1583,
+                  "predicted": 0.9124139740122075,
+                  "observed": 0.8950467543096314
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.006463718051659686,
+              "coverage90": 0.9371631693613119,
+              "pairs": 252,
+              "weekends": 9
+            },
+            "racePace": {
+              "mae": 0.007295488345688542,
+              "coverage90": 0.8739250085999312,
+              "pairs": 181,
+              "weekends": 9
+            },
+            "overall": {
+              "logLoss": 0.5585461649309966,
+              "brier": 0.19016065536885002,
+              "calibrationSlope": 0.8926992559902309,
+              "weekends": 9,
+              "pairs": 259,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 39,
+                  "predicted": 0.5553855930194214,
+                  "observed": 0.561728644842795
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 66,
+                  "predicted": 0.6540556638020864,
+                  "observed": 0.622815488247209
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 54,
+                  "predicted": 0.7503304983899579,
+                  "observed": 0.6262603174603174
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 80,
+                  "predicted": 0.8541240915732208,
+                  "observed": 0.8513785106931205
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 20,
+                  "predicted": 0.9118467283967325,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.005839110540175222,
+              "coverage90": 0.9592843904080472,
+              "pairs": 1157,
+              "weekends": 34
+            },
+            "racePace": {
+              "mae": 0.005509361464578221,
+              "coverage90": 0.9735793159759651,
+              "pairs": 1106,
+              "weekends": 34
+            },
+            "overall": {
+              "logLoss": 0.5429136056377014,
+              "brier": 0.18268634083925028,
+              "calibrationSlope": 0.962078866349852,
+              "weekends": 34,
+              "pairs": 1242,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 247,
+                  "predicted": 0.5472035021058841,
+                  "observed": 0.43199930223071753
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 254,
+                  "predicted": 0.6522820236706562,
+                  "observed": 0.6213108827898955
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 240,
+                  "predicted": 0.7455300863210779,
+                  "observed": 0.6903765099943774
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 428,
+                  "predicted": 0.8572905333617984,
+                  "observed": 0.8748036881056721
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 73,
+                  "predicted": 0.9123952676950008,
+                  "observed": 0.9444557496964223
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": null,
+            "racePace": null,
+            "overall": null
+          },
+          "carFirst5": {
+            "qualifying": null,
+            "racePace": null,
+            "overall": null
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.48421202823838505,
+          "brier": 0.15650723827011773,
+          "calibrationSlope": 1.0546662696207068,
+          "weekends": 112,
+          "pairs": 20044,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 2877,
+              "predicted": 0.55002059297984,
+              "observed": 0.5731398845308345
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 3073,
+              "predicted": 0.6505721310914179,
+              "observed": 0.6731552900616563
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 4029,
+              "predicted": 0.7538511294714163,
+              "observed": 0.7600023897528243
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 7430,
+              "predicted": 0.8574637116384898,
+              "observed": 0.8750935573243702
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 2635,
+              "predicted": 0.91500108405652,
+              "observed": 0.910097237966293
+            }
+          ]
+        }
+      },
+      {
+        "fromYear": 2026,
+        "toYear": 2026,
+        "slices": {
+          "all": {
+            "qualifying": {
+              "mae": 0.006634010528521024,
+              "coverage90": 0.9137164282316637,
+              "pairs": 4255,
+              "weekends": 19
+            },
+            "racePace": {
+              "mae": 0.007073477658753946,
+              "coverage90": 0.8600370620257124,
+              "pairs": 3915,
+              "weekends": 19
+            },
+            "overall": {
+              "logLoss": 0.5227039153910475,
+              "brier": 0.1706068879340782,
+              "calibrationSlope": 0.8500215908470967,
+              "weekends": 19,
+              "pairs": 4368,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 618,
+                  "predicted": 0.5474479931914153,
+                  "observed": 0.5470758354755784
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 720,
+                  "predicted": 0.6475137475111057,
+                  "observed": 0.645979864846228
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 528,
+                  "predicted": 0.7518287654675581,
+                  "observed": 0.7517370892018779
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 1646,
+                  "predicted": 0.8666972013115201,
+                  "observed": 0.8399418851020037
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 856,
+                  "predicted": 0.9139148792353999,
+                  "observed": 0.8562594796406487
+                }
+              ]
+            }
+          },
+          "driverFirst1": {
+            "qualifying": {
+              "mae": 0.00990539588707458,
+              "coverage90": 0.7222222222222223,
+              "pairs": 38,
+              "weekends": 2
+            },
+            "racePace": {
+              "mae": 0.0068560021636303765,
+              "coverage90": 0.8947368421052632,
+              "pairs": 38,
+              "weekends": 2
+            },
+            "overall": {
+              "logLoss": 0.4796784286989118,
+              "brier": 0.15590983439273706,
+              "calibrationSlope": 1.414272218556378,
+              "weekends": 2,
+              "pairs": 41,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 10,
+                  "predicted": 0.5475976086554764,
+                  "observed": 0.6956521739130435
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 11,
+                  "predicted": 0.653612527177448,
+                  "observed": 0.7300884955752213
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 5,
+                  "predicted": 0.7488836875364644,
+                  "observed": 0.803921568627451
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 11,
+                  "predicted": 0.8628342519222651,
+                  "observed": 0.9066666666666667
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 4,
+                  "predicted": 0.9102274062396196,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "driverFirst5": {
+            "qualifying": {
+              "mae": 0.007652773328762327,
+              "coverage90": 0.8593915343915344,
+              "pairs": 121,
+              "weekends": 6
+            },
+            "racePace": {
+              "mae": 0.006108766859293972,
+              "coverage90": 0.9366062214359427,
+              "pairs": 93,
+              "weekends": 5
+            },
+            "overall": {
+              "logLoss": 0.5577308798495808,
+              "brier": 0.1895944028406485,
+              "calibrationSlope": 0.9214322419670367,
+              "weekends": 6,
+              "pairs": 125,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 31,
+                  "predicted": 0.5420576570352366,
+                  "observed": 0.6124401913875595
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 31,
+                  "predicted": 0.6481078180838925,
+                  "observed": 0.5830670926517569
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 11,
+                  "predicted": 0.742148159166471,
+                  "observed": 0.6396396396396397
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 46,
+                  "predicted": 0.8658053299432338,
+                  "observed": 0.847567567567568
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 6,
+                  "predicted": 0.9088654766773586,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "carFirst1": {
+            "qualifying": {
+              "mae": 0.016858058289867858,
+              "coverage90": 0.53125,
+              "pairs": 64,
+              "weekends": 1
+            },
+            "racePace": {
+              "mae": 0.02223523122406113,
+              "coverage90": 0.33962264150943394,
+              "pairs": 53,
+              "weekends": 1
+            },
+            "overall": {
+              "logLoss": 0.5329721011128714,
+              "brier": 0.1748689774656104,
+              "calibrationSlope": 1.150418752472818,
+              "weekends": 1,
+              "pairs": 72,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 16,
+                  "predicted": 0.556675163093581,
+                  "observed": 0.4375
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 22,
+                  "predicted": 0.6467426710458669,
+                  "observed": 0.8181818181818182
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 13,
+                  "predicted": 0.7493746969644026,
+                  "observed": 0.8461538461538461
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 16,
+                  "predicted": 0.8679723174930104,
+                  "observed": 0.8125
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 5,
+                  "predicted": 0.9051221642177969,
+                  "observed": 1.0
+                }
+              ]
+            }
+          },
+          "carFirst5": {
+            "qualifying": {
+              "mae": 0.010522723425772307,
+              "coverage90": 0.7884057317952416,
+              "pairs": 365,
+              "weekends": 5
+            },
+            "racePace": {
+              "mae": 0.010387367413464136,
+              "coverage90": 0.7759561321341624,
+              "pairs": 295,
+              "weekends": 5
+            },
+            "overall": {
+              "logLoss": 0.5998497860165195,
+              "brier": 0.19957170433900379,
+              "calibrationSlope": 0.6456235734982892,
+              "weekends": 5,
+              "pairs": 376,
+              "reliability": [
+                {
+                  "fromProbability": 0.5,
+                  "count": 44,
+                  "predicted": 0.55146012077294,
+                  "observed": 0.6324257425742571
+                },
+                {
+                  "fromProbability": 0.6,
+                  "count": 82,
+                  "predicted": 0.6476109066315016,
+                  "observed": 0.5767690253671564
+                },
+                {
+                  "fromProbability": 0.7,
+                  "count": 40,
+                  "predicted": 0.7457799949175091,
+                  "observed": 0.7025920873124147
+                },
+                {
+                  "fromProbability": 0.8,
+                  "count": 116,
+                  "predicted": 0.8687012848271823,
+                  "observed": 0.7932509505703423
+                },
+                {
+                  "fromProbability": 0.9,
+                  "count": 94,
+                  "predicted": 0.9185171457024652,
+                  "observed": 0.8090748379493226
+                }
+              ]
+            }
+          }
+        },
+        "knownGrid": {
+          "logLoss": 0.492347277383091,
+          "brier": 0.15701839659422104,
+          "calibrationSlope": 0.8847051269487346,
+          "weekends": 18,
+          "pairs": 4137,
+          "reliability": [
+            {
+              "fromProbability": 0.5,
+              "count": 493,
+              "predicted": 0.5492696239142524,
+              "observed": 0.5766438079870915
+            },
+            {
+              "fromProbability": 0.6,
+              "count": 570,
+              "predicted": 0.6492418922639985,
+              "observed": 0.6824041811846691
+            },
+            {
+              "fromProbability": 0.7,
+              "count": 541,
+              "predicted": 0.7510492692450329,
+              "observed": 0.8022381214456064
+            },
+            {
+              "fromProbability": 0.8,
+              "count": 1357,
+              "predicted": 0.8657540692172736,
+              "observed": 0.8501650165016502
+            },
+            {
+              "fromProbability": 0.9,
+              "count": 1176,
+              "predicted": 0.9151966351183717,
+              "observed": 0.8601220752797557
+            }
+          ]
+        }
+      }
+    ],
+    "calibration": [
+      {
+        "fromYear": 2008,
+        "channel": 0,
+        "slope": 0.9975851343656343,
+        "noise": 2.2005956732744134
+      },
+      {
+        "fromYear": 2008,
+        "channel": 1,
+        "slope": 0.9898636112875603,
+        "noise": 1.8557988500357978
+      },
+      {
+        "fromYear": 2008,
+        "channel": 2,
+        "slope": 1.3578773358747158
+      },
+      {
+        "fromYear": 2012,
+        "channel": 0,
+        "slope": 1.0112200166502112,
+        "noise": 1.9221082891518004
+      },
+      {
+        "fromYear": 2012,
+        "channel": 1,
+        "slope": 1.0159067029008795,
+        "noise": 1.770843576900308
+      },
+      {
+        "fromYear": 2012,
+        "channel": 2,
+        "slope": 1.3613387282913896
+      },
+      {
+        "fromYear": 2016,
+        "channel": 0,
+        "slope": 0.9983999282454811,
+        "noise": 1.8357457198174654
+      },
+      {
+        "fromYear": 2016,
+        "channel": 1,
+        "slope": 1.0083849445849045,
+        "noise": 1.6188579476830642
+      },
+      {
+        "fromYear": 2016,
+        "channel": 2,
+        "slope": 1.2456746036720145
+      },
+      {
+        "fromYear": 2021,
+        "channel": 0,
+        "slope": 0.9841306413454903,
+        "noise": 1.7352344306032628
+      },
+      {
+        "fromYear": 2021,
+        "channel": 1,
+        "slope": 1.000398860622059,
+        "noise": 1.5002547225389231
+      },
+      {
+        "fromYear": 2021,
+        "channel": 2,
+        "slope": 1.202668161633779
+      },
+      {
+        "fromYear": 2026,
+        "channel": 0,
+        "slope": 0.9767328767942886,
+        "noise": 1.599348716116472
+      },
+      {
+        "fromYear": 2026,
+        "channel": 1,
+        "slope": 0.9968419052902157,
+        "noise": 1.3986590343487293
+      },
+      {
+        "fromYear": 2026,
+        "channel": 2,
+        "slope": 1.1979454600803119
+      }
+    ],
+    "gridHeads": [
+      {
+        "fromYear": 2008,
+        "trainedThrough": 2007,
+        "ratingCoefficient": 1.0578312123018443,
+        "gridCoefficient": 1.676944982561342,
+        "penalty": 0.001,
+        "innerScore": 0.5457906739554435
+      },
+      {
+        "fromYear": 2012,
+        "trainedThrough": 2011,
+        "ratingCoefficient": 1.0389897346687311,
+        "gridCoefficient": 1.6504238259806623,
+        "penalty": 0.001,
+        "innerScore": 0.52231902099648
+      },
+      {
+        "fromYear": 2016,
+        "trainedThrough": 2015,
+        "ratingCoefficient": 0.9462114850913765,
+        "gridCoefficient": 1.5088241163992107,
+        "penalty": 0.001,
+        "innerScore": 0.5086421926834029
+      },
+      {
+        "fromYear": 2021,
+        "trainedThrough": 2020,
+        "ratingCoefficient": 0.9128724412465692,
+        "gridCoefficient": 1.4513803618386054,
+        "penalty": 0.001,
+        "innerScore": 0.5151055770827593
+      },
+      {
+        "fromYear": 2026,
+        "trainedThrough": 2025,
+        "ratingCoefficient": 0.9101967859775805,
+        "gridCoefficient": 1.5419074614136945,
+        "penalty": 0.001,
+        "innerScore": 0.4834036723403257
+      }
+    ],
+    "latestMeans": {
+      "drivers": [
+        948.7877719700481,
+        1031.874154511315,
+        1058.8037504406686
+      ],
+      "cars": [
+        1125.3349626192103,
+        1096.4114648143304,
+        1049.3864011565647
+      ]
+    },
+    "overallMovement90": {
+      "drivers": 2.992494375788968,
+      "cars": 7.3860183922581335
+    }
+  },
+  "comparisons": {
+    "all": {
+      "logLossDifference": -0.0003270376339438889,
+      "seasonInterval95": [
+        -0.00122274590506608,
+        0.0005986856591854684
+      ]
+    },
+    "driverFirst1": {
+      "logLossDifference": 8.241373571090435e-05,
+      "seasonInterval95": [
+        -0.003288722299935637,
+        0.003887374642240155
+      ]
+    },
+    "driverFirst5": {
+      "logLossDifference": 0.0024749917014029532,
+      "seasonInterval95": [
+        0.00029691361990233497,
+        0.004981924237353477
+      ]
+    },
+    "carFirst1": {
+      "logLossDifference": 0.007963237243487587,
+      "seasonInterval95": [
+        -0.008755312650082786,
+        0.023234395114298024
+      ]
+    },
+    "carFirst5": {
+      "logLossDifference": 0.0111062621631031,
+      "seasonInterval95": [
+        -0.0046158946525746754,
+        0.03419316344965488
+      ]
+    }
+  },
+  "guards": {
+    "overall": true,
+    "blocks": true,
+    "timing": false,
+    "driverStability": true,
+    "driver": {
+      "logLossChange": 0.002474991701402973,
+      "qualifyingErrorRatio": 1.02821343050409,
+      "racePaceErrorRatio": 1.0126549143156862,
+      "accepted": false
+    },
+    "car": {
+      "logLossChange": 0.011106262163103064,
+      "qualifyingErrorRatio": 0.9952388124391353,
+      "racePaceErrorRatio": 1.0200235181816937,
+      "accepted": false
+    }
+  },
+  "accepted": false,
+  "decision": "Rejected: both newcomer result slices worsened and full-field qualifying error increased 2.08%, exceeding the declared 2% tolerance. Production remains unchanged."
+}

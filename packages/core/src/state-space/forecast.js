@@ -1,3 +1,4 @@
+import { isUnified, forecastPreWeekend } from '../unified/forecast.js';
 // The state-space ratings used on their own to forecast a pairing: the chance that A finishes ahead of B in a race, from
 // the state-space ratings alone, with the uncertainty of the two ratings carried into the probability.
 import { STATE_SPACE } from '../presets/state-space.js';
@@ -13,6 +14,10 @@ const expit = (z) => 1 / (1 + Math.exp(-z));
  *        covariance between a driver and his car), p the probability with that uncertainty folded in.
  */
 export function ratingsAlone(model, idA, idB) {
+  if (isUnified(model)) {
+    const result = forecastPreWeekend(model, idA, idB);
+    return result ? { p: result.competitive, gap: result.gap, sd: result.sd } : null;
+  }
   const latest = model?.ss?.latest?.race;
   if (!latest) return null;
   const nd = latest.driverIds.length;

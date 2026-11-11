@@ -1,0 +1,40 @@
+{
+  "result": "PASS",
+  "sourceHash": "dc909062c7273b74",
+  "halfLife": 20,
+  "weekends": 620,
+  "channelPairGapsChecked": 505431,
+  "maximumGapDifference": 4.547473508864641e-13,
+  "currentPairsWithUnchangedForecasts": 231,
+  "knownGridPairsWithUnchangedForecasts": 231,
+  "unchangedScenarioModes": [
+    "latest",
+    "prime",
+    "mixed-date"
+  ],
+  "underlyingModelUnchanged": true,
+  "firstScreenMatchesFullHistory": true,
+  "latestOverallMeans": {
+    "drivers": 999.1822203059836,
+    "cars": 1000.2185541268677
+  },
+  "unchangedRawFiles": {
+    "data/model.json": {
+      "sha256": "882a4d7d3a960dc59104f33f45a9624d9c46a74b8c8f534333707b32f42baea9",
+      "byteIdentical": true
+    },
+    "data/model-latest.json": {
+      "sha256": "adacbdea90b6e13347fe4d5f010fd254e582514848d63b30e029aed901863d76",
+      "byteIdentical": true
+    },
+    "data/teammate-graph.json": {
+      "sha256": "e3aa4107037e4232fedd6e9efa5c0877556c9687229a1067ae60833acd3b994b",
+      "byteIdentical": true
+    }
+  },
+  "freshModelComparisonNumbers": 1202133,
+  "productionInferenceFixtures": 22,
+  "knownGridInferenceFixtures": 16,
+  "interpretation": "Display-only lagged exponential reference; the model, calibration, covariance, retirement outputs and raw forecast inputs are unchanged. Historical charts show strength relative to a recent-era reference, not absolute cross-era ability.",
+  "browserChecksPassed": 227
+}

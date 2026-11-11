@@ -113,7 +113,7 @@ for (const author of [
   assert.ok(insights.includes(author), `the Insights notes cite ${author}`);
 
 // 6. what is published
-for (const file of ['data/model.json', 'data/model-latest.json', 'data/teammate-graph.json']) {
+for (const file of ['data/model.json', 'data/model-latest.json', 'data/teammate-graph.json', 'data/rating-reference.json']) {
   const { licence } = deserialize(await read(file));
   assert.equal(licence?.licence, 'CC BY-NC-SA 4.0', `${file} carries the licence`);
   assert.ok(licence.credit.includes('Jolpica') && licence.credit.includes('TracingInsights'), `${file} carries the credit`);
@@ -141,8 +141,12 @@ try {
   assert.equal(run.status, 0, run.stderr);
   const published = (await walk('dist')).map((file) => relative('dist', file));
   assert.ok(!published.some((file) => file.endsWith('.csv')), 'the source tables are not published');
+  assert.ok(
+    !published.some((file) => /^site\/(?:assets\/(?:models|f1-driver|f1-mercedes-car)\/|js\/stage-model-)/.test(file)),
+    'the reference-only 3D experiment is retained outside the restored production site',
+  );
   assert.ok(published.includes('_headers'), 'the headers file is published');
-  assert.ok(published.includes('packages/core/src/forecast/scenario.js'), 'the lazy forecast dependency is published');
+  assert.ok(published.includes('packages/core/src/unified/scenario.js'), 'the lazy forecast dependency is published');
   assert.ok(!published.includes('packages/core/src/dataset.js'), 'model-building code is not published');
   // Inspect the assembled JavaScript independently of the builder's traversal, including lazy imports and re-exports.
   for (const file of published.filter((name) => /^(?:site\/js|packages\/core)\/.*\.js$/.test(name))) {

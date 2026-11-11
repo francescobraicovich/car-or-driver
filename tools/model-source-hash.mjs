@@ -10,12 +10,12 @@ async function sourceFiles(directory) {
   const files = await Promise.all(
     entries.map((entry) => (entry.isDirectory() ? sourceFiles(join(directory, entry.name)) : [join(directory, entry.name)])),
   );
-  return files.flat().filter((file) => file.endsWith('.js'));
+  return files.flat().filter((file) => /\.(js|mjs|py|json)$/.test(file));
 }
 
 export async function modelSourceHash(root = '.') {
   const manifest = JSON.parse(await readFile(join(root, 'data/manifest.json'), 'utf8'));
-  const files = [...(await sourceFiles(join(root, 'packages/core/src'))).sort(), join(root, 'tools/build-model.mjs')];
+  const files = [...(await sourceFiles(join(root, 'packages/core'))).sort(), join(root, 'tools/build-model.mjs')];
   const hash = createHash('sha256').update(manifest.version);
   for (const file of files) hash.update(file.slice(root.length)).update(await readFile(file));
   return { sourceHash: hash.digest('hex').slice(0, 16), lastRace: manifest.lastRace };

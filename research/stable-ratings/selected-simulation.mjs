@@ -1,16 +1,19 @@
 // Both sessions and graph evidence come from the same simulated world.
 import { writeFile } from 'node:fs/promises';
+import { modelSourceHash } from '../../tools/model-source-hash.mjs';
 import { pathToFileURL } from 'node:url';
 import { load } from '../../packages/research/node/strict-eval.mjs';
 import { bothSessions } from '../../packages/research/node/simulation-both.mjs';
 import { indexTimeline, findMoves, truthMetrics, worldFromHyper, worldParamsV2 } from '../../packages/eval/src/index.js';
 import { carLineage, runPublishedRatings } from '../../packages/core/src/state-space/build.js';
+import { structuralDiagnostics } from '../../packages/eval/src/structural-diagnostics.js';
 
 import { rankingCandidates } from '../simplification/candidates-ranking.mjs';
 
 import { simulatedWeekends } from './synthetic-weekends.mjs';
 
 async function main() {
+  const output = process.argv[2] ?? 'research/stable-ratings/selected-simulation-results';
   const env = await load(2015);
   const originalIndex = indexTimeline(env.timeline, env.prep.ctx);
   const center = (snapshot) => {
@@ -29,7 +32,8 @@ async function main() {
     const weekends = simulatedWeekends(world.timeline);
     const baseline = rankingCandidates['without-qualifying-car-link']({ ...env, timeline: world.timeline });
     const raw = runPublishedRatings(weekends, env.prep.ctx.tmBoost);
-    const selected = Object.fromEntries(['race', 'qual'].map((session) => [session, { session, pre: raw[session].pre, post: raw[session].ratings }]));
+    const selected = Object.fromEntries(['race', 'qual'].map((session) => [session, { session, k: Math.LN10 / raw[session].hyper.s,
+      pre: raw[session].pre, post: raw[session].ratings }]));
     const runs = { baseline, selected };
     for (const [model, pair] of Object.entries(runs)) for (const session of ['race', 'qual']) {
       const run = { ...pair[session], post: pair[session].post.map(center) };
@@ -37,7 +41,8 @@ async function main() {
       records.push({ scenario, seed, model, session, driverRmse: result.rmseDriver.est, carRmse: result.rmseCar.est,
         teammateGapRmse: result.gapRmse.mates.est, fieldGapRmse: result.gapRmse.cars.est,
         winterLeak: result.leakTruth.winterUnchanged.est, seasonLeak: result.leakTruth.season.est,
-        carCapture: result.carCapture.est, moverStepRmse: result.moverStepError.rms });
+        carCapture: result.carCapture.est, moverStepRmse: result.moverStepError.rms,
+        structural: structuralDiagnostics(idx, run, { fromYear: 2008, toYear: 2015, boot: { B: 0 } }) });
     }
     console.log(`Completed ${scenario}, seed ${seed}`);
   }
@@ -52,11 +57,15 @@ async function main() {
     }));
   }
   const protocol = 'Simulator v2 on the real calendar through 2015; both sessions and graph evidence simulated; three paired seeds per scenario. Retrospective stress tests, not real-world validation. Recovery begins after two initial seasons. Uncertainty coverage is not evaluated.';
-  await writeFile('research/stable-ratings/selected-simulation-results.json', `${JSON.stringify({ protocol, scenarios, seeds: [1, 2, 3], summary, records }, null, 2)}\n`);
+  await writeFile(`${output}.json`, `${JSON.stringify({ modelSource: await modelSourceHash(), protocol, scenarios, seeds: [1, 2, 3], summary, records }, null, 2)}\n`);
   const lines = ['# Synthetic truth recovery', '', protocol, '', '| Scenario / session | Driver RMSE baseline / selected | Car RMSE baseline / selected | Teammate-gap RMSE baseline / selected | Field-gap RMSE baseline / selected | Mover-step RMSE baseline / selected |', '| --- | --- | --- | --- | --- | --- |'];
   const fmt = (x) => Number.isFinite(x) ? x.toFixed(2) : 'unavailable';
   for (const [key, row] of Object.entries(summary)) lines.push(`| ${key} | ${fmt(row.driverRmse.baseline)} / ${fmt(row.driverRmse.selected)} | ${fmt(row.carRmse.baseline)} / ${fmt(row.carRmse.selected)} | ${fmt(row.teammateGapRmse.baseline)} / ${fmt(row.teammateGapRmse.selected)} | ${fmt(row.fieldGapRmse.baseline)} / ${fmt(row.fieldGapRmse.selected)} | ${fmt(row.moverStepRmse.baseline)} / ${fmt(row.moverStepRmse.selected)} |`);
+  lines.push('', '| Scenario / session | In-season driver response to true car change | Winter driver response to true car change | Winter car response to true car change |',
+    '| --- | ---: | ---: | ---: |');
+  for (const [key, row] of Object.entries(summary)) lines.push(`| ${key} | ${fmt(row.seasonLeak.selected)} | ${fmt(row.winterLeak.selected)} | ${fmt(row.carCapture.selected)} |`);
+  lines.push('', 'The slopes compare estimated changes with simulated true car changes; zero driver response is the synthetic target when true changes are independent. Detailed structural diagnostics for each seed are in the JSON.');
   lines.push('', 'These results are sensitive to the simulator assumptions; three seeds do not establish real-world accuracy. Per-seed results and further diagnostics are in the accompanying JSON.', '');
-  await writeFile('research/stable-ratings/selected-simulation-results.md', lines.join('\n'));
+  await writeFile(`${output}.md`, lines.join('\n'));
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) await main();

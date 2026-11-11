@@ -17,8 +17,8 @@ const ID = /^[A-Za-z0-9_-]{1,64}$/;
 export function createHistoryView({ onChange }) {
   const hist = {
     entity: 'driver',
-    driverMetric: 'race',
-    carMetric: 'race',
+    driverMetric: 'overall',
+    carMetric: 'overall',
     from: null,
     to: null,
     drivers: null,
@@ -35,9 +35,9 @@ export function createHistoryView({ onChange }) {
   // each id's own history, so the lines are joined here, keyed by the car's identity (see lineage.js).
   let joined = null;
   function joinedCars() {
-    if (joined?.model === state.model) return joined;
+    if (joined?.model === state.displayModel) return joined;
     const lines = new Map();
-    for (const [id, points] of state.model.ch) {
+    for (const [id, points] of state.displayModel.ch) {
       const car = carIdentity(id);
       if (!lines.has(car)) lines.set(car, []);
       lines.get(car).push(...points);
@@ -45,14 +45,14 @@ export function createHistoryView({ onChange }) {
     const labels = new Map();
     for (const [car, points] of lines) {
       points.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
-      labels.set(car, state.model.cname.get(String(points.at(-1).constructorId)) || car);
+      labels.set(car, state.displayModel.cname.get(String(points.at(-1).constructorId)) || car);
     }
-    joined = { model: state.model, lines, labels };
+    joined = { model: state.displayModel, lines, labels };
     return joined;
   }
   const entityId = (id) => (hist.entity === 'car' ? carIdentity(id) : String(id));
-  const series = () => (hist.entity === 'driver' ? state.model?.dh : state.model && joinedCars().lines) || new Map();
-  const names = () => (hist.entity === 'driver' ? state.model?.dname : state.model && joinedCars().labels) || new Map();
+  const series = () => (hist.entity === 'driver' ? state.displayModel?.dh : state.displayModel && joinedCars().lines) || new Map();
+  const names = () => (hist.entity === 'driver' ? state.displayModel?.dname : state.displayModel && joinedCars().labels) || new Map();
   const inRange = (points) => points.filter((p) => p.year >= hist.from && p.year <= hist.to);
 
   function build() {
@@ -152,7 +152,7 @@ export function createHistoryView({ onChange }) {
 
   /** Entities that could be plotted: {id, name, last, first, latest, active}. */
   function catalog() {
-    const latest = state.model.snaps[state.model.snaps.length - 1];
+    const latest = state.displayModel.snaps[state.displayModel.snaps.length - 1];
     const activeIds = new Set(
       (hist.entity === 'driver' ? latest.drivers : latest.cars).map((r) =>
         entityId(hist.entity === 'driver' ? r.driverId : r.constructorId),
@@ -162,7 +162,7 @@ export function createHistoryView({ onChange }) {
       .map(([id, points]) => ({
         id: String(id),
         name: names().get(id) || String(id),
-        last: points[points.length - 1]?.race ?? NaN,
+        last: points[points.length - 1]?.overall ?? NaN,
         first: points[0]?.year,
         latest: points[points.length - 1]?.year,
         active: activeIds.has(String(id)),
@@ -186,9 +186,9 @@ export function createHistoryView({ onChange }) {
   }
 
   function refresh() {
-    if (!state.model?.snaps.length) return;
+    if (!state.displayModel?.snaps.length) return;
     if (!root) build();
-    seasons = [...new Set(state.model.snaps.map((s) => +s.year))].sort((a, b) => a - b);
+    seasons = [...new Set(state.displayModel.snaps.map((s) => +s.year))].sort((a, b) => a - b);
     const latest = seasons[seasons.length - 1];
     const snap = (year, fallback) =>
       seasons.reduce((best, s) => (Math.abs(s - (year ?? fallback)) < Math.abs(best - (year ?? fallback)) ? s : best), latest);
@@ -204,11 +204,11 @@ export function createHistoryView({ onChange }) {
     render();
   }
 
-  const raceNames = () => new Map(state.model.snaps.map((s) => [String(s.raceId), s.name]));
+  const raceNames = () => new Map(state.displayModel.snaps.map((s) => [String(s.raceId), s.name]));
 
   /** Time axis for the chosen seasons: first weekend of `from` to last weekend of `to`. */
   function seasonSpan() {
-    const dates = state.model.snaps.filter((s) => +s.year >= hist.from && +s.year <= hist.to).map((s) => Date.parse(s.date));
+    const dates = state.displayModel.snaps.filter((s) => +s.year >= hist.from && +s.year <= hist.to).map((s) => Date.parse(s.date));
     return dates.length ? [Math.min(...dates) - 14 * 86400000, Math.max(...dates) + 14 * 86400000] : undefined;
   }
 
@@ -330,7 +330,7 @@ export function createHistoryView({ onChange }) {
   }
 
   function render() {
-    if (!root || !state.model) return;
+    if (!root || !state.displayModel) return;
     hideInfoTip(); // (the chart is drawn again under a pointer that may be on the icon)
     const type = hist.entity;
     const m = metric();
@@ -348,9 +348,13 @@ export function createHistoryView({ onChange }) {
       ui.historyInfo,
       [
         DESCRIPTIONS[m],
-        isProbability(m) ? '' : '1,000 is the average of the field.',
-        type === 'car'
-          ? 'A car carries over only partly into a new season, so the lines step.'
+        ['overall', 'race', 'qual'].includes(m)
+          ? '1,000 is a recent-era reference with a 20-weekend half-life, using earlier weekends only. The field average can differ.'
+          : isProbability(m)
+            ? ''
+            : '1,000 indicates the reference field’s retirement risk.',
+        type === 'car' && ['overall', 'race', 'qual'].includes(m)
+          ? 'Car uncertainty increases between seasons, allowing larger revisions when new evidence arrives.'
           : 'Each point is the rating after a weekend; gaps are seasons out.',
         'Hover, or use the arrow keys, to read a weekend.',
       ]
@@ -372,7 +376,7 @@ export function createHistoryView({ onChange }) {
       pointLabel: (p) => raceNames().get(String(p.raceId)),
       legend: false, // the chips name the lines
       casing: true,
-      reference: isProbability(m) ? undefined : { value: 1000 }, // the average of the field, drawn as the ratings draw theirs
+      reference: isProbability(m) ? undefined : { value: 1000 }, // the same dated centring convention as Ratings
       height: () => Math.max(0, ui.historyPlot.clientHeight - PLOT_PADDING), // (0 while the view is hidden: the renderer then takes its own)
     });
     renderChips();
@@ -400,7 +404,7 @@ export function createHistoryView({ onChange }) {
             ),
           ].slice(0, MAX_SERIES);
         const selected = params.get(type === 'driver' ? 'dm' : 'cm');
-        const m = selected === 'combined' ? 'race' : selected;
+        const m = selected === 'combined' ? 'overall' : selected;
         if (METRICS[type].includes(m)) hist[`${type}Metric`] = m;
       }
       for (const k of ['from', 'to']) {
@@ -410,8 +414,8 @@ export function createHistoryView({ onChange }) {
     },
     writeURL(params) {
       params.set('h', hist.entity);
-      params.set('dm', hist.driverMetric === 'combined' ? 'race' : hist.driverMetric);
-      params.set('cm', hist.carMetric === 'combined' ? 'race' : hist.carMetric);
+      params.set('dm', hist.driverMetric === 'combined' ? 'overall' : hist.driverMetric);
+      params.set('cm', hist.carMetric === 'combined' ? 'overall' : hist.carMetric);
       for (const k of ['drivers', 'cars']) if (hist[k] !== null) params.set(k, hist[k].join(','));
       for (const k of ['from', 'to']) if (hist[k] !== null) params.set(k, String(hist[k]));
     },
@@ -425,7 +429,7 @@ export function createHistoryView({ onChange }) {
       hist[entity === 'driver' ? 'drivers' : 'cars'] = [
         ...new Set(ids.map((id) => (entity === 'car' ? carIdentity(id) : String(id)))),
       ].slice(0, MAX_SERIES);
-      hist[`${entity}Metric`] = m === 'combined' ? 'race' : m;
+      hist[`${entity}Metric`] = m === 'combined' ? 'overall' : m;
       hist.to = year;
       hist.from = Math.max(seasons[0] ?? 2000, year - 9);
     },

@@ -1,7 +1,7 @@
 // The state-space model's settings besides its filters (presets/state-space.js): the exam it is read on (which observations exist and
 // what each one counts), the retirement hazards, the rating scale and the standard race distance of the forecasts.
 //
-// They were chosen with the Elo benchmark (presets/tuned-elo.js reuses them) on 2008-2011 with 2012-2015 as a pre-registered gate
+// These settings were selected on 2008-2011 with 2012-2015 as a pre-registered gate
 // (research/evaluation/backbone/protocol-4.json, era-transfer.json), and are fixed: the exam is never searched (packages/core/src/exam.js).
 //
 // Teammate pairs are scored at weight 8 (qTmBoost for qualifying): they are the hardest subset.

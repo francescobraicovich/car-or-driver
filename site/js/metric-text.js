@@ -1,6 +1,7 @@
 // Plain-language names and one-line descriptions for every rating, shared by
 // the Ratings, History and Head-to-head views.
 export const NAMES = {
+  overall: 'Overall strength',
   race: 'Race pace',
   qual: 'Qualifying pace',
   effective: 'Effective pace',
@@ -11,9 +12,11 @@ export const NAMES = {
 };
 
 export const DESCRIPTIONS = {
-  race: 'Estimated race pace, informed by qualifying, finishing order and valid lap times.',
-  qual: 'Pace over one lap, from the latest qualifying session in which both drivers set a time.',
-  effective: 'The historical blend of race and qualifying pace, adjusted for the driver’s or car’s retirement risk.',
+  overall:
+    'Expected race competitiveness before the weekend, learned directly from finishing order with information shared across the three outputs. Retirement risk is separate.',
+  race: 'Sustained speed from matching retained laps, without awarding credit for starting ahead. Traffic, tyres and strategy can still affect it.',
+  qual: 'Pace over one lap, from a valid shared qualifying phase, with format adjustments described in Methodology.',
+  effective: 'Overall strength adjusted for retirement risk; retained only for older exports.',
   clean: 'Chance of finishing a standard race distance without a driver-caused retirement.',
   survival: 'Chance of the car finishing a standard race distance without a mechanical failure.',
   incident: 'How rarely a driver is involved in retirements, on the rating scale.',
@@ -21,8 +24,8 @@ export const DESCRIPTIONS = {
 };
 
 export const METRICS = {
-  driver: ['race', 'qual', 'effective', 'clean', 'incident'],
-  car: ['race', 'qual', 'effective', 'survival', 'reliability'],
+  driver: ['overall', 'race', 'qual', 'clean', 'incident'],
+  car: ['overall', 'race', 'qual', 'survival', 'reliability'],
 };
 
 export const isProbability = (metric) => ['clean', 'survival'].includes(metric);

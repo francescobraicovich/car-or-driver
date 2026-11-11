@@ -2,7 +2,6 @@
 //
 //   node packages/research/node/evaluate.mjs [options]
 //
-//   --model state-space|elo|both     which ratings to evaluate (default state-space)
 //   --no-link               run the race filter alone (the model before the cross-session link, state-space/qualifying-link.js)
 //   --set race.sdC=30       override a state-space setting (repeatable; "race.", "qual." or no prefix for both)
 //   --runner file.mjs       evaluate your own model: the file's default export is (timeline, session, ctx) => ratingRun
@@ -22,13 +21,13 @@
 //   --details               print the detail tables as well as the scorecard
 //
 // Every interval is a bootstrap over whole seasons. "null" is what the same diagnostic reads on synthetic worlds where
-// the filter's assumptions hold, drawn on the real schedule (docs/evaluation.md).
+// the filter's assumptions hold, drawn on the real schedule (docs/backtesting.md).
 import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { loadData } from './common.mjs';
 import { STATE_SPACE } from '../../core/src/presets/state-space.js';
-import { evaluateModel, eloRun, stateSpaceRun, syntheticStudy } from '../../eval/src/index.js';
-import { eloForecastScores, prepareReal, stateSpaceForecastScores } from '../../eval/src/pipeline.js';
+import { evaluateModel, stateSpaceRun, syntheticStudy } from '../../eval/src/index.js';
+import { prepareReal, stateSpaceForecastScores } from '../../eval/src/pipeline.js';
 import { compare, detailReport, predictiveReport, recoveryReport, scorecard, syntheticReport } from '../../eval/src/report.js';
 
 const argv = process.argv.slice(2);
@@ -46,7 +45,8 @@ if (flag('compare')) {
   process.exit(0);
 }
 
-const model = opt('model', 'state-space');
+const model = 'state-space';
+if (opt('model') && opt('model') !== 'state-space') throw Error('Only the state-space model is supported');
 const sessions = String(opt('sessions', 'race,qual')).split(',');
 const holdout = flag('holdout');
 const full = flag('full');
@@ -80,19 +80,10 @@ console.error(
   `loaded ${prep.timeline.length} weekends (${prep.timeline[0].year}-${prep.timeline.at(-1).year})${holdout ? ' INCLUDING the 2016+ holdout' : ', holdout excluded'}`,
 );
 
-const models = model === 'both' ? ['state-space', 'elo'] : [model];
+const models = [model];
 const results = {};
-// Elo ratings are read first: the state-space forecast layer overwrites the core's snapshots
-let eloForecast = null;
 const runsBy = {};
-if (models.includes('elo')) {
-  const snaps = prep.elo.snaps.slice(0, prep.n);
-  runsBy.elo = Object.fromEntries(sessions.map((s) => [s, eloRun(prep.timeline, prep.weekends.slice(0, prep.n), snaps, s)]));
-  if (full) eloForecast = eloForecastScores(prep, { holdout });
-}
-if (models.includes('state-space')) {
-  runsBy['state-space'] = Object.fromEntries(sessions.map((s) => [s, stateSpaceRun(prep.timeline, s, prep.ctx, overrides[s])]));
-}
+runsBy['state-space'] = Object.fromEntries(sessions.map((s) => [s, stateSpaceRun(prep.timeline, s, prep.ctx, overrides[s])]));
 if (opt('runner')) {
   const mod = await import(pathToFileURL(String(opt('runner'))).href);
   runsBy.custom = Object.fromEntries(await Promise.all(sessions.map(async (s) => [s, await mod.default(prep.timeline, s, prep.ctx)])));
@@ -110,11 +101,6 @@ for (const name of models) {
     res.forecast = stateSpaceForecastScores(prep, runsBy['state-space'], { holdout });
     for (const [win, v] of Object.entries(res.forecast))
       for (const k of ['raceDay', 'thursday', 'qual']) res.headline[`forecast.state-space.${k}.${win}`] = { est: v[k] };
-  }
-  if (full && name === 'elo' && eloForecast) {
-    res.forecast = eloForecast;
-    for (const [win, v] of Object.entries(eloForecast))
-      for (const k of ['raceDay', 'thursday', 'qual']) res.headline[`forecast.elo.${k}.${win}`] = { est: v[k] };
   }
   if (name === 'state-space' && nNull > 0) {
     res.synthetic = {};
@@ -172,10 +158,6 @@ for (const name of models) {
   if (flag('details')) console.log(detailReport(res.sessions));
 }
 
-if (models.length === 2) {
-  console.log('\n# state-space vs elo (headline metrics)');
-  console.log(compare(results['state-space'].headline, results.elo.headline, { labelA: 'state-space', labelB: 'elo' }));
-}
 const jsonPath = opt('json');
 if (jsonPath && jsonPath !== true) {
   const out = models.length === 1 ? results[models[0]] : results;

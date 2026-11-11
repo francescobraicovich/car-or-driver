@@ -7,13 +7,11 @@
 //   node tools/build-model.mjs
 import { writeFile } from 'node:fs/promises';
 import { loadData } from '../packages/research/node/common.mjs';
-import { buildStateSpace } from '../packages/core/src/state-space/build.js';
-import { eloBenchmark } from '../packages/core/src/elo-benchmark.js';
+import { buildUnified } from '../packages/core/node/build-unified.mjs';
 import { serialize } from '../packages/core/src/json-serialization.js';
-import { carFormShifts, formShifts } from '../packages/core/src/forecast/form-shift.js';
 import { modelSourceHash } from './model-source-hash.mjs';
 
-export const FILE_FORMAT = 2; // forecast definitions travel with the model
+export const FILE_FORMAT = 3; // unified ratings and joint forecast covariance
 
 // Travels inside every published data file, so the terms are with the data wherever it is copied (see the About page of the site and data/NOTICE.md).
 export const LICENCE_NOTICE = {
@@ -25,12 +23,6 @@ export const LICENCE_NOTICE = {
 };
 const WEEKEND_SIGNIFICANT_DIGITS = 6; // display still rounds to whole points; retain enough precision for what-if probabilities
 
-// The benchmark rating tracks stay: Head to head reads the circuit and wet-weather skills from them. Everything else the benchmark adds is for
-// comparison only and is left out, and so are the retirement audit tables, which no page reads.
-const isBenchmarkField = (key) => /^elo[A-Z]/.test(key);
-const withoutBenchmarkFields = (row) => Object.fromEntries(Object.entries(row).filter(([key]) => !isBenchmarkField(key)));
-const withoutBenchmarkRows = (history) => new Map([...history].map(([id, rows]) => [id, rows.map(withoutBenchmarkFields)]));
-
 const roundedRow = (row) =>
   Object.fromEntries(
     Object.entries(row).map(([key, value]) => [
@@ -40,21 +32,15 @@ const roundedRow = (row) =>
   );
 
 const omit = (object, keys) => Object.fromEntries(Object.entries(object).filter(([key]) => !keys.includes(key)));
-const OMITTED_FROM_WEEKENDS = ['audit', 'qualAudit', 'eloDiag'];
+const OMITTED_FROM_WEEKENDS = ['audit', 'qualAudit'];
 
 /** The model as the site works with it: the same ratings, histories and forecast state, without what no page reads. */
 export function trimmedModel(model) {
   return {
     ...omit(model, ['exportRows']),
-    carFormShifts: carFormShifts(model),
-    formShifts: formShifts(model), // the Ratings page's recent-form column, computed here so the browser needs no forecasting code to show it
     snaps: model.snaps.map((snap) => ({
       ...omit(snap, OMITTED_FROM_WEEKENDS),
-      drivers: snap.drivers.map((row) => withoutBenchmarkFields(row)),
-      cars: snap.cars.map((row) => withoutBenchmarkFields(row)),
     })),
-    dh: withoutBenchmarkRows(model.dh),
-    ch: withoutBenchmarkRows(model.ch),
   };
 }
 
@@ -76,13 +62,13 @@ export function latestModel(model) {
     new Map(
       rows.map((row) => {
         const earlier = histories.get(row[identifier]).filter((point) => point.raceId !== latest.raceId);
-        return [row[identifier], earlier.slice(-1).map((point) => roundedRow(withoutBenchmarkFields(point)))];
+        return [row[identifier], earlier.slice(-1).map((point) => roundedRow(point))];
       }),
     );
   return {
     // without what only the other pages read: the forecast state, the circuit and wet-weather skills, the name lists
     ...omit(shipped, ['snaps', 'forecastState', 'ss', 'affFinal', 'wetFinal', 'dname', 'cname', 'circuitList']),
-    snaps: [omit(latest, ['diag', 'ssDiag'])],
+    snaps: [omit(latest, ['diag', 'ssDiag', 'unified'])],
     dh: previousRows(model.dh, latest.drivers, 'driverId'),
     ch: previousRows(model.ch, latest.cars, 'constructorId'),
   };
@@ -107,9 +93,7 @@ export function driverProfiles(drivers, ids) {
 
 if (import.meta.url === new URL(process.argv[1], 'file://').href) {
   const data = await loadData();
-  const model = buildStateSpace(data.raw, data.lapSnapshots, data.maps, { modelKind: 'state-space' }, data.lapPace, {
-    benchmark: eloBenchmark,
-  });
+  const model = await buildUnified(data);
   const { sourceHash, lastRace } = await modelSourceHash();
   const header = { format: FILE_FORMAT, sourceHash, lastRace, licence: LICENCE_NOTICE };
   const ratedIn = (snaps) => snaps.flatMap((snap) => snap.drivers.map((row) => row.driverId));

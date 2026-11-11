@@ -1,19 +1,5 @@
-# Published ratings and linear forecasts
+# Archived hybrid model
 
-The current model uses slower intrinsic learning and a recent teammate graph. The decision, predictive cost, failed alternatives and reproduction commands are in [temporal-graph.md](temporal-graph.md). The [rating principles](rating-principles.md) remain the behavioral contract.
+The hybrid pipeline has been replaced in production by the [unified model](unified-model.md). This path remains for existing documentation links.
 
-Two state-space filters estimate race and qualifying driver/car levels. The race filter reads qualifying driver levels through a 0.4 link; there is no qualifying-car link. Its driver–team fit stays internal and is excluded from portable driver strength. An online comparison learner provides another portable driver estimate, using a separate car level to explain race evidence.
-
-The underlying driver estimate is `H = 0.48 race-filter driver + 0.32 qualifying-filter driver + 0.20 online driver`. Published race driver strength is `0.95 H + 0.05 graph`; published qualifying strength is `0.95 qualifying-filter driver + 0.05 graph`. Graph levels are centered on the current field. Car strength remains `0.75 race-filter car + 0.25 qualifying-filter car`. Race is the default visible rating; Qualifying remains available. A retained legacy combined measure uses 65% published race and 35% published qualifying for historical and derived fields.
-
-The shared information fraction is 0.25: race/qualifying likelihood temperatures are 0.01/0.0175 and the online step is 45. Priors and drift remain. There is no output moving average or delayed persistent target. Controlled new results move the mean in their direction, and repeated evidence accumulates. Team changes introduce no portable-driver variance jump, mean penalty or mover-specific likelihood multiplier. The car-specific fit is reset separately.
-
-The graph fits a ridge Bradley–Terry likelihood on driver-season levels, with three-year calendar decay and prior precision 2 at each driver’s first node. Adjacent observed seasons have a random-walk link using the existing race-driver drift of 4 points per square-root year. Each result connects the levels in its own season; published snapshots remain causal. More valid comparisons add information without a cap; equivalent indirect paths have less information than direct evidence. The Graph page uses the same model. Mechanical failures are not pace losses, and a weekend adds at most one valid comparison per pair/session.
-
-Forecasts remain small ridge-logistic models using rating gaps, two speeds of driver/car qualifying, lap and order form, and bounded transforms. Post-qualifying forecasts also read current qualifying and grid. The grid-only head is a six-feature linear model. Production has no circuit-form trackers, trees or ensembles. Displayed driver form holds car form fixed and is centered across the field; both teammates can have positive form.
-
-Forecast fits starting in 2008, 2012, 2016, 2021 and 2026 use completed earlier seasons only. The 2026 head was trained through 2025 and is not refitted as 2026 weekends are appended. Inner temporal validation selects ridge strength from 0.003, 0.03 and 0.3, using training-only scaling. Python/JavaScript parity has 480 fixtures. Model format 2 carries its forecast definitions; the first-screen file omits forecast state. The [recent form report](current-form.md) records the fixed-family comparison and subsequent component follow-up.
-
-This is an empirical combination of correlated estimates. Uncertainty bars are filter-derived approximations, not calibrated coverage for the complete blend. Driver–car attribution depends partly on priors and connections. Forecasts target the weighted comparison benchmark rather than unconditional race wins. The accepted mover cost and failed strict guards remain explicit in the decision report.
-
-The rating choice is a display change: forecasts still use both race and qualifying levels. Adding the displayed form adjustment to a race rating summarizes pairwise forecast contributions and does not exactly reproduce the nonlinear forecast head.
+The archived implementation in `packages/core/src/state-space/build.js` combines state-space, online and graph estimates and retains its fitted form heads. Older research and regression tests use it as a reference. It must not be used to rebuild website ratings, forecasts or Insights. Use `npm run build:model` for production.

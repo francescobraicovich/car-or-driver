@@ -1,0 +1,41 @@
+{
+  "integrated": true,
+  "date": "2026-11-11",
+  "selectedCandidate": "refined_all",
+  "sourceHash": "09fb4cdcf6ba1c3f",
+  "lastRace": {
+    "year": 2026,
+    "round": 19,
+    "name": "Mexico City Grand Prix",
+    "date": "2026-11-01"
+  },
+  "publicationFormats": {
+    "ratings": 3,
+    "teammateGraph": 4
+  },
+  "researchParity": {
+    "ratingsCompared": 59667,
+    "maxPublishedRoundingDifference": 0.004999813332510428
+  },
+  "validation": {
+    "nodeTestFiles": 57,
+    "numericalTests": 9,
+    "pythonInferenceFixtures": 22,
+    "browserAssertions": 220,
+    "browserResult": "passed",
+    "savedModelNumbersCompared": 1203117,
+    "lint": "passed",
+    "publicationChecks": "passed",
+    "staticBuild": "passed",
+    "execution": "All Node test files passed across the full run and targeted continuation after integration fixes. The final complete browser suite passed."
+  },
+  "sourceResponsibilities": {
+    "measurements": "packages/core/node/unified-evidence.mjs",
+    "numericalModel": "packages/core/python/unified_model.py",
+    "publication": "packages/core/node/build-unified.mjs",
+    "browserForecasts": "packages/core/src/unified/",
+    "methodology": "site/js/methodology-content.js"
+  },
+  "deployment": "Local production artifacts and static build prepared; no remote deployment performed.",
+  "studyArtifacts": "The original selection, manifest and results remain the pre-migration study record."
+}

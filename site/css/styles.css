@@ -1,6 +1,6 @@
 /* Car or Driver — the tokens and the parts that the front page's panels are made of (chart frame, controls, charts, tables, the Methodology's text
    and diagrams). The front page itself, the panel's metal and the cards of slides are in stage.css, which pins its own colours on the panel and the
-   cards; the tokens here are what a part falls back to. The data colours are the eight-slot categorical palette (docs/design.md). */
+   cards; the tokens here are what a part falls back to. The data colours are the eight-slot categorical palette (docs/architecture.md). */
 :root {
   color-scheme: light;
   --surface: #fffdf8;
@@ -929,5 +929,22 @@ summary {
 }
 .references li {
   margin-bottom: 8px;
+  overflow-wrap: anywhere;
+}
+
+/* Method tables explain ideas in prose; allow their cells to wrap on phones. */
+.method-part table {
+  width: 100%;
+  table-layout: fixed;
+}
+.method-part th,
+.method-part td {
+  white-space: normal;
+  vertical-align: top;
+  text-align: left;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.method-part code {
   overflow-wrap: anywhere;
 }

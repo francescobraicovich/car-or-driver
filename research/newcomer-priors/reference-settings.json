@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "parameters": {
+    "driver_correlation": 0.85,
+    "car_correlation": 0.5,
+    "noise": [1.9436995118945026, 1.62335504595748],
+    "driver_multiplier": 2.0,
+    "car_multiplier": 2.0
+  },
+  "parameterSelectionThrough": 2007,
+  "refinements": {
+    "qualifyingFormat": true,
+    "exactLaps": true,
+    "omitPartial": true
+  }
+}
