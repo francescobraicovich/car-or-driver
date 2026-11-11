@@ -1049,7 +1049,7 @@ export const INSIGHT_CARDS = [
         .filter((row) => row.year < data.dataThrough.year)
         .reduce((best, row) => (row.percent < best.percent ? row : best));
       const latest = rows.at(-1);
-      return `In ${peak.year}, ${formatInteger(peak.percent)}% of starters retired with a mechanical failure; in ${lowest.year}, ${formatInteger(lowest.percent)}%. The latest season has ${formatInteger(latest.percent)}% in ${latest.year}, a level similar to 2017.`;
+      return `In ${peak.year}, ${formatInteger(peak.percent)}% of starters retired with a mechanical failure; in ${lowest.year}, ${formatInteger(lowest.percent)}%. The latest season has ${formatInteger(latest.percent)}% in ${latest.year}.`;
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>

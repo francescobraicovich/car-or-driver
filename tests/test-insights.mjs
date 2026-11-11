@@ -208,8 +208,14 @@ assert.ok(
     .includes(String(Math.round(D.development.mclaren2023))),
   'the headline uses the current McLaren climb',
 );
-const retirement = (year) => D.mechanicalRetirements.find((row) => row.year === year).percent;
-assert.ok(Math.abs(retirement(D.dataThrough.year) - retirement(2017)) < 3, 'mechanical retirements are back to about the 2017 level');
+const retirementCard = INSIGHT_CARDS.find((card) => card.id === 'mechanical-retirements');
+const retirementData = {
+  ...D,
+  mechanicalRetirements: D.mechanicalRetirements.map((row, index, rows) => (index === rows.length - 1 ? { ...row, percent: 40 } : row)),
+};
+const retirementHeadline = retirementCard.lead(retirementData);
+assert.ok(retirementHeadline.includes('40%'), 'the retirement headline follows a changed latest rate');
+assert.ok(!retirementHeadline.includes('similar to 2017'), 'the headline does not assume a fixed historical comparison');
 const correlation = (year) => D.winterOrder.correlations.find((row) => row.year === year).correlation;
 assert.ok(correlation(2009) < 0.3 && correlation(2022) > 0.7, '2009 reshuffled the order and 2022 did not');
 const driverShare = (label) => {
