@@ -1,6 +1,6 @@
 {
  "format": 2,
- "dataVersion": "491b695e2c2870e3",
+ "dataVersion": "7f9e2c7705b4307a",
  "licence": {"licence":"CC BY-NC-SA 4.0","url":"https://creativecommons.org/licenses/by-nc-sa/4.0/","credit":"Race data: Ergast / Jolpica-F1, Kaggle datasets by J. Trotman, and TracingInsights/RaceData. Changed: the results were converted into ratings, forecasts and findings by Francesco Braicovich (Car or Driver).","nonCommercial":true},
  "year": 1997,
  "codes": {"14":"COU","15":"TRU","21":"FIS","22":"BAR","23":"SCH","25":"WUR","30":"MSC","35":"VIL","44":"PAN","49":"FRE","50":"VER","55":"ALE","56":"IRV","57":"HAK","58":"MAR","63":"SAL","64":"DIN","65":"HER","71":"HIL","75":"NAK","76":"MAG","77":"BER","78":"LAR","79":"KAT","81":"MOR","82":"FON"},
