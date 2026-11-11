@@ -1911,6 +1911,13 @@ check(
 `),
 );
 check(
+  'methodology renders its LaTeX equations',
+  await evaluate(`
+  document.querySelectorAll('#methodologyCard [data-math], #methodologyCard [data-math-display]').length > 20 &&
+  [...document.querySelectorAll('#methodologyCard [data-math], #methodologyCard [data-math-display]')].every(node => node.querySelector('.katex-mathml'))
+`),
+);
+check(
   'methodology displays the unified chronological score and publication',
   await evaluate(`
   /0.53012/.test(document.getElementById('methodologyValidationSummary').textContent) &&

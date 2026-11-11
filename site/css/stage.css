@@ -1982,6 +1982,9 @@ body[data-page='graph'] .track-title {
 .deck-card[data-deck='methodology'] .deck-text .glossary {
   max-width: none;
 }
+.deck-card[data-deck='methodology'] .method-equation {
+  overflow-x: auto;
+}
 .deck-card[data-deck='methodology'] .deck-text h3 {
   margin-bottom: 14px;
   font-size: 22px;

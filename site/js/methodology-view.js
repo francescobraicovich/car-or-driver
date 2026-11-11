@@ -25,11 +25,14 @@ function render() {
 export function initMethodology() {
   const text = document.createElement('div');
   text.innerHTML = CONTENT_HTML;
+  for (const node of text.querySelectorAll('[data-math], [data-math-display]')) {
+    window.katex.render(node.textContent, node, { displayMode: node.hasAttribute('data-math-display') });
+  }
   const labels = [
-    'Questions',
+    'Contributions',
     'Evidence',
     'Driver and car',
-    'One model',
+    'Shared learning',
     'Updating',
     'Reading ratings',
     'Forecasts',
@@ -41,7 +44,7 @@ export function initMethodology() {
     page: 'methodology',
     title: 'Methodology',
     before:
-      '<p class="deck-intro">Follow a weekend from observations to three driver and car ratings, then to a forecast. Each part builds on the one before it.</p>',
+      '<p class="deck-intro">How teammate comparisons separate driver and car contributions, how the ratings become forecasts, and what the evidence can establish. Open the technical details for equations and settings.</p>',
     groups: [
       {
         slides: [...text.querySelectorAll(':scope > .method-part')].map((part, index) => ({
