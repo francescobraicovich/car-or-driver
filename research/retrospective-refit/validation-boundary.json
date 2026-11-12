@@ -1,0 +1,574 @@
+{
+  "inputSha256": "e135121b1d174edf4c9dfce246b53e3833f20d277bf1e68381529f2bcad88aaa",
+  "settingsSha256": "d36c06f3e6affe7b4d3d3c049832de9e792528d4f4b7987322a8807c9d2a92fa",
+  "filterSourceHash": "5c102d77fe74df75",
+  "firstDate": "1994-03-27",
+  "firstObservationCounts": [
+    325,
+    252,
+    66
+  ],
+  "cutoffs": [
+    {
+      "weekends": 1,
+      "through": "1994-03-27",
+      "entities": {
+        "driver": {
+          "30": {
+            "name": "Michael Schumacher",
+            "rating": 1023.762597689176,
+            "change": 0.0025976891760137732,
+            "sd": 19.768992126895682
+          },
+          "102": {
+            "name": "Ayrton Senna",
+            "rating": 1024.9726336250212,
+            "change": 0.0026336250211898005,
+            "sd": 19.818383307074416
+          }
+        },
+        "car": {
+          "30": {
+            "name": "Pacific",
+            "rating": 983.5237862942353,
+            "change": -0.00021370576473600522,
+            "sd": 49.777663837101905
+          },
+          "1": {
+            "name": "McLaren",
+            "rating": 1009.1489392030325,
+            "change": -0.0010607969675220374,
+            "sd": 47.09123562458261
+          }
+        }
+      },
+      "absoluteChanges": {
+        "driver": {
+          "median": 0.00041413466647099995,
+          "maximum": 0.00486453686664845
+        },
+        "car": {
+          "median": 0.0003869610422952974,
+          "maximum": 0.004539489135368058
+        }
+      },
+      "schumacherSennaGap": -1.2100359358452124,
+      "pacificMcLarenGap": -25.62515290879719
+    },
+    {
+      "weekends": 2,
+      "through": "1994-04-17",
+      "entities": {
+        "driver": {
+          "30": {
+            "name": "Michael Schumacher",
+            "rating": 1045.2556868140055,
+            "change": 21.495686814005467,
+            "sd": 19.476099551647476
+          },
+          "102": {
+            "name": "Ayrton Senna",
+            "rating": 1030.6780562076226,
+            "change": 5.708056207622576,
+            "sd": 19.4598476047713
+          }
+        },
+        "car": {
+          "30": {
+            "name": "Pacific",
+            "rating": 983.0680554619391,
+            "change": -0.4559445380608622,
+            "sd": 49.78720065222691
+          },
+          "1": {
+            "name": "McLaren",
+            "rating": 1040.794924313467,
+            "change": 31.64492431346696,
+            "sd": 45.93552650030821
+          }
+        }
+      },
+      "absoluteChanges": {
+        "driver": {
+          "median": 5.247444026764526,
+          "maximum": 21.495686814005467
+        },
+        "car": {
+          "median": 17.05106156690715,
+          "maximum": 47.34203533338541
+        }
+      },
+      "schumacherSennaGap": 14.577630606382854,
+      "pacificMcLarenGap": -57.7268688515278
+    },
+    {
+      "weekends": 5,
+      "through": "1994-05-29",
+      "entities": {
+        "driver": {
+          "30": {
+            "name": "Michael Schumacher",
+            "rating": 1060.7672383428317,
+            "change": 37.00723834283167,
+            "sd": 18.009749755073436
+          },
+          "102": {
+            "name": "Ayrton Senna",
+            "rating": 1036.2863106545306,
+            "change": 11.316310654530525,
+            "sd": 19.12392985698023
+          }
+        },
+        "car": {
+          "30": {
+            "name": "Pacific",
+            "rating": 851.2790737515351,
+            "change": -132.24492624846494,
+            "sd": 47.00354552892488
+          },
+          "1": {
+            "name": "McLaren",
+            "rating": 1072.2517310967814,
+            "change": 63.101731096781464,
+            "sd": 41.56250245146106
+          }
+        }
+      },
+      "absoluteChanges": {
+        "driver": {
+          "median": 9.017498906882793,
+          "maximum": 37.00723834283167
+        },
+        "car": {
+          "median": 34.64849234216467,
+          "maximum": 132.24492624846494
+        }
+      },
+      "schumacherSennaGap": 24.480927688301108,
+      "pacificMcLarenGap": -220.97265734524638
+    },
+    {
+      "weekends": 16,
+      "through": "1994-11-13",
+      "entities": {
+        "driver": {
+          "30": {
+            "name": "Michael Schumacher",
+            "rating": 1107.7476078794675,
+            "change": 83.98760787946753,
+            "sd": 15.914816145858406
+          },
+          "102": {
+            "name": "Ayrton Senna",
+            "rating": 1036.9239801919236,
+            "change": 11.95398019192362,
+            "sd": 19.106387888765802
+          }
+        },
+        "car": {
+          "30": {
+            "name": "Pacific",
+            "rating": 838.7934552802606,
+            "change": -144.73054471973944,
+            "sd": 46.075249821741
+          },
+          "1": {
+            "name": "McLaren",
+            "rating": 1071.4161531634759,
+            "change": 62.266153163475906,
+            "sd": 36.53581160985326
+          }
+        }
+      },
+      "absoluteChanges": {
+        "driver": {
+          "median": 15.776477257936222,
+          "maximum": 83.98760787946753
+        },
+        "car": {
+          "median": 46.02849901111824,
+          "maximum": 144.73054471973944
+        }
+      },
+      "schumacherSennaGap": 70.82362768754388,
+      "pacificMcLarenGap": -232.62269788321532
+    },
+    {
+      "weekends": 32,
+      "through": "1995-10-29",
+      "entities": {
+        "driver": {
+          "30": {
+            "name": "Michael Schumacher",
+            "rating": 1141.206110207842,
+            "change": 117.44611020784191,
+            "sd": 14.455549907361645
+          },
+          "102": {
+            "name": "Ayrton Senna",
+            "rating": 1035.7863034373092,
+            "change": 10.816303437309216,
+            "sd": 19.05038414314869
+          }
+        },
+        "car": {
+          "30": {
+            "name": "Pacific",
+            "rating": 816.393535745181,
+            "change": -167.130464254819,
+            "sd": 44.10396512104749
+          },
+          "1": {
+            "name": "McLaren",
+            "rating": 1076.7082564876132,
+            "change": 67.55825648761322,
+            "sd": 33.056143757765156
+          }
+        }
+      },
+      "absoluteChanges": {
+        "driver": {
+          "median": 22.61462521268146,
+          "maximum": 117.44611020784191
+        },
+        "car": {
+          "median": 53.593769097452366,
+          "maximum": 167.130464254819
+        }
+      },
+      "schumacherSennaGap": 105.41980677053266,
+      "pacificMcLarenGap": -260.3147207424322
+    },
+    {
+      "weekends": 60,
+      "through": "1997-08-10",
+      "entities": {
+        "driver": {
+          "30": {
+            "name": "Michael Schumacher",
+            "rating": 1142.356579925337,
+            "change": 118.59657992533698,
+            "sd": 13.194087635506733
+          },
+          "102": {
+            "name": "Ayrton Senna",
+            "rating": 1037.3187677211777,
+            "change": 12.348767721177637,
+            "sd": 19.121208289013268
+          }
+        },
+        "car": {
+          "30": {
+            "name": "Pacific",
+            "rating": 812.8934132159284,
+            "change": -170.63058678407162,
+            "sd": 43.91367195920077
+          },
+          "1": {
+            "name": "McLaren",
+            "rating": 1073.2879734080102,
+            "change": 64.13797340801023,
+            "sd": 31.384183896131468
+          }
+        }
+      },
+      "absoluteChanges": {
+        "driver": {
+          "median": 26.460176618650394,
+          "maximum": 118.59657992533698
+        },
+        "car": {
+          "median": 42.336694739712016,
+          "maximum": 170.63058678407162
+        }
+      },
+      "schumacherSennaGap": 105.03781220415931,
+      "pacificMcLarenGap": -260.3945601920818
+    },
+    {
+      "weekends": 120,
+      "through": "2001-04-29",
+      "entities": {
+        "driver": {
+          "30": {
+            "name": "Michael Schumacher",
+            "rating": 1135.0598097551842,
+            "change": 111.29980975518424,
+            "sd": 12.427265457938777
+          },
+          "102": {
+            "name": "Ayrton Senna",
+            "rating": 1037.5871164336236,
+            "change": 12.61711643362355,
+            "sd": 19.13592809779238
+          }
+        },
+        "car": {
+          "30": {
+            "name": "Pacific",
+            "rating": 812.0688547814318,
+            "change": -171.4551452185682,
+            "sd": 43.89899283478313
+          },
+          "1": {
+            "name": "McLaren",
+            "rating": 1070.657416384644,
+            "change": 61.50741638464399,
+            "sd": 31.105818091672642
+          }
+        }
+      },
+      "absoluteChanges": {
+        "driver": {
+          "median": 23.860599822840527,
+          "maximum": 111.29980975518424
+        },
+        "car": {
+          "median": 43.839135092202696,
+          "maximum": 171.4551452185682
+        }
+      },
+      "schumacherSennaGap": 97.47269332156066,
+      "pacificMcLarenGap": -258.58856160321216
+    },
+    {
+      "weekends": 310,
+      "through": "2011-11-27",
+      "entities": {
+        "driver": {
+          "30": {
+            "name": "Michael Schumacher",
+            "rating": 1131.546709434168,
+            "change": 107.78670943416796,
+            "sd": 11.907527727222158
+          },
+          "102": {
+            "name": "Ayrton Senna",
+            "rating": 1037.2166280581364,
+            "change": 12.246628058136366,
+            "sd": 19.11272274052441
+          }
+        },
+        "car": {
+          "30": {
+            "name": "Pacific",
+            "rating": 809.5151202500391,
+            "change": -174.0088797499609,
+            "sd": 43.88761249657279
+          },
+          "1": {
+            "name": "McLaren",
+            "rating": 1069.9654514343597,
+            "change": 60.815451434359716,
+            "sd": 30.94871734809116
+          }
+        }
+      },
+      "absoluteChanges": {
+        "driver": {
+          "median": 24.073507615158917,
+          "maximum": 107.78670943416796
+        },
+        "car": {
+          "median": 42.718808621410744,
+          "maximum": 174.0088797499609
+        }
+      },
+      "schumacherSennaGap": 94.33008137603156,
+      "pacificMcLarenGap": -260.4503311843206
+    },
+    {
+      "weekends": 621,
+      "through": "2026-11-08",
+      "entities": {
+        "driver": {
+          "30": {
+            "name": "Michael Schumacher",
+            "rating": 1131.3473460879052,
+            "change": 107.58734608790519,
+            "sd": 11.891583375724842
+          },
+          "102": {
+            "name": "Ayrton Senna",
+            "rating": 1037.1442661092715,
+            "change": 12.174266109271457,
+            "sd": 19.108346283310546
+          }
+        },
+        "car": {
+          "30": {
+            "name": "Pacific",
+            "rating": 809.184932507176,
+            "change": -174.33906749282403,
+            "sd": 43.88751484349533
+          },
+          "1": {
+            "name": "McLaren",
+            "rating": 1070.076098975633,
+            "change": 60.926098975632954,
+            "sd": 30.94518094500482
+          }
+        }
+      },
+      "absoluteChanges": {
+        "driver": {
+          "median": 23.693141724529994,
+          "maximum": 107.58734608790519
+        },
+        "car": {
+          "median": 42.72438002623119,
+          "maximum": 174.33906749282403
+        }
+      },
+      "schumacherSennaGap": 94.2030799786337,
+      "pacificMcLarenGap": -260.89116646845696
+    }
+  ],
+  "limitations": "The first weekend is the model boundary, not the start of the drivers\u2019 careers. Data cutoff comparisons are retrospective refits with fixed parameters, and do not establish true historical abilities. Later data are observational and can propagate via other drivers and teams. Raw ratings use the fixed prior reference; within-weekend gaps are unaffected by a common display translation.",
+  "targetEvidence": {
+    "driver": [
+      {
+        "throughWeekends": 1,
+        "appearances": 1,
+        "comparisons": [
+          25,
+          22,
+          11
+        ],
+        "totalWeight": [
+          1.8888888888888888,
+          2.256944444444444,
+          0.3055555555555555
+        ]
+      },
+      {
+        "throughWeekends": 2,
+        "appearances": 2,
+        "comparisons": [
+          50,
+          43,
+          21
+        ],
+        "totalWeight": [
+          3.7777777777777777,
+          4.579861111111111,
+          0.5833333333333333
+        ]
+      },
+      {
+        "throughWeekends": 5,
+        "appearances": 5,
+        "comparisons": [
+          101,
+          103,
+          51
+        ],
+        "totalWeight": [
+          7.626780626780627,
+          9.26846688034188,
+          2.1685042735042734
+        ]
+      },
+      {
+        "throughWeekends": 16,
+        "appearances": 14,
+        "comparisons": [
+          326,
+          295,
+          113
+        ],
+        "totalWeight": [
+          24.660968660968663,
+          26.94555021367521,
+          5.347991452991453
+        ]
+      },
+      {
+        "throughWeekends": 32,
+        "appearances": 30,
+        "comparisons": [
+          701,
+          604,
+          254
+        ],
+        "totalWeight": [
+          55.85227300879475,
+          53.29546781535824,
+          16.333236894786683
+        ]
+      }
+    ],
+    "car": [
+      {
+        "throughWeekends": 1,
+        "appearances": 1,
+        "comparisons": [
+          25,
+          0,
+          0
+        ],
+        "totalWeight": [
+          0.9259259259259258,
+          0,
+          0
+        ]
+      },
+      {
+        "throughWeekends": 2,
+        "appearances": 2,
+        "comparisons": [
+          25,
+          0,
+          0
+        ],
+        "totalWeight": [
+          0.9259259259259258,
+          0,
+          0
+        ]
+      },
+      {
+        "throughWeekends": 5,
+        "appearances": 5,
+        "comparisons": [
+          125,
+          78,
+          0
+        ],
+        "totalWeight": [
+          6.6239316239316235,
+          5.751479700854701,
+          0
+        ]
+      },
+      {
+        "throughWeekends": 16,
+        "appearances": 16,
+        "comparisons": [
+          150,
+          101,
+          0
+        ],
+        "totalWeight": [
+          7.585470085470085,
+          7.078402777777778,
+          0
+        ]
+      },
+      {
+        "throughWeekends": 32,
+        "appearances": 32,
+        "comparisons": [
+          864,
+          580,
+          51
+        ],
+        "totalWeight": [
+          52.14199182460052,
+          40.74723493428017,
+          1.6493200174106495
+        ]
+      }
+    ]
+  }
+}

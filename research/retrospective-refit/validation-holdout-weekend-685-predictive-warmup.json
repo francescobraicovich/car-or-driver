@@ -1,0 +1,119 @@
+{
+  "mode": "weekend",
+  "predictive": true,
+  "holdoutOffset": 64,
+  "inputSha256": "4c76e622cfbe7a317ca6ad0d367b7ddf6a51214e1a65fc82b174e16567623db6",
+  "heldoutRaceIds": [
+    "869",
+    "879",
+    "890",
+    "900",
+    "910",
+    "927",
+    "938",
+    "950",
+    "960",
+    "970",
+    "980",
+    "990",
+    "1000",
+    "1010",
+    "1020",
+    "1030",
+    "1040",
+    "1054",
+    "1064",
+    "1074",
+    "1084",
+    "1095",
+    "1107",
+    "1117",
+    "1127",
+    "1137",
+    "1147",
+    "1157",
+    "1167",
+    "1177",
+    "1187"
+  ],
+  "burnIn": 374,
+  "weekends": 685,
+  "evaluatedWeekends": 31,
+  "counts": [
+    6124,
+    5580,
+    4502
+  ],
+  "channels": [
+    "qual",
+    "race",
+    "overall"
+  ],
+  "averageNegativeLogLikelihood": {
+    "filtered": [
+      2.5309982859855538,
+      2.26985166654865,
+      0.5299428013992745
+    ],
+    "retrospective": [
+      2.4892927695616627,
+      2.219342030362907,
+      0.5106865777005012
+    ]
+  },
+  "limitations": "Posterior predictive likelihood integrated using the local Gaussian approximation. Within-weekend pair observations are dependent. Entire weekends are held out from model updates. Retrospective estimates use future races; filtered estimates do not. Parameters were selected using 1994\u20132007 data, before this period; the additional pre-1994 warm-up was not used for tuning.",
+  "predictiveCalibration": {
+    "filtered": {
+      "qualCoverage90": {
+        "value": 0.9411491998620374,
+        "raceClusterBootstrap95": [
+          0.9095301337715148,
+          0.96909191343993
+        ],
+        "races": 31
+      },
+      "raceCoverage90": {
+        "value": 0.9639963508267069,
+        "raceClusterBootstrap95": [
+          0.9463567646715934,
+          0.9795450283344282
+        ],
+        "races": 31
+      },
+      "overallBrier": {
+        "value": 0.1803238521832886,
+        "raceClusterBootstrap95": [
+          0.16582074943113423,
+          0.19454158539179697
+        ],
+        "races": 31
+      }
+    },
+    "retrospective": {
+      "qualCoverage90": {
+        "value": 0.9426204608459854,
+        "raceClusterBootstrap95": [
+          0.9111005606861579,
+          0.9705618350790997
+        ],
+        "races": 31
+      },
+      "raceCoverage90": {
+        "value": 0.9682636921369705,
+        "raceClusterBootstrap95": [
+          0.9524812767907397,
+          0.9821387087976214
+        ],
+        "races": 31
+      },
+      "overallBrier": {
+        "value": 0.17251388097132966,
+        "raceClusterBootstrap95": [
+          0.15735767909316567,
+          0.1876960451234308
+        ],
+        "races": 31
+      }
+    }
+  }
+}

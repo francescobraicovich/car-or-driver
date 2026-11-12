@@ -1,0 +1,1577 @@
+{
+  "weekendIndices": [
+    9,
+    29,
+    59,
+    74,
+    84
+  ],
+  "channels": [
+    "qual",
+    "race",
+    "overall"
+  ],
+  "results": [
+    {
+      "world": "shared",
+      "seed": 41,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 23.69915059108452,
+              "coverage90": 0.8242424242424242,
+              "meanSdPoints": 22.12865176528648,
+              "count": 330
+            },
+            {
+              "rmsePoints": 18.785764513137995,
+              "coverage90": 0.9636363636363636,
+              "meanSdPoints": 22.08890574323196,
+              "count": 330
+            },
+            {
+              "rmsePoints": 15.095597470747853,
+              "coverage90": 0.990909090909091,
+              "meanSdPoints": 22.13105121809242,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 27.096054642382743,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 36.673977037342,
+              "count": 75
+            },
+            {
+              "rmsePoints": 17.183519044650335,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.336878313278525,
+              "count": 75
+            },
+            {
+              "rmsePoints": 17.31528616978596,
+              "coverage90": 1.0,
+              "meanSdPoints": 37.81772201394715,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 12.400269577250404,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 30.095664947416395,
+              "count": 330
+            },
+            {
+              "rmsePoints": 10.906783730295144,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 29.700098692020187,
+              "count": 330
+            },
+            {
+              "rmsePoints": 15.277154523415062,
+              "coverage90": 1.0,
+              "meanSdPoints": 31.314368239907484,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 23.07195837799536,
+              "coverage90": 0.793939393939394,
+              "meanSdPoints": 20.378097048927952,
+              "count": 330
+            },
+            {
+              "rmsePoints": 17.973557805381233,
+              "coverage90": 0.9696969696969697,
+              "meanSdPoints": 20.335205756767863,
+              "count": 330
+            },
+            {
+              "rmsePoints": 11.746929458103972,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 20.46046451771937,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 26.670764410176602,
+              "coverage90": 0.92,
+              "meanSdPoints": 30.318132179194517,
+              "count": 75
+            },
+            {
+              "rmsePoints": 18.80949737088176,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.073332522304245,
+              "count": 75
+            },
+            {
+              "rmsePoints": 14.463646065648886,
+              "coverage90": 1.0,
+              "meanSdPoints": 31.514451835216597,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 8.879612439925335,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.930617379623776,
+              "count": 330
+            },
+            {
+              "rmsePoints": 9.740561703630352,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.61279297656941,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.759310648757923,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 24.329039642810905,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "shared",
+      "seed": 42,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 23.679626436210757,
+              "coverage90": 0.8757575757575757,
+              "meanSdPoints": 22.126003238192858,
+              "count": 330
+            },
+            {
+              "rmsePoints": 24.797901619342802,
+              "coverage90": 0.8787878787878788,
+              "meanSdPoints": 22.08330698228675,
+              "count": 330
+            },
+            {
+              "rmsePoints": 24.265452115864072,
+              "coverage90": 0.8939393939393939,
+              "meanSdPoints": 22.063312549256004,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 24.618841264343132,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.73879500007059,
+              "count": 75
+            },
+            {
+              "rmsePoints": 29.07281617436761,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 36.29996904079246,
+              "count": 75
+            },
+            {
+              "rmsePoints": 32.83561756422194,
+              "coverage90": 0.9066666666666666,
+              "meanSdPoints": 37.66787952226735,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 13.736481102427623,
+              "coverage90": 0.9939393939393939,
+              "meanSdPoints": 30.16854366054662,
+              "count": 330
+            },
+            {
+              "rmsePoints": 11.263751580593686,
+              "coverage90": 1.0,
+              "meanSdPoints": 29.658417225703896,
+              "count": 330
+            },
+            {
+              "rmsePoints": 19.743484754990376,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 31.12585756233346,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 21.101032998411874,
+              "coverage90": 0.8787878787878788,
+              "meanSdPoints": 20.368668889737343,
+              "count": 330
+            },
+            {
+              "rmsePoints": 23.534167469978712,
+              "coverage90": 0.8606060606060606,
+              "meanSdPoints": 20.324619293840982,
+              "count": 330
+            },
+            {
+              "rmsePoints": 22.61356630343845,
+              "coverage90": 0.9,
+              "meanSdPoints": 20.344126938323573,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 23.33897566027952,
+              "coverage90": 0.9733333333333334,
+              "meanSdPoints": 30.34705722492778,
+              "count": 75
+            },
+            {
+              "rmsePoints": 25.019767572755395,
+              "coverage90": 0.96,
+              "meanSdPoints": 30.062984510202455,
+              "count": 75
+            },
+            {
+              "rmsePoints": 28.893183863117674,
+              "coverage90": 0.92,
+              "meanSdPoints": 31.57431009248253,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 8.798282521384282,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.962225144866466,
+              "count": 330
+            },
+            {
+              "rmsePoints": 6.870440647380058,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.60056290235418,
+              "count": 330
+            },
+            {
+              "rmsePoints": 15.36431289791751,
+              "coverage90": 0.990909090909091,
+              "meanSdPoints": 24.307542906140537,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "shared",
+      "seed": 43,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 19.514376773618388,
+              "coverage90": 0.9666666666666667,
+              "meanSdPoints": 22.1465081809784,
+              "count": 330
+            },
+            {
+              "rmsePoints": 10.858994617455378,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.097940988599518,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.868724017818147,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.15749679185158,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 19.514830641746034,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.76687176269491,
+              "count": 75
+            },
+            {
+              "rmsePoints": 17.50565855676898,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.39549803909308,
+              "count": 75
+            },
+            {
+              "rmsePoints": 17.261697825685864,
+              "coverage90": 1.0,
+              "meanSdPoints": 39.4063519080585,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 14.108578015300939,
+              "coverage90": 0.9939393939393939,
+              "meanSdPoints": 30.21429587415321,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.517520663359802,
+              "coverage90": 1.0,
+              "meanSdPoints": 29.770690391135215,
+              "count": 330
+            },
+            {
+              "rmsePoints": 17.19831479763041,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 33.0406395887166,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 17.30622201361498,
+              "coverage90": 0.9818181818181818,
+              "meanSdPoints": 20.37595911263538,
+              "count": 330
+            },
+            {
+              "rmsePoints": 9.070437300712703,
+              "coverage90": 1.0,
+              "meanSdPoints": 20.335077006150556,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.309184123096236,
+              "coverage90": 1.0,
+              "meanSdPoints": 20.411752858090026,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 17.793850124311266,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.35070611912433,
+              "count": 75
+            },
+            {
+              "rmsePoints": 13.8330520045781,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.130802418477742,
+              "count": 75
+            },
+            {
+              "rmsePoints": 14.197877572355075,
+              "coverage90": 1.0,
+              "meanSdPoints": 32.75252975724335,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 10.49743430378179,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 22.972149947840713,
+              "count": 330
+            },
+            {
+              "rmsePoints": 8.980182685124275,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.68240330870638,
+              "count": 330
+            },
+            {
+              "rmsePoints": 14.085336245433188,
+              "coverage90": 1.0,
+              "meanSdPoints": 25.688684430764418,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "specialization",
+      "seed": 41,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 30.35314193062413,
+              "coverage90": 0.7575757575757576,
+              "meanSdPoints": 22.129319648178246,
+              "count": 330
+            },
+            {
+              "rmsePoints": 20.864216116458834,
+              "coverage90": 0.9393939393939394,
+              "meanSdPoints": 22.0928494472333,
+              "count": 330
+            },
+            {
+              "rmsePoints": 15.224524065579246,
+              "coverage90": 0.9757575757575757,
+              "meanSdPoints": 22.101735591561354,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 31.66043704740869,
+              "coverage90": 0.92,
+              "meanSdPoints": 36.69538877400386,
+              "count": 75
+            },
+            {
+              "rmsePoints": 19.197170911306028,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.3820540255305,
+              "count": 75
+            },
+            {
+              "rmsePoints": 14.36975330932871,
+              "coverage90": 1.0,
+              "meanSdPoints": 38.323957791162066,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 13.3395335700509,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 30.121129271919873,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.208537834261689,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 29.753965599092286,
+              "count": 330
+            },
+            {
+              "rmsePoints": 19.944817391998804,
+              "coverage90": 0.9939393939393939,
+              "meanSdPoints": 31.855641996618587,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 29.347197575910357,
+              "coverage90": 0.7515151515151515,
+              "meanSdPoints": 20.377194618875645,
+              "count": 330
+            },
+            {
+              "rmsePoints": 19.839171525421165,
+              "coverage90": 0.9606060606060606,
+              "meanSdPoints": 20.334446188797717,
+              "count": 330
+            },
+            {
+              "rmsePoints": 10.119922357174435,
+              "coverage90": 0.9939393939393939,
+              "meanSdPoints": 20.425033332089512,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 31.86926371597767,
+              "coverage90": 0.8533333333333334,
+              "meanSdPoints": 30.332858994503784,
+              "count": 75
+            },
+            {
+              "rmsePoints": 20.177657874459896,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.088161568870703,
+              "count": 75
+            },
+            {
+              "rmsePoints": 13.052984979568693,
+              "coverage90": 1.0,
+              "meanSdPoints": 31.932424757286864,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 9.479010986415316,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.94867238500094,
+              "count": 330
+            },
+            {
+              "rmsePoints": 10.311714934402925,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.63097289909807,
+              "count": 330
+            },
+            {
+              "rmsePoints": 15.138623278994295,
+              "coverage90": 0.9939393939393939,
+              "meanSdPoints": 24.79263519506224,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "specialization",
+      "seed": 42,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 16.473606801682664,
+              "coverage90": 0.9606060606060606,
+              "meanSdPoints": 22.133310246370918,
+              "count": 330
+            },
+            {
+              "rmsePoints": 18.966510876027588,
+              "coverage90": 0.9727272727272728,
+              "meanSdPoints": 22.085004291812645,
+              "count": 330
+            },
+            {
+              "rmsePoints": 14.632960371854118,
+              "coverage90": 0.990909090909091,
+              "meanSdPoints": 22.051128436323346,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 15.820422354592893,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.77299319988757,
+              "count": 75
+            },
+            {
+              "rmsePoints": 23.019224150402223,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.30566758846939,
+              "count": 75
+            },
+            {
+              "rmsePoints": 23.934900291460426,
+              "coverage90": 0.9733333333333334,
+              "meanSdPoints": 37.01269162854653,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 16.485943156602623,
+              "coverage90": 0.9878787878787879,
+              "meanSdPoints": 30.210788092500685,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.780995040114359,
+              "coverage90": 0.9939393939393939,
+              "meanSdPoints": 29.665025858201588,
+              "count": 330
+            },
+            {
+              "rmsePoints": 20.10924174711002,
+              "coverage90": 0.9757575757575757,
+              "meanSdPoints": 30.40956521463359,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 12.42351339580283,
+              "coverage90": 0.9878787878787879,
+              "meanSdPoints": 20.369377759383507,
+              "count": 330
+            },
+            {
+              "rmsePoints": 18.030273584258047,
+              "coverage90": 0.9787878787878788,
+              "meanSdPoints": 20.32386560738146,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.203764829585387,
+              "coverage90": 1.0,
+              "meanSdPoints": 20.327038893440726,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 13.241365878403306,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.341745758654863,
+              "count": 75
+            },
+            {
+              "rmsePoints": 19.409284933661674,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.054856334154618,
+              "count": 75
+            },
+            {
+              "rmsePoints": 20.18264651952081,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.90103743095851,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 10.199560233824934,
+              "coverage90": 0.9878787878787879,
+              "meanSdPoints": 22.95739163387216,
+              "count": 330
+            },
+            {
+              "rmsePoints": 7.699416930540741,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.591099626681164,
+              "count": 330
+            },
+            {
+              "rmsePoints": 14.166900311986126,
+              "coverage90": 1.0,
+              "meanSdPoints": 23.563293751881567,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "specialization",
+      "seed": 43,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 29.589025326674786,
+              "coverage90": 0.7575757575757576,
+              "meanSdPoints": 22.145693333910536,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.439750875099131,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 22.08820625345682,
+              "count": 330
+            },
+            {
+              "rmsePoints": 22.007099524713635,
+              "coverage90": 0.8939393939393939,
+              "meanSdPoints": 22.050797819779454,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 27.367198819960766,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 36.83571668162914,
+              "count": 75
+            },
+            {
+              "rmsePoints": 17.48183839320679,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.398845127427,
+              "count": 75
+            },
+            {
+              "rmsePoints": 21.312621273902085,
+              "coverage90": 1.0,
+              "meanSdPoints": 38.26707647725387,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 18.330437406108302,
+              "coverage90": 0.9666666666666667,
+              "meanSdPoints": 30.28845206867561,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.913191256943755,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 29.766228191019515,
+              "count": 330
+            },
+            {
+              "rmsePoints": 21.466109310882768,
+              "coverage90": 0.9696969696969697,
+              "meanSdPoints": 31.728606818915353,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 27.71390765614976,
+              "coverage90": 0.7424242424242424,
+              "meanSdPoints": 20.37065166651109,
+              "count": 330
+            },
+            {
+              "rmsePoints": 10.99922175936267,
+              "coverage90": 1.0,
+              "meanSdPoints": 20.32774288102275,
+              "count": 330
+            },
+            {
+              "rmsePoints": 20.382303798927424,
+              "coverage90": 0.906060606060606,
+              "meanSdPoints": 20.319862208920863,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 27.035358021475627,
+              "coverage90": 0.9733333333333334,
+              "meanSdPoints": 30.348965262184553,
+              "count": 75
+            },
+            {
+              "rmsePoints": 14.496673014866913,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.118562823987883,
+              "count": 75
+            },
+            {
+              "rmsePoints": 21.130104825807447,
+              "coverage90": 0.9733333333333334,
+              "meanSdPoints": 31.937562003557062,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 12.852423115231511,
+              "coverage90": 0.9787878787878788,
+              "meanSdPoints": 22.96529496784937,
+              "count": 330
+            },
+            {
+              "rmsePoints": 8.926947655543742,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.660979306159657,
+              "count": 330
+            },
+            {
+              "rmsePoints": 17.57172689439431,
+              "coverage90": 0.9696969696969697,
+              "meanSdPoints": 24.65427879865631,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "persistent_fit",
+      "seed": 41,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 27.03011731000572,
+              "coverage90": 0.806060606060606,
+              "meanSdPoints": 22.11998957993827,
+              "count": 330
+            },
+            {
+              "rmsePoints": 23.56210625638858,
+              "coverage90": 0.8545454545454545,
+              "meanSdPoints": 22.080394888755173,
+              "count": 330
+            },
+            {
+              "rmsePoints": 18.552032394319845,
+              "coverage90": 0.9363636363636364,
+              "meanSdPoints": 22.023064348858448,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 24.005686214018365,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.654389755579544,
+              "count": 75
+            },
+            {
+              "rmsePoints": 28.49373909425645,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.29932071616068,
+              "count": 75
+            },
+            {
+              "rmsePoints": 28.447918399155643,
+              "coverage90": 0.96,
+              "meanSdPoints": 36.2522419676264,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 25.757574534068247,
+              "coverage90": 0.9484848484848485,
+              "meanSdPoints": 30.07107667910743,
+              "count": 330
+            },
+            {
+              "rmsePoints": 25.292094671652034,
+              "coverage90": 0.9393939393939394,
+              "meanSdPoints": 29.65627794538079,
+              "count": 330
+            },
+            {
+              "rmsePoints": 28.887572720529633,
+              "coverage90": 0.9030303030303031,
+              "meanSdPoints": 29.57686594435024,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 26.694030706282973,
+              "coverage90": 0.7757575757575758,
+              "meanSdPoints": 20.3635094072273,
+              "count": 330
+            },
+            {
+              "rmsePoints": 23.633555765321464,
+              "coverage90": 0.806060606060606,
+              "meanSdPoints": 20.32375853641934,
+              "count": 330
+            },
+            {
+              "rmsePoints": 16.329440855399945,
+              "coverage90": 0.9181818181818182,
+              "meanSdPoints": 20.264057028015152,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 27.324753794806586,
+              "coverage90": 0.9466666666666667,
+              "meanSdPoints": 30.308087293571855,
+              "count": 75
+            },
+            {
+              "rmsePoints": 29.797389727174068,
+              "coverage90": 0.9466666666666667,
+              "meanSdPoints": 30.090127840607902,
+              "count": 75
+            },
+            {
+              "rmsePoints": 22.951919085425395,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 30.15454258624955,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 25.319060222901186,
+              "coverage90": 0.8303030303030303,
+              "meanSdPoints": 22.912314452846935,
+              "count": 330
+            },
+            {
+              "rmsePoints": 26.018438551410355,
+              "coverage90": 0.8303030303030303,
+              "meanSdPoints": 22.630225353398693,
+              "count": 330
+            },
+            {
+              "rmsePoints": 23.29623544528001,
+              "coverage90": 0.8666666666666667,
+              "meanSdPoints": 22.663641377040907,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "persistent_fit",
+      "seed": 42,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 23.883500685691143,
+              "coverage90": 0.8636363636363636,
+              "meanSdPoints": 22.121218425372852,
+              "count": 330
+            },
+            {
+              "rmsePoints": 28.02967213495978,
+              "coverage90": 0.8181818181818182,
+              "meanSdPoints": 22.070376481898407,
+              "count": 330
+            },
+            {
+              "rmsePoints": 24.971848307187926,
+              "coverage90": 0.8545454545454545,
+              "meanSdPoints": 22.02753589437276,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 24.896951626251045,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 36.74258368675786,
+              "count": 75
+            },
+            {
+              "rmsePoints": 36.08109369274218,
+              "coverage90": 0.8933333333333333,
+              "meanSdPoints": 36.34158527298603,
+              "count": 75
+            },
+            {
+              "rmsePoints": 32.30401165699731,
+              "coverage90": 0.9466666666666667,
+              "meanSdPoints": 39.62845354580627,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 14.496415220971752,
+              "coverage90": 0.9878787878787879,
+              "meanSdPoints": 30.169173998097357,
+              "count": 330
+            },
+            {
+              "rmsePoints": 17.258009651489516,
+              "coverage90": 0.9696969696969697,
+              "meanSdPoints": 29.689776321309626,
+              "count": 330
+            },
+            {
+              "rmsePoints": 21.287175913578388,
+              "coverage90": 0.9545454545454546,
+              "meanSdPoints": 33.17620880215138,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 22.49245647066546,
+              "coverage90": 0.8363636363636363,
+              "meanSdPoints": 20.364579497145886,
+              "count": 330
+            },
+            {
+              "rmsePoints": 28.029673238088236,
+              "coverage90": 0.7606060606060606,
+              "meanSdPoints": 20.313513934330583,
+              "count": 330
+            },
+            {
+              "rmsePoints": 24.454085672759813,
+              "coverage90": 0.8,
+              "meanSdPoints": 20.29537224854646,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 25.75759082587264,
+              "coverage90": 0.96,
+              "meanSdPoints": 30.356691005148928,
+              "count": 75
+            },
+            {
+              "rmsePoints": 35.9036841597652,
+              "coverage90": 0.8266666666666667,
+              "meanSdPoints": 30.052206874917434,
+              "count": 75
+            },
+            {
+              "rmsePoints": 30.323546136394913,
+              "coverage90": 0.9333333333333333,
+              "meanSdPoints": 32.79330670065311,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 13.901241235932163,
+              "coverage90": 0.9757575757575757,
+              "meanSdPoints": 22.972979548270697,
+              "count": 330
+            },
+            {
+              "rmsePoints": 16.963947883187917,
+              "coverage90": 0.9242424242424242,
+              "meanSdPoints": 22.58032887704274,
+              "count": 330
+            },
+            {
+              "rmsePoints": 18.696044953800687,
+              "coverage90": 0.9303030303030303,
+              "meanSdPoints": 25.696027507096225,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "persistent_fit",
+      "seed": 43,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 25.63095476896455,
+              "coverage90": 0.8333333333333334,
+              "meanSdPoints": 22.15798561750303,
+              "count": 330
+            },
+            {
+              "rmsePoints": 20.20250752966979,
+              "coverage90": 0.9363636363636364,
+              "meanSdPoints": 22.110907693576653,
+              "count": 330
+            },
+            {
+              "rmsePoints": 20.476898119864167,
+              "coverage90": 0.9181818181818182,
+              "meanSdPoints": 22.225218461352217,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 31.419290297838362,
+              "coverage90": 0.96,
+              "meanSdPoints": 36.75462400796303,
+              "count": 75
+            },
+            {
+              "rmsePoints": 20.617626751784655,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.38213338492475,
+              "count": 75
+            },
+            {
+              "rmsePoints": 26.760890579312612,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 41.09582087635263,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 24.715162767378814,
+              "coverage90": 0.9333333333333333,
+              "meanSdPoints": 30.210491072305405,
+              "count": 330
+            },
+            {
+              "rmsePoints": 23.081765291633193,
+              "coverage90": 0.9484848484848485,
+              "meanSdPoints": 29.768762881930602,
+              "count": 330
+            },
+            {
+              "rmsePoints": 28.281283113305552,
+              "coverage90": 0.9454545454545454,
+              "meanSdPoints": 34.88005779274576,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 24.031650054446157,
+              "coverage90": 0.8272727272727273,
+              "meanSdPoints": 20.377936621188198,
+              "count": 330
+            },
+            {
+              "rmsePoints": 19.108119204096266,
+              "coverage90": 0.9393939393939394,
+              "meanSdPoints": 20.34093138319475,
+              "count": 330
+            },
+            {
+              "rmsePoints": 18.3208257147642,
+              "coverage90": 0.9151515151515152,
+              "meanSdPoints": 20.44809807226508,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 28.85114130384154,
+              "coverage90": 0.92,
+              "meanSdPoints": 30.352353464707406,
+              "count": 75
+            },
+            {
+              "rmsePoints": 19.615112954075318,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 30.132893724463756,
+              "count": 75
+            },
+            {
+              "rmsePoints": 27.621196997210358,
+              "coverage90": 0.9733333333333334,
+              "meanSdPoints": 34.13900796117546,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 23.301379614625386,
+              "coverage90": 0.8636363636363636,
+              "meanSdPoints": 22.976841217737885,
+              "count": 330
+            },
+            {
+              "rmsePoints": 23.060168848602586,
+              "coverage90": 0.8878787878787879,
+              "meanSdPoints": 22.68962546007493,
+              "count": 330
+            },
+            {
+              "rmsePoints": 26.30215603992918,
+              "coverage90": 0.9242424242424242,
+              "meanSdPoints": 27.290051469394207,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "heavy_noise",
+      "seed": 41,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 24.31163048336426,
+              "coverage90": 0.8181818181818182,
+              "meanSdPoints": 22.175572343646156,
+              "count": 330
+            },
+            {
+              "rmsePoints": 19.42887953310557,
+              "coverage90": 0.9636363636363636,
+              "meanSdPoints": 22.15552969603913,
+              "count": 330
+            },
+            {
+              "rmsePoints": 14.974767582428905,
+              "coverage90": 0.990909090909091,
+              "meanSdPoints": 22.126029044950812,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 25.58802342727664,
+              "coverage90": 0.9733333333333334,
+              "meanSdPoints": 36.95564261070143,
+              "count": 75
+            },
+            {
+              "rmsePoints": 22.114422391130482,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.78665282291566,
+              "count": 75
+            },
+            {
+              "rmsePoints": 19.223901735056128,
+              "coverage90": 1.0,
+              "meanSdPoints": 37.077623252405296,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 12.667147964880742,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.433724680210123,
+              "count": 330
+            },
+            {
+              "rmsePoints": 13.456202899653832,
+              "coverage90": 0.9939393939393939,
+              "meanSdPoints": 30.233403177110343,
+              "count": 330
+            },
+            {
+              "rmsePoints": 16.20432508697559,
+              "coverage90": 0.9939393939393939,
+              "meanSdPoints": 30.50991892600455,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 23.759754171541033,
+              "coverage90": 0.7848484848484848,
+              "meanSdPoints": 20.409676514772272,
+              "count": 330
+            },
+            {
+              "rmsePoints": 18.938445085924332,
+              "coverage90": 0.9545454545454546,
+              "meanSdPoints": 20.392741463536183,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.136583962180868,
+              "coverage90": 1.0,
+              "meanSdPoints": 20.388080834251838,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 25.411935294118805,
+              "coverage90": 0.9466666666666667,
+              "meanSdPoints": 30.457238165830177,
+              "count": 75
+            },
+            {
+              "rmsePoints": 20.31542861244296,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 30.36242253442121,
+              "count": 75
+            },
+            {
+              "rmsePoints": 15.548953695490523,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.807843088105933,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 10.006596225307653,
+              "coverage90": 1.0,
+              "meanSdPoints": 23.12187989160701,
+              "count": 330
+            },
+            {
+              "rmsePoints": 10.07376269833096,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.996933814820327,
+              "count": 330
+            },
+            {
+              "rmsePoints": 11.750699350945812,
+              "coverage90": 1.0,
+              "meanSdPoints": 23.500506841085798,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "heavy_noise",
+      "seed": 42,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 25.824752050958253,
+              "coverage90": 0.8333333333333334,
+              "meanSdPoints": 22.169945407334335,
+              "count": 330
+            },
+            {
+              "rmsePoints": 26.19555425702796,
+              "coverage90": 0.8727272727272727,
+              "meanSdPoints": 22.134776243611096,
+              "count": 330
+            },
+            {
+              "rmsePoints": 22.62991465907142,
+              "coverage90": 0.9090909090909091,
+              "meanSdPoints": 22.08030889414684,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 23.777937692853055,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 37.012062409738746,
+              "count": 75
+            },
+            {
+              "rmsePoints": 28.620217581943788,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 36.83900978715458,
+              "count": 75
+            },
+            {
+              "rmsePoints": 30.104336467209183,
+              "coverage90": 0.96,
+              "meanSdPoints": 38.17655754190027,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 13.255471314150377,
+              "coverage90": 0.990909090909091,
+              "meanSdPoints": 30.49436432637035,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.647902261127031,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.279633348042154,
+              "count": 330
+            },
+            {
+              "rmsePoints": 21.008076041730035,
+              "coverage90": 0.9666666666666667,
+              "meanSdPoints": 31.682097538675272,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 22.832273645076064,
+              "coverage90": 0.8515151515151516,
+              "meanSdPoints": 20.414282666613353,
+              "count": 330
+            },
+            {
+              "rmsePoints": 24.934202769212554,
+              "coverage90": 0.8363636363636363,
+              "meanSdPoints": 20.379473230717938,
+              "count": 330
+            },
+            {
+              "rmsePoints": 21.396929829027933,
+              "coverage90": 0.8939393939393939,
+              "meanSdPoints": 20.378788343334694,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 22.306339119378467,
+              "coverage90": 0.9866666666666667,
+              "meanSdPoints": 30.542298172731613,
+              "count": 75
+            },
+            {
+              "rmsePoints": 25.042352090017733,
+              "coverage90": 0.9733333333333334,
+              "meanSdPoints": 30.424283682547195,
+              "count": 75
+            },
+            {
+              "rmsePoints": 24.901452291727,
+              "coverage90": 1.0,
+              "meanSdPoints": 31.89039584073725,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 9.917821135071971,
+              "coverage90": 0.9939393939393939,
+              "meanSdPoints": 23.22109484932955,
+              "count": 330
+            },
+            {
+              "rmsePoints": 10.499688875388028,
+              "coverage90": 1.0,
+              "meanSdPoints": 23.057872947988006,
+              "count": 330
+            },
+            {
+              "rmsePoints": 16.545581647224704,
+              "coverage90": 0.9757575757575757,
+              "meanSdPoints": 24.708085193722333,
+              "count": 330
+            }
+          ]
+        }
+      }
+    },
+    {
+      "world": "heavy_noise",
+      "seed": 43,
+      "models": {
+        "filtered": {
+          "driver": [
+            {
+              "rmsePoints": 20.03881882911975,
+              "coverage90": 0.9484848484848485,
+              "meanSdPoints": 22.199597585445154,
+              "count": 330
+            },
+            {
+              "rmsePoints": 13.617818250945541,
+              "coverage90": 1.0,
+              "meanSdPoints": 22.147856895287877,
+              "count": 330
+            },
+            {
+              "rmsePoints": 14.5516007773112,
+              "coverage90": 0.990909090909091,
+              "meanSdPoints": 22.14985983875255,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 17.52742895040767,
+              "coverage90": 1.0,
+              "meanSdPoints": 37.077892987783464,
+              "count": 75
+            },
+            {
+              "rmsePoints": 16.70473639625991,
+              "coverage90": 1.0,
+              "meanSdPoints": 36.826490386722,
+              "count": 75
+            },
+            {
+              "rmsePoints": 21.998652522729717,
+              "coverage90": 1.0,
+              "meanSdPoints": 39.51518348528293,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 13.510803250200416,
+              "coverage90": 0.990909090909091,
+              "meanSdPoints": 30.58894497551957,
+              "count": 330
+            },
+            {
+              "rmsePoints": 13.064915795873029,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.273906773875048,
+              "count": 330
+            },
+            {
+              "rmsePoints": 18.377887864297772,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 33.140209145129774,
+              "count": 330
+            }
+          ]
+        },
+        "retrospective": {
+          "driver": [
+            {
+              "rmsePoints": 18.448368709550984,
+              "coverage90": 0.9606060606060606,
+              "meanSdPoints": 20.419303453017772,
+              "count": 330
+            },
+            {
+              "rmsePoints": 10.719566196942413,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 20.37736443066441,
+              "count": 330
+            },
+            {
+              "rmsePoints": 13.385657764744485,
+              "coverage90": 1.0,
+              "meanSdPoints": 20.3753427072903,
+              "count": 330
+            }
+          ],
+          "car": [
+            {
+              "rmsePoints": 15.189792576470117,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.570006974218288,
+              "count": 75
+            },
+            {
+              "rmsePoints": 15.129434538958218,
+              "coverage90": 1.0,
+              "meanSdPoints": 30.38931320509947,
+              "count": 75
+            },
+            {
+              "rmsePoints": 17.53730406560134,
+              "coverage90": 1.0,
+              "meanSdPoints": 32.999582808835314,
+              "count": 75
+            }
+          ],
+          "package": [
+            {
+              "rmsePoints": 11.43658971959707,
+              "coverage90": 0.996969696969697,
+              "meanSdPoints": 23.25478538020123,
+              "count": 330
+            },
+            {
+              "rmsePoints": 10.184390634398444,
+              "coverage90": 1.0,
+              "meanSdPoints": 23.014313472228764,
+              "count": 330
+            },
+            {
+              "rmsePoints": 12.85531602487963,
+              "coverage90": 1.0,
+              "meanSdPoints": 25.94499457156028,
+              "count": 330
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "limitations": "Three seeds per world; dependent pairwise observations and shared truth. Coverage is descriptive, not independent binomial data. Simulation is misspecified relative to the fitted model."
+}

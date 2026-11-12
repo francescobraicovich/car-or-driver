@@ -1,0 +1,84 @@
+{
+  "mode": "weekend",
+  "predictive": true,
+  "burnIn": 20,
+  "weekends": 120,
+  "evaluatedWeekends": 10,
+  "counts": [
+    697,
+    1844,
+    735
+  ],
+  "channels": [
+    "qual",
+    "race",
+    "overall"
+  ],
+  "averageNegativeLogLikelihood": {
+    "filtered": [
+      2.7571207019479833,
+      2.6506979938017223,
+      0.46551116151120003
+    ],
+    "retrospective": [
+      2.7235842004008606,
+      2.6404384980119344,
+      0.4448786122327252
+    ]
+  },
+  "limitations": "Posterior predictive likelihood integrated using the local Gaussian approximation. Within-weekend pair observations are dependent. Entire weekends are held out from model updates. Retrospective estimates use future races; filtered estimates do not. Parameters were selected using later 2002\u20132007 training and warm-up overlapping this period.",
+  "predictiveCalibration": {
+    "filtered": {
+      "qualCoverage90": {
+        "value": 0.9120457626558202,
+        "raceClusterBootstrap95": [
+          0.8794926004228312,
+          0.982051282051282
+        ],
+        "races": 3
+      },
+      "raceCoverage90": {
+        "value": 0.8715109390179692,
+        "raceClusterBootstrap95": [
+          0.7902449568074712,
+          0.93426115833165
+        ],
+        "races": 10
+      },
+      "overallBrier": {
+        "value": 0.15221661154039837,
+        "raceClusterBootstrap95": [
+          0.12195405572360554,
+          0.19900343583757335
+        ],
+        "races": 10
+      }
+    },
+    "retrospective": {
+      "qualCoverage90": {
+        "value": 0.9044737625235579,
+        "raceClusterBootstrap95": [
+          0.8689217758985179,
+          0.9846153846153846
+        ],
+        "races": 3
+      },
+      "raceCoverage90": {
+        "value": 0.859508588225546,
+        "raceClusterBootstrap95": [
+          0.7754056225972317,
+          0.9250377122099288
+        ],
+        "races": 10
+      },
+      "overallBrier": {
+        "value": 0.14323199986828225,
+        "raceClusterBootstrap95": [
+          0.11449251487865147,
+          0.18921113141934787
+        ],
+        "races": 10
+      }
+    }
+  }
+}

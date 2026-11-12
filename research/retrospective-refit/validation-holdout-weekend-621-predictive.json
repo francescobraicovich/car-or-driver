@@ -1,0 +1,84 @@
+{
+  "mode": "weekend",
+  "predictive": true,
+  "burnIn": 310,
+  "weekends": 621,
+  "evaluatedWeekends": 31,
+  "counts": [
+    6124,
+    5580,
+    4502
+  ],
+  "channels": [
+    "qual",
+    "race",
+    "overall"
+  ],
+  "averageNegativeLogLikelihood": {
+    "filtered": [
+      2.5309880573864776,
+      2.269824291072927,
+      0.5298620515132214
+    ],
+    "retrospective": [
+      2.4893108049730666,
+      2.2193651575649884,
+      0.5106308131405913
+    ]
+  },
+  "limitations": "Posterior predictive likelihood integrated using the local Gaussian approximation. Within-weekend pair observations are dependent. Entire weekends are held out from model updates. Retrospective estimates use future races; filtered estimates do not. Parameters were fixed using 1994\u20132007 warm-up and training before this period.",
+  "predictiveCalibration": {
+    "filtered": {
+      "qualCoverage90": {
+        "value": 0.9411491998620374,
+        "raceClusterBootstrap95": [
+          0.9095301337715148,
+          0.96909191343993
+        ],
+        "races": 31
+      },
+      "raceCoverage90": {
+        "value": 0.9639963508267069,
+        "raceClusterBootstrap95": [
+          0.9463567646715934,
+          0.9795450283344282
+        ],
+        "races": 31
+      },
+      "overallBrier": {
+        "value": 0.1802880043490147,
+        "raceClusterBootstrap95": [
+          0.16579497700848794,
+          0.19448854073208788
+        ],
+        "races": 31
+      }
+    },
+    "retrospective": {
+      "qualCoverage90": {
+        "value": 0.9426204608459854,
+        "raceClusterBootstrap95": [
+          0.9111005606861579,
+          0.9705618350790997
+        ],
+        "races": 31
+      },
+      "raceCoverage90": {
+        "value": 0.9683388766478842,
+        "raceClusterBootstrap95": [
+          0.9525137059809021,
+          0.9821935973721149
+        ],
+        "races": 31
+      },
+      "overallBrier": {
+        "value": 0.1724844568614472,
+        "raceClusterBootstrap95": [
+          0.15733156324161818,
+          0.18766432734867927
+        ],
+        "races": 31
+      }
+    }
+  }
+}

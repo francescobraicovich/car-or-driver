@@ -17,7 +17,7 @@ jobs:
   refresh:
     if: github.repository == 'francescobraicovich/car-or-driver' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -65,7 +65,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/*.csv data/manifest.json data/model*.json data/teammate-graph.json data/rating-reference.json data/race-laps site/assets/tracks.json site/js/insights-data.js tests/golden.json
+          git add data/*.csv data/manifest.json data/model*.json data/retrospective*.json data/teammate-graph.json data/rating-reference.json data/race-laps site/assets/tracks.json site/js/insights-data.js tests/golden.json
           git diff --cached --check
           git commit -m "Update GP data"
           git push origin HEAD:main

@@ -113,7 +113,14 @@ for (const author of [
   assert.ok(insights.includes(author), `the Insights notes cite ${author}`);
 
 // 6. what is published
-for (const file of ['data/model.json', 'data/model-latest.json', 'data/teammate-graph.json', 'data/rating-reference.json']) {
+for (const file of [
+  'data/model.json',
+  'data/model-latest.json',
+  'data/retrospective.json',
+  'data/retrospective-latest.json',
+  'data/teammate-graph.json',
+  'data/rating-reference.json',
+]) {
   const { licence } = deserialize(await read(file));
   assert.equal(licence?.licence, 'CC BY-NC-SA 4.0', `${file} carries the licence`);
   assert.ok(licence.credit.includes('Jolpica') && licence.credit.includes('TracingInsights'), `${file} carries the credit`);
@@ -155,7 +162,14 @@ try {
     for (const [, reference] of references)
       assert.ok(existsSync(resolve('dist', dirname(file), reference)), `${file} imports missing ${reference}`);
   }
-  for (const file of ['site/assets/tracks.json', 'site/assets/tracks-licence.txt', 'data/race-laps/2026.json', 'data/teammate-graph.json'])
+  for (const file of [
+    'site/assets/tracks.json',
+    'site/assets/tracks-licence.txt',
+    'data/race-laps/2026.json',
+    'data/teammate-graph.json',
+    'data/retrospective.json',
+    'data/retrospective-latest.json',
+  ])
     assert.ok(published.includes(file), `${file} is published`);
   assert.ok(
     !published.some((file) => file.startsWith('data/source/')),

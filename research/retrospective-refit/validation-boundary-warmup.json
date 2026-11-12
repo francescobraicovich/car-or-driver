@@ -1,0 +1,44 @@
+{
+  "baselineInputSha256": "e135121b1d174edf4c9dfce246b53e3833f20d277bf1e68381529f2bcad88aaa",
+  "warmupInputSha256": "7231f27a821a205c3d98f64802bec87de07257143a13fb42d97a471c89e68947",
+  "warmupDates": [
+    "1990-03-11",
+    "1993-11-07"
+  ],
+  "warmupWeekends": 64,
+  "scoredDate": "1994-03-27",
+  "through": "1995-10-29",
+  "warmupObservationCounts": [
+    0,
+    16120,
+    4931
+  ],
+  "post1994EvidenceIdentical": true,
+  "absoluteChangesFromBaseline": {
+    "driver": {
+      "meanAbsoluteChange": 11.141156467431667,
+      "maximumAbsoluteChange": 54.49145236709568
+    },
+    "car": {
+      "meanAbsoluteChange": 64.18943020201992,
+      "maximumAbsoluteChange": 85.81502692992403
+    }
+  },
+  "baseline": {
+    "schumacherRating": 1141.206110207842,
+    "schumacherSennaGap": 105.4198067705326,
+    "pacificRating": 816.393535745181,
+    "pacificMcLarenGap": -260.31472074243214,
+    "schumacherSd": 14.455549907361645,
+    "pacificSd": 44.10396512104749
+  },
+  "warmup": {
+    "schumacherRating": 1139.1198732087278,
+    "schumacherSennaGap": 48.842117404322806,
+    "pacificRating": 863.1964704112739,
+    "pacificMcLarenGap": -283.5381157112344,
+    "schumacherSd": 14.164386713362912,
+    "pacificSd": 44.26421955198461
+  },
+  "limitations": "Exploratory refits through October 1995, not the full history. The extra 1990\u20131993 data contain no qualifying comparisons and have not been independently audited for quality. Fixed settings were originally selected with a 1994 start; scores are not ground truth."
+}

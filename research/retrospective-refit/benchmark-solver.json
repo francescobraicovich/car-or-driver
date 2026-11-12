@@ -1,0 +1,44 @@
+{
+  "inputSha256": "e135121b1d174edf4c9dfce246b53e3833f20d277bf1e68381529f2bcad88aaa",
+  "weekends": 120,
+  "covarianceIndices": [
+    0,
+    30,
+    60,
+    119
+  ],
+  "results": [
+    {
+      "permutation": "COLAMD",
+      "rhsBatchSize": 8,
+      "elapsedSeconds": 19.284608166082762,
+      "processWallSeconds": 20.086743416963145,
+      "iterations": 6,
+      "maximumGradient": 9.983711430350262e-07,
+      "maximumRatingDifferencePoints": 0.0,
+      "maximumCovarianceDifference": 0.0,
+      "factorizationSeconds": 2.300342790898867,
+      "factorNonzeros": 12677355,
+      "extractionSeconds": 2.5631106660002843
+    },
+    {
+      "permutation": "COLAMD",
+      "rhsBatchSize": 32,
+      "elapsedSeconds": 19.14893295802176,
+      "processWallSeconds": 19.94321791699622,
+      "iterations": 6,
+      "maximumGradient": 9.983711430350262e-07,
+      "maximumRatingDifferencePoints": 0.0,
+      "maximumCovarianceDifference": 0.0,
+      "factorizationSeconds": 2.31852304097265,
+      "factorNonzeros": 12677355,
+      "extractionSeconds": 2.4262022910406813
+    },
+    {
+      "permutation": "MMD_AT_PLUS_A",
+      "rhsBatchSize": 8,
+      "timedOutAfterSeconds": 90
+    }
+  ],
+  "limitations": "Single-run exploratory timings on the first 120 weekends, with a 90-second limit per case. Full-history runtime and peak memory require separate measurement; solver output is checked on four selected blocks."
+}

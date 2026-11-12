@@ -1,0 +1,51 @@
+{
+  "inputSha256": "e135121b1d174edf4c9dfce246b53e3833f20d277bf1e68381529f2bcad88aaa",
+  "weekends": 5,
+  "cases": [
+    {
+      "case": "all_evidence",
+      "removedComparisons": [
+        0,
+        0,
+        0
+      ],
+      "pacificRating": 851.2790737515351,
+      "pacificMcLarenGap": -220.97265734524632,
+      "pacificSd": 47.00354552892488
+    },
+    {
+      "case": "omit_later_pacific_qualifying",
+      "removedComparisons": [
+        100,
+        0,
+        0
+      ],
+      "pacificRating": 898.7354294094629,
+      "pacificMcLarenGap": -169.78721208476875,
+      "pacificSd": 48.25383754050197
+    },
+    {
+      "case": "omit_later_pacific_race_pace",
+      "removedComparisons": [
+        0,
+        78,
+        0
+      ],
+      "pacificRating": 919.7892689192969,
+      "pacificMcLarenGap": -147.49481734982382,
+      "pacificSd": 48.76239702643526
+    },
+    {
+      "case": "omit_both_later_pacific_timing",
+      "removedComparisons": [
+        100,
+        78,
+        0
+      ],
+      "pacificRating": 982.8672311299575,
+      "pacificMcLarenGap": -79.51645524759881,
+      "pacificSd": 49.79797750466178
+    }
+  ],
+  "limitations": "Diagnostic refits after removing comparisons involving Pacific in weekends 3\u20135; other same-weekend comparisons remain and are dependent. Differences are not causal attributions or evidence of true 1994 strength."
+}

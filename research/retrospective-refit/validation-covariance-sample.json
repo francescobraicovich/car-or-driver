@@ -1,0 +1,12 @@
+{
+  "inputSha256": "e135121b1d174edf4c9dfce246b53e3833f20d277bf1e68381529f2bcad88aaa",
+  "weekendsInFit": 621,
+  "covarianceBlocks": 25,
+  "firstBlockSeconds": 96.36116254201625,
+  "lastBlockSeconds": 154.3388780420646,
+  "blockExtractionSecondsAfterFirst": 57.97771550004836,
+  "meanSecondsPerAdditionalBlock": 2.4157381458353484,
+  "iterations": 11,
+  "maximumGradient": 4.9921608513692206e-11,
+  "limitations": "First 25 blocks only, with the entire history fitted. Wall time depends on concurrent workloads; the first block includes fitting and factorization. This is not the completed all-block benchmark."
+}

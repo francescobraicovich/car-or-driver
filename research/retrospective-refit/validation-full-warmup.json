@@ -1,0 +1,307 @@
+{
+  "baseInputSha256": "e135121b1d174edf4c9dfce246b53e3833f20d277bf1e68381529f2bcad88aaa",
+  "warmInputSha256": "4c76e622cfbe7a317ca6ad0d367b7ddf6a51214e1a65fc82b174e16567623db6",
+  "warmupWeekends": 64,
+  "warmupDates": [
+    "1990-03-11",
+    "1993-11-07"
+  ],
+  "post1994Weekends": 621,
+  "post1994EvidenceIdentical": true,
+  "fullFitSeconds": 267.8158531660447,
+  "maximumGradient": 5.243783532393742e-11,
+  "overallDifferences": {
+    "driver": {
+      "raw": {
+        "count": 13278,
+        "meanSigned": 0.7705184230527186,
+        "meanAbsolute": 0.9601323048337073,
+        "medianAbsolute": 0.20811604529737693,
+        "p95Absolute": 5.2174438545532436,
+        "maximumAbsolute": 53.53128700670895
+      },
+      "fieldRelative": {
+        "count": 13278,
+        "meanSigned": 4.0803497214721825e-18,
+        "meanAbsolute": 0.6871178319093576,
+        "medianAbsolute": 0.05935864276525546,
+        "p95Absolute": 3.9763771476427228,
+        "maximumAbsolute": 48.573720320158415
+      }
+    },
+    "car": {
+      "raw": {
+        "count": 6645,
+        "meanSigned": 6.348710177339837,
+        "meanAbsolute": 6.365702017736978,
+        "medianAbsolute": 0.6332646492614771,
+        "p95Absolute": 34.669224693143214,
+        "maximumAbsolute": 70.1140171304594
+      },
+      "fieldRelative": {
+        "count": 6645,
+        "meanSigned": 3.010717667982742e-17,
+        "meanAbsolute": 0.9011832711169715,
+        "medianAbsolute": 0.058554679107343355,
+        "p95Absolute": 5.560775670732417,
+        "maximumAbsolute": 71.27100934247636
+      }
+    }
+  },
+  "byDecade": {
+    "1990": {
+      "driver": {
+        "raw": {
+          "count": 2279,
+          "meanSigned": 2.991513743647513,
+          "meanAbsolute": 4.055752174896288,
+          "medianAbsolute": 2.223727199059148,
+          "p95Absolute": 11.499390509863852,
+          "maximumAbsolute": 53.53128700670895
+        },
+        "fieldRelative": {
+          "count": 2279,
+          "meanSigned": 7.716512817052426e-17,
+          "meanAbsolute": 3.3793869979812485,
+          "medianAbsolute": 2.363997512853677,
+          "p95Absolute": 10.53275323178773,
+          "maximumAbsolute": 48.573720320158415
+        }
+      },
+      "car": {
+        "raw": {
+          "count": 1143,
+          "meanSigned": 27.86123913682953,
+          "meanAbsolute": 27.960023720765662,
+          "medianAbsolute": 24.529137250859332,
+          "p95Absolute": 51.535222105911714,
+          "maximumAbsolute": 70.1140171304594
+        },
+        "fieldRelative": {
+          "count": 1143,
+          "meanSigned": 7.615178051672115e-17,
+          "meanAbsolute": 4.648173586459741,
+          "medianAbsolute": 3.333796261639794,
+          "p95Absolute": 13.16110866228006,
+          "maximumAbsolute": 71.27100934247636
+        }
+      }
+    },
+    "2000": {
+      "driver": {
+        "raw": {
+          "count": 3643,
+          "meanSigned": 0.7234579051405262,
+          "meanAbsolute": 0.7299054057377985,
+          "medianAbsolute": 0.5912349717085537,
+          "p95Absolute": 1.8590320728069545,
+          "maximumAbsolute": 4.937205183236777
+        },
+        "fieldRelative": {
+          "count": 3643,
+          "meanSigned": -1.334827572840567e-17,
+          "meanAbsolute": 0.30195170003243227,
+          "medianAbsolute": 0.20302548628016864,
+          "p95Absolute": 0.9947584442200391,
+          "maximumAbsolute": 3.405596074748439
+        }
+      },
+      "car": {
+        "raw": {
+          "count": 1823,
+          "meanSigned": 4.906898189787496,
+          "meanAbsolute": 4.906898189787496,
+          "medianAbsolute": 3.7215678326081445,
+          "p95Absolute": 11.79357449238287,
+          "maximumAbsolute": 13.805458709501291
+        },
+        "fieldRelative": {
+          "count": 1823,
+          "meanSigned": 5.371457530002129e-17,
+          "meanAbsolute": 0.2832458854115635,
+          "medianAbsolute": 0.15430757366495507,
+          "p95Absolute": 1.1868358378845612,
+          "maximumAbsolute": 2.8474171572562064
+        }
+      }
+    },
+    "2010": {
+      "driver": {
+        "raw": {
+          "count": 4297,
+          "meanSigned": 0.14073446899875688,
+          "meanAbsolute": 0.15674691786916622,
+          "medianAbsolute": 0.1479846399132292,
+          "p95Absolute": 0.3302146652980688,
+          "maximumAbsolute": 0.48207786178465994
+        },
+        "fieldRelative": {
+          "count": 4297,
+          "meanSigned": 2.6806059763756106e-19,
+          "meanAbsolute": 0.06604082772255652,
+          "medianAbsolute": 0.044498121109779326,
+          "p95Absolute": 0.15865941268120923,
+          "maximumAbsolute": 0.6701751088915239
+        }
+      },
+      "car": {
+        "raw": {
+          "count": 2149,
+          "meanSigned": 0.48546560602470296,
+          "meanAbsolute": 0.48546560602470296,
+          "medianAbsolute": 0.4488567419159448,
+          "p95Absolute": 0.8366306607944779,
+          "maximumAbsolute": 0.9793434673902368
+        },
+        "fieldRelative": {
+          "count": 2149,
+          "meanSigned": 2.1439858316400185e-18,
+          "meanAbsolute": 0.06638826515530032,
+          "medianAbsolute": 0.05039347135823913,
+          "p95Absolute": 0.18371699281563078,
+          "maximumAbsolute": 0.2634120041794269
+        }
+      }
+    },
+    "2020": {
+      "driver": {
+        "raw": {
+          "count": 3059,
+          "meanSigned": 0.056551369011677066,
+          "meanAbsolute": 0.056551369011677066,
+          "medianAbsolute": 0.05541338431230258,
+          "p95Absolute": 0.09678317946688697,
+          "maximumAbsolute": 0.12815588794989452
+        },
+        "fieldRelative": {
+          "count": 3059,
+          "meanSigned": -2.6993408779501804e-19,
+          "meanAbsolute": 0.012468167293627683,
+          "medianAbsolute": 0.010023860633572301,
+          "p95Absolute": 0.032552910540054464,
+          "maximumAbsolute": 0.05423487365528075
+        }
+      },
+      "car": {
+        "raw": {
+          "count": 1530,
+          "meanSigned": 0.2308769984950106,
+          "meanAbsolute": 0.2308769984950106,
+          "medianAbsolute": 0.22800720123185414,
+          "p95Absolute": 0.31038973103715384,
+          "maximumAbsolute": 0.3354987530544662
+        },
+        "fieldRelative": {
+          "count": 1530,
+          "meanSigned": -1.1247357439013024e-18,
+          "meanAbsolute": 0.010767840735143943,
+          "medianAbsolute": 0.008105657051711332,
+          "p95Absolute": 0.031173188492572435,
+          "maximumAbsolute": 0.03842019706151245
+        }
+      }
+    }
+  },
+  "firstWeekend": {
+    "date": "1994-03-27",
+    "baselineSchumacherSennaGap": 94.20307997863355,
+    "warmSchumacherSennaGap": 42.12043889361745,
+    "baselinePacificMcLarenGap": -260.891166468457,
+    "warmPacificMcLarenGap": -282.8867499554024
+  },
+  "selectedCovariance": [
+    {
+      "date": "1994-03-27",
+      "index": 0,
+      "overallSdChangePoints": {
+        "driver": {
+          "count": 28,
+          "meanSigned": -0.16514892053026015,
+          "meanAbsolute": 0.5198368252118812,
+          "medianAbsolute": 0.24910903843961996,
+          "p95Absolute": 2.037462041599174,
+          "maximumAbsolute": 2.8187854227863443
+        },
+        "car": {
+          "count": 14,
+          "meanSigned": 2.497709545369467,
+          "meanAbsolute": 2.497709545369467,
+          "medianAbsolute": 2.5838268679220437,
+          "p95Absolute": 3.905208856346183,
+          "maximumAbsolute": 4.345219117566728
+        }
+      },
+      "minimumWarmCovarianceEigenvalue": 0.02961859215179435
+    },
+    {
+      "date": "2003-06-01",
+      "index": 155,
+      "overallSdChangePoints": {
+        "driver": {
+          "count": 20,
+          "meanSigned": 0.004325302717652858,
+          "meanAbsolute": 0.00506158045117067,
+          "medianAbsolute": 0.0011493307292415478,
+          "p95Absolute": 0.026029914572556618,
+          "maximumAbsolute": 0.04762583617584393
+        },
+        "car": {
+          "count": 10,
+          "meanSigned": 0.13343733146000586,
+          "meanAbsolute": 0.13343733146000586,
+          "medianAbsolute": 0.13106241231407967,
+          "p95Absolute": 0.17474803227861566,
+          "maximumAbsolute": 0.1814136999432568
+        }
+      },
+      "minimumWarmCovarianceEigenvalue": 0.02594970955916554
+    },
+    {
+      "date": "2012-03-18",
+      "index": 310,
+      "overallSdChangePoints": {
+        "driver": {
+          "count": 24,
+          "meanSigned": 0.000888124584383778,
+          "meanAbsolute": 0.001195421636616026,
+          "medianAbsolute": 0.0003162970188368722,
+          "p95Absolute": 0.002088328385136225,
+          "maximumAbsolute": 0.018300322929432088
+        },
+        "car": {
+          "count": 12,
+          "meanSigned": -0.002494479115039045,
+          "meanAbsolute": 0.003388604572722749,
+          "medianAbsolute": 0.0009118655862101631,
+          "p95Absolute": 0.012112480847563011,
+          "maximumAbsolute": 0.014997418656944848
+        }
+      },
+      "minimumWarmCovarianceEigenvalue": 0.022634630990105032
+    },
+    {
+      "date": "2026-11-08",
+      "index": 620,
+      "overallSdChangePoints": {
+        "driver": {
+          "count": 22,
+          "meanSigned": 1.7184707309514042e-05,
+          "meanAbsolute": 4.8422170388168234e-05,
+          "medianAbsolute": 3.1223741160887846e-05,
+          "p95Absolute": 0.0001627483337905901,
+          "maximumAbsolute": 0.00017778142158728457
+        },
+        "car": {
+          "count": 11,
+          "meanSigned": -0.0013863274835829074,
+          "meanAbsolute": 0.0013863274835829074,
+          "medianAbsolute": 0.001243487348297327,
+          "p95Absolute": 0.00260169775038961,
+          "maximumAbsolute": 0.0037708046622443652
+        }
+      },
+      "minimumWarmCovarianceEigenvalue": 0.03387590665671545
+    }
+  ],
+  "limitations": "Both models refit the same post-1994 observations and differ in 1990\u20131993 warm-up. Per-weekend centring is a diagnostic convention, not the website display reference. Warm-up qualifying is absent, input provenance is not independently verified and hyperparameters were selected for the original start. Selected Laplace covariances are conditional on each model, not validation of real latent strength."
+}

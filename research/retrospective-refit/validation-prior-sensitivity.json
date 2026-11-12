@@ -1,0 +1,133 @@
+{
+  "inputSha256": "e135121b1d174edf4c9dfce246b53e3833f20d277bf1e68381529f2bcad88aaa",
+  "weekends": 32,
+  "through": "1995-10-29",
+  "cases": [
+    {
+      "case": "baseline",
+      "initialSdPoints": {
+        "driver": 20,
+        "car": 50
+      },
+      "absoluteChangesFromBaseline": {
+        "driver": {
+          "meanAbsoluteChange": 0.0,
+          "maxAbsoluteChange": 0.0
+        },
+        "car": {
+          "meanAbsoluteChange": 0.0,
+          "maxAbsoluteChange": 0.0
+        }
+      },
+      "schumacher1994Overall": 1141.206110207842,
+      "schumacherSennaGap": 105.4198067705326,
+      "pacific1994Overall": 816.393535745181,
+      "pacificMcLarenGap": -260.31472074243214,
+      "schumacherSd": 14.455549907361645,
+      "pacificSd": 44.10396512104749,
+      "maximumGradient": 2.7610488340101824e-08,
+      "elapsedSeconds": 2.7043546669883654
+    },
+    {
+      "case": "driver_tight",
+      "initialSdPoints": {
+        "driver": 10,
+        "car": 50
+      },
+      "absoluteChangesFromBaseline": {
+        "driver": {
+          "meanAbsoluteChange": 16.65579788801291,
+          "maxAbsoluteChange": 74.2052894357875
+        },
+        "car": {
+          "meanAbsoluteChange": 5.174282248217255,
+          "maxAbsoluteChange": 13.72052500682635
+        }
+      },
+      "schumacher1994Overall": 1067.0008207720543,
+      "schumacherSennaGap": 57.56684672490638,
+      "pacific1994Overall": 819.9394414012711,
+      "pacificMcLarenGap": -265.1191497346389,
+      "schumacherSd": 8.705353167951163,
+      "pacificSd": 43.9416736676181,
+      "maximumGradient": 3.635945711177868e-12,
+      "elapsedSeconds": 2.692101333057508
+    },
+    {
+      "case": "driver_wide",
+      "initialSdPoints": {
+        "driver": 40,
+        "car": 50
+      },
+      "absoluteChangesFromBaseline": {
+        "driver": {
+          "meanAbsoluteChange": 26.32479604876298,
+          "maxAbsoluteChange": 74.36034717096183
+        },
+        "car": {
+          "meanAbsoluteChange": 8.431549278632273,
+          "maxAbsoluteChange": 17.971310813029902
+        }
+      },
+      "schumacher1994Overall": 1210.8480069910229,
+      "schumacherSennaGap": 100.70135638275163,
+      "pacific1994Overall": 815.2843915230371,
+      "pacificMcLarenGap": -252.87464143698088,
+      "schumacherSd": 23.467557334700842,
+      "pacificSd": 44.82806188972235,
+      "maximumGradient": 9.541161194448478e-08,
+      "elapsedSeconds": 2.696949833072722
+    },
+    {
+      "case": "car_tight",
+      "initialSdPoints": {
+        "driver": 20,
+        "car": 25
+      },
+      "absoluteChangesFromBaseline": {
+        "driver": {
+          "meanAbsoluteChange": 8.279658257609164,
+          "maxAbsoluteChange": 24.41564025160347
+        },
+        "car": {
+          "meanAbsoluteChange": 29.937086896389335,
+          "maxAbsoluteChange": 95.86115920251964
+        }
+      },
+      "schumacher1994Overall": 1149.529822597205,
+      "schumacherSennaGap": 108.97119484607674,
+      "pacific1994Overall": 912.2546949477006,
+      "pacificMcLarenGap": -134.62239933899576,
+      "schumacherSd": 14.305848977931126,
+      "pacificSd": 23.806611402120613,
+      "maximumGradient": 1.868945220806495e-09,
+      "elapsedSeconds": 2.350940791075118
+    },
+    {
+      "case": "car_wide",
+      "initialSdPoints": {
+        "driver": 20,
+        "car": 100
+      },
+      "absoluteChangesFromBaseline": {
+        "driver": {
+          "meanAbsoluteChange": 4.368475914802924,
+          "maxAbsoluteChange": 16.514158661845915
+        },
+        "car": {
+          "meanAbsoluteChange": 11.704335970289332,
+          "maxAbsoluteChange": 55.2144294280607
+        }
+      },
+      "schumacher1994Overall": 1136.7749750332703,
+      "schumacherSennaGap": 104.45684040638326,
+      "pacific1994Overall": 761.1791063171203,
+      "pacificMcLarenGap": -325.06767279025036,
+      "schumacherSd": 14.5300991088544,
+      "pacificSd": 82.67959592680033,
+      "maximumGradient": 2.3940622473350714e-07,
+      "elapsedSeconds": 4.077629957930185
+    }
+  ],
+  "limitations": "The alternative prior scales are deliberately illustrative and were not fitted. Only the first 32 weekends are used; this is not a comparison of full-history refits. The model prior mean and other assumptions remain fixed."
+}

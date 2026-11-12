@@ -1,0 +1,30 @@
+{
+  "mode": "weekend",
+  "predictive": false,
+  "burnIn": 310,
+  "weekends": 621,
+  "evaluatedWeekends": 31,
+  "counts": [
+    6124,
+    5580,
+    4502
+  ],
+  "channels": [
+    "qual",
+    "race",
+    "overall"
+  ],
+  "averageNegativeLogLikelihood": {
+    "filtered": [
+      2.5214554791402084,
+      2.2584276565605883,
+      0.5352273346277656
+    ],
+    "retrospective": [
+      2.482208669246863,
+      2.2102772658154253,
+      0.5120121188642937
+    ]
+  },
+  "limitations": "Plug-in mode likelihood; no posterior uncertainty integration. Within-weekend pair observations are dependent. Entire weekends are held out from model updates. Retrospective estimates use future races; filtered estimates do not. Production hyperparameters were fixed using 1994\u20132007 warm-up and training before the evaluated period."
+}

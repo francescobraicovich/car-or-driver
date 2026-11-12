@@ -1,0 +1,7 @@
+{
+  "weekends": 621,
+  "float32Values": 2926251,
+  "bytes": 11705004,
+  "verified": true,
+  "limitations": "Node gzip and JavaScript DataView were verified. Browser delivery, decompression support, loader integration and names/hazards metadata remain untested."
+}

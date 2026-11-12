@@ -1,0 +1,43 @@
+{
+  "originalInputSha256": "4c76e622cfbe7a317ca6ad0d367b7ddf6a51214e1a65fc82b174e16567623db6",
+  "clippedInputSha256": "7e2cb53e293d6d634228c501ee036c7732f1ca82ae55ee3561b2dcf50ee37520",
+  "results": {
+    "1994": {
+      "driver": {
+        "count": 1332,
+        "meanAbsolutePoints": 0.003876005532347858,
+        "maxAbsolutePoints": 0.03277932844007303
+      },
+      "car": {
+        "count": 672,
+        "meanAbsolutePoints": 0.004498099637418479,
+        "maxAbsolutePoints": 0.020559091108395933
+      }
+    },
+    "post1994": {
+      "driver": {
+        "count": 39834,
+        "meanAbsolutePoints": 0.00045971289851329104,
+        "maxAbsolutePoints": 0.03277932844007303
+      },
+      "car": {
+        "count": 19935,
+        "meanAbsolutePoints": 0.00044281415574205877,
+        "maxAbsolutePoints": 0.020559091108395933
+      }
+    },
+    "latest": {
+      "driver": {
+        "count": 66,
+        "meanAbsolutePoints": 1.7755315518364574e-05,
+        "maxAbsolutePoints": 3.654105597661328e-05
+      },
+      "car": {
+        "count": 33,
+        "meanAbsolutePoints": 1.1753966491290909e-05,
+        "maxAbsolutePoints": 2.64132204783607e-05
+      }
+    }
+  },
+  "limitations": "The clipped version deliberately removes five 1992 lap rows, modifying 20 pace comparisons. Formula 1 classifications support the longer distances, so clipping is only a counterfactual sensitivity test and is not recommended as a correction. Fixed assumptions; not a data-quality or coverage estimate."
+}

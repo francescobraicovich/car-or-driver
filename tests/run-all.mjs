@@ -31,6 +31,8 @@ const TESTS = [
   'test-graph-evidence.mjs',
   'test-unified-ratings.mjs',
   'test-unified-production.mjs',
+  'test-retrospective-projection.mjs',
+  'test-retrospective-publication.mjs',
   'test-unified-grid.mjs',
   'test-graph-rating-principles.mjs',
   'test-graph-production.mjs',

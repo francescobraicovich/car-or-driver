@@ -791,6 +791,14 @@ body {
   flex-direction: column;
   min-height: 100%;
 }
+.history-note {
+  flex: none;
+  margin: 0;
+  padding: 0 12px 5px;
+  color: var(--ink-2);
+  font-size: 11px;
+  line-height: 1.4;
+}
 .series-chips {
   display: flex;
   flex: none;

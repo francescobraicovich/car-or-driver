@@ -165,7 +165,7 @@ function readSide(s) {
 function matchup() {
   const sides = SIDES.map(readSide);
   if (!sameCar) return sides;
-  const first = forecasting.resolveSide(state.model, sides[0]);
+  const first = forecasting.resolveSide(state.retrospectiveModel ?? state.model, sides[0]);
   if (first.error) return sides;
   const shared = { carId: first.constructorId, carWhen: { kind: 'date', date: first.car.to } };
   return sides.map((x) => ({ ...x, ...shared }));
@@ -181,14 +181,16 @@ function isLive(sides) {
  * "How the forecast is built": the same probability (for driver A) after each
  * stage, so a headline that disagrees with the ratings says why.
  */
-function stepsHtml(r, nameA, nameB) {
+function stepsHtml(r, nameA, nameB, historical = false) {
   return stepsBlock(
     [
       stepRow('Overall ratings', r.breakdown.ratings, `Driver plus car overall strength: a gap of ${signed(r.gap)} points.`),
       stepRow(
         'Calibrated',
         r.breakdown.calibrated,
-        `Uses the joint uncertainty (gap ±${r.sd.toFixed(0)} points) and the historical relationship between ratings and outcomes.`,
+        historical
+          ? `Uses yearly-average uncertainty with independent drivers and cars (gap ±${r.sd.toFixed(0)} points), plus calibration.`
+          : `Uses the joint uncertainty (gap ±${r.sd.toFixed(0)} points) and the historical relationship between ratings and outcomes.`,
       ),
       ...(Number.isFinite(r.breakdown.grid)
         ? [
@@ -232,9 +234,10 @@ function drawHistory() {
     return;
   }
   const { ids, markers } = lastChart;
-  const series = new Map(ids.map((id) => [id, state.model.dh.get(id) || []]));
+  const historyModel = state.retrospectiveModel ?? state.model;
+  const series = new Map(ids.map((id) => [id, historyModel.dh.get(id) || []]));
   const dates = [...series.values()].flat().map((p) => Date.parse(p.date));
-  drawChart(svg, null, ids, series, state.model.dname, 'overall', 'driver', {
+  drawChart(svg, null, ids, series, historyModel.dname, 'overall', 'driver', {
     ...(dates.length ? { xDomain: [Math.min(...dates) - 14 * 864e5, Math.max(...dates) + 14 * 864e5] } : {}),
     legend: false, // the names above the figures have the colours
     casing: true,
@@ -332,7 +335,7 @@ function showChart(ids, markers) {
 
 /** A constructed matchup: any driver and car, at any moment, using overall ratings and retirement risk. */
 function renderScenario(sides, L) {
-  const r = forecasting.scenarioForecast(state.model, sides[0], sides[1], { L });
+  const r = forecasting.scenarioForecast(state.retrospectiveModel ?? state.model, sides[0], sides[1], { L });
   el.headToHeadState.textContent = conditionsLine(L, 'what-if comparison');
   if (r.error) {
     el.headToHeadOut.innerHTML = `<p class="head-to-head-why">${esc(r.error)}</p>`;
@@ -369,7 +372,7 @@ function renderScenario(sides, L) {
   el.headToHeadCarName.textContent = sameCar ? carWhen(a) : ''; // the shared car, said once
   el.headToHeadOut.innerHTML = `
     ${topHtml(headA, headB, pA, nameA, nameB)}
-    ${stepsHtml(r, nameA, nameB)}
+    ${stepsHtml(r, nameA, nameB, true)}
     ${today === null ? '' : `<p class="head-to-head-why">Own-car forecast: ${percent(today)} for ${esc(nameA)}${infoHtml('For these two on the current grid, in their own cars, before the next weekend.')}</p>`}
     <dl class="head-to-head-facts">
       <div><dt>Rating gap${infoHtml(`${nameA} minus ${nameB}, in points: ${gapParts.join(', ')}.`)}</dt><dd>${signed(r.gap)} <small>points</small></dd></div>
@@ -377,7 +380,7 @@ function renderScenario(sides, L) {
     </dl>`;
   const notes = [a.driver.note, a.car.note, b.driver.note, b.car.note].filter(Boolean);
   setNote(
-    `${sameCar ? 'Both drivers in the same car, so the gap is the drivers’ alone, from ratings only. ' : 'What-if matchup from ratings alone. '}${r.approximate ? 'Cross-date uncertainty treats dated states as independent. ' : ''}This uses current calibration, not a historical backtest. A rating is measured against the field of its own time, so comparing eras is a thought experiment.${notes.length ? ` ${[...new Set(notes)].join(' ')}` : ''}`,
+    `${sameCar ? 'Both drivers in the same car, so the gap is the drivers’ alone, from ratings only. ' : 'What-if matchup from ratings alone. '}${r.approximate ? 'Cross-date uncertainty treats dated states as independent. ' : ''}Historical ratings use later races; early estimates depend on the starting assumptions. Historical uncertainty uses yearly averages and treats drivers and cars as independent. This uses current calibration, not a historical backtest. Comparing eras is a thought experiment.${notes.length ? ` ${[...new Set(notes)].join(' ')}` : ''}`,
   );
   showMoments();
 }

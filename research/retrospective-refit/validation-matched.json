@@ -1,0 +1,167 @@
+{
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "weekendIndices": [
+    0,
+    9,
+    19,
+    29
+  ],
+  "models": {
+    "filtered": {
+      "driver": [
+        {
+          "rmsePoints": 21.20493489740303,
+          "coverage90": 0.9072222222222223,
+          "meanSdPoints": 21.059579343436187,
+          "count": 1800
+        },
+        {
+          "rmsePoints": 21.488028968783446,
+          "coverage90": 0.8944444444444445,
+          "meanSdPoints": 20.758256772726153,
+          "count": 1800
+        },
+        {
+          "rmsePoints": 21.08461230330012,
+          "coverage90": 0.895,
+          "meanSdPoints": 20.59991054309292,
+          "count": 1800
+        }
+      ],
+      "car": [
+        {
+          "rmsePoints": 30.82201454772585,
+          "coverage90": 0.9055555555555556,
+          "meanSdPoints": 30.748214932194898,
+          "count": 360
+        },
+        {
+          "rmsePoints": 26.80516031398395,
+          "coverage90": 0.9305555555555556,
+          "meanSdPoints": 28.918594866035402,
+          "count": 360
+        },
+        {
+          "rmsePoints": 29.80045575924996,
+          "coverage90": 0.9055555555555556,
+          "meanSdPoints": 29.834439433627995,
+          "count": 360
+        }
+      ],
+      "package": [
+        {
+          "rmsePoints": 25.71966248989711,
+          "coverage90": 0.8855555555555555,
+          "meanSdPoints": 23.694829808993106,
+          "count": 1800
+        },
+        {
+          "rmsePoints": 22.637959357423455,
+          "coverage90": 0.9022222222222223,
+          "meanSdPoints": 21.532985354882097,
+          "count": 1800
+        },
+        {
+          "rmsePoints": 25.892713279049598,
+          "coverage90": 0.8588888888888889,
+          "meanSdPoints": 22.29316597850005,
+          "count": 1800
+        }
+      ]
+    },
+    "retrospective": {
+      "driver": [
+        {
+          "rmsePoints": 18.91013833762925,
+          "coverage90": 0.9083333333333333,
+          "meanSdPoints": 19.08174326743326,
+          "count": 1800
+        },
+        {
+          "rmsePoints": 18.933205140751927,
+          "coverage90": 0.905,
+          "meanSdPoints": 18.740785313945075,
+          "count": 1800
+        },
+        {
+          "rmsePoints": 18.838078162701727,
+          "coverage90": 0.9105555555555556,
+          "meanSdPoints": 18.66028390927918,
+          "count": 1800
+        }
+      ],
+      "car": [
+        {
+          "rmsePoints": 26.899401662348502,
+          "coverage90": 0.8944444444444445,
+          "meanSdPoints": 25.968276989798014,
+          "count": 360
+        },
+        {
+          "rmsePoints": 23.717710924681334,
+          "coverage90": 0.9111111111111111,
+          "meanSdPoints": 24.938871027671293,
+          "count": 360
+        },
+        {
+          "rmsePoints": 26.69799072961139,
+          "coverage90": 0.8944444444444445,
+          "meanSdPoints": 26.00794151317744,
+          "count": 360
+        }
+      ],
+      "package": [
+        {
+          "rmsePoints": 18.716785423901406,
+          "coverage90": 0.8794444444444445,
+          "meanSdPoints": 16.860914074223697,
+          "count": 1800
+        },
+        {
+          "rmsePoints": 14.9789822583936,
+          "coverage90": 0.9166666666666666,
+          "meanSdPoints": 15.254895468378272,
+          "count": 1800
+        },
+        {
+          "rmsePoints": 19.390009542078374,
+          "coverage90": 0.8638888888888889,
+          "meanSdPoints": 16.321976751942252,
+          "count": 1800
+        }
+      ]
+    }
+  },
+  "limitations": "Generated independent pair observations with unit weights, fixed priors and parameters; pair coverage outcomes within a world are dependent. Not representative of the composite evidence or misspecification of real races."
+}

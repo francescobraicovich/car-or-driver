@@ -1,0 +1,545 @@
+{
+  "clippedInputSha256": "7e2cb53e293d6d634228c501ee036c7732f1ca82ae55ee3561b2dcf50ee37520",
+  "clippedEvidenceChanges": [
+    {
+      "raceId": "289",
+      "date": "1992-03-01",
+      "removed": 0,
+      "added": 0,
+      "modified": 6
+    },
+    {
+      "raceId": "296",
+      "date": "1992-07-05",
+      "removed": 0,
+      "added": 0,
+      "modified": 14
+    }
+  ],
+  "dataManifestVersion": "7f9e2c7705b4307a",
+  "warmupInputSha256": "4c76e622cfbe7a317ca6ad0d367b7ddf6a51214e1a65fc82b174e16567623db6",
+  "perYear": {
+    "1990": {
+      "races": 16,
+      "resultRows": 542,
+      "positiveLapEntries": 394,
+      "entriesWithoutLapRows": 1,
+      "entriesWithAllReportedLaps": 392,
+      "meanRecordedLapFractionCappedAtOne": 0.9959390862944162,
+      "racesWithAnyQualifyingRows": 0,
+      "qualifyingRows": 0,
+      "lapRows": 19113,
+      "lapKeys": 19113,
+      "duplicateLapKeys": 0,
+      "conflictingDuplicateLapKeys": 0,
+      "invalidLapRows": 0,
+      "extremeDurationRows": 3,
+      "retainedExtremeDurationRows": 0,
+      "retainedLapsBeyondResult": 0,
+      "entriesWithLapBeyondResult": 2,
+      "lapEntriesAbsentFromResults": 0,
+      "duplicateResultKeys": 0,
+      "unknownResultReferences": 0,
+      "examples": {
+        "conflictingLaps": [],
+        "lapBeyondResult": [
+          {
+            "raceId": "327",
+            "driverId": "123",
+            "resultLaps": 7
+          },
+          {
+            "raceId": "332",
+            "driverId": "119",
+            "resultLaps": 52
+          }
+        ],
+        "incompleteLaps": [
+          {
+            "raceId": "324",
+            "driverId": "137",
+            "resultLaps": 34,
+            "recordedLapsWithinResult": 0
+          },
+          {
+            "raceId": "335",
+            "driverId": "101",
+            "resultLaps": 5,
+            "recordedLapsWithinResult": 2
+          }
+        ],
+        "retainedBeyondResult": [],
+        "extremeDurations": [
+          {
+            "raceId": "332",
+            "driverId": "114",
+            "lap": "6",
+            "milliseconds": "636030"
+          },
+          {
+            "raceId": "326",
+            "driverId": "101",
+            "lap": "2",
+            "milliseconds": "945145"
+          },
+          {
+            "raceId": "326",
+            "driverId": "101",
+            "lap": "7",
+            "milliseconds": "960260"
+          }
+        ]
+      },
+      "evidenceCounts": [
+        0,
+        4162,
+        1267
+      ],
+      "evidenceWeight": [
+        0,
+        307.29691263628297,
+        68.83318014705883
+      ]
+    },
+    "1991": {
+      "races": 16,
+      "resultRows": 539,
+      "positiveLapEntries": 405,
+      "entriesWithoutLapRows": 0,
+      "entriesWithAllReportedLaps": 404,
+      "meanRecordedLapFractionCappedAtOne": 0.9991769547325103,
+      "racesWithAnyQualifyingRows": 0,
+      "qualifyingRows": 0,
+      "lapRows": 17792,
+      "lapKeys": 17792,
+      "duplicateLapKeys": 0,
+      "conflictingDuplicateLapKeys": 0,
+      "invalidLapRows": 0,
+      "extremeDurationRows": 1,
+      "retainedExtremeDurationRows": 0,
+      "retainedLapsBeyondResult": 0,
+      "entriesWithLapBeyondResult": 0,
+      "lapEntriesAbsentFromResults": 0,
+      "duplicateResultKeys": 0,
+      "unknownResultReferences": 0,
+      "examples": {
+        "conflictingLaps": [],
+        "lapBeyondResult": [],
+        "incompleteLaps": [
+          {
+            "raceId": "317",
+            "driverId": "109",
+            "resultLaps": 21,
+            "recordedLapsWithinResult": 14
+          }
+        ],
+        "retainedBeyondResult": [],
+        "extremeDurations": [
+          {
+            "raceId": "307",
+            "driverId": "119",
+            "lap": "10",
+            "milliseconds": "617728"
+          }
+        ]
+      },
+      "evidenceCounts": [
+        0,
+        4119,
+        1293
+      ],
+      "evidenceWeight": [
+        0,
+        301.27470223951065,
+        73.30396975004217
+      ]
+    },
+    "1992": {
+      "races": 16,
+      "resultRows": 478,
+      "positiveLapEntries": 397,
+      "entriesWithoutLapRows": 0,
+      "entriesWithAllReportedLaps": 396,
+      "meanRecordedLapFractionCappedAtOne": 0.9999414211235429,
+      "racesWithAnyQualifyingRows": 0,
+      "qualifyingRows": 0,
+      "lapRows": 18369,
+      "lapKeys": 18369,
+      "duplicateLapKeys": 0,
+      "conflictingDuplicateLapKeys": 0,
+      "invalidLapRows": 0,
+      "extremeDurationRows": 1,
+      "retainedExtremeDurationRows": 0,
+      "retainedLapsBeyondResult": 5,
+      "entriesWithLapBeyondResult": 2,
+      "lapEntriesAbsentFromResults": 0,
+      "duplicateResultKeys": 0,
+      "unknownResultReferences": 0,
+      "examples": {
+        "conflictingLaps": [],
+        "lapBeyondResult": [
+          {
+            "raceId": "289",
+            "driverId": "109",
+            "resultLaps": 44
+          },
+          {
+            "raceId": "296",
+            "driverId": "79",
+            "resultLaps": 41
+          }
+        ],
+        "incompleteLaps": [
+          {
+            "raceId": "300",
+            "driverId": "65",
+            "resultLaps": 43,
+            "recordedLapsWithinResult": 42
+          }
+        ],
+        "retainedBeyondResult": [
+          {
+            "raceId": "296",
+            "driverId": "79",
+            "lap": "42",
+            "milliseconds": "79331"
+          },
+          {
+            "raceId": "296",
+            "driverId": "79",
+            "lap": "43",
+            "milliseconds": "78714"
+          },
+          {
+            "raceId": "296",
+            "driverId": "79",
+            "lap": "44",
+            "milliseconds": "81468"
+          },
+          {
+            "raceId": "289",
+            "driverId": "109",
+            "lap": "45",
+            "milliseconds": "82289"
+          },
+          {
+            "raceId": "289",
+            "driverId": "109",
+            "lap": "46",
+            "milliseconds": "83840"
+          }
+        ],
+        "extremeDurations": [
+          {
+            "raceId": "298",
+            "driverId": "77",
+            "lap": "16",
+            "milliseconds": "688534"
+          }
+        ]
+      },
+      "evidenceCounts": [
+        0,
+        4066,
+        1234
+      ],
+      "evidenceWeight": [
+        0,
+        315.9330176354889,
+        74.0668072470967
+      ]
+    },
+    "1993": {
+      "races": 16,
+      "resultRows": 412,
+      "positiveLapEntries": 382,
+      "entriesWithoutLapRows": 0,
+      "entriesWithAllReportedLaps": 378,
+      "meanRecordedLapFractionCappedAtOne": 0.9962658959713934,
+      "racesWithAnyQualifyingRows": 0,
+      "qualifyingRows": 0,
+      "lapRows": 18216,
+      "lapKeys": 18216,
+      "duplicateLapKeys": 0,
+      "conflictingDuplicateLapKeys": 0,
+      "invalidLapRows": 0,
+      "extremeDurationRows": 6,
+      "retainedExtremeDurationRows": 0,
+      "retainedLapsBeyondResult": 0,
+      "entriesWithLapBeyondResult": 0,
+      "lapEntriesAbsentFromResults": 0,
+      "duplicateResultKeys": 0,
+      "unknownResultReferences": 0,
+      "examples": {
+        "conflictingLaps": [],
+        "lapBeyondResult": [],
+        "incompleteLaps": [
+          {
+            "raceId": "279",
+            "driverId": "55",
+            "resultLaps": 33,
+            "recordedLapsWithinResult": 23
+          },
+          {
+            "raceId": "280",
+            "driverId": "79",
+            "resultLaps": 16,
+            "recordedLapsWithinResult": 9
+          },
+          {
+            "raceId": "280",
+            "driverId": "70",
+            "resultLaps": 9,
+            "recordedLapsWithinResult": 3
+          },
+          {
+            "raceId": "285",
+            "driverId": "100",
+            "resultLaps": 52,
+            "recordedLapsWithinResult": 51
+          }
+        ],
+        "retainedBeyondResult": [],
+        "extremeDurations": [
+          {
+            "raceId": "281",
+            "driverId": "110",
+            "lap": "33",
+            "milliseconds": "834179"
+          },
+          {
+            "raceId": "283",
+            "driverId": "117",
+            "lap": "21",
+            "milliseconds": "677677"
+          },
+          {
+            "raceId": "287",
+            "driverId": "111",
+            "lap": "2",
+            "milliseconds": "608860"
+          },
+          {
+            "raceId": "276",
+            "driverId": "123",
+            "lap": "1",
+            "milliseconds": "737162"
+          },
+          {
+            "raceId": "277",
+            "driverId": "79",
+            "lap": "3",
+            "milliseconds": "994441"
+          }
+        ]
+      },
+      "evidenceCounts": [
+        0,
+        3773,
+        1137
+      ],
+      "evidenceWeight": [
+        0,
+        334.675284594106,
+        70.86422627545917
+      ]
+    },
+    "1994": {
+      "races": 16,
+      "resultRows": 444,
+      "positiveLapEntries": 383,
+      "entriesWithoutLapRows": 2,
+      "entriesWithAllReportedLaps": 381,
+      "meanRecordedLapFractionCappedAtOne": 0.9947780678851175,
+      "racesWithAnyQualifyingRows": 15,
+      "qualifyingRows": 392,
+      "lapRows": 18525,
+      "lapKeys": 18525,
+      "duplicateLapKeys": 0,
+      "conflictingDuplicateLapKeys": 0,
+      "invalidLapRows": 0,
+      "extremeDurationRows": 2,
+      "retainedExtremeDurationRows": 0,
+      "retainedLapsBeyondResult": 0,
+      "entriesWithLapBeyondResult": 0,
+      "lapEntriesAbsentFromResults": 0,
+      "duplicateResultKeys": 0,
+      "unknownResultReferences": 0,
+      "examples": {
+        "conflictingLaps": [],
+        "lapBeyondResult": [],
+        "incompleteLaps": [
+          {
+            "raceId": "259",
+            "driverId": "105",
+            "resultLaps": 44,
+            "recordedLapsWithinResult": 0
+          },
+          {
+            "raceId": "265",
+            "driverId": "55",
+            "resultLaps": 1,
+            "recordedLapsWithinResult": 0
+          }
+        ],
+        "retainedBeyondResult": [],
+        "extremeDurations": [
+          {
+            "raceId": "272",
+            "driverId": "93",
+            "lap": "9",
+            "milliseconds": "673313"
+          },
+          {
+            "raceId": "260",
+            "driverId": "79",
+            "lap": "38",
+            "milliseconds": "1315303"
+          }
+        ]
+      },
+      "evidenceCounts": [
+        4901,
+        3920,
+        1152
+      ],
+      "evidenceWeight": [
+        367.2991452991453,
+        345.36040064102565,
+        68.36448717948718
+      ]
+    },
+    "1995": {
+      "races": 17,
+      "resultRows": 418,
+      "positiveLapEntries": 392,
+      "entriesWithoutLapRows": 0,
+      "entriesWithAllReportedLaps": 391,
+      "meanRecordedLapFractionCappedAtOne": 0.9995950761256883,
+      "racesWithAnyQualifyingRows": 17,
+      "qualifyingRows": 418,
+      "lapRows": 18930,
+      "lapKeys": 18930,
+      "duplicateLapKeys": 0,
+      "conflictingDuplicateLapKeys": 0,
+      "invalidLapRows": 0,
+      "extremeDurationRows": 0,
+      "retainedExtremeDurationRows": 0,
+      "retainedLapsBeyondResult": 0,
+      "entriesWithLapBeyondResult": 0,
+      "lapEntriesAbsentFromResults": 0,
+      "duplicateResultKeys": 0,
+      "unknownResultReferences": 0,
+      "examples": {
+        "conflictingLaps": [],
+        "lapBeyondResult": [],
+        "incompleteLaps": [
+          {
+            "raceId": "254",
+            "driverId": "81",
+            "resultLaps": 63,
+            "recordedLapsWithinResult": 53
+          }
+        ],
+        "retainedBeyondResult": [],
+        "extremeDurations": []
+      },
+      "evidenceCounts": [
+        4593,
+        3754,
+        1231
+      ],
+      "evidenceWeight": [
+        379.83478260869566,
+        340.36348127299635,
+        81.0499426400471
+      ]
+    },
+    "1996": {
+      "races": 16,
+      "resultRows": 340,
+      "positiveLapEntries": 310,
+      "entriesWithoutLapRows": 0,
+      "entriesWithAllReportedLaps": 310,
+      "meanRecordedLapFractionCappedAtOne": 1.0,
+      "racesWithAnyQualifyingRows": 7,
+      "qualifyingRows": 148,
+      "lapRows": 14431,
+      "lapKeys": 14431,
+      "duplicateLapKeys": 0,
+      "conflictingDuplicateLapKeys": 0,
+      "invalidLapRows": 0,
+      "extremeDurationRows": 1,
+      "retainedExtremeDurationRows": 0,
+      "retainedLapsBeyondResult": 0,
+      "entriesWithLapBeyondResult": 0,
+      "lapEntriesAbsentFromResults": 0,
+      "duplicateResultKeys": 0,
+      "unknownResultReferences": 0,
+      "examples": {
+        "conflictingLaps": [],
+        "lapBeyondResult": [],
+        "incompleteLaps": [],
+        "retainedBeyondResult": [],
+        "extremeDurations": [
+          {
+            "raceId": "226",
+            "driverId": "63",
+            "lap": "27",
+            "milliseconds": "941618"
+          }
+        ]
+      },
+      "evidenceCounts": [
+        1432,
+        2438,
+        809
+      ],
+      "evidenceWeight": [
+        135.8095238095238,
+        270.484257518797,
+        58.088345864661655
+      ]
+    },
+    "1997": {
+      "races": 17,
+      "resultRows": 376,
+      "positiveLapEntries": 355,
+      "entriesWithoutLapRows": 0,
+      "entriesWithAllReportedLaps": 355,
+      "meanRecordedLapFractionCappedAtOne": 1.0,
+      "racesWithAnyQualifyingRows": 10,
+      "qualifyingRows": 220,
+      "lapRows": 17206,
+      "lapKeys": 17206,
+      "duplicateLapKeys": 0,
+      "conflictingDuplicateLapKeys": 0,
+      "invalidLapRows": 0,
+      "extremeDurationRows": 0,
+      "retainedExtremeDurationRows": 0,
+      "retainedLapsBeyondResult": 0,
+      "entriesWithLapBeyondResult": 0,
+      "lapEntriesAbsentFromResults": 0,
+      "duplicateResultKeys": 0,
+      "unknownResultReferences": 0,
+      "examples": {
+        "conflictingLaps": [],
+        "lapBeyondResult": [],
+        "incompleteLaps": [],
+        "retainedBeyondResult": [],
+        "extremeDurations": []
+      },
+      "evidenceCounts": [
+        2289,
+        3054,
+        1200
+      ],
+      "evidenceWeight": [
+        211.8985507246377,
+        304.9897259478173,
+        88.0844200149156
+      ]
+    }
+  },
+  "limitations": "Internal consistency and completeness checks only: this does not independently verify historical lap times, event selection, timing conditions, source provenance by row or race outcomes. Lap fractions are capped at one; pit stops and extreme-duration rows may be legitimate. Pre-1994 qualifying data are absent from these files."
+}

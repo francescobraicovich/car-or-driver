@@ -1,0 +1,140 @@
+{
+  "filterSourceHash": "5c102d77fe74df75",
+  "inputSha256": "e135121b1d174edf4c9dfce246b53e3833f20d277bf1e68381529f2bcad88aaa",
+  "settingsSha256": "d36c06f3e6affe7b4d3d3c049832de9e792528d4f4b7987322a8807c9d2a92fa",
+  "lastRace": {
+    "year": 2026,
+    "round": 20,
+    "name": "Brazilian Grand Prix",
+    "date": "2026-11-08"
+  },
+  "elapsedSeconds": 1284.7340177500155,
+  "iterations": 11,
+  "maxGradient": 4.9921608513692206e-11,
+  "states": 59769,
+  "observations": 300777,
+  "covarianceWeekends": {
+    "0": {
+      "date": "1994-03-27",
+      "driver": {
+        "meanSdChangePoints": -5.289399527645438,
+        "minimumSdChangePoints": -7.877416624275156,
+        "maximumSdChangePoints": -0.5702785900526166
+      },
+      "car": {
+        "meanSdChangePoints": -12.560876633166474,
+        "minimumSdChangePoints": -16.841779204630473,
+        "maximumSdChangePoints": -5.890185156504671
+      }
+    },
+    "310": {
+      "date": "2012-03-18",
+      "driver": {
+        "meanSdChangePoints": -4.643871460206449,
+        "minimumSdChangePoints": -8.851665114536706,
+        "maximumSdChangePoints": -2.548127352231898
+      },
+      "car": {
+        "meanSdChangePoints": -16.246310371096722,
+        "minimumSdChangePoints": -18.228317626296246,
+        "maximumSdChangePoints": -9.828631102334299
+      }
+    },
+    "620": {
+      "date": "2026-11-08",
+      "driver": {
+        "meanSdChangePoints": 0.008954450241152772,
+        "minimumSdChangePoints": -0.09297535139343971,
+        "maximumSdChangePoints": 0.15117736179053054
+      },
+      "car": {
+        "meanSdChangePoints": 0.12623434437055503,
+        "minimumSdChangePoints": -0.6504244600812896,
+        "maximumSdChangePoints": 0.5054163017085074
+      }
+    }
+  },
+  "absoluteOverallRatingChanges": {
+    "driver": {
+      "count": 13277,
+      "mean": 10.987057335634374,
+      "median": 9.075239513584506,
+      "p95": 28.35682631726627,
+      "maximum": 107.58734608790519
+    },
+    "car": {
+      "count": 6645,
+      "mean": 15.665520099095426,
+      "median": 12.31954278610715,
+      "p95": 42.23685506279162,
+      "maximum": 176.63514082123913
+    }
+  },
+  "byDecade": {
+    "1990": {
+      "driver": {
+        "count": 2279,
+        "mean": 13.541265254252624,
+        "median": 11.122436101078051,
+        "p95": 34.99678179468572,
+        "maximum": 107.58734608790519
+      },
+      "car": {
+        "count": 1143,
+        "mean": 18.297590749159507,
+        "median": 14.259659459810337,
+        "p95": 47.57696960811336,
+        "maximum": 176.63514082123913
+      }
+    },
+    "2000": {
+      "driver": {
+        "count": 3643,
+        "mean": 13.50510969857146,
+        "median": 11.914423635268804,
+        "p95": 31.02956677863972,
+        "maximum": 54.158625940444495
+      },
+      "car": {
+        "count": 1823,
+        "mean": 19.584545416727327,
+        "median": 15.561846395052271,
+        "p95": 51.26565497702859,
+        "maximum": 91.16855425048504
+      }
+    },
+    "2010": {
+      "driver": {
+        "count": 4297,
+        "mean": 10.177939714029161,
+        "median": 8.687926415723496,
+        "p95": 25.366666721190086,
+        "maximum": 56.55819879170053
+      },
+      "car": {
+        "count": 2149,
+        "mean": 13.138416312833987,
+        "median": 10.856266525892238,
+        "p95": 32.79171085282974,
+        "maximum": 97.39694698844028
+      }
+    },
+    "2020": {
+      "driver": {
+        "count": 3058,
+        "mean": 7.220698217036161,
+        "median": 5.015391051964571,
+        "p95": 20.476185696843686,
+        "maximum": 40.45199267074281
+      },
+      "car": {
+        "count": 1530,
+        "mean": 12.579184236095243,
+        "median": 11.01790168409002,
+        "p95": 30.89257771784571,
+        "maximum": 52.77002838388398
+      }
+    }
+  },
+  "limitations": "Raw model-prior coordinates; the refit uses later data and a different joint approximation. Revisions are not evidence of accuracy. Covariance is local Laplace conditional on fixed settings and composite evidence."
+}

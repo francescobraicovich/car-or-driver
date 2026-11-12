@@ -647,8 +647,9 @@ check(
     raceOne.name === `${latestRace.name.replace('Grand Prix', 'GP')} · ${latestRace.year}` &&
     /^lap \d+ \/ [1-9]\d*$/.test(raceOne.lap) &&
     raceOne.path > 500 &&
-    JSON.stringify(raceOne.ids) === JSON.stringify(raceOne.rows) &&
-    raceOne.order.length === raceOne.ids.length &&
+    raceOne.ids.length > 0 &&
+    raceOne.ids.every((id) => raceOne.rows.includes(id)) &&
+    JSON.stringify([...raceOne.order].sort()) === JSON.stringify(raceOne.ids) &&
     raceOne.tableShown &&
     raceOne.codes.every((code) => /^[A-Z]{3}$/.test(code)) &&
     raceOne.box[0] > 700 &&

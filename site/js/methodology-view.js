@@ -13,7 +13,7 @@ function render() {
   const publication = document.getElementById('methodologyPublication');
   const latest = model.snaps.at(-1);
   if (publication)
-    publication.textContent = `Ratings through ${latest.date}, ${latest.name}. Model: unified, version ${model.params.version}. Source fingerprint: ${state.modelSourceHash || 'loading'}.`;
+    publication.textContent = `Ratings through ${latest.date}, ${latest.name}. Model: unified, version ${model.params.version}. Filtered source: ${state.modelSourceHash || 'loading'}. Historical refit: ${state.retrospectiveSourceHash || 'loading'}.`;
   const summary = document.getElementById('methodologyValidationSummary');
   if (summary) {
     const historical = summarizeBacktest(model, { fromYear: 2008, toYear: 2025, burnIn: 0 });

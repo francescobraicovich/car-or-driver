@@ -64,7 +64,14 @@ async function buildPages() {
     await cp(path, destination);
   }
   await mkdir(join(DIST, 'data'));
-  for (const name of ['model-latest.json', 'model.json', 'teammate-graph.json', 'rating-reference.json'])
+  for (const name of [
+    'model-latest.json',
+    'model.json',
+    'retrospective-latest.json',
+    'retrospective.json',
+    'teammate-graph.json',
+    'rating-reference.json',
+  ])
     await cp(join(ROOT, 'data', name), join(DIST, 'data', name)); // the CSVs the model was computed from are not published
   await cp(join(ROOT, 'data/race-laps'), join(DIST, 'data/race-laps'), { recursive: true }); // the laps of each season, for the racing dots
   await writeFile(

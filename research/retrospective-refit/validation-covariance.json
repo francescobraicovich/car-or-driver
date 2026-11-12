@@ -1,0 +1,19 @@
+{
+  "serializationSeconds": 2.9676485839299858,
+  "temporaryWriteSeconds": 0.16691775002982467,
+  "inputSha256": "e135121b1d174edf4c9dfce246b53e3833f20d277bf1e68381529f2bcad88aaa",
+  "resultSha256": "88eb51c00f95a5db594be3ecb981fe611241670f38757df1be8c4493eeca138b",
+  "weekends": 621,
+  "states": 59769,
+  "observations": 300777,
+  "iterations": 11,
+  "maximumGradient": 4.9921608513692206e-11,
+  "fitAndExtractionSeconds": 1284.7340177500155,
+  "outputBytes": 124603361,
+  "validationSeconds": 0.5970502089476213,
+  "maximumBlockDimension": 126,
+  "minimumBlockEigenvalue": 0.021412981584470095,
+  "maximumAsymmetry": 0.0,
+  "maximumStandardDeviationError": 0.0,
+  "limitations": "Fit and extraction elapsed time excludes JSON serialization and writing; separate serialization and temporary-file write timings were measured after the run. The build overlapped other validation workloads. Cross-weekend blocks were not included; positive-definite local Laplace matrices are not evidence of real-world calibration."
+}

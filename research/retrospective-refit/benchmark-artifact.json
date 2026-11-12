@@ -1,0 +1,23 @@
+{
+  "inputSha256": "88eb51c00f95a5db594be3ecb981fe611241670f38757df1be8c4493eeca138b",
+  "weekends": 621,
+  "originalJsonBytes": 124603361,
+  "gzipJsonBytes": 49238274,
+  "gzipJsonSeconds": 7.173053583013825,
+  "packedF32Bytes": 11705004,
+  "packedF32GzipBytes": 10749678,
+  "metadataJsonBytes": 1611151,
+  "metadataGzipBytes": 605150,
+  "compactGzipTotalBytes": 11354828,
+  "packingAndVerificationSeconds": 0.9270907080499455,
+  "compactCompressionSeconds": 0.5600090830121189,
+  "minimumQuantizedEigenvalue": 0.021412981834087897,
+  "maximumCovarianceErrorLatentSquared": 1.1913783604100558e-07,
+  "maximumMarginalSdErrorPoints": 1.3076821723469548e-06,
+  "maximumGapSdErrorPoints": 4.667879927922058e-06,
+  "maximumRelativeGapSdErrorAboveOnePoint": 2.2476098011698027e-07,
+  "maximumPackageGapSdErrorPoints": 5.246620322196804e-06,
+  "maximumRelativePackageGapSdErrorAboveOnePoint": 2.276639270338072e-07,
+  "totalSeconds": 11.465398916974664,
+  "limitations": "Research encoding: float32 upper triangles omit symmetric duplicates and marginal SDs are derived. No cross-weekend covariance was in the source; the encoding includes race IDs and dates but lacks the published site model\u2019s names, hazards and other metadata. All full-history covariance blocks were checked for positive definiteness and within-weekend scalar-gap and driver-plus-car package-gap errors. This is not a production format; browser decoding, delivery, compatibility, model changes and out-of-sample error bounds are not yet tested. Baseline is raw local JSON, not actual network transfer size."
+}

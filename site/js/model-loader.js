@@ -6,6 +6,7 @@ import { populate } from './ratings-view.js';
 import { withHistories } from '../../packages/core/src/weekend-histories.js';
 import { deserialize } from '../../packages/core/src/json-serialization.js';
 import { centredRatings } from './rating-reference.js';
+import { withAnnualUncertainty } from './retrospective-uncertainty.js';
 
 const FILE_FORMAT = 3; // must match tools/build-model.mjs
 
@@ -31,23 +32,37 @@ function showsRatingsFirst() {
 export async function loadModel() {
   try {
     const firstScreen = showsRatingsFirst();
-    const [reference, first] = await Promise.all([
+    const [reference, first, firstRetrospective] = await Promise.all([
       fetchFile('rating-reference.json', 1),
       fetchFile(firstScreen ? 'model-latest.json' : 'model.json'),
+      fetchFile(firstScreen ? 'retrospective-latest.json' : 'retrospective.json', 1),
     ]);
+    const verify = (filtered, retrospective) => {
+      if (filtered.sourceHash !== retrospective.sourceHash || String(filtered.lastRace?.date) !== String(retrospective.lastRace?.date))
+        throw Error('Retrospective ratings do not match the filtered model. Rebuild the data or reload the page.');
+    };
+    verify(first, firstRetrospective);
     if (firstScreen) {
-      const latest = first;
-      state.model = latest.model;
-      state.displayModel = centredRatings(latest.model, reference, latest.sourceHash);
-      state.profiles = latest.driverProfiles ?? {};
+      state.model = first.model;
+      state.displayModel = centredRatings(firstRetrospective.model, reference, first.sourceHash);
+      state.profiles = first.driverProfiles ?? {};
       populate();
       document.body.dataset.ratingsReady = '1';
       window.dispatchEvent(new CustomEvent('f1:ratings-ready'));
     }
-    const { model: shipped, driverProfiles, sourceHash } = firstScreen ? await fetchFile('model.json') : first;
+    const [filtered, retrospective] = firstScreen
+      ? await Promise.all([fetchFile('model.json'), fetchFile('retrospective.json', 1)])
+      : [first, firstRetrospective];
+    verify(filtered, retrospective);
+    if (firstRetrospective.refitHash !== retrospective.refitHash || firstRetrospective.inputSha256 !== retrospective.inputSha256)
+      throw Error('Retrospective rating files do not match. Reload the page.');
+    const { model: shipped, driverProfiles, sourceHash } = filtered;
     const model = withHistories(shipped);
     state.model = model;
-    state.displayModel = centredRatings(shipped, reference, sourceHash);
+    const historicalModel = withAnnualUncertainty(retrospective.model);
+    state.retrospectiveModel = withHistories(historicalModel);
+    state.retrospectiveSourceHash = retrospective.refitHash;
+    state.displayModel = centredRatings(historicalModel, reference, sourceHash);
     state.profiles = driverProfiles ?? {};
     state.modelSourceHash = sourceHash;
     populate();

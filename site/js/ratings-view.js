@@ -8,7 +8,7 @@ import { metricLabel, metricValue } from './charts.js';
 import { barScale, barShare } from './ratings-bars.js';
 import { DESCRIPTIONS, NAMES, isProbability } from './metric-text.js';
 
-// All three outputs are unified posterior means translated onto their dated display references.
+// All three outputs are joint strength estimates translated onto their dated display references.
 const PACE_METRICS = ['overall', 'race', 'qual'];
 const GUIDE_TEXT = {
   pace: 'Estimated strength after this weekend · higher is stronger · 1,000 is the recent-era reference',
@@ -154,6 +154,7 @@ function ensurePanel() {
     </div>
     <div class="ratings-guide-detail" id="ratingsGuideDetail" hidden>
       <p id="ratingsGuideText"></p>
+      <p>Historical strength ratings use later races and may change. Early estimates depend strongly on the 1990 starting assumptions. Historical ± values are yearly averages, not individual error bars.</p>
       <a href="#/methodology">Full method</a>
     </div>
     <ol class="ratings-list" id="ratingsList"></ol>
@@ -629,17 +630,23 @@ export function renderRatings() {
   controls.ratingsSd.setAttribute('aria-pressed', String(st.sd));
   controls.ratingsSd.toggleAttribute('disabled', !hasSd);
   controls.ratingsSd.hidden = panel.getBoundingClientRect().width < 400; // a phone has no room for the error beside every rating
-  controls.ratingsSd.title = hasSd ? 'Show approximate joint uncertainty for each rating' : 'This rating has no uncertainty estimate';
+  controls.ratingsSd.title = hasSd
+    ? currentIndex() < state.displayModel.snaps.length - 1
+      ? 'Show the average uncertainty for this year'
+      : 'Show approximate uncertainty for each rating'
+    : 'This rating has no uncertainty estimate';
   const rows = baseRows;
   const probability = isProbability(pref.metric);
   controls.ratingsMetric.title = DESCRIPTIONS[pref.metric];
-  controls.ratingsGuideLine.textContent = PACE_METRICS.includes(pref.metric) ? GUIDE_TEXT.pace : GUIDE_TEXT[pref.metric];
+  controls.ratingsGuideLine.textContent = PACE_METRICS.includes(pref.metric)
+    ? `${GUIDE_TEXT.pace}${currentIndex() < state.displayModel.snaps.length - 1 ? ' · later evidence · ± is the yearly average' : ''}`
+    : GUIDE_TEXT[pref.metric];
   const paceMeaning =
     entity === 'driver'
       ? 'These rankings are our model’s estimates of each driver’s contribution, holding the car constant. The model estimates the car’s effect separately.'
       : 'These rankings are our model’s estimates of each car’s contribution, holding the driver constant. The model estimates the driver’s effect separately.';
   controls.ratingsGuideText.textContent = PACE_METRICS.includes(pref.metric)
-    ? `${paceMeaning} ${DESCRIPTIONS[pref.metric]} They are strength estimates, not lap times or championship points. 1,000 is a recent-era reference, updated from earlier field averages with a 20-weekend half-life. The current field average can differ from 1,000. The ± value retains the model’s uncertainty, conditional on this display reference; it does not measure cross-era comparability.`
+    ? `${paceMeaning} ${DESCRIPTIONS[pref.metric]} They are strength estimates, not lap times or championship points. 1,000 is a recent-era reference, updated from earlier field averages with a 20-weekend half-life. The current field average can differ from 1,000. For historical ratings, ± is the average uncertainty for that year, not an individual error bar. The latest ratings use individual filtered uncertainty. Neither measures cross-era comparability.`
     : `${DESCRIPTIONS[pref.metric]} This ranking estimates the ${entity === 'driver' ? 'driver' : 'car'} separately from the ${entity === 'driver' ? 'car' : 'driver'}. The ± value, where shown, approximates uncertainty in the joint model, conditional on its assumptions.`;
   // the weekend is in the pickers beside the title, so only a screen reader is told it twice
   controls.ratingsTitle.innerHTML = `${entity === 'driver' ? 'Driver' : 'Car'} ratings<span class="sr-only"> after the ${esc(`${snap.year} ${snap.name}`)}</span>`;

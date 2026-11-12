@@ -71,6 +71,7 @@ export function createHistoryView({ onChange }) {
           <button type="button" id="historyTableView" aria-pressed="false">Table</button>
         </div>
       </div>
+      <p class="history-note">Historical strength ratings use later races and can change as new data arrives. Early estimates depend on the model’s starting assumptions; historical uncertainty values are yearly averages.</p>
       <div class="series-chips" id="historyChips"></div>
       <div class="history-plot" id="historyPlot">
         <svg id="driverChart" class="chart"></svg>
