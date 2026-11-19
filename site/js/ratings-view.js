@@ -155,7 +155,7 @@ function ensurePanel() {
     <div class="ratings-guide-detail" id="ratingsGuideDetail" hidden>
       <p id="ratingsGuideText"></p>
       <p>Historical strength ratings use later races and may change. Early estimates depend strongly on the 1990 starting assumptions. Historical ± values are yearly averages, not individual error bars.</p>
-      <a href="#/methodology">Full method</a>
+      <a href="#/methodology/full">Full method</a>
     </div>
     <ol class="ratings-list" id="ratingsList"></ol>
     <div class="selection-bar" id="ratingsSelection" role="region" aria-label="Selected for comparison" hidden>

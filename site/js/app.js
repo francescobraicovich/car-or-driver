@@ -7,11 +7,13 @@ import { initStage } from './stage-view.js';
 import { initTrack } from './track-view.js';
 import { initInfoTips } from './info-tip.js';
 
-// Insights, Methodology, Privacy and About are fetched the first time they are opened, not on every visit.
+// Insights, the Methodology (its choice, the simple and the full version), Privacy and About are fetched the first time they are opened, not on every visit.
 const lazyPages = {
   graph: async () => (await import('./graph-view.js')).initGraph,
   insights: async () => (await import('./insights-view.js')).initInsights,
-  methodology: async () => (await import('./methodology-view.js')).initMethodology,
+  methodology: async () => (await import('./methodology-selection-view.js')).initMethodologySelection,
+  'methodology-simple': async () => (await import('./methodology-simple-view.js')).initSimpleMethodology,
+  'methodology-full': async () => (await import('./methodology-view.js')).initMethodology,
   privacy: async () => (await import('./legal-view.js')).initLegal,
   about: async () => (await import('./legal-view.js')).initLegal,
 };
