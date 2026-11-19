@@ -5,8 +5,21 @@ import { createHistoryView } from './history-view.js';
 import { DECK_PAGES, panelView } from './stage-pages.js';
 
 // Every route is the front page: the ratings are the panel on it, kept open; the history and the head to head are views over the ratings, in the
-// panel; the insights, the methodology, the privacy notice and the about page are each a card of slides over it.
-const ROUTES = ['/', '/ratings', '/history', '/head-to-head', '/graph', '/insights', '/methodology', '/privacy', '/about'];
+// panel; the insights, the methodology, the privacy notice and the about page are each a card over it. The methodology card offers two
+// cards of slides, the simple and the full methodology.
+const ROUTES = [
+  '/',
+  '/ratings',
+  '/history',
+  '/head-to-head',
+  '/graph',
+  '/insights',
+  '/methodology',
+  '/methodology/simple',
+  '/methodology/full',
+  '/privacy',
+  '/about',
+];
 const DEFAULT_ROUTE = '/';
 // Hashes from earlier versions of the site (and of the shared links in the wild).
 const ALIASES = {
@@ -49,7 +62,7 @@ export function initWorkspace() {
   });
   root.hidden = false;
 
-  const pageName = () => (route === '/' ? 'home' : route.slice(1));
+  const pageName = () => (route === '/' ? 'home' : route.slice(1).replace('/', '-'));
 
   /** The page the body is on, and what the panel shows (the ratings, or a view over them). */
   function setPage() {
@@ -66,8 +79,10 @@ export function initWorkspace() {
 
   function parseURL() {
     const [path, search = ''] = location.hash.slice(1).split('?');
-    const nextRoute = ROUTES.includes(path) ? path : ALIASES[path] || DEFAULT_ROUTE;
+    let nextRoute = ROUTES.includes(path) ? path : ALIASES[path] || DEFAULT_ROUTE;
     const params = new URLSearchParams(search.length <= 16000 ? search : '');
+    // a link to a slide of the methodology from before it had a simple and a full version leads to the full methodology
+    if (nextRoute === '/methodology' && /^method-/.test(params.get('slide') || '')) nextRoute = '/methodology/full';
     return { route: nextRoute, params: params.get('v') === '1' ? params : new URLSearchParams() };
   }
 

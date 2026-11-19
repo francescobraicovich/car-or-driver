@@ -15,7 +15,7 @@ Interface modules live in `site/js/`. Related modules share a prefix so they sta
 | Teammate graph | `graph-view.js` |
 | Race replay | `track-view.js`, `track-geometry.js`, `race-replay.js`, `speed-profile.js` |
 | Insights | `insights-view.js`, `insights-cards.js`, `insights-charts.js`, generated `insights-data.js` |
-| Methodology | `methodology-view.js`, `methodology-content.js` |
+| Methodology | `methodology-selection-view.js` (the choice); `methodology-simple-view.js`, `methodology-simple-content.js` (simple); `methodology-view.js`, `methodology-content.js` (full); `methodology-figures.js`, `methodology-interactives.js` (figures shared by both) |
 | Legal pages and identity | `legal-view.js`, `legal-content.js`, `site-identity.js` |
 | Shared charts and helpers | `charts.js`, `chart-renderer.js`, `chart-math.js`, `utils.js` |
 

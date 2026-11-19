@@ -1901,31 +1901,95 @@ await click(stageBox.x + 8, stageBox.y + stageBox.height / 2);
 await sleep(300);
 check('clicking outside the Insights card closes it', (await evaluate('location.hash')) === '#/');
 await evaluate("location.hash = '#/methodology'");
+await sleep(800);
+check(
+  'the Methodology opens on a choice between the simple and the full methodology',
+  await evaluate(`(() => {
+    const card = document.getElementById('methodologySelectionCard');
+    const links = [...card.querySelectorAll('.methodology-selection-option')].map((link) => link.getAttribute('href'));
+    return card.hasAttribute('data-open') && JSON.stringify(links) === JSON.stringify(['#/methodology/simple', '#/methodology/full']);
+  })()`),
+);
+await evaluate('document.querySelector(\'#methodologySelectionCard a[href="#/methodology/simple"]\').click()');
 await sleep(1200);
 check(
-  'methodology has ten coherent parts and no unresolved settings',
+  'the simple methodology has its four parts and draws its figures, and the before-and-after figure reacts to its controls',
+  await evaluate(`(() => {
+    const card = document.getElementById('methodologySimpleCard');
+    const belief = document.getElementById('simpleBeliefUpdate');
+    const before = belief.querySelector('.method-lab-reading').textContent;
+    belief.querySelector('[data-spread="32"]').click();
+    const input = belief.querySelector('input');
+    input.value = '60';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    return document.body.dataset.page === 'methodology-simple'
+      && card.hasAttribute('data-open')
+      && card.querySelectorAll('.method-part').length === 4
+      && document.querySelectorAll('#simpleOddsChart polyline').length === 1
+      && !!document.querySelector('#simpleSplitLab input')
+      && document.querySelectorAll('#simpleCareerGraph .method-network-link').length === 3
+      && belief.querySelectorAll('path').length === 2
+      && belief.querySelector('.method-lab-reading').textContent !== before
+      && !/\\{\\{|undefined|NaN/.test(card.textContent);
+  })()`),
+);
+await evaluate("location.hash = '#/methodology?v=1&slide=method-references'");
+await sleep(1200);
+check(
+  'a link to a slide of the methodology opens the full methodology at that slide',
+  (await evaluate('location.hash')).startsWith('#/methodology/full?') &&
+    (await evaluate("document.getElementById('methodologyPosition').textContent")) === '14 / 14',
+);
+await evaluate("location.hash = '#/methodology/full'");
+await sleep(1500);
+check(
+  'the full methodology has thirteen parts and no unresolved settings',
   await evaluate(`
-  document.querySelectorAll('#methodologyCard .method-part').length === 10 &&
-  document.querySelectorAll('#methodologyTrack .deck-slide').length === 11 &&
+  document.querySelectorAll('#methodologyCard .method-part').length === 13 &&
+  document.querySelectorAll('#methodologyTrack .deck-slide').length === 14 &&
   [...document.querySelectorAll('#methodologyCard [data-setting]')].every(node => node.textContent.trim()) &&
   !/\\{\\{|undefined|NaN/.test(document.getElementById('methodologyCard').textContent)
 `),
 );
 check(
-  'methodology renders its LaTeX equations',
+  'the full methodology renders its LaTeX equations',
   await evaluate(`
   document.querySelectorAll('#methodologyCard [data-math], #methodologyCard [data-math-display]').length > 20 &&
   [...document.querySelectorAll('#methodologyCard [data-math], #methodologyCard [data-math-display]')].every(node => node.querySelector('.katex-mathml'))
 `),
 );
 check(
-  'methodology displays the unified chronological score and publication',
+  'the full methodology displays the chronological score by period, and the publication',
   await evaluate(`
   /0.53012/.test(document.getElementById('methodologyValidationSummary').textContent) &&
-  /Model: unified/.test(document.getElementById('methodologyPublication').textContent)
+  document.querySelectorAll('#methodologyBlocks tr').length >= 6 &&
+  /Model version/.test(document.getElementById('methodologyPublication').textContent)
 `),
 );
-await evaluate('document.querySelector(\'#methodologyList button[data-slide="3"]\').click()');
+check(
+  'the full methodology draws the odds curve, the split, the career network, a career beside its cars, one result before and after, and every season',
+  await evaluate(`
+  document.querySelectorAll('#methodologyOddsChart polyline').length === 1 &&
+  !!document.querySelector('#methodologySplitLab input') &&
+  document.querySelectorAll('#methodologyCareerGraph .method-network-link').length === 3 &&
+  document.querySelectorAll('#methodologyCareerChart polyline').length >= 2 &&
+  document.querySelectorAll('#methodologyBeliefUpdate path').length === 2 &&
+  document.querySelectorAll('#methodologySeasonChart polyline').length >= 2
+`),
+);
+check(
+  'the full methodology says it was written by AI and corrected by the author, and links to the simple methodology',
+  /written by AI and corrected by the author/.test(
+    (await evaluate("document.querySelector('#methodologyCard .methodology-note')?.textContent")) || '',
+  ) && (await evaluate('!!document.querySelector(\'#methodologyCard .methodology-note a[href="#/methodology/simple"]\')')),
+);
+check(
+  'the methodology describes only the published model, with no trace of earlier versions',
+  !(await evaluate(`/previous ratings|previous version|earlier version|previous model|older model|hybrid|online learner|recent[- ]form|form layer|\\bElo\\b|candidate|adopt|retained|rejected|no longer|did not justify|original (study|evaluation)/i.test(
+    ['methodologySelectionCard', 'methodologySimpleCard', 'methodologyCard'].map((id) => document.getElementById(id)?.textContent || '').join(' ')
+  )`)),
+);
+await evaluate('document.querySelector(\'#methodologyList button[data-slide="4"]\').click()');
 await sleep(500);
 check('the separation explanation has a stable link', (await evaluate('location.hash')).includes('method-separation'));
 await evaluate('document.querySelector(\'#methodologyCard [data-jump="ref-1"]\').click()');
@@ -1933,14 +1997,6 @@ await sleep(500);
 check(
   'a method citation opens the reference slide',
   await evaluate("!!document.querySelector('#methodologyCard .deck-slide:not([inert]) #ref-1')"),
-);
-await evaluate('document.querySelector(\'#methodologyList button[data-slide="8"]\').click()');
-await sleep(500);
-check(
-  'validation describes costs as well as improvements',
-  await evaluate(
-    "/slightly worse/.test(document.querySelector('#method-validation').textContent) && /24%/.test(document.querySelector('#method-validation').textContent)",
-  ),
 );
 
 // The chosen weekend survives a reload, and hashes from the old site land on the pages that replaced them
@@ -1995,7 +2051,19 @@ check(
   'the site set no cookies',
   (await send('Network.getAllCookies')).result.cookies.length === 0 && (await evaluate('document.cookie')) === '',
 );
-for (const hash of ['#/', '#/ratings', '#/history', '#/head-to-head', '#/graph', '#/insights', '#/methodology', '#/privacy', '#/about']) {
+for (const hash of [
+  '#/',
+  '#/ratings',
+  '#/history',
+  '#/head-to-head',
+  '#/graph',
+  '#/insights',
+  '#/methodology',
+  '#/methodology/simple',
+  '#/methodology/full',
+  '#/privacy',
+  '#/about',
+]) {
   await evaluate(`location.hash = '${hash}'`);
   await sleep(700);
 }
@@ -2052,7 +2120,19 @@ check(
 // A phone: no page scrolls sideways
 await send('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 2, mobile: true });
 await sleep(500);
-for (const page of ['home', 'ratings', 'history', 'head-to-head', 'graph', 'insights', 'methodology', 'privacy', 'about']) {
+for (const page of [
+  'home',
+  'ratings',
+  'history',
+  'head-to-head',
+  'graph',
+  'insights',
+  'methodology',
+  'methodology/simple',
+  'methodology/full',
+  'privacy',
+  'about',
+]) {
   await evaluate(`location.hash = '#/${page}'`);
   await sleep(1200);
   const [scroll, inner] = await evaluate('[document.documentElement.scrollWidth, window.innerWidth]');
@@ -2071,9 +2151,9 @@ check(
   phoneGraph.picker.x > phoneGraph.title.x && phoneGraph.plot.height > 250 && phoneGraph.detail.y > phoneGraph.plot.bottom,
   JSON.stringify(phoneGraph),
 );
-await evaluate("location.hash = '#/methodology'");
+await evaluate("location.hash = '#/methodology/full'");
 await sleep(350);
-for (const slide of [1, 3, 7, 8, 9, 10]) {
+for (const slide of [1, 2, 4, 6, 7, 10, 11, 12]) {
   await evaluate(`document.querySelector('#methodologyList button[data-slide="${slide}"]').click()`);
   await sleep(250);
   check(

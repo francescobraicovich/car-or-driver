@@ -10,13 +10,14 @@ const attribute = (text) => esc(text);
 /**
  * @param {object} options
  * @param {string} options.page      the route name of the page (`insights`): the ids of the parts of the deck start with it
+ * @param {string} [options.idPrefix]  the start of the ids of the parts of the deck (default: the route name of the page)
  * @param {string} options.title     the title in the head of the card
  * @param {string} [options.before]  HTML above the contents
  * @param {string} [options.after]   HTML below the contents
  * @param {{title?: string, slides: {id: string, label: string, title: string, html: string}[]}[]} options.groups
  * @param {() => void} [options.firstShown]  called once, the first time the card is on the screen (the charts are drawn then, when they have a width)
  */
-export function createDeck({ page, title, before = '', after = '', groups, firstShown }) {
+export function createDeck({ page, idPrefix = page, title, before = '', after = '', groups, firstShown }) {
   const stage = document.getElementById('stage');
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const entries = groups.flatMap((group) => group.slides);
@@ -60,24 +61,24 @@ export function createDeck({ page, title, before = '', after = '', groups, first
     listHtml += `<section data-group="${groups.indexOf(group)}">${group.title ? `<h3>${group.title}</h3>` : ''}<ol>${rows.map(({ slide, number }) => `<li><button type="button" data-slide="${number}">${slide.label}</button></li>`).join('')}</ol></section>`;
   }
 
-  const list = Object.assign(document.createElement('nav'), { id: `${page}List`, className: 'deck-list', innerHTML: listHtml });
+  const list = Object.assign(document.createElement('nav'), { id: `${idPrefix}List`, className: 'deck-list', innerHTML: listHtml });
   list.setAttribute('aria-label', `Slides of the ${title}`);
   const card = Object.assign(document.createElement('section'), {
-    id: `${page}Card`,
+    id: `${idPrefix}Card`,
     className: 'deck-card',
     tabIndex: -1,
     innerHTML: `
       <header class="deck-head">
         <h2 class="deck-title">${title}</h2>
-        <span class="deck-position" id="${page}Position" aria-live="polite"></span>
-        <button type="button" class="deck-close" id="${page}Close" aria-label="Close the ${title}">×</button>
+        <span class="deck-position" id="${idPrefix}Position" aria-live="polite"></span>
+        <button type="button" class="deck-close" id="${idPrefix}Close" aria-label="Close the ${title}">×</button>
       </header>
-      <div class="deck-ticks" id="${page}Ticks" role="group" aria-label="Slides">${tickHtml}</div>
-      <div class="deck-slides" id="${page}Slides"><div class="deck-track" id="${page}Track">${track}</div></div>
+      <div class="deck-ticks" id="${idPrefix}Ticks" role="group" aria-label="Slides">${tickHtml}</div>
+      <div class="deck-slides" id="${idPrefix}Slides"><div class="deck-track" id="${idPrefix}Track">${track}</div></div>
       <footer class="deck-foot">
-        <button type="button" id="${page}Previous">Previous</button>
-        <span class="deck-name" id="${page}Name"></span>
-        <button type="button" id="${page}Next">Next</button>
+        <button type="button" id="${idPrefix}Previous">Previous</button>
+        <span class="deck-name" id="${idPrefix}Name"></span>
+        <button type="button" id="${idPrefix}Next">Next</button>
       </footer>`,
   });
   card.dataset.deck = page;
@@ -87,7 +88,7 @@ export function createDeck({ page, title, before = '', after = '', groups, first
   stage.append(list, card);
   window.dispatchEvent(new CustomEvent('f1:deck-made', { detail: { card, list } }));
 
-  const $ = (suffix) => document.getElementById(`${page}${suffix}`);
+  const $ = (suffix) => document.getElementById(`${idPrefix}${suffix}`);
   const trackNode = $('Track');
   const slideNodes = [...trackNode.children];
   const ticks = [...$('Ticks').children];

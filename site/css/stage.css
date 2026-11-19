@@ -1979,25 +1979,41 @@ body[data-page='graph'] .track-title {
   overflow-y: auto;
   touch-action: pan-y;
 }
-.deck-card[data-deck='methodology'] .deck-text,
-.deck-card[data-deck='methodology'] .deck-contents {
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text,
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-contents {
   width: min(100%, 760px);
   margin-inline: auto;
 }
-.deck-card[data-deck='methodology'] .deck-text p,
-.deck-card[data-deck='methodology'] .deck-text ul,
-.deck-card[data-deck='methodology'] .deck-text ol,
-.deck-card[data-deck='methodology'] .deck-text .glossary {
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text p,
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text ul,
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text ol,
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text .glossary {
   max-width: none;
 }
-.deck-card[data-deck='methodology'] .method-equation {
+/* technical details under a part of the methodology: a quiet label, set apart from the narrative */
+.deck-card[data-deck='methodology-full'] .deck-text details {
+  margin: 14px 0;
+  padding: 8px 12px;
+  border-left: 2px solid var(--rule);
+  background: rgb(255 255 255 / 0.32);
+}
+.deck-card[data-deck='methodology-full'] .deck-text summary {
+  color: var(--ink-2);
+  font-size: 12.5px;
+  font-weight: 650;
+  cursor: pointer;
+}
+.deck-card[data-deck='methodology-full'] .deck-text details[open] summary {
+  margin-bottom: 8px;
+}
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .method-equation {
   overflow-x: auto;
 }
-.deck-card[data-deck='methodology'] .deck-text h3 {
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text h3 {
   margin-bottom: 14px;
   font-size: 22px;
 }
-.deck-card[data-deck='methodology'] .deck-text h4 {
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text h4 {
   margin: 28px 0 9px;
   color: var(--ink);
   font-family: var(--text);
@@ -2006,13 +2022,13 @@ body[data-page='graph'] .track-title {
   letter-spacing: 0;
   text-transform: none;
 }
-.deck-card[data-deck='methodology'] .deck-text p,
-.deck-card[data-deck='methodology'] .deck-text li,
-.deck-card[data-deck='methodology'] .deck-text dd {
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text p,
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text li,
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text dd {
   font-size: 14px;
   line-height: 1.65;
 }
-.deck-card[data-deck='methodology'] .deck-text p {
+.deck-card:is([data-deck='methodology-full'], [data-deck='methodology-simple']) .deck-text p {
   margin-bottom: 14px;
 }
 .deck-foot {
@@ -2064,6 +2080,72 @@ body[data-page='graph'] .track-title {
   font-size: 15px;
   font-weight: 650;
   line-height: 1.35;
+}
+/* a line under the introduction of the methodology: who wrote it, and the way to the other version */
+.methodology-note {
+  margin: -6px 0 16px;
+  color: var(--ink-2);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.methodology-note a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+/* the card that opens the Methodology: two large boxes, the simple and the full methodology */
+.methodology-selection-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  width: min(100%, 760px);
+  min-height: 0;
+  margin-inline: auto;
+  padding: 6px 18px 28px;
+  overflow-y: auto;
+}
+.methodology-selection-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.methodology-selection-option {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+  min-height: 230px;
+  padding: 22px 22px 24px;
+  border: 1px solid var(--ink);
+  border-top-width: 4px;
+  border-radius: var(--radius);
+  background: rgb(255 255 255 / 0.42);
+  color: var(--ink);
+  text-decoration: none;
+}
+.methodology-selection-option:hover,
+.methodology-selection-option:focus-visible {
+  background: var(--ink);
+  color: var(--surface);
+}
+.methodology-selection-kind {
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.methodology-selection-option strong {
+  font-size: 20px;
+  line-height: 1.2;
+}
+.methodology-selection-option span:last-child {
+  font-size: 13.5px;
+  line-height: 1.55;
 }
 .deck-topics {
   display: grid;
@@ -2462,6 +2544,58 @@ body[data-page='graph'] .track-title {
   margin: 8px 0 0;
   color: var(--ink-2);
   font-size: 12px;
+}
+/* one rating before and after one result (methodology-interactives.js): three choices of how sure the model was, two bell curves */
+.method-lab-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 10px;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.method-lab-choices span {
+  margin-right: 4px;
+}
+.method-lab-choices button {
+  min-height: 26px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+.method-lab-choices button[aria-pressed='true'] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--surface);
+}
+.method-belief-axis {
+  stroke: var(--rule);
+  stroke-width: 1.5;
+}
+.method-belief-tick,
+.method-belief-label {
+  fill: var(--ink-2);
+  font: 11px var(--mono);
+}
+.method-belief-label.strong {
+  fill: var(--ink);
+  font-weight: 700;
+}
+.method-belief-result {
+  stroke: var(--ink-3);
+  stroke-dasharray: 3 3;
+}
+.method-belief-before {
+  fill: none;
+  stroke: var(--ink-3);
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+}
+.method-belief-after {
+  fill: var(--accent);
+  fill-opacity: 0.14;
+  stroke: var(--accent);
+  stroke-width: 2.5;
 }
 @media (max-width: 600px) {
   .method-split-grid {
