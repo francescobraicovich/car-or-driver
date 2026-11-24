@@ -5,19 +5,18 @@ import { createHistoryView } from './history-view.js';
 import { DECK_PAGES, panelView } from './stage-pages.js';
 
 // Every route is the front page: the ratings are the panel on it, kept open; the history and the head to head are views over the ratings, in the
-// panel; the insights, the methodology, the privacy notice and the about page are each a card over it. The methodology card offers two
-// cards of slides, the simple and the full methodology.
+// panel; Insights, Prediction, Methodology and About & Privacy each open a card over it.
 const ROUTES = [
   '/',
   '/ratings',
   '/history',
   '/head-to-head',
+  '/prediction',
   '/graph',
   '/insights',
   '/methodology',
   '/methodology/simple',
   '/methodology/full',
-  '/privacy',
   '/about',
 ];
 const DEFAULT_ROUTE = '/';
@@ -79,11 +78,12 @@ export function initWorkspace() {
 
   function parseURL() {
     const [path, search = ''] = location.hash.slice(1).split('?');
-    let nextRoute = ROUTES.includes(path) ? path : ALIASES[path] || DEFAULT_ROUTE;
+    let nextRoute = path === '/privacy' ? '/about' : ROUTES.includes(path) ? path : ALIASES[path] || DEFAULT_ROUTE;
     const params = new URLSearchParams(search.length <= 16000 ? search : '');
-    // a link to a slide of the methodology from before it had a simple and a full version leads to the full methodology
-    if (nextRoute === '/methodology' && /^method-/.test(params.get('slide') || '')) nextRoute = '/methodology/full';
-    return { route: nextRoute, params: params.get('v') === '1' ? params : new URLSearchParams() };
+    const accepted = params.get('v') === '1' ? params : new URLSearchParams();
+    if (nextRoute === '/methodology' && /^method-/.test(accepted.get('slide') || '')) nextRoute = '/methodology/full';
+    if (path === '/privacy' && !accepted.has('slide')) accepted.set('slide', 'privacy');
+    return { route: nextRoute, params: accepted };
   }
 
   function readURLState(params) {
@@ -137,6 +137,7 @@ export function initWorkspace() {
     const now = panelView(pageName());
     let target = home;
     if (pageName() === 'graph') target = $('graphPage') ?? target;
+    else if (pageName() === 'prediction') target = $('predictionPage') ?? target;
     else if (DECK_PAGES.includes(pageName()))
       target = document.querySelector(`.deck-card[data-deck="${pageName()}"]`) ?? target; // (the card is made when its page is first shown, and takes the focus itself then)
     else if (now !== 'ratings') target = $(VIEW_IDS[now]).querySelector('.ledger-back');
@@ -209,7 +210,7 @@ export function initWorkspace() {
   window.addEventListener('hashchange', navigate);
   $('stage').addEventListener('pointerdown', (event) => {
     if (!DECK_PAGES.includes(pageName())) return;
-    if (event.target.closest('.deck-card, .deck-list, .graph-page, .stage-top, .stage-bottom, .track')) return;
+    if (event.target.closest('.deck-card, .deck-list, .graph-page, .prediction-page, .stage-top, .stage-bottom, .track')) return;
     location.hash = '#/';
   });
   window.addEventListener('f1:race-changed', () => {

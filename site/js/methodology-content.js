@@ -7,15 +7,15 @@
 // unified_grid.py, packages/core/src/unified/ and site/js/rating-reference.js.
 export const CONTENT_HTML = String.raw`
 <section id="method-questions" class="method-part">
-  <h3>1. The question</h3>
+  <h3>1. The question: driver or car?</h3>
   <p>
-    Every Formula 1 result is produced by a driver in a car. A win shows that the pairing was the fastest on the day and leaves open how the credit divides between the driver and the machine. This site divides it. After every Grand Prix weekend since 1994 it gives each driver and each car ratings of their own, in the same units and with an uncertainty attached, and it uses those ratings to forecast who will finish ahead of whom.
+    Every Formula 1 result is produced by a driver in a car. A win leaves open how the credit divides between the driver and the machine. This site estimates that division. After every Grand Prix weekend since 1994 it gives each driver and each car ratings of their own, in the same units and with an uncertainty attached, and it uses those ratings to forecast who will finish ahead of whom.
   </p>
   <p>A driver is never observed without a car, and a car never without a driver, so the split has to be inferred. The sport itself supplies the evidence.</p>
   <ul>
-    <li><b>Teammates share a car.</b> When two drivers in the same car finish apart, the car is common to both, and the gap between them measures the drivers.</li>
+    <li><b>Teammates share a car.</b> The model assumes teammates share the same car contribution, so their comparison informs the difference between drivers. In practice upgrades, strategy and treatment can differ.</li>
     <li><b>Drivers change teams.</b> A driver takes their skill into the new car. Each move links the old teammate to the new one, and over three decades these links join drivers from different teams and different eras into one network of comparisons.</li>
-    <li><b>Qualifying is a clean measurement.</b> A single flying lap, with no traffic or pit stops, shows the speed of a driver and car with far less noise than a race.</li>
+    <li><b>Qualifying measures speed.</b> Shared-phase lap times compare the pace of a driver and car, although traffic, weather and session circumstances still matter.</li>
     <li><b>Cars change faster than drivers.</b> Teams rebuild their cars every winter and develop them through the season, while a driver's skill moves slowly. When a whole team's results jump at once, the car is the likely source.</li>
   </ul>
   <p>Each driver and each car carries three ratings, because a race weekend measures three different things.</p>
@@ -33,12 +33,12 @@ export const CONTENT_HTML = String.raw`
     <li><b>Testing.</b> Before a weekend updates the ratings, the ratings forecast it. Scoring those forecasts against what happened is how the model was tested and how its settings were chosen (<a href="#" data-jump="method-forecast">Parts 9</a> and <a href="#" data-jump="method-validation">10</a>).</li>
   </ol>
   <p>
-    The twenty findings on the <a href="#/insights">Insights page</a> come from these same ratings, or from the raw results where no rating is needed, and each carries its own note on how it was computed.
+    The findings on the <a href="#/insights">Insights page</a> come from these same ratings, or from the raw results where no rating is needed, and each carries its own note on how it was computed.
   </p>
 </section>
 
 <section id="method-evidence" class="method-part">
-  <h3>2. From results to comparisons</h3>
+  <h3>2. The evidence: lap times and race results</h3>
 
   <h4>The data</h4>
   <p>
@@ -81,7 +81,7 @@ export const CONTENT_HTML = String.raw`
 </section>
 
 <section id="method-odds" class="method-part">
-  <h3>3. Ratings as odds</h3>
+  <h3>3. Ratings and race odds</h3>
   <p>
     Suppose each entrant has a hidden strength, and that when two meet, the chance that one finishes ahead depends only on the difference between their strengths. The simplest rule with that property is the logistic curve of the <b>Bradley–Terry</b> model <a class="cite" href="#" data-jump="ref-1">[1]</a>. For an overall-strength gap <span data-math>g</span> in the model's internal units,
   </p>
@@ -102,7 +102,7 @@ export const CONTENT_HTML = String.raw`
 </section>
 
 <section id="method-separation" class="method-part">
-  <h3>4. Splitting driver from car</h3>
+  <h3>4. Separating driver and car</h3>
 
   <h4>A strength made of two parts</h4>
   <p>In Formula 1 the entrant is a driver in a car, so for each of the three ratings the model gives A this expected advantage over B:</p>
@@ -147,7 +147,7 @@ export const CONTENT_HTML = String.raw`
 </section>
 
 <section id="method-joint" class="method-part">
-  <h3>5. Three related strengths</h3>
+  <h3>5. How the three ratings learn together</h3>
   <p>
     The three ratings measure different things, and they are related. A driver who is quick over one lap is usually quick over a race stint, and both usually help them finish ahead. The model makes use of that. Each driver and each car has three strengths, one per rating, and the model expects them to move together: the correlation between a driver's three strengths is <span data-setting="driver_correlation"></span>, and between a car's three strengths <span data-setting="car_correlation"></span>. The correlations hold both in the starting estimates and in how the strengths change over time.
   </p>
@@ -160,7 +160,7 @@ export const CONTENT_HTML = String.raw`
 </section>
 
 <section id="method-time" class="method-part">
-  <h3>6. Strength through time</h3>
+  <h3>6. How strengths change over time</h3>
   <p>
     Strengths change. Cars are developed through the season and rebuilt over the winter; drivers improve and age. A rating has to follow these changes while ignoring the noise of any single result. The model is a state-space filter <a class="cite" href="#" data-jump="ref-3">[3]</a><a class="cite" href="#" data-jump="ref-4">[4]</a>: each strength is an estimate with an uncertainty, the uncertainty grows while time passes, and each weekend's evidence shrinks it again <a class="cite" href="#" data-jump="ref-2">[2]</a>.
   </p>
@@ -181,7 +181,7 @@ export const CONTENT_HTML = String.raw`
 </section>
 
 <section id="method-update" class="method-part">
-  <h3>7. Learning from a weekend</h3>
+  <h3>7. Updating ratings after a weekend</h3>
   <p>
     Each weekend runs in two steps. First the model predicts every comparison of the weekend from what it knew beforehand, and those predictions are recorded. Then it updates every strength with the weekend's evidence. Nothing from a weekend is used to forecast it.
   </p>
@@ -213,7 +213,7 @@ export const CONTENT_HTML = String.raw`
 </section>
 
 <section id="method-scale" class="method-part">
-  <h3>8. Reading a rating</h3>
+  <h3>8. Understanding the rating scale</h3>
 
   <h4>Two views of the same model</h4>
   <p>
@@ -242,7 +242,7 @@ export const CONTENT_HTML = String.raw`
 </section>
 
 <section id="method-forecast" class="method-part">
-  <h3>9. Forecasts</h3>
+  <h3>9. From ratings to race predictions</h3>
   <p>
     Head to head gives the chance that A finishes ahead of B in the next race. It starts from the overall gap, driver plus car, and its variance from the full covariance, with one more week of change added. Uncertainty pulls the probability toward 50%, and a calibration slope <span data-math>s</span>, fitted on the forecasts of earlier years, sets how strongly a gap should move the odds:
   </p>
@@ -265,6 +265,9 @@ export const CONTENT_HTML = String.raw`
   <p>
     Head to head can also pair drivers and cars that never met, from any two dates, or put both drivers in the same car. Matchups at past dates use the historical ratings, and every matchup uses the current calibration.
   </p>
+  <h4>The prediction grid</h4>
+  <p>Prediction compares each driver in the latest modelled field, in their own car, against every other entrant. Expected finishing position is one plus the sum of the probabilities that each opponent finishes ahead. Sorting those expectations gives the displayed order; it is not the most likely complete race order or a probability of winning.</p>
+  <p>The selected date and distance affect uncertainty and retirement risk. Selecting a circuit sets its most recently recorded race distance. The forecast has no circuit-specific or wet-weather correction, and the latest modelled lineup may differ from the next race's entrants.</p>
   <details><summary>Probability, retirement risks and the grid</summary>
     <p>The variance includes the change expected by the forecast date, by default seven days after the latest weekend. Each entrant's per-lap retirement probability combines the driver's incident risk <span data-math>q_D</span> and the car's mechanical risk <span data-math>q_C</span> as <span data-math>1-(1-q_D)(1-q_C)</span>, and the forecast combines survival and retirement order over the race distance.</p>
     <p>Risk records shrink toward the field's behaviour. Mechanical records have a 35-race half-life and a 100-lap prior, and a car keeps 95% of its record over the winter; incident records have a five-race half-life and a 2,000-lap prior. Timing forecasts combine the strength uncertainty with the calibrated observation noise into a 90% prediction interval.</p>
@@ -274,7 +277,7 @@ export const CONTENT_HTML = String.raw`
 </section>
 
 <section id="method-validation" class="method-part">
-  <h3>10. Testing against the future</h3>
+  <h3>10. Testing the model’s predictions</h3>
   <p>
     The ratings are judged by what they say about results they have not yet seen. The whole history was replayed in date order, each weekend forecast from the weekends before it and only then used to update the ratings <a class="cite" href="#" data-jump="ref-8">[8]</a>. The replay starts in 1994, warms up through 2001, and chooses the model's few shared settings from the forecasts of 2002 to 2007. The years from 2008 to 2025 are scored in four periods, each with a calibration fitted only on earlier years, and every scored weekend carries the same total weight. The 2026 season is scored as it happens, with the calibration refreshed once a year from earlier years only.
   </p>
@@ -326,7 +329,7 @@ export const CONTENT_HTML = String.raw`
 </section>
 
 <section id="method-limits" class="method-part">
-  <h3>11. Limitations</h3>
+  <h3>11. What the ratings cannot tell us</h3>
   <p>
     The ratings are model-dependent estimates of competitiveness in the available observations. They do not measure innate talent, and they do not estimate the causal effect of placing a driver in a car. Every qualification of the preceding parts is collected below.
   </p>

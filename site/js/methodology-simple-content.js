@@ -56,7 +56,7 @@ export const SIMPLE_CONTENT_HTML = String.raw`
 <section id="simple-teammates" class="method-part">
   <h3>3. Learning from teammates</h3>
   <p>
-    Teammates drive the same car, so when one beats the other, the car cannot be the reason. A teammate record is the cleanest evidence there is about drivers, and it suggests a first way to rate them: use teammate comparisons and nothing else.
+    The model assumes teammates share the same car contribution, so their comparisons offer evidence about the drivers. Real teammates can receive different upgrades, strategies or treatment. Teammate records suggest a first way to rate drivers: use teammate comparisons and nothing else.
   </p>
   <p>
     Take two teammates, A and B, who meet ten times: A finishes ahead 7 times and B 3 times. To turn this record into points, we first add one imaginary win to each side, which stops a short unbeaten record from looking infinitely strong. That gives 8 to 4, odds of 2 to 1. On our scale, odds of 2 to 1 are a gap of about 23 points.

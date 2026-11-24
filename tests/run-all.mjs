@@ -60,6 +60,7 @@ const TESTS = [
   'test-stage-models.mjs',
   'test-stage-model-motion.mjs',
   'test-insights.mjs',
+  'test-prediction.mjs',
   'test-layering.mjs',
   'test-teammate-graph.mjs',
   'test-site-imports.mjs',

@@ -382,18 +382,19 @@ export function renderPlot(svg, options) {
   }
 
   // lines
+  const lineWidth = options.lineWidth ?? 2;
   for (const s of series) {
     const color = colorOf(s);
     const segments = splitSegments(s.points);
     for (const group of segments) {
       const points = group.map((p) => `${X(timeOf(p)).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
       if (options.casing)
-        // a thin dark edge under the line, so that a pale colour shows on a light plate
+        // The outline sits under the colored line and can be set by the chart.
         node(layer, 'polyline', {
           points,
           fill: 'none',
-          stroke: 'rgb(0 0 0 / 0.2)',
-          'stroke-width': 3.8,
+          stroke: options.casing === true ? 'rgb(0 0 0 / 0.2)' : options.casing,
+          'stroke-width': lineWidth + 1.8,
           'stroke-linejoin': 'round',
           'stroke-linecap': 'round',
           'pointer-events': 'none',
@@ -402,7 +403,7 @@ export function renderPlot(svg, options) {
         points,
         fill: 'none',
         stroke: color,
-        'stroke-width': 2,
+        'stroke-width': lineWidth,
         'stroke-linejoin': 'round',
         'stroke-linecap': 'round',
         'stroke-dasharray': s.dash || 'none',
@@ -441,9 +442,11 @@ export function renderPlot(svg, options) {
 
   // a time cursor (Head to head): a marker for each moment in use, which the visitor can drag along the chart to change them
   const cursor = options.timeCursor;
+  let cursorMarkers = cursor?.markers || [];
   const marks = cursor ? node(svg, 'g', { 'pointer-events': 'none' }) : null;
   if (cursor) {
     const place = (markers) => {
+      cursorMarkers = markers;
       marks.replaceChildren();
       markers.forEach((marker, index) => {
         // two markers at the same time stand side by side
@@ -500,6 +503,7 @@ export function renderPlot(svg, options) {
       node(cross, 'circle', { cx: X(t), cy: Y(p.v), r: 4.5, fill: colorOf(s), stroke: 'var(--surface)', 'stroke-width': 2 });
     const tip = tipElement();
     tip.className = svg.closest('.ledger, .deck-card') ? 'rich metal' : 'rich'; // on the panel, or on a card of slides, the tooltip is in the panel's metal
+    tip.classList.toggle('history-tooltip', Boolean(svg.closest('#historyView')));
     tip.replaceChildren();
     const head = document.createElement('div');
     head.className = 'tip-head';
@@ -537,22 +541,31 @@ export function renderPlot(svg, options) {
     overlay.style.cursor = 'ew-resize';
     overlay.addEventListener('pointerdown', (e) => {
       if (e.button) return;
+      const rect = svg.getBoundingClientRect();
+      const px = ((e.clientX - rect.left) * width) / rect.width;
+      const selected = cursorMarkers.reduce(
+        (best, marker, index) => {
+          const x = Math.max(box.left, Math.min(box.right, X(marker.time))) + (index - (cursorMarkers.length - 1) / 2) * 3;
+          return Math.abs(px - x) < best.distance ? { index, distance: Math.abs(px - x) } : best;
+        },
+        { index: 0, distance: Infinity },
+      ).index;
       // the moves and the release are taken on the window, not on the chart: the chart may be drawn again under the pointer (its size changes), and
       // a drag held by an element that is gone would be dropped
       dragging.add(svg);
-      const move = (event) => cursor.onScrub(timeAt(event), 'move');
+      const move = (event) => cursor.onScrub(timeAt(event), 'move', selected);
       const end = (event) => {
         window.removeEventListener('pointermove', move);
         window.removeEventListener('pointerup', end);
         window.removeEventListener('pointercancel', end);
         dragging.delete(svg);
-        cursor.onScrub(timeAt(event), 'end');
+        cursor.onScrub(timeAt(event), 'end', selected);
         if (Math.round(svg.getBoundingClientRect().width) !== charts.get(svg)?.width) charts.get(svg)?.redraw(); // a size change that waited
       };
       window.addEventListener('pointermove', move);
       window.addEventListener('pointerup', end);
       window.addEventListener('pointercancel', end);
-      cursor.onScrub(timeAt(e), 'start');
+      cursor.onScrub(timeAt(e), 'start', selected);
     });
   }
   overlay.addEventListener('pointermove', (e) => show(locate(e), e.clientX, e.clientY));

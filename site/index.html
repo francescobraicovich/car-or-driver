@@ -6,7 +6,7 @@
     <title>Car or Driver</title>
     <meta
       name="description"
-      content="Car or Driver separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 1994, head to head forecasts and twenty findings."
+      content="Car or Driver separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 1994, head to head forecasts and thirteen findings."
     />
     <meta name="theme-color" content="#d90a04" />
     <link
@@ -124,7 +124,7 @@
 
           <nav class="stage-bar stage-top stage-links" aria-label="Main navigation">
             <a href="#/ratings">ratings</a><a href="#/history">history</a><a href="#/head-to-head">versus</a><a href="#/graph">graph</a
-            ><a href="#/insights">insights</a><a href="#/methodology">method</a>
+            ><a href="#/prediction">prediction</a><a href="#/insights">insights</a><a href="#/methodology">method</a>
           </nav>
 
           <h1 class="stage-title" id="stageTitle" aria-label="Car or Driver">
@@ -276,17 +276,17 @@
                 </select>
               </label>
             </header>
-            <p class="graph-intro">Teammate comparisons connect the unified driver ratings across teams and seasons.</p>
+            <p class="graph-intro">Teammate duels in the same car connect drivers and help estimate their ratings.</p>
             <details class="graph-guide">
               <summary>How to read this</summary>
               <div class="graph-guide-box">
                 <p>
-                  Each dot is a driver. Drivers who shared a team are linked, so the graph can also compare drivers through chains of
-                  teammates.
+                  Each dot is a driver. A link connects teammates whose qualifying or race performances were compared. Drivers who change
+                  teams connect those comparisons across the field.
                 </p>
                 <p>
-                  Higher dots have greater published overall strength; left to right shows the average year each driver raced. Select a
-                  driver to see their links and head-to-head record.
+                  The horizontal axis shows the average year raced; the vertical axis shows overall driver strength at the driver's most
+                  recent appearance through the selected weekend. Select a driver or a teammate in the panel to explore their record.
                 </p>
                 <p>
                   The vertical score is the published overall driver rating at each driver’s latest appearance. Its recent-era reference is
@@ -330,7 +330,7 @@
             </p>
             <p class="stage-tagline" role="status"></p>
             <nav class="stage-links stage-footer-links" aria-label="About this site">
-              <a href="#/privacy">privacy</a><a href="#/about">about</a
+              <a href="#/about">about &amp; privacy</a
               ><a href="https://github.com/francescobraicovich/car-or-driver" rel="noopener noreferrer">source</a>
             </nav>
           </footer>

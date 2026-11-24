@@ -1,6 +1,6 @@
 # Car or Driver
 
-How much of a Formula 1 result is the driver, and how much is the car? This static, non-commercial website separates their ratings after every race weekend since 1994. It includes rating histories, head-to-head forecasts, a teammate graph, race replays, twenty findings and the methodology behind them.
+How much of a Formula 1 result is the driver, and how much is the car? This static, non-commercial website separates their ratings after every race weekend since 1994. It includes rating histories, head-to-head forecasts, a teammate graph, race replays, a race prediction, thirteen findings and the methodology behind them.
 
 It is an independent personal project. It is not affiliated with Formula 1, the FIA or any team or driver.
 
@@ -10,10 +10,11 @@ It is an independent personal project. It is not affiliated with Formula 1, the 
 | --- | --- |
 | **Front page and ratings** | A drawing of a car and a driver's hands under the title. Point at either (or at its word in the title) and a box opens, the picture turns black and white, the blue version shows inside the box and a panel opens on the left with the ratings of the cars or of the drivers: a ranking after any weekend since 1994, each row with its error and a bar, with scrolling for large historical fields on short screens; a slider to play through the seasons as a bar-chart race (the rows glide to their new places and the bars grow); the rating to show; and a way to select entries and compare them. Press to keep the panel open (the address then is `#/ratings`). Where a circuit outline is available, the real race of the weekend is replayed at the bottom right, at 1 to 50 times the real speed (you choose), from the lap times of every car (overtakes, pit stops, safety cars and red flags included), with a live timing table of places and gaps; pointing at a driver highlights his dot and his row of the table. |
 | **History** | Rating lines for the drivers or cars you choose, over any range of seasons. It opens over the ratings, in the panel, with a button to go back (`#/history`). |
-| **Head to head** | A pre-weekend race-result forecast from unified overall ratings, joint uncertainty and retirement risk, with historical and same-car what-if comparisons. It opens over the ratings, in the panel (`#/head-to-head`): the same car for both drivers to begin with, a Prime button for each, and a date to drag along their rating history, which takes the race at the bottom right to that Grand Prix. |
+| **Head to head** | A pre-weekend race-result forecast with historical and same-car comparisons. Each driver has an independent career slider and chart marker (`#/head-to-head`). |
 | **Graph** | Every driver in the data, positioned by mean year raced and their published overall rating at their latest appearance. Scrub to any weekend, inspect each driver's published rating, age and complete teammate record, and follow favorable and unfavorable links. On wide screens, selecting a driver also lights their dot in the mini GP (`#/graph`). |
-| **Insights** | Twenty findings, each with a chart and a note on how it was computed: how much of a race is the car, who the best teammates are, how the order survives a winter, and more. They are a slide show on a card over the front page (`#/insights`): the contents first, then a slide for each finding, reached from the contents, from the list of slides beside the card, with the arrow keys or a swipe. |
-| **Methodology** | How the numbers are computed, from first principles, as a guided explanation from observations through driver–car separation to forecasts and limitations. |
+| **Prediction** | Expected finishing positions for the latest modelled field, with a race date, distance and optional starting grid (`#/prediction`). The forecast has no circuit-specific or wet-weather correction. |
+| **Insights** | Thirteen model-driven findings in three topics, each with a chart and an explanation (`#/insights`). |
+| **Methodology** | A choice between a plain-language explanation and the complete method, from observations through driver–car separation to forecasts and limitations. |
 
 ## How it works, in one paragraph
 
@@ -27,7 +28,7 @@ The 2008–2025 replay gives actual-result log loss **0.53012**, against **0.531
 
 ## Run it
 
-You need Node.js 24 or newer. Building ratings and running the complete tests also require Python 3.12 with `python3 -m pip install -r requirements-model.txt`. Static hosting needs no Python runtime. Chrome or Chromium is needed only for the browser test.
+You need Node.js 24 or newer. Building ratings and running the complete tests also require Python 3.12 with `python3 -m pip install -r requirements-research.txt`. Static hosting needs no Python runtime. Chrome or Chromium is needed only for the browser test.
 
 ```bash
 npm ci
@@ -45,7 +46,7 @@ The 3D design experiment is retained in [the reference archive](research/interfa
 
 ## Find your way around
 
-The local data runs through the 2026 Brazilian Grand Prix on 8 November (round 20). The ratings are **computed once, when the site is published**, not in every visitor's browser. `node tools/build-model.mjs` builds the model from the CSV tables in `data/` and writes `data/model-latest.json` (the first screen), `data/model.json` (every weekend). The retrospective build also writes `data/retrospective-latest.json` and `data/retrospective.json` for historical views. Each records a fingerprint of the inputs and model code. `tests/test-model-file.mjs` compares the filtered files with a fresh build; `tests/test-retrospective-publication.mjs` checks the retrospective fingerprint and published views. After changing the data or the model, run `npm run build:data` and commit the result: it runs `tools/build-model.mjs`, `tools/build-retrospective.mjs`, `tools/build-teammate-graph.mjs` (the dated graph at `data/teammate-graph.json`), `tools/build-race-laps.mjs` (every driver's lap times for each season, `data/race-laps/`, behind the replay of the race), and `tools/build-tracks.mjs` (the circuit outlines, `site/assets/tracks.json`). A circuit that has not raced before needs an outline: add its file from `data/source/f1-circuits/` and a line in `SOURCE_FILES` in `tools/build-tracks.mjs` (the test fails until you do, or until you add the circuit to the few it lists as having none).
+The latest completed Grand Prix in the local data is recorded in `data/manifest.json`. The ratings are **computed once, when the site is published**, not in every visitor's browser. `node tools/build-model.mjs` builds the model from the CSV tables in `data/` and writes `data/model-latest.json` (the first screen), `data/model.json` (every weekend). The retrospective build also writes `data/retrospective-latest.json` and `data/retrospective.json` for historical views. Each records a fingerprint of the inputs and model code. `tests/test-model-file.mjs` compares the filtered files with a fresh build; `tests/test-retrospective-publication.mjs` checks the retrospective fingerprint and published views. After changing the data or the model, run `npm run build:data` and commit the result: it rebuilds ratings, the dated teammate graph, race laps, circuit outlines, the prediction calendar and Insights. A circuit that has not raced before needs an outline: add its file from `data/source/f1-circuits/` and a line in `SOURCE_FILES` in `tools/build-tracks.mjs` (the test fails until you do, or until you add the circuit to the few it lists as having none).
 
 | Directory | Responsibility | Start here |
 | --- | --- | --- |
@@ -66,13 +67,13 @@ The checkout contains the website and the code, data and evidence needed to main
 The browser downloads precomputed ratings. After changing model code or accepting new race data:
 
 ```bash
-npm run build:data       # ratings, teammate graph, race laps and circuit outlines
-npm run build:findings   # Insights; requires the Python requirements below
+npm run build:data       # ratings, graph, race laps, circuit outlines, calendar and findings
+npm run build:findings   # recompute Insights separately
 npm test
 npm run lint
 ```
 
-Install findings and research dependencies with `python3 -m pip install -r requirements-research.txt`. Interface development against the saved ratings needs no Python; rebuilding ratings and running the complete test suite require the model dependencies.
+Install findings and research dependencies with `python3 -m pip install -r requirements-research.txt`. Interface development against the saved ratings needs no Python; rebuilding ratings and the findings requires these research dependencies.
 
 `model-latest.json` supplies the first screen; `model.json` supplies complete history and forecast state. `teammate-graph.json`, seasonal race-lap files and `site/assets/tracks.json` supply the graph and replay. Source fingerprints and regression tests prevent publication of stale generated files. Keep generated files committed. Update `tests/golden.json` deliberately only when the underlying data or model behavior changes.
 

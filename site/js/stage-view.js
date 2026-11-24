@@ -414,7 +414,7 @@ export function initStage() {
   // a card of slides and its list are made when their page is first shown: they are held too
   window.addEventListener('f1:deck-made', (event) => {
     hold(event.detail.card);
-    hold(event.detail.list);
+    if (event.detail.list) hold(event.detail.list);
   });
 
   // the picture's area and the word are two ways to the same subject

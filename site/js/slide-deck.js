@@ -1,5 +1,5 @@
-// A card of slides in the middle of the front page, with a list of the slides beside it: the Insights, the Methodology, the Privacy notice and the About
-// page are each one. The first slide is the contents (the slides, grouped), then the slides, which slide. They are reached from the contents, from the
+// A card of slides in the middle of the front page, with a list of the slides beside it: the Insights and the Methodology each use one.
+// The first slide is the contents (the slides, grouped), then the slides, which slide. They are reached from the contents, from the
 // list beside the card (where there is room), from the ticks under the title, with the arrows and the arrow keys, by a swipe, or by a link in the text
 // (an element with `data-jump` names the element it leads to); the slide on the card is in the address (`slide=`), so that a link opens it. A deck is
 // made the first time its page is shown (the module of the page calls createDeck), and shown only on its page. No storage, no requests.

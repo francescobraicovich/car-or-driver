@@ -116,9 +116,9 @@ check(
 // The site is the front page and what opens over it: the links at its top are Ratings, History, Versus, Graph, Insights and Method, and the links at its foot
 // are Privacy, About and the source. Nothing of the old pages (header, loading screen, status line, footer, share button, theme button) is left.
 check(
-  'the links at the top of the front page are exactly ratings, history, versus, graph, insights and method',
+  'the links at the top of the front page are exactly ratings, history, versus, graph, prediction, insights and method',
   JSON.stringify(await evaluate("[...document.querySelectorAll('.stage-top a')].map((a) => a.textContent)")) ===
-    JSON.stringify(['ratings', 'history', 'versus', 'graph', 'insights', 'method']),
+    JSON.stringify(['ratings', 'history', 'versus', 'graph', 'prediction', 'insights', 'method']),
 );
 check(
   'nothing of the old pages is left: no header, loading screen, status line, footer, share button or theme button',
@@ -133,9 +133,9 @@ check(
   )) && (await evaluate('document.body.dataset.mode === undefined')),
 );
 check(
-  'the foot of the front page links to Privacy, About and the source',
+  'the foot of the front page links to About & Privacy and the source',
   JSON.stringify(await evaluate("[...document.querySelectorAll('.stage-footer-links a')].map((a) => a.getAttribute('href'))")) ===
-    JSON.stringify(['#/privacy', '#/about', 'https://github.com/francescobraicovich/car-or-driver']),
+    JSON.stringify(['#/about', 'https://github.com/francescobraicovich/car-or-driver']),
 );
 
 // The front page: a red drawing with a white two-line title and a square cursor. Pointing at the car or the hands (or at the matching word) opens a
@@ -224,13 +224,12 @@ check(
   JSON.stringify({ wordDriver, wordCar }),
 );
 const bottomLinks = await evaluate(
-  "(() => { const width = document.getElementById('stage').getBoundingClientRect().width; const boxes = [...document.querySelectorAll('.stage-footer-links a')].map((a) => a.getBoundingClientRect()); return { names: [...document.querySelectorAll('.stage-footer-links a')].map((a) => a.textContent.toLowerCase()), width, left: boxes[0].left, middle: (boxes[1].left + boxes[1].right) / 2, right: boxes[2].right }; })()",
+  "(() => { const width = document.getElementById('stage').getBoundingClientRect().width; const boxes = [...document.querySelectorAll('.stage-footer-links a')].map((a) => a.getBoundingClientRect()); return { names: [...document.querySelectorAll('.stage-footer-links a')].map((a) => a.textContent.toLowerCase()), width, left: boxes[0].left, right: boxes[1].right }; })()",
 );
 check(
-  'the bottom row is privacy at the left, about in the middle and source at the right, and has no sentence',
-  JSON.stringify(bottomLinks.names) === JSON.stringify(['privacy', 'about', 'source']) &&
+  'the bottom row has About & Privacy at the left and source at the right, with no sentence',
+  JSON.stringify(bottomLinks.names) === JSON.stringify(['about & privacy', 'source']) &&
     bottomLinks.left < 90 &&
-    Math.abs(bottomLinks.middle - bottomLinks.width / 2) < 2 &&
     bottomLinks.right > bottomLinks.width - 90 &&
     (await evaluate("document.querySelector('.stage-tagline').textContent.trim()")) === '' &&
     (await evaluate("[...document.querySelectorAll('.stage-bottom p.sr-only')].every((p) => p.getBoundingClientRect().width <= 1)")), // the sentence is for screen readers only
@@ -588,7 +587,9 @@ check(
   'the row under the pointer inverts: light text on dark',
   (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row')).backgroundColor")) === 'rgb(7, 8, 11)' &&
     (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .name')).color")) === 'rgb(238, 240, 243)' &&
-    (await evaluate("getComputedStyle(document.querySelector('#ratingsList .ledger-row .change')).color")) === 'rgb(238, 240, 243)',
+    (await evaluate(
+      "!document.querySelector('#ratingsList .ledger-row .change') && !document.querySelector('#ratingsList .ledger-row').getAttribute('aria-label').includes('Change since')",
+    )),
 );
 // the card that opens on the row under the pointer: who, age, team, rank and the paces, in the panel's own style
 const card = await evaluate(
@@ -1397,6 +1398,18 @@ check(
     "(() => { const tip = document.getElementById('chartValueTooltip'); return !tip.hidden && tip.classList.contains('metal') && tip.querySelectorAll('.tip-row').length >= 1; })()",
   ),
 );
+check(
+  'the History tooltip fits its contents rather than expanding to the height of the page',
+  await evaluate(
+    `(() => { const tip = document.getElementById('chartValueTooltip'); return tip.classList.contains('history-tooltip') && getComputedStyle(tip).minHeight === '0px' && tip.getBoundingClientRect().height < 180; })()`,
+  ),
+);
+check(
+  'History uses eight distinct series colors and the tooltip uses the same palette',
+  await evaluate(
+    `(() => { const view = getComputedStyle(document.getElementById('historyView')); const tooltip = getComputedStyle(document.getElementById('chartValueTooltip')); const colors = Array.from({ length: 8 }, (_, index) => view.getPropertyValue('--s' + (index + 1)).trim()); return new Set(colors).size === 8 && colors[0] === '#fa1802' && colors[1] === '#091a9c' && colors.every((color, index) => color === tooltip.getPropertyValue('--s' + (index + 1)).trim()); })()`,
+  ),
+);
 await mouse('mouseMoved', 8, 300);
 await evaluate("document.querySelector('#historyView .ledger-back').click()");
 await sleep(700);
@@ -1474,8 +1487,7 @@ check(
   (await evaluate("!document.getElementById('infoTip').hidden")) &&
     (await evaluate("(document.activeElement.blur(), document.getElementById('infoTip').hidden)")),
 );
-// Head to head: the same car is the standard setting, Prime puts a driver at his peak, the rating and the date of each driver are beside his chance, and
-// dragging along the plot sets the date of both: the race at the bottom right goes to that Grand Prix with the two drivers lit in their colours
+// Head to head: each driver can be moved independently by its career slider or chart marker.
 await mouse('mouseMoved', 8, 300);
 // (the checks above left driver B at his prime and the conditions wet: start from the standard setting)
 await evaluate(
@@ -1539,7 +1551,7 @@ check(
     })()),
   JSON.stringify({ standard: standard.figures, primed: primed.figures, weekend: primed.weekend }),
 );
-// dragging along the plot: both drivers go to the date, the race waits while it moves and then goes to that Grand Prix; the address is told once
+// Drag the marker nearest the pointer: only that driver moves, and the address is updated once on release.
 const dragPlot = await rectangleOfSelector('#headToHeadChart');
 const dragY = dragPlot.y + dragPlot.height * 0.5;
 const entriesBeforeDrag = await evaluate('history.length');
@@ -1555,8 +1567,8 @@ await mouse('mouseReleased', dragPlot.x + dragPlot.width * 0.62, dragY);
 await sleep(1500);
 const dragged = JSON.parse(await headToHeadState());
 check(
-  'dragging along the plot sets the date of both drivers, and the race (put away while it moves) goes to that Grand Prix with the two drivers lit in their colours',
-  dragging.figures[0].date === dragging.figures[1].date &&
+  'dragging one chart marker changes only that driver and updates the race',
+  dragging.figures[1].date === standard.figures[1].date &&
     dragging.figures[0].date !== standard.figures[0].date &&
     dragging.raceShown === false &&
     dragged.raceShown === true &&
@@ -1573,8 +1585,44 @@ check(
     (await evaluate('history.length')) === entriesBeforeDrag,
   JSON.stringify({ addressMidDrag: addressMidDrag.slice(-24), now: (await evaluate('location.hash')).slice(-24) }),
 );
-// the plot is not drawn again while it is dragged: the chart element under the pointer stays, and the markers moved
-check('the markers moved with the drag (both at the dragged date, side by side)', dragged.markers[0] >= 1 && dragged.markers[1] >= 1);
+check('both independently positioned chart markers remain visible', dragged.markers[0] >= 1 && dragged.markers[1] >= 1);
+const markerB = await evaluate(
+  `(() => { const marker = document.querySelector('#headToHeadChart line[stroke="var(--s2)"][stroke-width="2"]'); const box = marker.getBoundingClientRect(); return { x: box.x, y: box.y + box.height / 2 }; })()`,
+);
+await mouse('mouseMoved', markerB.x, markerB.y);
+await mouse('mousePressed', markerB.x, markerB.y);
+await mouse('mouseMoved', dragPlot.x + dragPlot.width * 0.72, markerB.y, { buttons: 1 });
+await mouse('mouseReleased', dragPlot.x + dragPlot.width * 0.72, markerB.y);
+await sleep(500);
+const draggedB = JSON.parse(await headToHeadState());
+check(
+  'dragging driver B’s chart marker leaves driver A at the selected date',
+  draggedB.figures[0].date === dragged.figures[0].date && draggedB.figures[1].date !== dragged.figures[1].date,
+  JSON.stringify(draggedB.figures),
+);
+await evaluate(
+  `(() => { const slider = document.getElementById('headToHeadTimeB'); slider.value = Math.floor(Number(slider.max) / 3); slider.dispatchEvent(new Event('input', { bubbles: true })); slider.dispatchEvent(new Event('change', { bubbles: true })); })()`,
+);
+await sleep(500);
+const sliderMoved = JSON.parse(await headToHeadState());
+check(
+  'the second career slider moves driver B without changing driver A',
+  sliderMoved.figures[0].date === draggedB.figures[0].date &&
+    sliderMoved.figures[1].date !== draggedB.figures[1].date &&
+    sliderMoved.weekend === sliderMoved.figures[1].date &&
+    (await evaluate("!!document.getElementById('headToHeadTimeB').getAttribute('aria-valuetext')")),
+  JSON.stringify(sliderMoved.figures),
+);
+await evaluate("document.getElementById('headToHeadTimeB').focus()");
+await press('Home', 'Home', 36);
+await sleep(300);
+const earliestB = JSON.parse(await headToHeadState());
+check(
+  'each career slider supports keyboard navigation to the start of the driver’s career',
+  earliestB.figures[0].date === sliderMoved.figures[0].date &&
+    earliestB.figures[1].date !== sliderMoved.figures[1].date &&
+    (await evaluate("document.getElementById('headToHeadTimeB').value === '0'")),
+);
 // Same car off, with both drivers at their latest: each in his own car again, and the forecast including retirement risk for the current grid
 await evaluate(
   "(() => { for (const s of ['A', 'B']) { const when = document.getElementById('headToHeadWhen' + s); when.value = 'latest'; when.dispatchEvent(new Event('change', { bubbles: true })); } })()",
@@ -1709,6 +1757,70 @@ await evaluate("document.getElementById('ratingsDrivers').click()");
 await sleep(400);
 await evaluate("location.hash = '#/ratings'");
 
+// The prediction uses the latest model and rejects an incomplete starting grid.
+await evaluate("location.hash = '#/prediction'");
+await sleep(1500);
+check(
+  'prediction page shows the current field and next race',
+  await evaluate(
+    "!!document.querySelector('#predictionPage:not([hidden]) tbody tr input') && !!document.getElementById('predictionDate').value",
+  ),
+);
+check(
+  'the starting-grid question is a visible button',
+  await evaluate(
+    "(() => { const button = document.querySelector('#predictionPage .prediction-grid-toggle'); return button.textContent.includes('How does the starting grid change the prediction?') && button.getBoundingClientRect().height > 0 && button.getAttribute('aria-pressed') === 'false'; })()",
+  ),
+);
+await evaluate("document.querySelector('#predictionPage .prediction-grid-toggle').click()");
+check(
+  'the starting-grid question opens the editor',
+  await evaluate(
+    "document.querySelector('#predictionPage .prediction-grid-toggle').getAttribute('aria-pressed') === 'true' && getComputedStyle(document.querySelector('#predictionPage tbody input')).display !== 'none'",
+  ),
+);
+await evaluate(
+  "document.querySelector('#predictionPage tbody input').value = '1'; document.querySelector('#predictionPage tbody input').dispatchEvent(new Event('input', { bubbles: true })); document.querySelector('#predictionPage [data-action=apply]').click()",
+);
+check(
+  'prediction requires a complete grid',
+  await evaluate("document.querySelector('.prediction-status').textContent.includes('every driver')"),
+);
+await evaluate("document.querySelector('#predictionPage [data-action=clear]').click()");
+check(
+  'clearing the starting grid restores the forecast',
+  await evaluate("document.querySelector('.prediction-status').textContent.includes('Pre-weekend')"),
+);
+
+// Every predicted position and, when editing, every grid input must fit without scrolling.
+const predictionFits = async (editing) =>
+  evaluate(`(() => {
+    const page = document.getElementById('predictionPage');
+    const wrap = page.querySelector('.prediction-table-wrap');
+    const bounds = wrap.getBoundingClientRect();
+    const rows = [...wrap.querySelectorAll('tbody tr')];
+    return rows.length > 0 && rows.every((row) => {
+      const box = row.getBoundingClientRect();
+      const input = row.querySelector('input');
+      const field = input.getBoundingClientRect();
+      return box.top >= bounds.top - 1 && box.bottom <= bounds.bottom + 1 && box.left >= bounds.left - 1 && box.right <= bounds.right + 1 &&
+        (!${editing} || (field.height > 0 && field.top >= box.top - 1 && field.bottom <= box.bottom + 1));
+    }) && wrap.scrollHeight <= wrap.clientHeight + 1 && wrap.scrollWidth <= wrap.clientWidth + 1;
+  })()`);
+check('the complete prediction and grid inputs fit on desktop without scrolling', await predictionFits(true));
+for (const [width, height] of [
+  [375, 812],
+  [375, 640],
+  [320, 480],
+]) {
+  await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: true });
+  await sleep(400);
+  check(`the complete prediction and grid inputs fit at ${width}×${height} without scrolling`, await predictionFits(true));
+}
+await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+await sleep(400);
+await evaluate("document.querySelector('#predictionPage .prediction-grid-toggle').click()");
+
 // The Insights: a card in the middle of the front page (the picture is grey, no panel is open), a slide show: the contents first, then a slide for each
 // finding with its chart, sliding; a list of the slides beside the card, the ticks under its title, the arrows and the keys move along it; the slide is in
 // the address
@@ -1744,11 +1856,11 @@ check(
   JSON.stringify({ insightsAtStart, insightsBox }),
 );
 check(
-  'the first slide is the contents: the twenty findings under five topics, and a slide for each after it, all drawn',
-  insightsAtStart.position === '1 / 21' &&
-    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents button[data-slide]').length")) === 20 &&
-    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents h3').length")) === 5 &&
-    (await evaluate("document.querySelectorAll('article.insight').length")) === 20 &&
+  'the first slide is the contents: the thirteen findings under three topics, and a slide for each after it, all drawn',
+  insightsAtStart.position === '1 / 14' &&
+    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents button[data-slide]').length")) === 13 &&
+    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents h3').length")) === 3 &&
+    (await evaluate("document.querySelectorAll('article.insight').length")) === 13 &&
     (await evaluate(
       "[...document.querySelectorAll('article.insight')].every((card) => card.querySelector('svg, table') && card.querySelector('.info'))",
     )) &&
@@ -1761,16 +1873,58 @@ check(
     return box.y + box.height <= svg.height.baseVal.value + 2 && svg.parentElement.getBoundingClientRect().bottom + 1 >= svg.getBoundingClientRect().bottom;
   })`),
 );
+check(
+  'title comparison draws the two requested scatter plots from the same drivers',
+  await evaluate(`(() => {
+    const card = document.getElementById('insight-equal-car-titles');
+    const first = card.querySelector('[data-chart="actual-years"] svg');
+    const second = card.querySelector('[data-chart="other-eras"] svg');
+    const firstPoint = [...first.querySelectorAll('circle.insight-point')].find((point) => point.getAttribute('aria-label').startsWith('Michael Schumacher:'));
+    const secondPoint = [...second.querySelectorAll('circle.insight-point')].find((point) => point.getAttribute('aria-label').startsWith('Michael Schumacher:'));
+    return first && second && first.querySelectorAll('circle.insight-point').length > 10 &&
+      first.querySelectorAll('circle.insight-point').length === second.querySelectorAll('circle.insight-point').length &&
+      first.textContent.includes('actual titles') && second.textContent.includes('actual titles') &&
+      firstPoint && secondPoint && firstPoint.getAttribute('cx') === secondPoint.getAttribute('cx') &&
+      firstPoint.getAttribute('aria-label').includes('expected titles with equal cars (their own years)') &&
+      secondPoint.getAttribute('aria-label').includes('expected titles with equal cars (median in other eras)');
+  })()`),
+);
+check(
+  'Schumacher is inside the career scatter plot',
+  await evaluate(`(() => {
+    const svg = document.querySelector('#insight-career-driver-and-car svg');
+    const point = [...svg.querySelectorAll('circle.insight-point')].find((dot) => dot.getAttribute('aria-label').startsWith('Michael Schumacher:'));
+    return point && +point.getAttribute('cx') >= 44 && +point.getAttribute('cx') <= svg.width.baseVal.value - 14 &&
+      +point.getAttribute('cy') >= 24 && +point.getAttribute('cy') <= svg.height.baseVal.value - 34;
+  })()`),
+);
+check(
+  'the champion chart fits every stacked bar and package marker, including 1995 Schumacher',
+  await evaluate(`(() => {
+    const svg = document.querySelector('#insight-champions svg');
+    const width = svg.viewBox.baseVal.width;
+    const bars = [...svg.querySelectorAll('rect')];
+    const markers = [...svg.querySelectorAll('circle')];
+    return bars.some((bar) => bar.querySelector('title')?.textContent.includes('1995  Schumacher')) &&
+      bars.every((bar) => +bar.getAttribute('x') >= 110 && +bar.getAttribute('x') + +bar.getAttribute('width') <= width - 46) &&
+      markers.every((marker) => +marker.getAttribute('cx') >= 110 && +marker.getAttribute('cx') <= width - 46);
+  })()`),
+);
+check(
+  'all four rating extremes show 25 entries',
+  await evaluate(`['driver-peak-ratings', 'driver-low-ratings', 'car-peak-ratings', 'car-low-ratings'].every((id) =>
+    document.querySelectorAll('#insight-' + id + ' tbody tr').length === 25)`),
+);
 // jumping from the contents, and sliding there
-await evaluate('document.querySelector(\'#insightsCard .deck-contents button[data-slide="12"]\').click()');
+await evaluate('document.querySelector(\'#insightsCard .deck-contents button[data-slide="10"]\').click()');
 await sleep(900);
 const jumped = JSON.parse(await insightsState());
 check(
   'a finding on the contents slide takes the card there (the track slides, the others are put out of reach, the address names it)',
-  jumped.position === '13 / 21' &&
-    jumped.open.join() === '12' &&
-    jumped.transform === 'translateX(-1200%)' &&
-    jumped.current.join() === '12,12' &&
+  jumped.position === '11 / 14' &&
+    jumped.open.join() === '10' &&
+    jumped.transform === 'translateX(-1000%)' &&
+    jumped.current.join() === '10,10' &&
     jumped.hash === '#/insights' &&
     jumped.slide === 'ageing',
   JSON.stringify(jumped),
@@ -1826,10 +1980,10 @@ await sleep(600);
 const atEnd = JSON.parse(await insightsState());
 check(
   'Next, the arrow keys, Home and End move along the slides',
-  afterNext.position === '14 / 21' &&
-    afterKeys.position === '12 / 21' &&
-    atHome.position === '1 / 21' &&
-    atEnd.position === '21 / 21' &&
+  afterNext.position === '12 / 14' &&
+    afterKeys.position === '10 / 14' &&
+    atHome.position === '1 / 14' &&
+    atEnd.position === '14 / 14' &&
     (await evaluate("document.getElementById('insightsNext').disabled")),
   JSON.stringify({ afterNext: afterNext.position, afterKeys: afterKeys.position, atHome: atHome.position, atEnd: atEnd.position }),
 );
@@ -1849,14 +2003,14 @@ await evaluate('document.querySelector(\'#insightsTicks button[data-slide="9"]\'
 await sleep(700);
 const fromTicks = JSON.parse(await insightsState());
 check(
-  'the list of slides beside the card (five topics, the contents and the twenty findings, clear of the card) and the ticks under its title move to a slide',
+  'the list of slides beside the card (three topics, the contents and the thirteen findings, clear of the card) and the ticks under its title move to a slide',
   list.shown &&
-    list.buttons === 21 &&
-    list.topics === 5 &&
+    list.buttons === 14 &&
+    list.topics === 3 &&
     list.right < list.cardLeft &&
-    fromList.position === '6 / 21' &&
+    fromList.position === '6 / 14' &&
     fromList.current.join() === '5,5' &&
-    fromTicks.position === '10 / 21',
+    fromTicks.position === '10 / 14',
   JSON.stringify({ list, fromList: fromList.position, fromTicks: fromTicks.position }),
 );
 const topicHeads = JSON.parse(
@@ -1868,10 +2022,10 @@ const topicHeads = JSON.parse(
 );
 check(
   'the topics in the list of slides are headings of their own (a rule over each, bold, a square before it, the findings set in under it with a guide) and the topic of the slide shown is marked',
-  topicHeads.heads.length === 5 &&
+  topicHeads.heads.length === 3 &&
     topicHeads.heads.every((head) => head.rule === '2px' && Number(head.weight) >= 700 && head.marker === '7px') &&
     topicHeads.guide.every((width) => width === '1px') &&
-    topicHeads.marked.join() === 'Champions and stars',
+    topicHeads.marked.join() === 'Drivers and championships',
   JSON.stringify(topicHeads),
 );
 await mouse('mouseMoved', 8, 300);
@@ -2073,45 +2227,78 @@ check(
     (await evaluate('indexedDB.databases().then((list) => list.length)')) === 0,
   await evaluate('JSON.stringify([Object.keys(localStorage), Object.keys(sessionStorage)])'),
 );
-await evaluate("location.hash = '#/privacy'");
-await sleep(800);
-check(
-  "the Privacy page names the controller's regulator and the host, says there are no cookies, and no longer has a theme to forget",
-  await evaluate(
-    "(() => { const text = document.getElementById('privacyCard').textContent; return ['Garante', 'Information Commissioner', 'Cloudflare', 'no cookies'].every((word) => text.includes(word)) && !text.includes('f1-theme') && !document.getElementById('forgetTheme'); })()",
-  ),
-);
-await evaluate("location.hash = '#/about'");
-await sleep(800);
-check(
-  'the About page credits the data sources and gives the licence',
-  await evaluate(
-    "(() => { const text = document.getElementById('aboutCard').textContent; return ['TracingInsights', 'Jolpica', 'Ergast', 'CC BY-NC-SA 4.0', 'non-commercial', 'Inter', 'KaTeX'].every((word) => text.includes(word)) && !text.includes('Space Grotesk'); })()",
-  ),
-);
-const legalDeck = async (hash) => {
+const legalDocument = async (hash) => {
   await evaluate(`location.hash = '${hash}'`);
   await sleep(900);
   return evaluate(
-    `(() => { const page = document.body.dataset.page; const card = document.getElementById(page + 'Card'); return JSON.stringify({ mode: document.getElementById('stage').dataset.mode, slides: card.querySelectorAll('.deck-slide').length, list: document.querySelectorAll('#' + page + 'List button').length, position: document.getElementById(page + 'Position').textContent, shown: card.querySelector('.deck-slide:not([inert])')?.getAttribute('aria-label') }); })()`,
+    `(() => { const card = document.getElementById('aboutCard'); const body = card.querySelector('.legal-document-body'); return JSON.stringify({ page: document.body.dataset.page, slides: card.querySelectorAll('.deck-slide').length, controls: card.querySelectorAll('.deck-ticks, .deck-foot').length, sections: body.querySelectorAll('h3').length, overflow: body.scrollHeight > body.clientHeight, tabIndex: body.tabIndex, scrollTop: body.scrollTop, text: body.textContent }); })()`,
   );
 };
-const privacyDeck = JSON.parse(await legalDeck('#/privacy'));
+const aboutDocument = JSON.parse(await legalDocument('#/about'));
 check(
-  'Privacy is a card of slides: the contents with the summary, then ten sections',
-  privacyDeck.mode === 'deck' && privacyDeck.slides === 11 && privacyDeck.list === 11 && privacyDeck.position === '1 / 11',
-  JSON.stringify(privacyDeck),
+  'About and Privacy are one scrollable document containing both sets of information',
+  aboutDocument.page === 'about' &&
+    aboutDocument.slides === 0 &&
+    aboutDocument.controls === 0 &&
+    aboutDocument.sections === 20 &&
+    aboutDocument.overflow &&
+    aboutDocument.tabIndex === 0 &&
+    aboutDocument.scrollTop === 0 &&
+    [
+      'Garante',
+      'Information Commissioner',
+      'Cloudflare',
+      'no cookies',
+      'TracingInsights',
+      'Jolpica',
+      'Ergast',
+      'CC BY-NC-SA 4.0',
+      'Inter',
+      'KaTeX',
+    ].every((word) => aboutDocument.text.includes(word)),
+);
+await evaluate("document.querySelector('#aboutCard .legal-document-body').focus()");
+await press('PageDown', 'PageDown', 34);
+await sleep(300);
+check(
+  'About & Privacy scrolls with the keyboard',
+  await evaluate("document.querySelector('#aboutCard .legal-document-body').scrollTop > 0"),
 );
 check(
-  'the Privacy contents carry the summary of the notice',
-  await evaluate("document.getElementById('privacyCard').querySelector('.deck-slide:not([inert])').textContent.includes('In short')"),
+  'the combined document scrolls to the final privacy section',
+  await evaluate(
+    `(() => { const body = document.querySelector('#aboutCard .legal-document-body'); body.scrollTop = body.scrollHeight; return body.scrollTop > 0 && body.scrollTop + body.clientHeight >= body.scrollHeight - 1 && body.textContent.includes('10. Changes'); })()`,
+  ),
 );
-const aboutDeck = JSON.parse(await legalDeck('#/about?v=1&slide=credits'));
+const legacyPrivacy = JSON.parse(await legalDocument('#/privacy'));
 check(
-  'About opens at the credits when the address names them',
-  aboutDeck.mode === 'deck' && aboutDeck.slides === 10 && aboutDeck.position === '5 / 10' && /Data sources/.test(aboutDeck.shown),
-  JSON.stringify(aboutDeck),
+  'the old Privacy link opens the privacy section of the combined document',
+  legacyPrivacy.page === 'about' &&
+    legacyPrivacy.scrollTop > 0 &&
+    (await evaluate(
+      `(() => { const body = document.querySelector('#aboutCard .legal-document-body'); const heading = document.getElementById('privacy-notice'); return heading.getBoundingClientRect().top >= body.getBoundingClientRect().top && heading.getBoundingClientRect().top < body.getBoundingClientRect().top + 30; })()`,
+    )),
 );
+const privacySection = JSON.parse(await legalDocument('#/privacy?v=1&slide=your-rights'));
+check(
+  'old Privacy section links still open the requested section',
+  privacySection.page === 'about' &&
+    privacySection.scrollTop > 0 &&
+    (await evaluate(
+      `(() => { const body = document.querySelector('#aboutCard .legal-document-body'); const heading = body.querySelector('[data-legal-slide="your-rights"]'); return heading.getBoundingClientRect().top >= body.getBoundingClientRect().top && heading.getBoundingClientRect().bottom <= body.getBoundingClientRect().bottom; })()`,
+    )),
+);
+const credits = JSON.parse(await legalDocument('#/about?v=1&slide=credits'));
+check(
+  'old About credit links open at the credits in the combined document',
+  credits.page === 'about' &&
+    credits.scrollTop > 0 &&
+    (await evaluate(
+      `(() => { const body = document.querySelector('#aboutCard .legal-document-body'); const heading = document.getElementById('about-data'); return heading.getBoundingClientRect().top >= body.getBoundingClientRect().top && heading.getBoundingClientRect().top < body.getBoundingClientRect().top + 30; })()`,
+    )),
+);
+const unknownSection = JSON.parse(await legalDocument('#/about?v=1&slide=unknown-section'));
+check('an unknown section opens the start of the document', unknownSection.scrollTop === 0);
 check(
   'no link outside the navigation carries an icon',
   (await evaluate("document.querySelectorAll('main a svg, footer a svg').length")) === 0,
@@ -2138,6 +2325,33 @@ for (const page of [
   const [scroll, inner] = await evaluate('[document.documentElement.scrollWidth, window.innerWidth]');
   check(`on a phone ${page} does not scroll sideways`, scroll <= inner, `${scroll} wide in ${inner}`);
 }
+for (const page of ['privacy', 'about']) {
+  await evaluate(`location.hash = '#/${page}'`);
+  await sleep(500);
+  check(
+    `on a phone ${page} scrolls to the end of its document`,
+    await evaluate(
+      `(() => { const body = document.querySelector('#aboutCard .legal-document-body'); body.scrollTop = body.scrollHeight; return body.scrollTop > 0 && body.scrollTop + body.clientHeight >= body.scrollHeight - 1; })()`,
+    ),
+  );
+}
+await send('Emulation.setDeviceMetricsOverride', { width: 320, height: 640, deviceScaleFactor: 1, mobile: true });
+await evaluate("location.hash = '#/insights?v=1&slide=car-low-ratings'");
+await sleep(900);
+check(
+  'the narrow rating chart keeps labels and values separate',
+  await evaluate(`(() => {
+  const card = document.getElementById('insightsCard').getBoundingClientRect();
+  const svg = document.querySelector('#insight-car-low-ratings svg');
+  const labels = [...svg.querySelectorAll('text.secondary')].filter((text) => text.textContent.trim());
+  const values = [...svg.querySelectorAll('text.rating-extreme-value')];
+  return labels.length === 25 && values.length === 25 && labels.every((label, index) => {
+    const name = label.getBoundingClientRect(), value = values[index].getBoundingClientRect();
+    return name.left >= card.left && name.right + 2 < value.left && value.right <= card.right;
+  });
+})()`),
+);
+await send('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 2, mobile: true });
 await evaluate("location.hash = '#/graph'");
 await sleep(400);
 const phoneGraph = JSON.parse(
@@ -2179,7 +2393,7 @@ check(
     phoneCard.x + phoneCard.width <= 375 &&
     phoneCard.width > 300 &&
     (await evaluate("getComputedStyle(document.getElementById('insightsList')).display")) === 'none' &&
-    (await evaluate("document.getElementById('insightsPosition').textContent")) === '2 / 21',
+    (await evaluate("document.getElementById('insightsPosition').textContent")) === '2 / 14',
   JSON.stringify({ phoneCard, position: await evaluate("document.getElementById('insightsPosition').textContent") }),
 );
 // On a phone the ratings are a sheet: a tap on the car keeps it open, it stays clear of both pictures and above the text at the bottom
@@ -2232,7 +2446,7 @@ const linkedSlide = await evaluate(
 );
 check(
   'a link straight to a finding opens the card on that slide, drawn',
-  JSON.parse(linkedSlide).position === '20 / 21' && JSON.parse(linkedSlide).name === 'The biggest upsets' && JSON.parse(linkedSlide).drawn,
+  JSON.parse(linkedSlide).position === '14 / 14' && JSON.parse(linkedSlide).name === 'The biggest upsets' && JSON.parse(linkedSlide).drawn,
   linkedSlide,
 );
 for (const [view, ready] of [
@@ -2268,6 +2482,12 @@ check(
   })()`),
 );
 check(
+  'the Graph panel uses compact teammate rows and keeps the explanation available',
+  await evaluate(
+    `(() => { const rows = [...document.querySelectorAll('#graphDetail .graph-rival')]; const note = document.querySelector('#graphDetail .graph-note'); return rows.length > 0 && rows.every((row) => row.getBoundingClientRect().height <= 32) && note && !note.open; })()`,
+  ),
+);
+check(
   'a link straight to the graph defaults to Max and lights him in the mini GP',
   linkedGraph.shown &&
     linkedGraph.drawn &&
@@ -2280,6 +2500,30 @@ check(
     linkedGraph.table &&
     linkedGraph.hot,
   JSON.stringify(linkedGraph),
+);
+check(
+  'graph teammates are ordered by recency and qualifying and race results are colored independently',
+  await evaluate(`(() => {
+    const rows = [...document.querySelectorAll('#graphDetail .graph-rival')];
+    return rows.length > 1 && rows.every((row, index) => {
+      const previous = rows[index - 1];
+      const results = [...row.querySelectorAll('.graph-result')];
+      return (!previous || +previous.dataset.lastIndex >= +row.dataset.lastIndex) && results.length === 2 && results.every((result) => {
+        const [wins, losses] = result.textContent.match(/\\d+/g).map(Number);
+        return result.classList.contains(wins > losses ? 'up' : wins < losses ? 'down' : 'even');
+      });
+    });
+  })()`),
+);
+check(
+  'a teammate can be selected directly from the graph detail panel',
+  await evaluate(`(() => {
+    const button = document.querySelector('#graphDetail .graph-rival-name');
+    const id = button.dataset.driver;
+    const name = button.textContent;
+    button.click();
+    return document.getElementById('graphDriver').value === id && document.querySelector('#graphDetail h3').textContent === name;
+  })()`),
 );
 check(
   'graph details match dated History ratings for current and retired drivers',
