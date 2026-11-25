@@ -46,7 +46,7 @@ export const SIMPLE_CONTENT_HTML = String.raw`
     <figcaption>How a lead in rating turns into a chance of finishing ahead. A small lead makes a large difference in a close contest; past about 150 points the result is nearly certain.</figcaption>
   </figure>
   <p>
-    Differences add up. If A is 20 points better than B, and B is 10 points better than C, then A is 30 points better than C, even if A and C have never raced each other. This is what lets one scale cover every driver and every car since 1994. On the site, 1,000 stands for the typical level of the recent field.
+    Differences add up. If A is 20 points better than B, and B is 10 points better than C, then A is 30 points better than C, even if A and C have never raced each other. This is what lets one scale cover every driver and every car since 1994. On the site, 1,000 stands for the typical level of the recent leading field: the middle of the 20 best-rated drivers, or of the 10 best-rated cars.
   </p>
   <p>
     The hard part is finding the ratings. Nobody can measure them directly. All we see is who finished ahead of whom, and every one of those results mixes the driver with the car. The rest of this explanation shows how to get from results to ratings.

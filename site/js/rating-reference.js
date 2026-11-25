@@ -2,20 +2,35 @@
 import { withHistories } from '../../packages/core/src/weekend-histories.js';
 
 export const REFERENCE_HALF_LIFE = 20;
+/** The reference field is a fixed number of the highest-rated entrants, so grid size and turnover do not move it. */
+export const REFERENCE_FIELD_SIZE = { drivers: 20, cars: 10 };
 const REFERENCE_WEIGHT = 1 - 2 ** (-1 / REFERENCE_HALF_LIFE);
 const OUTPUTS = ['qual', 'race', 'overall'];
 const KINDS = ['drivers', 'cars'];
 
-/** Six references, frozen before each weekend. The first field supplies the initial origin. */
-export function buildRatingReference(model, sourceHash) {
+/** The median of the `count` highest values, or of all values when fewer are present. */
+function medianOfHighest(values, count) {
+  const highest = [...values].sort((a, b) => b - a).slice(0, count);
+  const middle = Math.floor(highest.length / 2);
+  return highest.length % 2 ? highest[middle] : (highest[middle - 1] + highest[middle]) / 2;
+}
+
+/** Six references, frozen before each weekend, built from the snapshots they translate. The first field supplies the initial origin. */
+export function buildRatingReference(model, refitHash) {
   let reference = null;
-  let previousMeans = null;
+  let previousLevels = null;
   const snapshots = model.snaps.map((snapshot) => {
-    const means = Object.fromEntries(
+    const levels = Object.fromEntries(
       KINDS.map((kind) => [
         kind,
         Object.fromEntries(
-          OUTPUTS.map((output) => [output, snapshot[kind].reduce((sum, row) => sum + row[output], 0) / snapshot[kind].length]),
+          OUTPUTS.map((output) => [
+            output,
+            medianOfHighest(
+              snapshot[kind].map((row) => row[output]),
+              REFERENCE_FIELD_SIZE[kind],
+            ),
+          ]),
         ),
       ]),
     );
@@ -26,21 +41,26 @@ export function buildRatingReference(model, sourceHash) {
             Object.fromEntries(
               OUTPUTS.map((output) => [
                 output,
-                reference[kind][output] + REFERENCE_WEIGHT * (previousMeans[kind][output] - reference[kind][output]),
+                reference[kind][output] + REFERENCE_WEIGHT * (previousLevels[kind][output] - reference[kind][output]),
               ]),
             ),
           ]),
         )
-      : means;
-    previousMeans = means;
+      : levels;
+    previousLevels = levels;
     return { raceId: snapshot.raceId, ...reference };
   });
-  return { format: 1, sourceHash, halfLife: REFERENCE_HALF_LIFE, snapshots };
+  return { format: 2, refitHash, halfLife: REFERENCE_HALF_LIFE, fieldSize: REFERENCE_FIELD_SIZE, snapshots };
 }
 
 /** Project display rows without modifying raw ratings, uncertainty, calibration or forecast state. */
-export function centredRatings(model, reference, sourceHash) {
-  if (reference.format !== 1 || reference.halfLife !== REFERENCE_HALF_LIFE || reference.sourceHash !== sourceHash)
+export function centredRatings(model, reference, refitHash) {
+  if (
+    reference.format !== 2 ||
+    reference.halfLife !== REFERENCE_HALF_LIFE ||
+    KINDS.some((kind) => reference.fieldSize?.[kind] !== REFERENCE_FIELD_SIZE[kind]) ||
+    reference.refitHash !== refitHash
+  )
     throw Error('Rating reference does not match this model. Rebuild the reference or reload the page.');
   const byRace = new Map(reference.snapshots.map((snapshot) => [String(snapshot.raceId), snapshot]));
   const project = (row, kind, raceId) => {

@@ -92,8 +92,8 @@ for (const [kind, key, histories] of [
   }
 }
 const reference = JSON.parse(await readFile('data/rating-reference.json', 'utf8'));
-const displayFull = centredRatings(materialized, reference, published.sourceHash);
-const displayLatest = centredRatings(latest.model, reference, latest.sourceHash);
+const displayFull = centredRatings(materialized, reference, published.refitHash);
+const displayLatest = centredRatings(latest.model, reference, latest.refitHash);
 for (const [kind, key, history] of [
   ['drivers', 'driverId', 'dh'],
   ['cars', 'constructorId', 'ch'],

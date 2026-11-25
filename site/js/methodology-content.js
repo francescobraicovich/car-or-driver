@@ -225,10 +225,10 @@ export const CONTENT_HTML = String.raw`
 
   <h4>The reference of 1,000</h4>
   <p>
-    Higher is stronger, and 1,000 stands for the recent competitive field. Ratings, History and Graph quote every rating against a benchmark that follows the field's average gradually: each weekend it moves about 3.4% of the way toward the previous weekend's average, so the influence of any one weekend halves over 20 weekends. A change of line-up or a surprising result enters the benchmark only from the following weekend. The translation leaves every gap within a weekend, and every forecast, unchanged.
+    Higher is stronger, and 1,000 stands for the recent leading field. Ratings, History and Graph quote every rating against a benchmark that gradually follows the median of the 20 highest-rated drivers, or of the 10 highest-rated cars: each weekend it moves about 3.4% of the way toward the previous weekend's median, so the influence of any one weekend halves over 20 weekends. The field has a fixed size because grids have not: 28 drivers entered in 1994 and 20 in 2025. Backmarkers below the leading 20 therefore do not move the benchmark, and a newcomer joins it by rating, not by experience. A change of line-up or a surprising result enters the benchmark only from the following weekend. The translation leaves every gap within a weekend, and every forecast, unchanged.
   </p>
   <p>
-    Equal ratings in different decades mean equal standing relative to their own fields.
+    Equal ratings in different decades mean equal standing relative to the leading field of their own time.
   </p>
 
   <h4>The ± sign</h4>
@@ -236,7 +236,7 @@ export const CONTENT_HTML = String.raw`
     For current ratings, ± is one standard deviation of the driver's or car's own estimate. For past ratings it is the average standard deviation of the drivers, or of the cars, in that year, computed from the first, middle and last weekends of the year.
   </p>
   <details><summary>The display reference</summary>
-    <p>There are six references: one for each rating, separately for drivers and cars. At each weekend, take the plain average over drivers and over distinct cars from the chronological run; the same reference also translates the historical ratings. For one reference, let <span data-math>\mu_t</span> be that average and <span data-math>B_t</span> the benchmark used at weekend <span data-math>t</span>.</p>
+    <p>There are six references: one for each rating, separately for drivers and cars. At each weekend of the historical run that the pages display, rank the drivers, or the distinct cars, by that rating and take the median of the highest 20 drivers or 10 cars (all of them on a smaller grid). For one reference, let <span data-math>\mu_t</span> be that median and <span data-math>B_t</span> the benchmark used at weekend <span data-math>t</span>.</p>
     <p>Set <span data-math>B_0=\mu_0</span>, and thereafter <span data-math>B_t=(1-\alpha)B_{t-1}+\alpha\mu_{t-1}</span> with <span data-math>\alpha=1-2^{-1/20}</span>. A raw rating <span data-math>r_t</span> is displayed as <span data-math>1000+r_t-B_t</span>. The benchmark has no winter reset and no decay in calendar time. Each past rating keeps the benchmark of its own date, and a retired driver's Graph rating stays at their last appearance. Forecasts and historical scenarios read the raw ratings.</p>
   </details>
 </section>
@@ -401,6 +401,7 @@ export const CONTENT_HTML = String.raw`
         <tr><th scope="row" class="left">Race-pace windows</th><td class="left">8 laps; at least 4 matched laps; full weight at 16</td></tr>
         <tr class="group"><th colspan="2" scope="colgroup">Display and forecasts</th></tr>
         <tr><th scope="row" class="left">Display benchmark half-life</th><td class="left">20 weekends</td></tr>
+        <tr><th scope="row" class="left">Display benchmark field</th><td class="left">median of the 20 highest-rated drivers; of the 10 highest-rated cars</td></tr>
         <tr><th scope="row" class="left">Mechanical risk</th><td class="left">35-race half-life, 100-lap prior, 95% kept over the winter</td></tr>
         <tr><th scope="row" class="left">Incident risk</th><td class="left">5-race half-life, 2,000-lap prior</td></tr>
         <tr><th scope="row" class="left">Forecast race distance</th><td class="left">60 laps</td></tr>

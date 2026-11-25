@@ -33,7 +33,7 @@ export async function loadModel() {
   try {
     const firstScreen = showsRatingsFirst();
     const [reference, first, firstRetrospective] = await Promise.all([
-      fetchFile('rating-reference.json', 1),
+      fetchFile('rating-reference.json', 2),
       fetchFile(firstScreen ? 'model-latest.json' : 'model.json'),
       fetchFile(firstScreen ? 'retrospective-latest.json' : 'retrospective.json', 1),
     ]);
@@ -44,7 +44,7 @@ export async function loadModel() {
     verify(first, firstRetrospective);
     if (firstScreen) {
       state.model = first.model;
-      state.displayModel = centredRatings(firstRetrospective.model, reference, first.sourceHash);
+      state.displayModel = centredRatings(firstRetrospective.model, reference, firstRetrospective.refitHash);
       state.profiles = first.driverProfiles ?? {};
       populate();
       document.body.dataset.ratingsReady = '1';
@@ -62,7 +62,7 @@ export async function loadModel() {
     const historicalModel = withAnnualUncertainty(retrospective.model);
     state.retrospectiveModel = withHistories(historicalModel);
     state.retrospectiveSourceHash = retrospective.refitHash;
-    state.displayModel = centredRatings(historicalModel, reference, sourceHash);
+    state.displayModel = centredRatings(historicalModel, reference, retrospective.refitHash);
     state.profiles = driverProfiles ?? {};
     state.modelSourceHash = sourceHash;
     populate();
