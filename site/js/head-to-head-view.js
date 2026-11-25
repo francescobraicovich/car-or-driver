@@ -84,7 +84,8 @@ function buildSides() {
     const host = el[`headToHeadSide${s}`];
     host.insertAdjacentHTML(
       'beforeend',
-      `<details class="head-to-head-extras" id="headToHeadExtras${s}">
+      `<label class="head-to-head-time"><span>Career</span><input type="range" min="0" step="1" id="headToHeadTime${s}" aria-label="Career date for driver ${s}"></label>
+      <details class="head-to-head-extras" id="headToHeadExtras${s}">
         <summary>Another season or car</summary>
         <div class="head-to-head-when">
           <label class="field">Moment in career<select id="headToHeadWhen${s}">${MOMENTS}</select></label>
@@ -98,6 +99,23 @@ function buildSides() {
       </details>`,
     );
     for (const node of host.querySelectorAll('[id]')) side[node.id] = node;
+    const slider = side[`headToHeadTime${s}`];
+    let moving = false;
+    const time = () => Date.parse(state.model.dh.get(el[`headToHead${s}`].value)?.[+slider.value]?.date);
+    slider.addEventListener('input', () => {
+      const selected = time();
+      if (!Number.isFinite(selected)) return;
+      scrub(selected, moving ? 'move' : 'start', SIDES.indexOf(s));
+      moving = true;
+    });
+    const finish = () => {
+      if (!moving) return;
+      moving = false;
+      scrub(time(), 'end', SIDES.indexOf(s));
+    };
+    slider.addEventListener('change', finish);
+    slider.addEventListener('pointercancel', finish);
+    slider.addEventListener('blur', finish);
     for (const id of ['When', 'Date', 'Car', 'CarWhen', 'CarDate']) {
       const changed = () => {
         renderHeadToHead();
@@ -259,36 +277,30 @@ function goToWeekend(index, announce) {
   if (index >= 0 && index !== state.raceIndex) setRace(index, { announce });
 }
 const weekendOfRace = (raceId) => state.model.snaps.findIndex((snap) => String(snap.raceId) === String(raceId));
-/** The last weekend on or before a time (the first one, before them all). */
-const weekendAt = (time) =>
-  Math.max(
-    0,
-    state.model.snaps.findLastIndex((snap) => Date.parse(snap.date) <= time),
-  );
 /** After a change of the moment of driver `s` (his prime, a date): the race goes to the weekend that moment is from. */
 function followMoment(s) {
   if (resolved) goToWeekend(weekendOfRace(resolved[s].raceId), true);
 }
 
 /**
- * Dragging along the chart sets the date of both drivers (each within his own career, as the date field would have it). The chart is not drawn
+ * Dragging a chart marker or a career slider sets one driver's date. The chart is not drawn
  * again meanwhile (its markers move: drawing it would drop the drag), the moves are taken once a frame, and the weekends count as going by: the
  * race on the page waits for the weekend the drag stops at, and the address is told once, at the end.
  */
 let dragActive = false; // the date is being dragged: the chart is not drawn again meanwhile
 let draggedTo = 0;
 let dragFrame = 0;
-function scrub(time, phase) {
+function scrub(time, phase, markerIndex) {
+  const s = SIDES[markerIndex];
+  if (!s || !Number.isFinite(time)) return;
   const apply = () => {
     dragFrame = 0;
     const iso = new Date(draggedTo).toISOString().slice(0, 10);
-    for (const s of SIDES) {
-      const [from, to] = span(state.model.dh.get(el[`headToHead${s}`].value));
-      side[`headToHeadWhen${s}`].value = 'date';
-      side[`headToHeadDate${s}`].value = iso < from ? from : iso > to ? to : iso;
-    }
+    const [from, to] = span(state.model.dh.get(el[`headToHead${s}`].value));
+    side[`headToHeadWhen${s}`].value = 'date';
+    side[`headToHeadDate${s}`].value = iso < from ? from : iso > to ? to : iso;
     renderHeadToHead();
-    goToWeekend(weekendAt(draggedTo), false);
+    if (resolved) goToWeekend(weekendOfRace(resolved[s].raceId), false);
   };
   draggedTo = time;
   if (phase === 'start') {
@@ -316,6 +328,16 @@ function announceVersus() {
 /** The chart under the figures, with a marker for the moment of each driver (A in the first colour, B in the second). */
 function showMoments() {
   const ids = [el.headToHeadA.value, el.headToHeadB.value];
+  for (const s of SIDES) {
+    const slider = side[`headToHeadTime${s}`];
+    const points = state.model.dh.get(el[`headToHead${s}`].value) || [];
+    const index = points.findIndex((point) => String(point.raceId) === String(resolved[s].raceId));
+    slider.max = String(Math.max(0, points.length - 1));
+    slider.value = String(Math.max(0, index));
+    slider.disabled = points.length < 2;
+    slider.setAttribute('aria-label', `Career date for ${state.model.dname.get(el[`headToHead${s}`].value) || `driver ${s}`}`);
+    slider.setAttribute('aria-valuetext', dayText(resolved[s].date));
+  }
   const markers = [
     { time: Date.parse(resolved.A.date), color: 'var(--s1)' },
     { time: Date.parse(resolved.B.date), color: 'var(--s2)' },

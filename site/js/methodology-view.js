@@ -11,17 +11,17 @@ import { createDeck } from './slide-deck.js';
 const $ = (id) => document.getElementById(id);
 
 const LABELS = {
-  'method-questions': 'Question',
-  'method-evidence': 'Comparisons',
-  'method-odds': 'Odds',
-  'method-separation': 'Driver and car',
-  'method-joint': 'Three strengths',
-  'method-time': 'Time',
-  'method-update': 'Update',
-  'method-scale': 'Reading ratings',
-  'method-forecast': 'Forecasts',
-  'method-validation': 'Testing',
-  'method-limits': 'Limitations',
+  'method-questions': 'The question',
+  'method-evidence': 'Times and results',
+  'method-odds': 'Ratings and odds',
+  'method-separation': 'Separating driver and car',
+  'method-joint': 'Learning together',
+  'method-time': 'Changes over time',
+  'method-update': 'Updating ratings',
+  'method-scale': 'Reading the ratings',
+  'method-forecast': 'Race predictions',
+  'method-validation': 'Testing the model',
+  'method-limits': 'Limits of the ratings',
   'method-settings': 'Settings',
   'method-references': 'References',
 };

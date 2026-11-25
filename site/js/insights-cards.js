@@ -45,80 +45,108 @@ const CIRCUIT_LABELS = [
   ['Monaco', 'Monaco'],
 ];
 const circuitLabel = (name) => (CIRCUIT_LABELS.find(([fragment]) => name.includes(fragment)) || [null, name.replace(' Circuit', '')])[1];
-const findCircuit = (rows, label) => rows.find((row) => circuitLabel(row.name) === label);
-
-const pearson = (xs, ys) => {
-  const meanX = average(xs);
-  const meanY = average(ys);
-  let covariance = 0;
-  let varianceX = 0;
-  let varianceY = 0;
-  xs.forEach((x, index) => {
-    covariance += (x - meanX) * (ys[index] - meanY);
-    varianceX += (x - meanX) ** 2;
-    varianceY += (ys[index] - meanY) ** 2;
-  });
-  return covariance / Math.sqrt(varianceX * varianceY);
-};
-
 export const INSIGHT_TOPICS = [
-  { id: 'split', title: 'The split: car or driver?' },
-  { id: 'stars', title: 'Champions and stars' },
-  { id: 'people', title: 'Teammates and specialists' },
-  { id: 'cars', title: 'Cars through time' },
-  { id: 'race', title: 'On race day' },
+  { id: 'extremes', title: 'Rating extremes' },
+  { id: 'drivers', title: 'Drivers and championships' },
+  { id: 'racing', title: 'Cars and racing' },
 ];
 
-export const INSIGHT_CARDS = [
-  {
-    id: 'best-car-against-best-driver',
-    topic: 'split',
+function ratingExtremeCard({ id, title, label, key, entity, highest }) {
+  return {
+    id,
+    topic: 'extremes',
     kind: 'model',
-    title: 'Who has the bigger edge: the best car or the best driver?',
-    label: 'Best car or best driver',
+    title,
+    label,
     lead: (data) => {
-      const seasons = data.bestCarAgainstBestDriver.filter((row) => row.year < data.dataThrough.year);
-      const carWins = seasons.filter((row) => row.carEdge > row.driverEdge).length;
-      const widest = seasons.reduce((best, row) => (row.carEdge - row.driverEdge > best.carEdge - best.driverEdge ? row : best));
-      return `In ${carWins} of ${seasons.length} completed seasons the best car had a bigger edge over the field than the best driver. The widest gap was ${widest.year}, when ${widest.carTeam}'s car stood ${formatInteger(widest.carEdge)} points above average against ${formatInteger(widest.driverEdge)} for ${widest.driverName}.`;
+      const first = data.ratingExtremes[key][0];
+      return `${first.name} is ${highest ? 'highest' : 'lowest'}, at ${formatInteger(first.rating)} after the ${first.year} ${first.grandPrix}.`;
     },
-    body: () =>
-      legendHtml([
-        ['var(--s1)', 'Best car, points above the field average'],
-        ['var(--s2)', 'Best driver (portable rating), points above the field average'],
-      ]) + '<div class="insight-chart" data-chart="main"></div>',
-    how: () =>
-      'Season average of the published ratings for cars and drivers with at least 8 races. A driver rating is the portable level, which excludes the fit with the current car. The latest season is partial. Because the model decides how a team-wide swing is shared, the split carries some assumption.',
+    body: () => '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="details"></div>',
+    how: (data) =>
+      `The ${highest ? 'highest' : 'lowest'} displayed overall ${entity} rating reached after a rated Grand Prix, with each ${entity === 'driver' ? 'driver' : 'team'} appearing once. These are the same retrospective ratings and 20-weekend display reference as Ratings and History, including the filtered latest weekend. Data starts in ${data.equalCarTitles.seasons[0].year}; even short careers and partial seasons are included. Historical estimates can change as new races are added. Early ratings depend on the starting assumptions, and cross-era comparisons are uncertain.`,
     draw: (data, root) => {
-      const rows = data.bestCarAgainstBestDriver;
+      const rows = data.ratingExtremes[key];
+      const items = rows.map((row) => ({
+        label: `${row.year} ${entity === 'driver' ? surname(row.name) : row.name}`,
+        bars: [
+          {
+            value: row.rating,
+            color: highest ? 'var(--s2)' : 'var(--s1)',
+            name: `rating after ${row.grandPrix}`,
+            text: '',
+          },
+        ],
+      }));
+      const minimum = Math.min(1000, ...rows.map((row) => row.rating));
+      const maximum = Math.max(1000, ...rows.map((row) => row.rating));
+      const padding = Math.max(5, (maximum - minimum) * 0.1);
       mountChart(
         chartIn(root, 'main'),
-        (svg, width, height) => {
-          const maximum = Math.ceil(Math.max(...rows.flatMap((row) => [row.carEdge, row.driverEdge])) / 40) * 40;
-          drawLines(svg, width, height, {
-            xDomain: [rows[0].year, rows.at(-1).year],
-            yDomain: [0, maximum],
-            xTicks: [1995, 2000, 2005, 2010, 2015, 2020, 2025],
-            yTicks: Array.from({ length: maximum / 40 + 1 }, (_, index) => index * 40),
-            series: [
-              { name: 'Best car', color: 'var(--s1)', markers: true, points: rows.map((row) => [row.year, row.carEdge]), label: 'car' },
-              {
-                name: 'Best driver',
-                color: 'var(--s2)',
-                markers: true,
-                points: rows.map((row) => [row.year, row.driverEdge]),
-                label: 'driver',
-              },
-            ],
+        (svg, width) => {
+          drawHorizontalBars(svg, width, items, {
+            marginLeft: Math.min(150, width * 0.42),
+            marginRight: 38,
+            rowHeight: 24,
+            baseline: 1000,
+            minimum: minimum < 1000 ? minimum - padding : 1000,
+            maximum: maximum > 1000 ? maximum + padding : 1000,
+            ticks: [1000],
           });
+          rows.forEach((row, index) =>
+            drawText(svg, width - 33, 18 + index * 24, formatInteger(row.rating), {
+              baseline: 'middle',
+              className: 'rating-extreme-value',
+            }),
+          );
         },
-        () => 280,
+        () => horizontalBarsHeight(items.length, 24),
+      );
+      chartIn(root, 'details').innerHTML = tableHtml(
+        [entity === 'driver' ? 'Driver' : 'Car', 'Grand Prix', 'Rating'],
+        rows.map((row) => [row.name, `${row.year} ${row.grandPrix}`, formatInteger(row.rating)]),
+        [2],
       );
     },
-  },
+  };
+}
+
+export const INSIGHT_CARDS = [
+  ratingExtremeCard({
+    id: 'driver-peak-ratings',
+    title: 'The highest driver ratings',
+    label: 'Highest driver ratings',
+    key: 'driverHigh',
+    entity: 'driver',
+    highest: true,
+  }),
+  ratingExtremeCard({
+    id: 'driver-low-ratings',
+    title: 'The lowest driver ratings',
+    label: 'Lowest driver ratings',
+    key: 'driverLow',
+    entity: 'driver',
+    highest: false,
+  }),
+  ratingExtremeCard({
+    id: 'car-peak-ratings',
+    title: 'The highest car ratings',
+    label: 'Highest car ratings',
+    key: 'carHigh',
+    entity: 'car',
+    highest: true,
+  }),
+  ratingExtremeCard({
+    id: 'car-low-ratings',
+    title: 'The lowest car ratings',
+    label: 'Lowest car ratings',
+    key: 'carLow',
+    entity: 'car',
+    highest: false,
+  }),
   {
     id: 'explained-share',
-    topic: 'split',
+    topic: 'racing',
     kind: 'model',
     title: 'How much of a race result is the car?',
     label: 'How much is the car',
@@ -137,7 +165,7 @@ export const INSIGHT_CARDS = [
         ['var(--ink)', 'Between-team share of season-average results (no model)'],
       ]) + '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
-      "<b>Bars:</b> for every pair of drivers in a race, the pre-race car and driver rating gaps predict who finishes ahead. The explained signal is split between the two by averaging each one's contribution with and without the other (a Shapley split; Shapley 1953, Lipovetsky and Conklin 2001), in 3-season windows, with the signal measured by the pseudo-R² of logistic fits (McFadden 1974). <b>Dots:</b> the intraclass correlation (Shrout and Fleiss 1979) of each driver's average finishing percentile within a season, which needs no ratings; 2025 stands out as the most even year. The two views measure different things (single races against a season), so read the dots as an independent check on the direction, not on the exact share.",
+      "<b>Bars:</b> for every pair of drivers in a race, the pre-race car and driver rating gaps predict who finishes ahead. The explained signal is split between the two by averaging each one's contribution with and without the other (a Shapley split; Shapley 1953, Lipovetsky and Conklin 2001), in 3-season windows, with the signal measured by the pseudo-R² of logistic fits (McFadden 1974). <b>Dots:</b> the intraclass correlation (Shrout and Fleiss 1979) of each driver's average finishing percentile within a season, which needs no ratings. The two views measure different things (single races against a season), so read the dots as an independent check on the direction, not on the exact share.",
     draw: (data, root) => {
       const rows = data.explainedShare;
       mountChart(
@@ -208,77 +236,16 @@ export const INSIGHT_CARDS = [
     },
   },
   {
-    id: 'exchange-rate',
-    topic: 'split',
-    kind: 'model',
-    title: 'The exchange rate: finishing places per rating point',
-    label: 'Places per rating point',
-    lead: (data) => {
-      const eras = data.exchangeRate;
-      const pairs = eras.map((era) => `${era.placesPerTenDriverPoints} vs ${era.placesPerTenCarPoints}`).join(', ');
-      return `Estimated finishing places per 10 rating points vary by era (${pairs}, driver against car). The car wins on spread: the grid's cars differ by ${eras[0].carSpreadPlaces} to ${eras[1].carSpreadPlaces} places, its drivers by ${eras[0].driverSpreadPlaces} to ${eras[1].driverSpreadPlaces}.`;
-    },
-    body: () =>
-      legendHtml([
-        ['var(--s2)', 'Typical driver spread'],
-        ['var(--s1)', 'Typical car spread'],
-      ]) + '<div class="insight-chart" data-chart="main"></div>',
-    how: () =>
-      'Regression of finishing place (among classified finishers, relative to the race average) on the driver and car rating gaps before the race, by era. "Typical spread" is one standard deviation of season-average ratings across the field, converted to places with those coefficients.',
-    draw: (data, root) => {
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width, height) => {
-          const axes = drawAxes(svg, width, height, {
-            xDomain: [0, 3],
-            yDomain: [0, 3.5],
-            xTicks: [],
-            hideXTicks: true,
-            yTicks: [0, 1, 2, 3],
-            yTitle: 'finishing places (1 standard deviation across the field)',
-          });
-          data.exchangeRate.forEach((era, index) => {
-            const centre = axes.left + ((width - axes.left - axes.right) * (index + 0.5)) / 3;
-            const barWidth = Math.min(70, (width - axes.left - axes.right) / 9);
-            [
-              [era.driverSpreadPlaces, 'var(--s2)', -barWidth - 2],
-              [era.carSpreadPlaces, 'var(--s1)', 2],
-            ].forEach(([value, color, offset]) => {
-              svg.append(
-                createSvgElement('rect', {
-                  x: centre + offset,
-                  y: axes.y(value),
-                  width: barWidth,
-                  height: axes.y(0) - axes.y(value),
-                  fill: color,
-                  rx: 2,
-                }),
-              );
-              drawText(svg, centre + offset + barWidth / 2, axes.y(value) - 5, value.toFixed(1), {
-                anchor: 'middle',
-                className: 'primary',
-              });
-            });
-            drawText(svg, centre, axes.y(0) + 18, era.era, { anchor: 'middle' });
-          });
-        },
-        () => 260,
-      );
-    },
-  },
-  {
     id: 'circuit-weights',
-    topic: 'split',
+    topic: 'racing',
     kind: 'model',
-    title: 'Circuit fingerprints: where the car decides, where the driver does',
-    label: 'Circuit fingerprints',
+    title: 'How much do driver and car ratings predict at each circuit?',
+    label: 'Driver and car by circuit',
     lead: (data) => {
-      const rows = data.circuitWeights;
-      const pair = (label) => {
-        const row = findCircuit(rows, label);
-        return `${row.carWeight} car against ${row.driverWeight} driver`;
-      };
-      return `Barcelona and Suzuka show larger car than driver weights (${pair('Barcelona')}; ${pair('Suzuka')}). Singapore and Imola show the reverse (${pair('Singapore')}; ${pair('Imola')}). Mexico City's weights are ${pair('Mexico City')}, and Monaco's are ${pair('Monaco')}.`;
+      const rows = [...data.circuitWeights].sort((a, b) => b.driverWeight - b.carWeight - (a.driverWeight - a.carWeight));
+      const driver = rows[0];
+      const car = rows.at(-1);
+      return `${circuitLabel(driver.name)} has the largest driver-versus-car weight difference (${driver.driverWeight} versus ${driver.carWeight}); ${circuitLabel(car.name)} has the largest car-versus-driver difference (${car.carWeight} versus ${car.driverWeight}). These estimates are uncertain.`;
     },
     body: () => '<div class="insight-chart" data-chart="main"></div>',
     how: () =>
@@ -317,7 +284,7 @@ export const INSIGHT_CARDS = [
   },
   {
     id: 'champions',
-    topic: 'stars',
+    topic: 'drivers',
     kind: 'model',
     title: 'Every champion, split into driver and car',
     label: 'Every champion split',
@@ -344,59 +311,63 @@ export const INSIGHT_CARDS = [
         ],
         total: row.driverRating + row.carRating,
       }));
+      const minimum = Math.min(-5, ...items.map((item) => item.segments.reduce((sum, segment) => sum + Math.min(0, segment.value), 0) - 5));
+      const maximum = Math.max(...items.map((item) => item.segments.reduce((sum, segment) => sum + Math.max(0, segment.value), 0))) + 5;
+      const ticks = Array.from({ length: Math.floor(maximum / 50) + 1 }, (_, index) => index * 50);
       mountChart(
         chartIn(root, 'main'),
-        (svg, width) =>
-          drawHorizontalBars(svg, width, items, { marginLeft: 110, ticks: [0, 50, 100, 150], minimum: -5, maximum: 165, rowHeight: 19 }),
+        (svg, width) => drawHorizontalBars(svg, width, items, { marginLeft: 110, ticks, minimum, maximum, rowHeight: 19 }),
         () => horizontalBarsHeight(items.length, 19),
       );
     },
   },
   {
     id: 'equal-car-titles',
-    topic: 'stars',
+    topic: 'drivers',
     kind: 'model',
-    title: 'Championships with equal cars, across eras',
-    label: 'Titles with equal cars',
+    title: 'How might title chances change in another era?',
+    label: 'Title chances across eras',
     lead: (data) => {
       const first = data.eraTiming[0];
       return `${first.name} won ${first.actualTitles} titles in the rated period. With equal cars, the model estimates ${first.actualEra.toFixed(2)} in those years and a median of ${first.median.toFixed(2)} across ${first.alternatives} other career placements.`;
     },
     body: () =>
-      legendHtml([
-        ['var(--s1)', 'Actual titles'],
-        ['var(--s2)', 'Equal cars: actual years'],
-        ['var(--s3)', 'Equal cars: other eras, median'],
-      ]) +
-      '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="details"></div><div class="insight-extra" data-chart="seasons"></div>',
+      '<div class="insight-grid"><div><h4>Equal cars in their own years</h4><div data-chart="actual-years"></div></div><div><h4>Equal cars in other eras</h4><div data-chart="other-eras"></div></div></div><div class="insight-extra" data-chart="details"></div><div class="insight-extra" data-chart="seasons"></div>',
     how: (data) => {
       const seasons = data.equalCarTitles.seasons;
-      return `The bars compare actual titles with equal-car expectations in the driver's own years and the median over other eras. Each driver's eligible career seasons from ${seasons[0].year}–${seasons.at(-1).year} are moved as a sequence through every other placement that fits in those completed years, preserving gaps. For each season, we estimate the chance of having the highest season-average portable driver rating against that year's field in equal cars; these chances add to expected titles. The table shows the minimum and maximum across alternative placements. Rows are sorted by the equal-car estimate in actual years minus the alternative median, so the least favorable timing appears first. Drivers need at least three eligible seasons, at least one alternative placement, and either an actual title or at least 0.25 expected titles in some alternative. A season is eligible after at least eight races and half its rounds. Careers and titles before ${seasons[0].year} and the incomplete current season are excluded; long careers have fewer possible placements. A driver's own historical entry is removed from each comparison field. Ratings are relative to their original grids and eras are not perfectly comparable; the estimate does not simulate championships or how rivals might change. Rating uncertainty is an approximate marginal from the unified posterior; these exploratory draws treat drivers independently, and early seasons have less rating history and incomplete qualifying records. Differences from actual titles also reflect real cars and other factors, so they do not prove luck. The second table lists seasons where the likeliest best driver was not the champion, using 6,000 draws of approximate rating uncertainty.`;
+      return `Each point is a driver: the horizontal axis is actual titles, and the vertical axis is the expected number with equal cars. The first chart uses the driver’s own years; the second uses the median across other career placements. The dashed line marks equal actual and expected totals. Hover, focus or tap a point for the driver and values; the table lists all drivers. Each driver's eligible career seasons from ${seasons[0].year}–${seasons.at(-1).year} are moved as a sequence through every other placement that fits in those completed years, preserving gaps. For each season, we estimate the chance of having the highest season-average portable driver rating against that year's field in equal cars; these chances add to expected titles. The table shows the minimum and maximum across alternative placements. Drivers need at least three eligible seasons, at least one alternative placement, and either an actual title or at least 0.25 expected titles in some alternative. A season is eligible after at least eight races and half its rounds. Careers and titles before ${seasons[0].year} and the incomplete current season are excluded; long careers have fewer possible placements. A driver's own historical entry is removed from each comparison field. Ratings are relative to their original grids and eras are not perfectly comparable; the estimate does not simulate championships or how rivals might change. Rating uncertainty is an approximate marginal from the unified posterior; these exploratory draws treat drivers independently, and early seasons have less rating history and incomplete qualifying records. Differences from actual titles also reflect real cars and other factors, so they do not prove luck. The second table lists seasons where the likeliest best driver was not the champion, using 6,000 draws of approximate rating uncertainty.`;
     },
     draw: (data, root) => {
       const rows = data.eraTiming;
-      const items = rows.map((row) => ({
-        label: row.name,
-        bars: [
-          { value: row.actualTitles, color: 'var(--s1)', name: 'actual titles', text: String(row.actualTitles) },
-          { value: row.actualEra, color: 'var(--s2)', name: 'equal cars in actual years', text: row.actualEra.toFixed(2) },
-          { value: row.median, color: 'var(--s3)', name: 'equal cars in other eras, median', text: row.median.toFixed(2) },
-        ],
-      }));
-      const maximum = Math.max(2, Math.ceil(Math.max(...items.flatMap((item) => item.bars.map((bar) => bar.value))) / 2) * 2);
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width) =>
-          drawHorizontalBars(svg, width, items, {
-            marginLeft: Math.min(145, width * 0.38),
-            marginRight: 48,
-            rowHeight: 54,
-            ticks: Array.from({ length: maximum / 2 + 1 }, (_, index) => index * 2),
-            minimum: 0,
-            maximum: maximum + 0.2,
-          }),
-        () => horizontalBarsHeight(items.length, 54),
-      );
+      const maximum = Math.max(2, Math.ceil(Math.max(...rows.flatMap((row) => [row.actualTitles, row.actualEra, row.median])) / 2) * 2);
+      for (const [chart, field, description, color] of [
+        ['actual-years', 'actualEra', 'their own years', 'var(--s2)'],
+        ['other-eras', 'median', 'median in other eras', 'var(--s3)'],
+      ]) {
+        const points = rows.map((row) => ({
+          x: row.actualTitles,
+          y: row[field],
+          label: surname(row.name),
+          tooltip: `${row.name}: ${row.actualTitles} actual titles; ${row[field].toFixed(2)} expected titles with equal cars (${description})`,
+          priority: Math.abs(row[field] - row.actualTitles),
+          color,
+        }));
+        mountChart(
+          chartIn(root, chart),
+          (svg, width, height) =>
+            drawScatter(svg, width, height, {
+              xDomain: [-0.5, maximum + 0.5],
+              yDomain: [-0.5, maximum + 0.5],
+              xTicks: Array.from({ length: maximum / 2 + 1 }, (_, index) => index * 2),
+              yTicks: Array.from({ length: maximum / 2 + 1 }, (_, index) => index * 2),
+              xTitle: 'actual titles',
+              yTitle: 'expected titles in equal cars',
+              guides: [[0, 0, maximum, maximum]],
+              points,
+            }),
+          (width) => Math.max(260, Math.min(360, width * 0.8)),
+        );
+      }
       chartIn(root, 'details').innerHTML =
         '<h4>Career comparison</h4>' +
         tableHtml(
@@ -422,7 +393,7 @@ export const INSIGHT_CARDS = [
   },
   {
     id: 'career-driver-and-car',
-    topic: 'stars',
+    topic: 'drivers',
     kind: 'model',
     title: 'Carried or carrying: career car against career driver',
     label: 'Carried or carrying',
@@ -443,14 +414,32 @@ export const INSIGHT_CARDS = [
         priority: Math.abs(row.driverRating) + Math.abs(row.carRating) / 2,
         radius: 3 + Math.min(5, row.starts / 120),
       }));
+      const bounds = (values, minimum, maximum) => {
+        const lower = Math.floor(Math.min(minimum, ...values) / 20) * 20;
+        const upper = Math.ceil(Math.max(maximum, ...values) / 20) * 20;
+        return {
+          domain: [lower - 5, upper + 5],
+          ticks: Array.from({ length: (upper - lower) / 20 + 1 }, (_, index) => lower + index * 20),
+        };
+      };
+      const cars = bounds(
+        points.map((point) => point.x),
+        -80,
+        80,
+      );
+      const drivers = bounds(
+        points.map((point) => point.y),
+        -40,
+        40,
+      );
       mountChart(
         chartIn(root, 'main'),
         (svg, width, height) => {
           const axes = drawScatter(svg, width, height, {
-            xDomain: [-95, 90],
-            yDomain: [-50, 55],
-            xTicks: [-80, -40, 0, 40, 80],
-            yTicks: [-40, -20, 0, 20, 40],
+            xDomain: cars.domain,
+            yDomain: drivers.domain,
+            xTicks: cars.ticks,
+            yTicks: drivers.ticks,
             xTitle: 'average car rating (points above the field)',
             yTitle: 'average driver rating',
             points,
@@ -465,90 +454,11 @@ export const INSIGHT_CARDS = [
     },
   },
   {
-    id: 'driver-car-sorting',
-    topic: 'stars',
-    kind: 'model',
-    title: 'Do the best drivers drive the best cars? Not lately',
-    label: 'Best drivers, best cars?',
-    lead: (data) => {
-      const rows = data.driverCarSorting;
-      const latest = rows.at(-1);
-      const previous = rows.at(-2);
-      const baseline = average(rows.filter((row) => row.year >= 2010 && row.year <= latest.year - 2).map((row) => row.correlation));
-      return `From 2010 to ${latest.year - 2} the correlation between a driver's rating and their car's was about ${baseline.toFixed(2)}. In ${previous.year} it fell to ${previous.correlation.toFixed(2)} and in ${latest.year} it is ${latest.correlation.toFixed(2)}: the best drivers and the best cars have come apart.`;
-    },
-    body: () => '<div class="insight-chart" data-chart="main"></div>',
-    how: () =>
-      'Correlation, across the drivers of each season (at least 8 races), of average portable driver rating with average car rating. High values mean talent is concentrated in fast cars, which also makes the two harder to tell apart.',
-    draw: (data, root) => {
-      const rows = data.driverCarSorting;
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width, height) =>
-          drawLines(svg, width, height, {
-            xDomain: [rows[0].year, rows.at(-1).year],
-            yDomain: [0, 1],
-            xTicks: [1995, 2000, 2005, 2010, 2015, 2020, 2025],
-            yTicks: [0, 0.25, 0.5, 0.75, 1],
-            yFormat: (value) => value.toFixed(2),
-            series: [{ name: 'correlation', color: 'var(--s1)', markers: true, points: rows.map((row) => [row.year, row.correlation]) }],
-          }),
-        () => 250,
-      );
-    },
-  },
-  {
-    id: 'current-grid',
-    topic: 'stars',
-    kind: 'model',
-    title: 'The current grid: how much of each driver is the car',
-    label: 'The current grid',
-    lead: (data) => {
-      const grid = data.currentGrid;
-      const leader = grid.reduce((best, row) => (row.carRating > best.carRating ? row : best));
-      const teamDrivers = grid.filter((row) => row.team === leader.team);
-      const best = [...grid].sort((a, b) => b.driverRating - a.driverRating)[0];
-      return `After the ${data.dataThrough.name} ${data.dataThrough.year}, ${best.name} is the highest-rated driver (${formatInteger(best.driverRating)} points above average) in a car rated ${formatInteger(best.carRating)}. ${leader.team} has the best car (${formatInteger(leader.carRating)}), with drivers rated ${formatInteger(average(teamDrivers.map((row) => row.driverRating)))} on average.`;
-    },
-    body: () =>
-      legendHtml([
-        ['var(--s2)', 'Driver (portable rating)'],
-        ['var(--s1)', 'Car'],
-        ['var(--ink)', 'Package'],
-      ]) + '<div class="insight-chart" data-chart="main"></div>',
-    how: (data) =>
-      `Current published overall strength ratings after round ${data.dataThrough.round} of ${data.dataThrough.year}, relative to the field, sorted by package. Driver ratings are portable estimates from the unified model. The ratings panel shows approximate joint-model error bars, conditional on its assumptions.`,
-    draw: (data, root) => {
-      const items = [...data.currentGrid]
-        .sort((a, b) => b.driverRating + b.carRating - (a.driverRating + a.carRating))
-        .map((row) => ({
-          label: row.name,
-          segments: [
-            { value: row.driverRating, color: 'var(--s2)', name: 'driver' },
-            { value: row.carRating, color: 'var(--s1)', name: 'car' },
-          ],
-          total: row.driverRating + row.carRating,
-        }));
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width) =>
-          drawHorizontalBars(svg, width, items, {
-            marginLeft: 140,
-            ticks: [-150, -100, -50, 0, 50, 100, 150],
-            minimum: -170,
-            maximum: 160,
-            rowHeight: 20,
-          }),
-        () => horizontalBarsHeight(items.length, 20),
-      );
-    },
-  },
-  {
     id: 'teammate-gaps',
-    topic: 'people',
+    topic: 'drivers',
     kind: 'model',
-    title: 'Teammate demolitions, and the Red Bull second seat',
-    label: 'Teammate demolitions',
+    title: 'How large are teammate rating gaps?',
+    label: 'Teammate rating gaps',
     lead: (data) => {
       const largest = data.teammates.largestGaps[0];
       const redBull = data.teammates.teamAverages.at(-1);
@@ -627,7 +537,7 @@ export const INSIGHT_CARDS = [
   },
   {
     id: 'qualifying-versus-race',
-    topic: 'people',
+    topic: 'drivers',
     kind: 'model',
     title: 'Saturday drivers and Sunday drivers',
     label: 'Saturday and Sunday',
@@ -708,7 +618,7 @@ export const INSIGHT_CARDS = [
   },
   {
     id: 'ageing',
-    topic: 'people',
+    topic: 'drivers',
     kind: 'model',
     title: 'The ageing curve, and the careers behind it',
     label: 'The ageing curve',
@@ -804,335 +714,8 @@ export const INSIGHT_CARDS = [
     },
   },
   {
-    id: 'home-advantage',
-    topic: 'people',
-    kind: 'model',
-    title: 'Is there a home advantage? No.',
-    label: 'Home advantage',
-    lead: (data) => {
-      const { points, low, high } = data.homeAdvantage;
-      return `Racing at home is worth ${formatSigned(points)} rating points, with a 90% range from ${formatSigned(low)} to ${formatSigned(high)}. The interval includes zero. For comparison, 10 points would be an 8 percentage-point edge in a duel.`;
-    },
-    body: () => '<div class="insight-chart" data-chart="main"></div>',
-    how: (data) =>
-      `${data.homeAdvantage.duels.toLocaleString('en-GB')} duels between a home driver and a visitor, from ${data.homeAdvantage.homeStarts} home starts since ${data.analysisFrom}. The logistic fit (Cox 1958) takes the pre-race rating gap as given and estimates the extra effect of being at home in rating points; the interval is a bootstrap over races (Efron 1979). Only drivers with a matching nationality-to-country pair are counted.`,
-    draw: (data, root) => {
-      const { points, low, high } = data.homeAdvantage;
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width, height) => {
-          const axes = drawAxes(svg, width, height, {
-            xDomain: [-12, 12],
-            yDomain: [0, 1],
-            xTicks: [-10, -5, 0, 5, 10],
-            yTicks: [],
-            xTitle: 'home advantage (rating points)',
-            xGridlines: true,
-            marginLeft: 14,
-            marginTop: 14,
-          });
-          const centreY = height / 2 - 10;
-          svg.append(
-            createSvgElement('line', {
-              x1: axes.x(low),
-              x2: axes.x(high),
-              y1: centreY,
-              y2: centreY,
-              stroke: 'var(--s1)',
-              'stroke-width': 3,
-            }),
-          );
-          svg.append(
-            createSvgElement('circle', {
-              cx: axes.x(points),
-              cy: centreY,
-              r: 6,
-              fill: 'var(--s1)',
-              stroke: 'var(--surface)',
-              'stroke-width': 1.5,
-            }),
-          );
-          drawText(svg, axes.x(points), centreY - 14, `${formatSigned(points)} [${formatSigned(low)}, ${formatSigned(high)}]`, {
-            anchor: 'middle',
-            className: 'primary',
-          });
-          drawText(svg, axes.x(10), centreY + 26, '10 points ≈ +8 pp in a duel', { anchor: 'middle' });
-        },
-        () => 150,
-      );
-    },
-  },
-  {
-    id: 'dominance',
-    topic: 'cars',
-    kind: 'model',
-    title: 'Dominance: how far ahead was the best car?',
-    label: 'Dominance',
-    lead: (data) => {
-      const largest = data.dominance.reduce((best, row) => (row.largestLead > best.largestLead ? row : best));
-      const averageLead = data.dominance.reduce((best, row) => (row.meanLead > best.meanLead ? row : best));
-      return `The single biggest lead of one car over the next best was ${formatInteger(largest.largestLead)} points (${largest.team}, ${largest.year}). On a full-season average the most dominant car was ${averageLead.team} ${averageLead.year} (${formatInteger(averageLead.meanLead)}).`;
-    },
-    body: () =>
-      legendHtml([
-        ['var(--s1)', 'Season average lead of the best car over the second best'],
-        ['var(--ink)', 'Largest single-weekend lead'],
-      ]) + '<div class="insight-chart" data-chart="main"></div>',
-    how: () =>
-      'At every weekend the gap between the highest- and second-highest-rated car (overall strength rating after that weekend), averaged over the season. 75 overall points is 10:1 odds in the raw comparison rule, before uncertainty, calibration and retirement risk.',
-    draw: (data, root) => {
-      const rows = data.dominance;
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width, height) => {
-          const maximum = Math.ceil(Math.max(...rows.map((row) => row.largestLead)) / 20) * 20;
-          const axes = drawAxes(svg, width, height, {
-            xDomain: [rows[0].year - 0.6, rows.at(-1).year + 0.6],
-            yDomain: [0, maximum],
-            xTicks: [1995, 2000, 2005, 2010, 2015, 2020, 2025],
-            yTicks: Array.from({ length: maximum / 20 + 1 }, (_, index) => index * 20),
-          });
-          const barWidth = (axes.x(2001) - axes.x(2000)) * 0.7;
-          for (const row of rows) {
-            svg.append(
-              createSvgElement(
-                'rect',
-                {
-                  x: axes.x(row.year) - barWidth / 2,
-                  y: axes.y(row.meanLead),
-                  width: barWidth,
-                  height: axes.y(0) - axes.y(row.meanLead),
-                  fill: 'var(--s1)',
-                },
-                [
-                  createSvgElement(
-                    'title',
-                    {},
-                    `${row.year}, ${row.team}: average lead ${formatOneDecimal(row.meanLead)}, largest ${formatOneDecimal(row.largestLead)}`,
-                  ),
-                ],
-              ),
-            );
-            svg.append(
-              interactiveDot(
-                svg,
-                createSvgElement('circle', {
-                  cx: axes.x(row.year),
-                  cy: axes.y(row.largestLead),
-                  r: 4,
-                  fill: 'var(--ink)',
-                  stroke: 'var(--surface)',
-                }),
-                `${row.year} ${row.team}: largest lead ${formatOneDecimal(row.largestLead)} points`,
-              ),
-            );
-          }
-          const largest = rows.reduce((best, row) => (row.largestLead > best.largestLead ? row : best));
-          for (const row of [rows.find((r) => r.year === 2002), rows.find((r) => r.year === 2015), largest]) {
-            drawText(svg, axes.x(row.year), axes.y(row.largestLead) - 8, `${row.team} ${row.year}`, {
-              anchor: 'middle',
-              className: 'secondary',
-            });
-          }
-        },
-        () => 280,
-      );
-    },
-  },
-  {
-    id: 'winter-order',
-    topic: 'cars',
-    kind: 'model',
-    title: 'The winter reshuffle: does the pecking order survive?',
-    label: 'The winter reshuffle',
-    lead: (data) => {
-      const rows = data.winterOrder.correlations;
-      const lowest = rows.reduce((best, row) => (row.correlation < best.correlation ? row : best));
-      const ruleChange = rows.find((row) => row.year === 2022);
-      return `The order of the cars at the end of one season often resembles the next. The lowest rank correlation is ${lowest.year} (${lowest.correlation}); for the 2022 rule change it is ${ruleChange.correlation}.`;
-    },
-    body: () =>
-      '<div class="insight-chart" data-chart="main"></div><div class="insight-grid"><div><h4>Biggest falls over a winter (points above the field, before → after)</h4><div data-chart="falls"></div></div><div><h4>Biggest rises</h4><div data-chart="rises"></div></div></div>',
-    how: () =>
-      "Spearman correlation (Spearman 1904) between the rank order of the cars in the last race of one season and the last race of the next, for cars racing in both. Tables: change in a car's rating relative to the field across the winter (end of season to end of next).",
-    draw: (data, root) => {
-      const rows = data.winterOrder.correlations;
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width, height) =>
-          drawLines(svg, width, height, {
-            xDomain: [rows[0].year, rows.at(-1).year],
-            yDomain: [-1, 1],
-            xTicks: [1995, 2000, 2005, 2010, 2015, 2020, 2025],
-            yTicks: [-1, -0.5, 0, 0.5, 1],
-            yFormat: (value) => value.toFixed(2),
-            series: [
-              { name: 'rank correlation', color: 'var(--s1)', markers: true, points: rows.map((row) => [row.year, row.correlation]) },
-            ],
-            notes: [
-              { x: 2009, y: rows.find((row) => row.year === 2009).correlation, text: '2009', offset: 16 },
-              { x: 2014, y: rows.find((row) => row.year === 2014).correlation, text: '2014', offset: 16 },
-            ],
-          }),
-        () => 250,
-      );
-      const table = (changes) =>
-        tableHtml(
-          ['Season', 'Car', 'Change'],
-          changes.map((row) => [row.year, row.team, `${formatInteger(row.before)} → ${formatInteger(row.after)}`]),
-        );
-      chartIn(root, 'falls').innerHTML = table(data.winterOrder.falls);
-      chartIn(root, 'rises').innerHTML = table(data.winterOrder.rises);
-    },
-  },
-  {
-    id: 'development',
-    topic: 'cars',
-    kind: 'model',
-    title: 'In-season development: who built a faster car during the year',
-    label: 'In-season development',
-    lead: (data) => {
-      const slide = data.development.slides[0];
-      const climb = data.development.climbs[0];
-      return `${slide.team} lost ${formatInteger(-slide.change)} rating points over the ${slide.year} season, the largest in-season slide. The biggest climb was ${climb.team} ${climb.year} (+${formatInteger(climb.change)}); McLaren rose ${formatInteger(data.development.mclaren2023)} points in 2023.`;
-    },
-    body: () =>
-      legendHtml([
-        ['var(--s2)', 'Red Bull'],
-        ['var(--s1)', 'McLaren'],
-        ['var(--s5)', 'Ferrari'],
-        ['var(--s3)', 'Mercedes'],
-      ]) +
-      '<div class="insight-chart" data-chart="main"></div><div class="insight-grid"><div><h4>Largest in-season slides</h4><div data-chart="slides"></div></div><div><h4>Largest in-season climbs</h4><div data-chart="climbs"></div></div></div>',
-    how: () =>
-      'Car overall strength rating, relative to the field, after each round of 2024. Tables compare the average of rounds 3 to 5 with the last three rounds, for cars with 12 or more races. Early-season values rest on little data, which is why the first two rounds are skipped.',
-    draw: (data, root) => {
-      const colors = { 'Red Bull': 'var(--s2)', McLaren: 'var(--s1)', Ferrari: 'var(--s5)', Mercedes: 'var(--s3)' };
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width, height) =>
-          drawLines(svg, width, height, {
-            xDomain: [1, 24],
-            yDomain: [0, 100],
-            xTicks: [1, 6, 12, 18, 24],
-            yTicks: [0, 25, 50, 75, 100],
-            xTitle: '2024 round',
-            series: Object.entries(data.development.season2024).map(([team, values]) => ({
-              name: team,
-              color: colors[team],
-              points: values.map((value, index) => [index + 1, value]),
-              label: team,
-            })),
-          }),
-        () => 280,
-      );
-      const table = (changes) =>
-        tableHtml(
-          ['Season', 'Car', 'Change'],
-          changes.map((row) => [row.year, row.team, formatSigned(row.change)]),
-          [2],
-        );
-      chartIn(root, 'slides').innerHTML = table(data.development.slides);
-      chartIn(root, 'climbs').innerHTML = table(data.development.climbs);
-    },
-  },
-  {
-    id: 'mechanical-retirements',
-    topic: 'cars',
-    kind: 'direct',
-    title: 'The reliability revolution',
-    label: 'The reliability revolution',
-    lead: (data) => {
-      const rows = data.mechanicalRetirements;
-      const peak = rows.reduce((best, row) => (row.percent > best.percent ? row : best));
-      const lowest = rows
-        .filter((row) => row.year < data.dataThrough.year)
-        .reduce((best, row) => (row.percent < best.percent ? row : best));
-      const latest = rows.at(-1);
-      return `In ${peak.year}, ${formatInteger(peak.percent)}% of starters retired with a mechanical failure; in ${lowest.year}, ${formatInteger(lowest.percent)}%. The latest season has ${formatInteger(latest.percent)}% in ${latest.year}.`;
-    },
-    body: () => '<div class="insight-chart" data-chart="main"></div>',
-    how: () =>
-      'From the raw results: the share of starters whose finishing status is a mechanical cause (engine, gearbox, hydraulics and so on, by a fixed status table; ambiguous damage statuses are excluded), per season from 1950. The race data go back to 1950 although the ratings start in 1994. The latest season is incomplete.',
-    draw: (data, root) => {
-      const rows = data.mechanicalRetirements;
-      const at = (year) => rows.find((row) => row.year === year);
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width, height) =>
-          drawLines(svg, width, height, {
-            xDomain: [1950, rows.at(-1).year],
-            yDomain: [0, 50],
-            xTicks: [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020],
-            yTicks: [0, 10, 20, 30, 40, 50],
-            yFormat: (value) => `${value}%`,
-            series: [{ name: 'mechanical retirements', color: 'var(--s2)', points: rows.map((row) => [row.year, row.percent]) }],
-            notes: [1986, 2014, rows.at(-1).year].map((year) => ({ x: year, y: at(year).percent, text: String(year), offset: -8 })),
-          }),
-        () => 260,
-      );
-    },
-  },
-  {
-    id: 'fast-but-fragile',
-    topic: 'cars',
-    kind: 'model',
-    title: 'Fast but fragile: the quick cars that kept breaking',
-    label: 'Fast but fragile',
-    lead: (data) => {
-      const fast = data.fastButFragile.filter((row) => row.pace >= 40).sort((a, b) => b.excessRetirementPoints - a.excessRetirementPoints);
-      const names = fast.slice(0, 4).map((row) => `${row.team} ${row.year} (+${formatOneDecimal(row.excessRetirementPoints)})`);
-      const correlation = pearson(
-        data.fastButFragile.map((row) => row.pace),
-        data.fastButFragile.map((row) => row.excessRetirementPoints),
-      );
-      return `Among cars at least 40 points above the field, the ones that failed most often compared with their own season were ${names.join(', ')}, in extra mechanical retirements per hundred starts. Across all cars, quicker ones are the more reliable (correlation ${correlation.toFixed(2)}).`;
-    },
-    body: () => '<div class="insight-chart" data-chart="main"></div>',
-    how: () =>
-      'Each dot is a team-season with at least 30 starts. Vertical axis: mechanical retirements per hundred starts, minus the rate of the whole field in the same season, so that the long improvement in reliability does not hide the comparison. Horizontal axis: the average overall strength rating of the car.',
-    draw: (data, root) => {
-      const rows = data.fastButFragile;
-      const notable = new Set(
-        rows
-          .filter((row) => row.pace >= 40)
-          .sort((a, b) => b.excessRetirementPoints - a.excessRetirementPoints)
-          .slice(0, 6)
-          .map((row) => `${row.team}${row.year}`),
-      );
-      const points = rows.map((row) => ({
-        x: row.pace,
-        y: row.excessRetirementPoints,
-        label: notable.has(`${row.team}${row.year}`) ? `${row.team} ${row.year}` : null,
-        tooltip: `${row.team} ${row.year}: pace ${formatSigned(row.pace)}, ${formatSigned(row.excessRetirementPoints)} points more mechanical retirements than the field`,
-        priority: row.excessRetirementPoints,
-        radius: 3.2,
-        color: row.year >= 2014 ? 'var(--s1)' : 'var(--s2)',
-        opacity: 0.65,
-      }));
-      const low = Math.floor(Math.min(...rows.map((row) => row.excessRetirementPoints)) / 10) * 10;
-      const high = Math.ceil(Math.max(...rows.map((row) => row.excessRetirementPoints)) / 10) * 10;
-      const yTicks = [];
-      for (let tick = low; tick <= high; tick += 10) yTicks.push(tick);
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width, height) =>
-          drawScatter(svg, width, height, {
-            xDomain: [-160, 130],
-            yDomain: [low, high],
-            xTicks: [-150, -100, -50, 0, 50, 100],
-            yTicks,
-            xTitle: 'car overall strength (points above the field)',
-            yTitle: 'extra mechanical retirements per 100 starts, against the same season',
-            points,
-          }),
-        (width) => Math.max(300, Math.min(420, width * 0.6)),
-      );
-    },
-  },
-  {
     id: 'upsets',
-    topic: 'race',
+    topic: 'racing',
     kind: 'model',
     title: 'The biggest upsets: winners the ratings gave no chance',
     label: 'The biggest upsets',
@@ -1160,51 +743,6 @@ export const INSIGHT_CARDS = [
             maximum: 2.5,
           }),
         () => horizontalBarsHeight(items.length, 24) - 10,
-      );
-    },
-  },
-  {
-    id: 'grid-dependence',
-    topic: 'race',
-    kind: 'direct',
-    title: 'Where the grid decides the race',
-    label: 'Where the grid decides',
-    lead: (data) => {
-      const [first, second] = data.gridDependence.circuits;
-      const poles = data.gridDependence.poleToWin;
-      return `${circuitLabel(first.name)} and ${circuitLabel(second.name)} are the most grid-locked circuits since 2010 (grid-to-finish rank correlation ${first.correlation} and ${second.correlation}). Pole position converted to a win ${poles.at(-1).percent}% of the time in ${poles.at(-1).period}, up from ${poles[0].percent}% in ${poles[0].period}.`;
-    },
-    body: () =>
-      '<div class="insight-grid"><div><h4>Grid-to-finish correlation by circuit, 2010 on (axis starts at 0.6)</h4><div data-chart="circuits"></div></div><div><h4>Share of poles that became wins</h4><div data-chart="poles"></div></div></div>',
-    how: () =>
-      'Spearman correlation (Spearman 1904) between starting slot and finishing position among classified finishers, averaged over races at each circuit (2010 on, 8 or more races). Pole figures are from every race in each period.',
-    draw: (data, root) => {
-      const circuits = data.gridDependence.circuits.map((row) => ({
-        label: circuitLabel(row.name),
-        bars: [{ value: row.correlation, color: 'var(--s1)', name: 'rank correlation', text: row.correlation.toFixed(2) }],
-      }));
-      mountChart(
-        chartIn(root, 'circuits'),
-        (svg, width) =>
-          drawHorizontalBars(svg, width, circuits, {
-            marginLeft: 120,
-            rowHeight: 19,
-            baseline: 0.6,
-            minimum: 0.6,
-            maximum: 0.9,
-            format: (value) => value.toFixed(2),
-          }),
-        () => horizontalBarsHeight(circuits.length, 19),
-      );
-      const poles = data.gridDependence.poleToWin.map((row) => ({
-        label: row.period,
-        bars: [{ value: row.percent, color: 'var(--s2)', name: 'pole to win', text: `${row.percent}%` }],
-      }));
-      mountChart(
-        chartIn(root, 'poles'),
-        (svg, width) =>
-          drawHorizontalBars(svg, width, poles, { marginLeft: 90, rowHeight: 28, minimum: 0, maximum: 70, format: formatInteger }),
-        () => horizontalBarsHeight(poles.length, 28),
       );
     },
   },

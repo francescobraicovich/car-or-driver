@@ -31,14 +31,22 @@ export function initGraph() {
   const selectedSnap = () => state.model?.snaps[state.raceIndex];
   const record = (pair, id) => {
     const first = pair.a === id;
+    const qualWins = first ? pair.qa : pair.qb;
+    const qualLosses = first ? pair.qb : pair.qa;
+    const raceWins = first ? pair.ra : pair.rb;
+    const raceLosses = first ? pair.rb : pair.ra;
     return {
       other: first ? pair.b : pair.a,
-      qual: first ? `${pair.qa}–${pair.qb}` : `${pair.qb}–${pair.qa}`,
-      race: first ? `${pair.ra}–${pair.rb}` : `${pair.rb}–${pair.ra}`,
+      qualWins,
+      qualLosses,
+      raceWins,
+      raceLosses,
       advantage: first ? pair.wins - pair.losses : pair.losses - pair.wins,
       period: pair.firstYear === pair.lastYear ? String(pair.firstYear) : `${pair.firstYear}–${pair.lastYear}`,
+      lastIndex: pair.lastIndex,
     };
   };
+  const direction = (wins, losses) => (wins > losses ? 'up' : wins < losses ? 'down' : 'even');
   function showDetail() {
     const id = active();
     window.dispatchEvent(
@@ -58,12 +66,12 @@ export function initGraph() {
     const rivals = [...pairById.values()]
       .filter((pair) => pair.a === id || pair.b === id)
       .map((pair) => record(pair, id))
-      .sort((a, b) => Math.abs(b.advantage) - Math.abs(a.advantage));
+      .sort((a, b) => b.lastIndex - a.lastIndex || nameOf(a.other).localeCompare(nameOf(b.other)));
     detail.innerHTML = `<div class="graph-detail-heading"><div><small>${onGrid ? 'ON THIS GRID' : 'CAREER RECORD'}</small><h3>${esc(nameOf(id))}</h3></div><span>${node[3]} starts</span></div>
       <div class="graph-detail-metrics"><div><span>${onGrid ? 'Overall strength' : 'Last overall strength'}</span><strong>${published == null ? '—' : Math.round(published)}</strong></div><div><span>Rating season</span><strong>${node[5]}</strong></div><div><span>Age at date</span><strong>${node[4] ?? 'Unknown'}</strong></div><div><span>Mean season</span><strong>${node[2].toFixed(1)}</strong></div></div>
-      <h4>Career comparisons through this weekend</h4>
-      <div class="graph-rivals">${rivals.length ? rivals.map((item) => `<div class="graph-rival ${item.advantage > 0 ? 'up' : item.advantage < 0 ? 'down' : 'even'}"><span><span class="graph-rival-name">${esc(nameOf(item.other))}</span><small>${item.period}</small></span><span>Career Q ${item.qual}</span><span>Career R ${item.race}</span></div>`).join('') : '<p>No shared comparison yet.</p>'}</div>
-      <p class="graph-note">Dots use the published unified overall rating at each driver’s latest appearance through this date. Links show teammate comparisons used by the model; there is no separate graph rating or percentage blend. Q counts valid shared-phase qualifying comparisons. R counts normal finishing order, or matched lap pace when a finish comparison is unavailable. Link colors and ordering use cumulative observation weights, including timing and finish evidence; career counts are unweighted. Timing margins affect the model even though these counts show only their direction. Ratings use the same 20-weekend recent-era reference as Ratings and History. Retired drivers retain their last appearance’s rating and reference; later weekends do not move them.</p>`;
+      <h4>Teammates · most recent first</h4>
+      <div class="graph-rivals">${rivals.length ? rivals.map((item) => `<div class="graph-rival" data-last-index="${item.lastIndex}"><span><button type="button" class="graph-rival-name" data-driver="${esc(item.other)}">${esc(nameOf(item.other))}</button><small>${item.period}</small></span><span class="graph-result ${direction(item.qualWins, item.qualLosses)}" aria-label="Qualifying: ${item.qualWins} ahead, ${item.qualLosses} behind">Q ${item.qualWins}–${item.qualLosses}</span><span class="graph-result ${direction(item.raceWins, item.raceLosses)}" aria-label="Race: ${item.raceWins} ahead, ${item.raceLosses} behind">R ${item.raceWins}–${item.raceLosses}</span></div>`).join('') : '<p>No shared comparison yet.</p>'}</div>
+      <details class="graph-note"><summary>How to read these records</summary><p>Select a teammate to explore their record. Green counts mean this driver was ahead more often; red means behind more often. Q counts valid shared-phase qualifying comparisons. R counts normal finishing order, or matched lap pace when a finish comparison is unavailable. Link colors use cumulative observation weights, including timing and finish evidence; career counts are unweighted. Timing margins affect the model even though these counts show only their direction. Ratings use the same 20-weekend recent-era reference as Ratings and History. Retired drivers retain their last appearance’s rating and reference; later weekends do not move them.</p></details>`;
   }
 
   function buildAt(index) {
@@ -73,7 +81,7 @@ export function initGraph() {
     pairById = new Map(
       snap.edges.map(([a, b, wins, losses]) => [
         `${a}:${b}`,
-        { a, b, wins, losses, qa: 0, qb: 0, ra: 0, rb: 0, firstYear: null, lastYear: null },
+        { a, b, wins, losses, qa: 0, qb: 0, ra: 0, rb: 0, firstYear: null, lastYear: null, lastIndex: -1 },
       ]),
     );
     for (let i = 0; i <= index; i++)
@@ -84,6 +92,7 @@ export function initGraph() {
         if (q || r) {
           pair.firstYear ??= state.model.snaps[i].year;
           pair.lastYear = state.model.snaps[i].year;
+          pair.lastIndex = i;
         }
         if (q > 0) pair.qa++;
         else if (q < 0) pair.qb++;
@@ -326,6 +335,16 @@ export function initGraph() {
     hover = null;
     showDetail();
     draw(performance.now());
+  });
+  detail.addEventListener('click', (event) => {
+    const button = event.target.closest('button[data-driver]');
+    if (!button || !scoreById.has(button.dataset.driver)) return;
+    chosen = button.dataset.driver;
+    hover = null;
+    picker.value = chosen;
+    showDetail();
+    draw(performance.now());
+    picker.focus();
   });
   timeline.addEventListener('input', () => setRace(Number(timeline.value)));
   $('graphClose').addEventListener('click', () => (location.hash = '#/'));

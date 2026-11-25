@@ -6,7 +6,7 @@ const OPTIONS = [
     href: '#/methodology/simple',
     kind: 'Simple',
     title: 'The idea in plain words',
-    text: 'Four short slides without formulas: why the split between driver and car is hard, ratings as chances of winning, what teammates reveal, and a model that keeps learning.',
+    text: 'Four short slides without formulas: why the split between driver and car is hard, ratings as chances of finishing ahead, what teammates reveal, and a model that keeps learning.',
   },
   {
     href: '#/methodology/full',
@@ -27,7 +27,12 @@ export function initMethodologySelection() {
         <button type="button" class="deck-close" id="methodologySelectionClose" aria-label="Close the Methodology">×</button>
       </header>
       <div class="methodology-selection-body">
-        <p class="deck-intro">How race results become driver ratings, car ratings and forecasts. Choose how deep to go.</p>
+        <div class="method-overview">
+          <p class="method-overview-label">The question</p>
+          <h3>How much is the driver, and how much is the car?</h3>
+          <p>A driver’s result depends on both the person behind the wheel and the machinery around them. A win alone cannot tell us how much each contributed.</p>
+          <p>Estimating the split helps compare drivers across teams and seasons, and explore how they might fare in another car. The model combines teammate duels and cross-team results over time; its estimates depend on assumptions and carry uncertainty.</p>
+        </div>
         <ul class="methodology-selection-options">
           ${OPTIONS.map(
             (option) => `<li><a class="methodology-selection-option" href="${option.href}">

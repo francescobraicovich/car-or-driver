@@ -376,7 +376,8 @@ export function createHistoryView({ onChange }) {
       xDomain: seasonSpan(),
       pointLabel: (p) => raceNames().get(String(p.raceId)),
       legend: false, // the chips name the lines
-      casing: true,
+      casing: '#fff',
+      lineWidth: 2.5,
       reference: isProbability(m) ? undefined : { value: 1000 }, // the same dated centring convention as Ratings
       height: () => Math.max(0, ui.historyPlot.clientHeight - PLOT_PADDING), // (0 while the view is hidden: the renderer then takes its own)
     });

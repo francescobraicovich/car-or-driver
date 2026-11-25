@@ -101,15 +101,7 @@ for (const method of ['Bradley', 'Kalman', 'Fahrmeir', 'Brier', 'Gneiting', 'Tas
     `${method} is in the reference list`,
   );
 const insights = await read('site/js/insights-cards.js');
-for (const author of [
-  'Shapley 1953',
-  'McFadden 1974',
-  'Shrout and Fleiss 1979',
-  'Cox 1958',
-  'Efron 1979',
-  'Spearman 1904',
-  'Plackett 1975',
-])
+for (const author of ['Shapley 1953', 'McFadden 1974', 'Shrout and Fleiss 1979', 'Cox 1958', 'Plackett 1975'])
   assert.ok(insights.includes(author), `the Insights notes cite ${author}`);
 
 // 6. what is published

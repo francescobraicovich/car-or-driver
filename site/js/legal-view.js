@@ -1,10 +1,6 @@
-// The Privacy notice and the About page: each a card of slides (slide-deck.js), one slide for each section of the text (legal-content.js), with the
-// site's identity filled in (site-identity.js). The first slide is the contents (for the Privacy notice, with its summary above the sections).
+// About and Privacy, displayed as one continuous document.
 import { SITE } from './site-identity.js';
 import { ABOUT_HTML, PRIVACY_HTML } from './legal-content.js';
-import { createDeck } from './slide-deck.js';
-
-const $ = (id) => document.getElementById(id);
 
 const values = {
   name: SITE.name,
@@ -15,98 +11,76 @@ const values = {
   dataLicenceUrl: SITE.dataLicence.url,
   repositoryUrl: SITE.repositoryUrl,
 };
-const fill = (html) => html.replace(/\{\{(\w+)\}\}/g, (_, key) => values[key] ?? `{{${key}}}`);
-
-/** The address is put together here rather than written in the page source, which keeps it away from the simplest address harvesters. */
-function fillContact(root) {
-  for (const link of root.querySelectorAll('[data-contact-email]')) {
-    if (SITE.contactEmail) {
-      link.textContent = SITE.contactEmail;
-      link.href = `mailto:${SITE.contactEmail}`;
-    } else {
-      link.textContent = '(contact address to be added before publication)';
-    }
-  }
-}
 
 const slug = (text) =>
   text
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
+    .replace(/^-|-$/g, '')
+    .slice(0, 40);
 
-/**
- * The text cut into sections at its headings: what comes before the first heading goes above the contents, and each section (heading and what follows
- * it) is a slide, with the short name from `labels` (in order).
- */
-function sections(html, labels) {
-  const text = document.createElement('div');
-  text.innerHTML = fill(html);
-  const preface = [];
-  const found = [];
-  for (const node of [...text.children]) {
-    if (node.tagName === 'H3') found.push({ heading: node, nodes: [] });
-    else (found.at(-1)?.nodes ?? preface).push(node);
+function createDocument(page, title, html) {
+  const card = document.createElement('section');
+  card.id = `${page}Card`;
+  card.className = 'deck-card legal-document';
+  card.dataset.deck = page;
+  card.tabIndex = -1;
+  card.setAttribute('aria-label', title);
+  card.innerHTML = `<header class="deck-head"><h2 class="deck-title">${title}</h2><button type="button" class="deck-close" aria-label="Close ${title}">×</button></header>
+    <div class="deck-text legal-document-body" role="region" aria-label="${title} text" tabindex="0">${html.replace(/\{\{(\w+)\}\}/g, (_, key) => values[key] ?? `{{${key}}}`)}</div>`;
+  const body = card.querySelector('.legal-document-body');
+  for (const heading of body.querySelectorAll('h3')) {
+    heading.dataset.legalSlide =
+      heading.id === 'about-data'
+        ? 'credits'
+        : heading.id === 'privacy-notice'
+          ? 'privacy'
+          : slug(heading.textContent.replace(/^\d+\.\s*/, ''));
   }
-  if (found.length !== labels.length) throw new Error(`the text has ${found.length} sections and ${labels.length} short names`);
-  return {
-    before: preface.map((node) => node.outerHTML).join(''),
-    slides: found.map(({ heading, nodes }, index) => {
-      const title = heading.textContent.replace(/^\d+\.\s*/, '');
-      return {
-        id: heading.id === 'about-data' ? 'credits' : slug(title).slice(0, 40),
-        label: labels[index],
-        title,
-        html: `<div class="deck-text">${heading.outerHTML}${nodes.map((node) => node.outerHTML).join('')}</div>`,
-      };
-    }),
-  };
+  for (const link of card.querySelectorAll('[data-contact-email]')) {
+    if (SITE.contactEmail) {
+      link.textContent = SITE.contactEmail;
+      link.href = `mailto:${SITE.contactEmail}`;
+    } else link.textContent = '(contact address to be added before publication)';
+  }
+  document.getElementById('stage').append(card);
+  window.dispatchEvent(new CustomEvent('f1:deck-made', { detail: { card } }));
+  card.querySelector('.deck-close').addEventListener('click', () => (location.hash = '#/'));
+  let wasOpen = false;
+  let previousSection = null;
+  window.addEventListener('f1:workspace-changed', () => {
+    const open = document.body.dataset.page === page;
+    card.toggleAttribute('data-open', open);
+    if (!open) {
+      wasOpen = false;
+      return;
+    }
+    const [path, search = ''] = location.hash.split('?');
+    const section = new URLSearchParams(search).get('slide') || (path === '#/privacy' ? 'privacy' : null);
+    if (!wasOpen || section !== previousSection) {
+      body.scrollTop = 0;
+      const heading = [...body.querySelectorAll('h3')].find((item) => item.dataset.legalSlide === section);
+      if (heading) body.scrollTop = heading.getBoundingClientRect().top - body.getBoundingClientRect().top - 12;
+    }
+    previousSection = section;
+    if (!wasOpen) card.focus({ preventScroll: true });
+    wasOpen = true;
+  });
+  window.addEventListener('keydown', (event) => {
+    if (document.body.dataset.page === page && event.key === 'Escape' && !event.defaultPrevented) location.hash = '#/';
+  });
+  return card;
 }
-
-const PRIVACY_LABELS = [
-  'Who is responsible',
-  'When you visit',
-  'Cookies and storage',
-  'What it does not do',
-  'Information about drivers',
-  'Links to other sites',
-  'If you write to me',
-  'Your rights',
-  'Children',
-  'Changes',
-];
-const ABOUT_LABELS = [
-  'Who runs this site',
-  'Not affiliated',
-  'What the numbers are',
-  'Credits and data sources',
-  'Licence of what is published',
-  'Software and fonts',
-  'References',
-  'Corrections',
-  'Accessibility',
-];
 
 let started = false;
 
-/** Makes both cards (the first of the two pages to open does it, once). */
 export function initLegal() {
   if (started) return;
   started = true;
-  const privacy = sections(PRIVACY_HTML, PRIVACY_LABELS);
-  createDeck({
-    page: 'privacy',
-    title: 'Privacy',
-    before: `<div class="deck-text">${privacy.before}</div>`,
-    groups: [{ slides: privacy.slides }],
-  });
-  const about = sections(ABOUT_HTML, ABOUT_LABELS);
-  createDeck({
-    page: 'about',
-    title: 'About and credits',
-    before: `<div class="deck-text">${about.before}</div>`,
-    groups: [{ slides: about.slides }],
-  });
-  for (const id of ['privacyCard', 'aboutCard']) fillContact($(id));
-  $('citationAddress').textContent = new URL('./', location.href).href.replace(/site\/$/, '');
+  const about = createDocument(
+    'about',
+    'About & privacy',
+    `${ABOUT_HTML}<h3 id="privacy-notice" class="legal-section">Privacy and cookies</h3>${PRIVACY_HTML}`,
+  );
+  about.querySelector('#citationAddress').textContent = new URL('./', location.href).href.replace(/site\/$/, '');
 }

@@ -271,23 +271,7 @@ function ensurePanel() {
 const fmt = (value, probability) =>
   Number.isFinite(value) ? `${value.toFixed(probability ? 1 : ratingDecimals)}${probability ? '%' : ''}` : '—';
 
-function changeParts(row, probability) {
-  if (!row.previous) return { text: 'New', tone: '' };
-  if (!Number.isFinite(row.change)) return { text: '—', tone: '' };
-  const v = Number(row.change.toFixed(1));
-  if (v === 0) return { text: '0.0', tone: '' };
-  return { text: `${v > 0 ? '▲' : '▼'} ${Math.abs(v).toFixed(1)}${probability ? ' pp' : ''}`, tone: v > 0 ? 'var(--pos)' : 'var(--neg)' };
-}
-
-/** Change since the previous appearance. */
-function lastColumn(row, probability) {
-  const { text } = changeParts(row, probability);
-  const tone = text.startsWith('▲') ? 'up' : text.startsWith('▼') ? 'down' : ''; // a class, not an inline colour: an inline colour would stay on the inverted row
-  return { text: text === '0.0' ? '' : text === 'New' ? 'new' : text.replace(/([▲▼]) /, '$1').replace(' pp', 'pp'), tone };
-}
-
 function description(row, snap, metric, probability) {
-  const change = changeParts(row, probability).text;
   const lines = [
     `${row.name}${entity === 'driver' && row.car ? ` · ${row.car}` : ''}`,
     `Rank ${row.rank} · ${NAMES[metric] || metricLabel(metric)}: ${fmt(row.value, probability)}`,
@@ -297,7 +281,7 @@ function description(row, snap, metric, probability) {
     lines.push(
       `Uncertainty: ± ${sdOf(row, metric).toFixed(0)} points (approximate joint standard deviation; assumes the model is correct)`,
     );
-  lines.push(`Change since previous appearance: ${change}`, `${snap.year} ${snap.name}`);
+  lines.push(`${snap.year} ${snap.name}`);
   return lines.join('\n');
 }
 
@@ -330,8 +314,8 @@ function createRow() {
   bar.setAttribute('aria-hidden', 'true');
   const base = element('i', 'bar-base');
   bar.append(element('i', 'bar-track'), base);
-  const cells = Object.fromEntries(['rank', 'name', 'team', 'rating', 'deviation', 'change'].map((name) => [name, element('span', name)]));
-  line.append(cells.rank, cells.name, cells.team, cells.rating, cells.deviation, bar, cells.change);
+  const cells = Object.fromEntries(['rank', 'name', 'team', 'rating', 'deviation'].map((name) => [name, element('span', name)]));
+  line.append(cells.rank, cells.name, cells.team, cells.rating, cells.deviation, bar);
   // the row is a button for the keyboard and for screen readers (which are told the rating as a sentence); the card is for the eye
   line.tabIndex = 0;
   line.setAttribute('role', 'button');
@@ -367,19 +351,16 @@ function fillRow(item, row, index, { snap, metric, probability, share, names, te
   line.classList.toggle('linked', isLinked(row.id));
   line.setAttribute('aria-pressed', String(selected.has(row.id)));
   line.setAttribute('aria-label', description(row, snap, metric, probability));
-  const last = lastColumn(row, probability);
   cells.rank.textContent = row.rank;
   cells.name.textContent = names[index];
   cells.team.textContent = teams[index];
   cells.rating.textContent = fmt(row.value, probability);
   cells.deviation.textContent = Number.isFinite(sdOf(row, metric)) ? `±${sdOf(row, metric).toFixed(0)}` : '';
-  cells.change.className = `change ${last.tone}`.trim();
-  cells.change.textContent = last.text;
   base.style.width = share(row.value);
 }
 
 /**
- * The ratings, ranked, as rows: rank, name (and team when there is room), rating, error, a bar, and the last column. The bar runs from the left to
+ * The ratings, ranked, as rows: rank, name (and team when there is room), rating, error and a bar. The bar runs from the left to
  * the rating. A vertical line marks the fixed 1,000 reference for strengths, or the mean of what is shown for the probabilities.
  *
  * The rows stay from one weekend to the next (and from one rating to another): when the places change they glide to their new ones, the bars grow or

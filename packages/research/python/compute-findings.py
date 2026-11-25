@@ -9,6 +9,7 @@ Field-relative analyses explicitly subtract each weekend's mean from the publish
 posted after the previous weekend, so no result is used to forecast itself. See site/js/insights-cards.js for how each finding is worded.
 """
 
+import hashlib
 import itertools
 import json
 import re
@@ -122,6 +123,34 @@ def season_entrants(tables):
         .reset_index()
     )
     return entrants[entrants.races >= 8]
+
+
+def rating_extremes(retrospective, reference):
+    """Highest and lowest displayed weekend rating for each driver and car."""
+    references = {str(row['raceId']): row for row in reference['snapshots']}
+    records = {'drivers': [], 'cars': []}
+    for weekend in retrospective['model']['snaps']:
+        baselines = references[str(weekend['raceId'])]
+        for kind, identity in [('drivers', 'driverId'), ('cars', 'constructorId')]:
+            for row in weekend[kind]:
+                records[kind].append(dict(identity=str(row[identity]), name=row['name'], year=weekend['year'],
+                                          grandPrix=weekend['name'], date=weekend['date'],
+                                          rating=1000 + row['overall'] - baselines[kind]['overall']))
+
+    def extremes(kind, ascending):
+        rows = sorted(records[kind], key=lambda row: (row['rating'] if ascending else -row['rating'], row['date'], row['name']))
+        result, seen = [], set()
+        for row in rows:
+            if row['identity'] in seen:
+                continue
+            seen.add(row['identity'])
+            result.append({key: rounded(value) if key == 'rating' else value for key, value in row.items() if key != 'identity'})
+            if len(result) == 25:
+                break
+        return result
+
+    return dict(driverHigh=extremes('drivers', False), driverLow=extremes('drivers', True),
+                carHigh=extremes('cars', False), carLow=extremes('cars', True))
 
 
 def race_pairs(tables):
@@ -527,6 +556,12 @@ def main():
     starts = mechanical_retirements(tables)
     manifest = json.load(open(DATA_DIRECTORY / 'manifest.json'))
     model = json.load(open(DATA_DIRECTORY / 'model.json'))
+    retrospective = json.load(open(DATA_DIRECTORY / 'retrospective.json'))
+    reference = json.load(open(DATA_DIRECTORY / 'rating-reference.json'))
+    if retrospective['sourceHash'] != model['sourceHash'] or retrospective['lastRace'] != model['lastRace']:
+        raise ValueError('Retrospective ratings do not match the filtered model')
+    if reference['format'] != 2 or reference['refitHash'] != retrospective['refitHash']:
+        raise ValueError('Display reference does not match the retrospective ratings')
     if model['lastRace'] != manifest['lastRace']:
         raise ValueError('Published model does not match the data manifest')
     latest = model['model']['snaps'][-1]
@@ -542,8 +577,12 @@ def main():
     findings = dict(
         ratingMetric='overall',
         modelSourceHash=model['sourceHash'],
+        modelFileHash=hashlib.sha256((DATA_DIRECTORY / 'model.json').read_bytes()).hexdigest(),
+        retrospectiveFileHash=hashlib.sha256((DATA_DIRECTORY / 'retrospective.json').read_bytes()).hexdigest(),
+        ratingReferenceHash=hashlib.sha256((DATA_DIRECTORY / 'rating-reference.json').read_bytes()).hexdigest(),
         dataThrough=manifest['lastRace'],
         analysisFrom=tables.analysis_year,
+        ratingExtremes=rating_extremes(retrospective, reference),
         bestCarAgainstBestDriver=best_car_against_best_driver(tables),
         explainedShare=explained_share(tables, pairs),
         exchangeRate=exchange_rate(tables),
