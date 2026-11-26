@@ -13,6 +13,35 @@ const retrospectiveBytes = await readFile('data/retrospective.json');
 const referenceBytes = await readFile('data/rating-reference.json');
 const retrospective = deserialize(retrospectiveBytes.toString());
 const reference = JSON.parse(referenceBytes);
+// Grand Prix starts through each date, with the findings' definition of a start.
+const NOT_STARTED = new Set(['Did not start', 'Did not qualify', 'Did not prequalify', 'Withdrew']);
+const statusNames = new Map(
+  (await readFile('data/status.csv', 'utf8'))
+    .trim()
+    .split('\n')
+    .slice(1)
+    .map((line) =>
+      line
+        .trim()
+        .split(',')
+        .map((cell) => cell.replaceAll('"', '')),
+    ),
+);
+const raceDates = new Map(
+  (await readFile('data/races.csv', 'utf8'))
+    .trim()
+    .split('\n')
+    .slice(1)
+    .map((line) => [line.split(',')[0], line.match(/\d{4}-\d{2}-\d{2}/)[0]]),
+);
+const startDates = new Map();
+for (const line of (await readFile('data/results.csv', 'utf8')).trim().split('\n').slice(1)) {
+  const cells = line.trim().split(',');
+  if (NOT_STARTED.has(statusNames.get(cells.at(-1)))) continue;
+  if (!startDates.has(cells[2])) startDates.set(cells[2], []);
+  startDates.get(cells[2]).push(raceDates.get(cells[1]));
+}
+const startsThrough = (driverId, date) => (startDates.get(String(driverId)) ?? []).filter((day) => day <= date).length;
 assert.deepEqual(INSIGHTS_DATA.dataThrough, manifest.lastRace, 'findings match the race data');
 assert.equal(INSIGHTS_DATA.modelSourceHash, model.sourceHash, 'findings match the model source');
 assert.equal(INSIGHTS_DATA.modelFileHash, createHash('sha256').update(modelBytes).digest('hex'), 'rebuild findings after any model change');
@@ -77,8 +106,10 @@ for (const [kind, identity, keys] of [
     const extremes = INSIGHTS_DATA.ratingExtremes[key];
     assert.equal(extremes.length, 25, `${key} lists 25 entities`);
     assert.equal(new Set(extremes.map((row) => row.name)).size, extremes.length);
+    const minimumStarts = INSIGHTS_DATA.ratingExtremes[`${key}MinimumStarts`];
+    const eligible = minimumStarts ? ratings.filter((rating) => startsThrough(rating.id, rating.date) >= minimumStarts) : ratings;
     const bestById = new Map();
-    for (const rating of ratings) {
+    for (const rating of eligible) {
       const previous = bestById.get(rating.id);
       if (!previous || (index === 0 ? rating.rating > previous.rating : rating.rating < previous.rating)) bestById.set(rating.id, rating);
     }
@@ -89,13 +120,13 @@ for (const [kind, identity, keys] of [
       `${key}: top 25 entities`,
     );
     for (const row of extremes) {
-      const actual = ratings.find((rating) => rating.name === row.name && rating.date === row.date);
+      const actual = eligible.find((rating) => rating.name === row.name && rating.date === row.date);
       assert.ok(actual && Math.abs(actual.rating - row.rating) < 0.056, `${key}: ${row.name} ${row.date}`);
-      const history = ratings.filter((rating) => rating.id === actual.id).map((rating) => rating.rating);
+      const history = eligible.filter((rating) => rating.id === actual.id).map((rating) => rating.rating);
       const peak = index === 0 ? Math.max(...history) : Math.min(...history);
       assert.ok(Math.abs(actual.rating - peak) < 1e-8, `${key}: ${row.name} is at their own extreme`);
     }
-    const global = index === 0 ? Math.max(...ratings.map((row) => row.rating)) : Math.min(...ratings.map((row) => row.rating));
+    const global = index === 0 ? Math.max(...eligible.map((row) => row.rating)) : Math.min(...eligible.map((row) => row.rating));
     assert.ok(Math.abs(extremes[0].rating - global) < 0.056, `${key} leads with the correct extreme`);
     for (let position = 1; position < extremes.length; position++)
       assert.ok(
@@ -105,7 +136,12 @@ for (const [kind, identity, keys] of [
       );
   }
 }
+assert.equal(INSIGHTS_DATA.ratingExtremes.driverHighMinimumStarts, 20, 'driver peaks count from 20 Grand Prix starts');
+for (const key of ['driverLow', 'carHigh', 'carLow'])
+  assert.equal(INSIGHTS_DATA.ratingExtremes[`${key}MinimumStarts`], undefined, `${key} has no minimum`);
 const highestDriver = INSIGHT_CARDS.find((card) => card.id === 'driver-peak-ratings');
+assert.match(highestDriver.how(INSIGHTS_DATA), /only after 20 Grand Prix starts/);
+assert.match(INSIGHT_CARDS.find((card) => card.id === 'driver-low-ratings').how(INSIGHTS_DATA), /even short careers/);
 const revisedExtremes = {
   ...INSIGHTS_DATA,
   ratingExtremes: {

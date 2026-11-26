@@ -63,8 +63,13 @@ function ratingExtremeCard({ id, title, label, key, entity, highest }) {
       return `${first.name} is ${highest ? 'highest' : 'lowest'}, at ${formatInteger(first.rating)} after the ${first.year} ${first.grandPrix}.`;
     },
     body: () => '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="details"></div>',
-    how: (data) =>
-      `The ${highest ? 'highest' : 'lowest'} displayed overall ${entity} rating reached after a rated Grand Prix, with each ${entity === 'driver' ? 'driver' : 'team'} appearing once. These are the same retrospective ratings and 20-weekend display reference as Ratings and History, including the filtered latest weekend. Data starts in ${data.equalCarTitles.seasons[0].year}; even short careers and partial seasons are included. Historical estimates can change as new races are added. Early ratings depend on the starting assumptions, and cross-era comparisons are uncertain.`,
+    how: (data) => {
+      const minimumStarts = data.ratingExtremes[`${key}MinimumStarts`];
+      const coverage = minimumStarts
+        ? `a driver's ratings count only after ${minimumStarts} Grand Prix starts, because earlier ones can rest on a few races against barely tested teammates; partial seasons are included`
+        : 'even short careers and partial seasons are included';
+      return `The ${highest ? 'highest' : 'lowest'} displayed overall ${entity} rating reached after a rated Grand Prix, with each ${entity === 'driver' ? 'driver' : 'team'} appearing once. These are the same retrospective ratings and 20-weekend display reference as Ratings and History, including the filtered latest weekend. Data starts in ${data.equalCarTitles.seasons[0].year}; ${coverage}. Historical estimates can change as new races are added. Early ratings depend on the starting assumptions, and cross-era comparisons are uncertain.`;
+    },
     draw: (data, root) => {
       const rows = data.ratingExtremes[key];
       const items = rows.map((row) => ({

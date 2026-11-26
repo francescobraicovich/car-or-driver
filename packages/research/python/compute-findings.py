@@ -9,6 +9,7 @@ Field-relative analyses explicitly subtract each weekend's mean from the publish
 posted after the previous weekend, so no result is used to forecast itself. See site/js/insights-cards.js for how each finding is worded.
 """
 
+import bisect
 import hashlib
 import itertools
 import json
@@ -27,6 +28,9 @@ DATA_DIRECTORY = ROOT / 'data'
 OUTPUT_FILE = ROOT / 'site' / 'js' / 'insights-data.js'
 LOGISTIC_SLOPE = np.log(10) / 75  # rating points to log-odds
 FINISHED = r'^\+\d+ Laps?$'
+NOT_STARTED = ['Did not start', 'Did not qualify', 'Did not prequalify', 'Withdrew']
+# Earlier ratings can rest on a few races against barely tested teammates.
+DRIVER_PEAK_MINIMUM_STARTS = 20
 
 
 def rounded(value, digits=1):
@@ -125,32 +129,36 @@ def season_entrants(tables):
     return entrants[entrants.races >= 8]
 
 
-def rating_extremes(retrospective, reference):
-    """Highest and lowest displayed weekend rating for each driver and car."""
+def rating_extremes(retrospective, reference, start_dates):
+    """Highest and lowest displayed weekend rating for each driver and car. A driver's highest ratings count only
+    after DRIVER_PEAK_MINIMUM_STARTS Grand Prix starts, including that weekend; start_dates lists each driver's start dates in order."""
     references = {str(row['raceId']): row for row in reference['snapshots']}
     records = {'drivers': [], 'cars': []}
     for weekend in retrospective['model']['snaps']:
         baselines = references[str(weekend['raceId'])]
         for kind, identity in [('drivers', 'driverId'), ('cars', 'constructorId')]:
             for row in weekend[kind]:
-                records[kind].append(dict(identity=str(row[identity]), name=row['name'], year=weekend['year'],
-                                          grandPrix=weekend['name'], date=weekend['date'],
-                                          rating=1000 + row['overall'] - baselines[kind]['overall']))
+                record = dict(identity=str(row[identity]), name=row['name'], year=weekend['year'],
+                              grandPrix=weekend['name'], date=weekend['date'],
+                              rating=1000 + row['overall'] - baselines[kind]['overall'])
+                if kind == 'drivers':
+                    record['starts'] = bisect.bisect_right(start_dates.get(record['identity'], []), weekend['date'])
+                records[kind].append(record)
 
-    def extremes(kind, ascending):
+    def extremes(kind, ascending, minimum_starts=0):
         rows = sorted(records[kind], key=lambda row: (row['rating'] if ascending else -row['rating'], row['date'], row['name']))
         result, seen = [], set()
         for row in rows:
-            if row['identity'] in seen:
+            if row['identity'] in seen or row.get('starts', 0) < minimum_starts:
                 continue
             seen.add(row['identity'])
-            result.append({key: rounded(value) if key == 'rating' else value for key, value in row.items() if key != 'identity'})
+            result.append({key: rounded(value) if key == 'rating' else value for key, value in row.items() if key not in ('identity', 'starts')})
             if len(result) == 25:
                 break
         return result
 
-    return dict(driverHigh=extremes('drivers', False), driverLow=extremes('drivers', True),
-                carHigh=extremes('cars', False), carLow=extremes('cars', True))
+    return dict(driverHigh=extremes('drivers', False, DRIVER_PEAK_MINIMUM_STARTS), driverHighMinimumStarts=DRIVER_PEAK_MINIMUM_STARTS,
+                driverLow=extremes('drivers', True), carHigh=extremes('cars', False), carLow=extremes('cars', True))
 
 
 def race_pairs(tables):
@@ -504,7 +512,7 @@ def ageing(tables):
 
 
 def mechanical_retirements(tables):
-    starts = tables.results[~tables.results.status.isin(['Did not start', 'Did not qualify', 'Did not prequalify', 'Withdrew'])].copy()
+    starts = tables.results[~tables.results.status.isin(NOT_STARTED)].copy()
     starts['finishedOrLapped'] = starts.finished | starts.status.eq('Lapped')
     starts['mechanical'] = starts.statusId.astype(str).map(lambda s: tables.status_causes[s]['mech']) >= 0.5
     starts['mechanicalRetirement'] = starts.mechanical & ~starts.finishedOrLapped
@@ -582,7 +590,7 @@ def main():
         ratingReferenceHash=hashlib.sha256((DATA_DIRECTORY / 'rating-reference.json').read_bytes()).hexdigest(),
         dataThrough=manifest['lastRace'],
         analysisFrom=tables.analysis_year,
-        ratingExtremes=rating_extremes(retrospective, reference),
+        ratingExtremes=rating_extremes(retrospective, reference, {driver: sorted(dates) for driver, dates in starts.groupby('driverId').date}),
         bestCarAgainstBestDriver=best_car_against_best_driver(tables),
         explainedShare=explained_share(tables, pairs),
         exchangeRate=exchange_rate(tables),
