@@ -76,6 +76,7 @@ assert.deepEqual(
 for (const card of INSIGHT_CARDS) {
   assert.ok(INSIGHT_TOPICS.some((topic) => topic.id === card.topic));
   assert.ok(card.label.length <= 30);
+  assert.ok(card.title.endsWith('?') && card.label.endsWith('?'), `${card.id}: every insight is named as a question`);
   for (const text of [card.title, card.lead(INSIGHTS_DATA), card.body(INSIGHTS_DATA), card.how(INSIGHTS_DATA)]) {
     assert.equal(typeof text, 'string');
     assert.ok(!/undefined|NaN|\[object|null/.test(text), `${card.id}: ${text}`);
@@ -90,6 +91,8 @@ assert.deepEqual(
 for (const topic of INSIGHT_TOPICS) assert.ok(INSIGHT_CARDS.some((card) => card.topic === topic.id));
 // Compare each extreme with the same displayed weekends used by Ratings and History.
 const displayed = centredRatings(retrospective.model, reference, retrospective.refitHash);
+// The four extremes are titled "since 1994".
+assert.equal(displayed.snaps[0].date.slice(0, 4), '1994', 'the displayed ratings start in 1994');
 for (const [kind, identity, keys] of [
   ['drivers', 'driverId', ['driverHigh', 'driverLow']],
   ['cars', 'constructorId', ['carHigh', 'carLow']],

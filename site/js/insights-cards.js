@@ -11,7 +11,6 @@ import {
   drawHorizontalBars,
   drawLines,
   drawScatter,
-  drawText,
   createSvgElement,
   formatInteger,
   formatOneDecimal,
@@ -60,91 +59,61 @@ function ratingExtremeCard({ id, title, label, key, entity, highest }) {
     label,
     lead: (data) => {
       const first = data.ratingExtremes[key][0];
-      return `${first.name} is ${highest ? 'highest' : 'lowest'}, at ${formatInteger(first.rating)} after the ${first.year} ${first.grandPrix}.`;
+      return `${first.name}, by ${highest ? 'peak' : 'lowest'} rating: ${formatInteger(first.rating)} after the ${first.year} ${first.grandPrix}.`;
     },
-    body: () => '<div class="insight-chart" data-chart="main"></div><div class="insight-extra" data-chart="details"></div>',
+    // A ranking: one row per driver or team, with a short bar for its distance from the 1000 reference.
+    body: (data) => {
+      const rows = data.ratingExtremes[key];
+      const distance = (row) => Math.max(0, highest ? row.rating - 1000 : 1000 - row.rating);
+      const longest = Math.max(...rows.map(distance));
+      const bar = (row) =>
+        `<span class="rating-ranking-bar" style="width:${((100 * distance(row)) / longest).toFixed(1)}%;background:${highest ? 'var(--s2)' : 'var(--s1)'}"></span>`;
+      return `<div class="rating-ranking" data-chart="ranking">${tableHtml(
+        ['#', entity === 'driver' ? 'Driver' : 'Car', 'Grand Prix', 'Rating', ''],
+        rows.map((row, index) => [index + 1, row.name, `${row.year} ${row.grandPrix}`, formatInteger(row.rating), bar(row)]),
+        [0, 3],
+      )}</div>`;
+    },
     how: (data) => {
       const minimumStarts = data.ratingExtremes[`${key}MinimumStarts`];
       const coverage = minimumStarts
         ? `a driver's ratings count only after ${minimumStarts} Grand Prix starts, because earlier ones can rest on a few races against barely tested teammates; partial seasons are included`
         : 'even short careers and partial seasons are included';
-      return `The ${highest ? 'highest' : 'lowest'} displayed overall ${entity} rating reached after a rated Grand Prix, with each ${entity === 'driver' ? 'driver' : 'team'} appearing once. These are the same retrospective ratings and 20-weekend display reference as Ratings and History, including the filtered latest weekend. Data starts in ${data.equalCarTitles.seasons[0].year}; ${coverage}. Historical estimates can change as new races are added. Early ratings depend on the starting assumptions, and cross-era comparisons are uncertain.`;
+      return `The ${highest ? 'highest' : 'lowest'} displayed overall ${entity} rating reached after a rated Grand Prix, with each ${entity === 'driver' ? 'driver' : 'team'} appearing once. The bar is the distance ${highest ? 'above' : 'below'} 1000, the level of the leading field. These are the same retrospective ratings and 20-weekend display reference as Ratings and History, including the filtered latest weekend. Data starts in ${data.equalCarTitles.seasons[0].year}; ${coverage}. Historical estimates can change as new races are added. Early ratings depend on the starting assumptions, and cross-era comparisons are uncertain.`;
     },
-    draw: (data, root) => {
-      const rows = data.ratingExtremes[key];
-      const items = rows.map((row) => ({
-        label: `${row.year} ${entity === 'driver' ? surname(row.name) : row.name}`,
-        bars: [
-          {
-            value: row.rating,
-            color: highest ? 'var(--s2)' : 'var(--s1)',
-            name: `rating after ${row.grandPrix}`,
-            text: '',
-          },
-        ],
-      }));
-      const minimum = Math.min(1000, ...rows.map((row) => row.rating));
-      const maximum = Math.max(1000, ...rows.map((row) => row.rating));
-      const padding = Math.max(5, (maximum - minimum) * 0.1);
-      mountChart(
-        chartIn(root, 'main'),
-        (svg, width) => {
-          drawHorizontalBars(svg, width, items, {
-            marginLeft: Math.min(150, width * 0.42),
-            marginRight: 38,
-            rowHeight: 24,
-            baseline: 1000,
-            minimum: minimum < 1000 ? minimum - padding : 1000,
-            maximum: maximum > 1000 ? maximum + padding : 1000,
-            ticks: [1000],
-          });
-          rows.forEach((row, index) =>
-            drawText(svg, width - 33, 18 + index * 24, formatInteger(row.rating), {
-              baseline: 'middle',
-              className: 'rating-extreme-value',
-            }),
-          );
-        },
-        () => horizontalBarsHeight(items.length, 24),
-      );
-      chartIn(root, 'details').innerHTML = tableHtml(
-        [entity === 'driver' ? 'Driver' : 'Car', 'Grand Prix', 'Rating'],
-        rows.map((row) => [row.name, `${row.year} ${row.grandPrix}`, formatInteger(row.rating)]),
-        [2],
-      );
-    },
+    draw: () => {},
   };
 }
 
 export const INSIGHT_CARDS = [
   ratingExtremeCard({
     id: 'driver-peak-ratings',
-    title: 'The highest driver ratings',
-    label: 'Highest driver ratings',
+    title: 'Who is the best driver since 1994?',
+    label: 'Best driver since 1994?',
     key: 'driverHigh',
     entity: 'driver',
     highest: true,
   }),
   ratingExtremeCard({
     id: 'driver-low-ratings',
-    title: 'The lowest driver ratings',
-    label: 'Lowest driver ratings',
+    title: 'Who is the worst driver since 1994?',
+    label: 'Worst driver since 1994?',
     key: 'driverLow',
     entity: 'driver',
     highest: false,
   }),
   ratingExtremeCard({
     id: 'car-peak-ratings',
-    title: 'The highest car ratings',
-    label: 'Highest car ratings',
+    title: 'What is the best car since 1994?',
+    label: 'Best car since 1994?',
     key: 'carHigh',
     entity: 'car',
     highest: true,
   }),
   ratingExtremeCard({
     id: 'car-low-ratings',
-    title: 'The lowest car ratings',
-    label: 'Lowest car ratings',
+    title: 'What is the worst car since 1994?',
+    label: 'Worst car since 1994?',
     key: 'carLow',
     entity: 'car',
     highest: false,
@@ -154,7 +123,7 @@ export const INSIGHT_CARDS = [
     topic: 'racing',
     kind: 'model',
     title: 'How much of a race result is the car?',
-    label: 'How much is the car',
+    label: 'How much is the car?',
     lead: (data) => {
       const car = average(data.explainedShare.map((row) => row.car)) * 100;
       const driver = average(data.explainedShare.map((row) => row.driver)) * 100;
@@ -245,7 +214,7 @@ export const INSIGHT_CARDS = [
     topic: 'racing',
     kind: 'model',
     title: 'How much do driver and car ratings predict at each circuit?',
-    label: 'Driver and car by circuit',
+    label: 'Driver or car, by track?',
     lead: (data) => {
       const rows = [...data.circuitWeights].sort((a, b) => b.driverWeight - b.carWeight - (a.driverWeight - a.carWeight));
       const driver = rows[0];
@@ -291,8 +260,8 @@ export const INSIGHT_CARDS = [
     id: 'champions',
     topic: 'drivers',
     kind: 'model',
-    title: 'Every champion, split into driver and car',
-    label: 'Every champion split',
+    title: 'Which titles did the driver win, and which the car?',
+    label: 'Whose title was it?',
     lead: (data) => {
       const champions = data.champions.map((row) => ({ ...row, driverShare: row.driverRating / (row.driverRating + row.carRating) }));
       const mostDriver = champions.reduce((best, row) => (row.driverShare > best.driverShare ? row : best));
@@ -331,7 +300,7 @@ export const INSIGHT_CARDS = [
     topic: 'drivers',
     kind: 'model',
     title: 'How might title chances change in another era?',
-    label: 'Title chances across eras',
+    label: 'Titles in another era?',
     lead: (data) => {
       const first = data.eraTiming[0];
       return `${first.name} won ${first.actualTitles} titles in the rated period. With equal cars, the model estimates ${first.actualEra.toFixed(2)} in those years and a median of ${first.median.toFixed(2)} across ${first.alternatives} other career placements.`;
@@ -400,8 +369,8 @@ export const INSIGHT_CARDS = [
     id: 'career-driver-and-car',
     topic: 'drivers',
     kind: 'model',
-    title: 'Carried or carrying: career car against career driver',
-    label: 'Carried or carrying',
+    title: 'Who carried their car, and who was carried by it?',
+    label: 'Who carried whom?',
     lead: (data) => {
       const hamilton = data.careerDriverAndCar.find((row) => row.name === 'Lewis Hamilton');
       const alonso = data.careerDriverAndCar.find((row) => row.name === 'Fernando Alonso');
@@ -463,7 +432,7 @@ export const INSIGHT_CARDS = [
     topic: 'drivers',
     kind: 'model',
     title: 'How large are teammate rating gaps?',
-    label: 'Teammate rating gaps',
+    label: 'Who outdrives teammates?',
     lead: (data) => {
       const largest = data.teammates.largestGaps[0];
       const redBull = data.teammates.teamAverages.at(-1);
@@ -544,8 +513,8 @@ export const INSIGHT_CARDS = [
     id: 'qualifying-versus-race',
     topic: 'drivers',
     kind: 'model',
-    title: 'Saturday drivers and Sunday drivers',
-    label: 'Saturday and Sunday',
+    title: 'Who is a Saturday driver, and who a Sunday driver?',
+    label: 'Saturday or Sunday?',
     lead: (data) => {
       const drivers = data.qualifyingVersusRace.drivers;
       const saturday = [...drivers]
@@ -625,8 +594,8 @@ export const INSIGHT_CARDS = [
     id: 'ageing',
     topic: 'drivers',
     kind: 'model',
-    title: 'The ageing curve, and the careers behind it',
-    label: 'The ageing curve',
+    title: 'At what age do drivers peak?',
+    label: 'When do drivers peak?',
     lead: (data) => {
       const career = data.ageing.careers['Michael Schumacher'];
       const ferrari = career.filter((season) => season.year >= 1996 && season.year <= 2006);
@@ -722,8 +691,8 @@ export const INSIGHT_CARDS = [
     id: 'upsets',
     topic: 'racing',
     kind: 'model',
-    title: 'The biggest upsets: winners the ratings gave no chance',
-    label: 'The biggest upsets',
+    title: 'Which winners did the ratings give no chance?',
+    label: 'Who beat the odds?',
     lead: (data) => {
       const [first, ...rest] = data.upsets;
       const followers = rest.slice(0, 3).map((row) => `${row.driver} (${row.year} ${row.grandPrix}, 1 in ${row.oddsAgainst})`);

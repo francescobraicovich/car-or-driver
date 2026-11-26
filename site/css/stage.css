@@ -2495,6 +2495,34 @@ body[data-page='graph'] .track-title {
 .deck-card .insight-table th {
   white-space: normal;
 }
+/* the rating extremes: a ranking, with a short bar for each row's distance from 1000 */
+.deck-card .rating-ranking .insight-table td:first-child {
+  width: 2ch;
+}
+.deck-card .rating-ranking .insight-table :is(th, td):is(:nth-child(2), :nth-child(3)) {
+  text-align: left;
+}
+.deck-card .rating-ranking .insight-table td:last-child {
+  width: 18%;
+  min-width: 36px;
+}
+.rating-ranking-bar {
+  display: block;
+  height: 6px;
+  border-radius: 1px;
+}
+@media (max-width: 480px) {
+  /* on a phone the ranking keeps its numbers and drops the bars */
+  .deck-card .rating-ranking .insight-table :is(th, td) {
+    padding: 4px 3px;
+  }
+  .deck-card .rating-ranking .insight-table td {
+    font-size: 10px;
+  }
+  .deck-card .rating-ranking .insight-table :is(th, td):last-child {
+    display: none;
+  }
+}
 /* ── text on a slide (the Methodology, the Privacy notice, the About page) ───── */
 /* The text is set as it was on the pages these replace (paragraphs, lists, tables, figures, formulas, a diagram), on the card's tokens: headings in the
    panel's small capitals, numbers and code in mono, figures and formulas on plates of lighter glass like the charts. */

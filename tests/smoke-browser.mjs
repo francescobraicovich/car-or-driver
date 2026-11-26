@@ -2339,16 +2339,16 @@ await send('Emulation.setDeviceMetricsOverride', { width: 320, height: 640, devi
 await evaluate("location.hash = '#/insights?v=1&slide=car-low-ratings'");
 await sleep(900);
 check(
-  'the narrow rating chart keeps labels and values separate',
+  'on a narrow phone every rating ranking fits its card, ranked from 1 with its ratings in view',
   await evaluate(`(() => {
   const card = document.getElementById('insightsCard').getBoundingClientRect();
-  const svg = document.querySelector('#insight-car-low-ratings svg');
-  const labels = [...svg.querySelectorAll('text.secondary')].filter((text) => text.textContent.trim());
-  const values = [...svg.querySelectorAll('text.rating-extreme-value')];
-  return labels.length === 25 && values.length === 25 && labels.every((label, index) => {
-    const name = label.getBoundingClientRect(), value = values[index].getBoundingClientRect();
-    return name.left >= card.left && name.right + 2 < value.left && value.right <= card.right;
-  });
+  const ranking = document.querySelector('#insight-car-low-ratings .table-wrap');
+  const rows = [...ranking.querySelectorAll('tbody tr')];
+  return ['driver-peak-ratings', 'driver-low-ratings', 'car-peak-ratings', 'car-low-ratings'].every((id) => {
+    const wrap = document.querySelector('#insight-' + id + ' .table-wrap');
+    return wrap.scrollWidth <= wrap.clientWidth + 1;
+  }) && rows.length === 25 && rows.every((row, index) => row.cells[0].textContent === String(index + 1) &&
+    row.cells[3].getBoundingClientRect().right <= card.right);
 })()`),
 );
 await send('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 2, mobile: true });
@@ -2446,7 +2446,7 @@ const linkedSlide = await evaluate(
 );
 check(
   'a link straight to a finding opens the card on that slide, drawn',
-  JSON.parse(linkedSlide).position === '14 / 14' && JSON.parse(linkedSlide).name === 'The biggest upsets' && JSON.parse(linkedSlide).drawn,
+  JSON.parse(linkedSlide).position === '14 / 14' && JSON.parse(linkedSlide).name === 'Who beat the odds?' && JSON.parse(linkedSlide).drawn,
   linkedSlide,
 );
 for (const [view, ready] of [
