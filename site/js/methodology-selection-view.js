@@ -6,13 +6,13 @@ const OPTIONS = [
     href: '#/methodology/simple',
     kind: 'Simple',
     title: 'The idea in plain words',
-    text: 'Four short slides without formulas: why the split between driver and car is hard, ratings as chances of finishing ahead, what teammates reveal, and a model that keeps learning.',
+    text: 'Five short slides without formulas: why the split between driver and car is hard, ratings as chances of finishing ahead, what teammates reveal, a model that keeps learning, and how it looks back and how well it works.',
   },
   {
     href: '#/methodology/full',
     kind: 'Full',
     title: 'The complete method',
-    text: 'Thirteen parts with every comparison, formula, setting and test, the evidence for each step, the limitations and the references.',
+    text: 'Ten parts with every comparison, formula, setting and test: the data, the state-space model and how it is computed, the predictions, the evidence, the limitations and the references.',
   },
 ];
 

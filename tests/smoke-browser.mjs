@@ -2067,7 +2067,7 @@ check(
 await evaluate('document.querySelector(\'#methodologySelectionCard a[href="#/methodology/simple"]\').click()');
 await sleep(1200);
 check(
-  'the simple methodology has its four parts and draws its figures, and the before-and-after figure reacts to its controls',
+  'the simple methodology has its five parts and draws its figures, and the before-and-after figure reacts to its controls',
   await evaluate(`(() => {
     const card = document.getElementById('methodologySimpleCard');
     const belief = document.getElementById('simpleBeliefUpdate');
@@ -2078,7 +2078,7 @@ check(
     input.dispatchEvent(new Event('input', { bubbles: true }));
     return document.body.dataset.page === 'methodology-simple'
       && card.hasAttribute('data-open')
-      && card.querySelectorAll('.method-part').length === 4
+      && card.querySelectorAll('.method-part').length === 5
       && document.querySelectorAll('#simpleOddsChart polyline').length === 1
       && !!document.querySelector('#simpleSplitLab input')
       && document.querySelectorAll('#simpleCareerGraph .method-network-link').length === 3
@@ -2087,20 +2087,21 @@ check(
       && !/\\{\\{|undefined|NaN/.test(card.textContent);
   })()`),
 );
-await evaluate("location.hash = '#/methodology?v=1&slide=method-references'");
+await evaluate("location.hash = '#/methodology?v=1&slide=method-limits'");
 await sleep(1200);
 check(
   'a link to a slide of the methodology opens the full methodology at that slide',
   (await evaluate('location.hash')).startsWith('#/methodology/full?') &&
-    (await evaluate("document.getElementById('methodologyPosition').textContent")) === '14 / 14',
+    (await evaluate("document.getElementById('methodologyPosition').textContent")) === '11 / 11',
 );
 await evaluate("location.hash = '#/methodology/full'");
 await sleep(1500);
 check(
-  'the full methodology has thirteen parts and no unresolved settings',
+  'the full methodology has ten parts, its live coverage and no unresolved settings',
   await evaluate(`
-  document.querySelectorAll('#methodologyCard .method-part').length === 13 &&
-  document.querySelectorAll('#methodologyTrack .deck-slide').length === 14 &&
+  document.querySelectorAll('#methodologyCard .method-part').length === 10 &&
+  document.querySelectorAll('#methodologyTrack .deck-slide').length === 11 &&
+  /^\\d+ Grand Prix weekends, from the 1994 Brazilian Grand Prix/.test(document.getElementById('methodologyCoverage').textContent) &&
   [...document.querySelectorAll('#methodologyCard [data-setting]')].every(node => node.textContent.trim()) &&
   !/\\{\\{|undefined|NaN/.test(document.getElementById('methodologyCard').textContent)
 `),
@@ -2367,7 +2368,7 @@ check(
 );
 await evaluate("location.hash = '#/methodology/full'");
 await sleep(350);
-for (const slide of [1, 2, 4, 6, 7, 10, 11, 12]) {
+for (const slide of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
   await evaluate(`document.querySelector('#methodologyList button[data-slide="${slide}"]').click()`);
   await sleep(250);
   check(

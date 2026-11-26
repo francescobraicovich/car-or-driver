@@ -135,7 +135,7 @@ export const ABOUT_HTML = String.raw`
 </ul>
 
 <h3>References</h3>
-<p>The methods behind the ratings and the findings, with full references, are listed in <a href="#/methodology/full?v=1&slide=method-references">the References part of the full Methodology</a>.</p>
+<p>The methods behind the ratings and the findings, with full references, are listed in <a href="#/methodology/full?v=1&slide=method-limits">the last part of the full Methodology</a>.</p>
 
 <h3>Corrections and feedback</h3>
 <p>If you find an error in the numbers, the text or the credits, please write to <a data-contact-email></a> or open an issue in <a href="{{repositoryUrl}}" rel="noopener noreferrer">the repository</a>.</p>

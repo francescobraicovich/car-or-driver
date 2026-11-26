@@ -14,6 +14,7 @@ const LABELS = {
   'simple-odds': 'Ratings as chances',
   'simple-teammates': 'Teammates',
   'simple-model': 'A learning model',
+  'simple-history': 'Looking back',
 };
 
 const SPLIT_READING =

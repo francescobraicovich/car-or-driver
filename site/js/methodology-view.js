@@ -12,21 +12,16 @@ const $ = (id) => document.getElementById(id);
 
 const LABELS = {
   'method-questions': 'The question',
-  'method-evidence': 'Times and results',
-  'method-odds': 'Ratings and odds',
+  'method-data': 'The data',
+  'method-ratings': 'What a rating means',
   'method-separation': 'Separating driver and car',
-  'method-joint': 'Learning together',
-  'method-time': 'Changes over time',
-  'method-update': 'Updating ratings',
-  'method-scale': 'Reading the ratings',
-  'method-forecast': 'Race predictions',
-  'method-validation': 'Testing the model',
-  'method-limits': 'Limits of the ratings',
-  'method-settings': 'Settings',
-  'method-references': 'References',
+  'method-model': 'The state-space model',
+  'method-filter': 'Running forward',
+  'method-history': 'Refitting history',
+  'method-forecast': 'Predictions',
+  'method-evidence': 'Evidence',
+  'method-limits': 'Limits and sources',
 };
-// The reference material after the narrative, which ends with the limitations.
-const APPENDIX = new Set(['method-settings', 'method-references']);
 const COIN_FLIP = Math.LN2;
 const PERIODS = [
   ['2008–2011', 2008, 2011],
@@ -60,6 +55,17 @@ function fillValidation(model) {
     (monitoring.weekends ? ` In 2026, ${monitoring.weekends} weekends so far score ${monitoring.overall.raceLogLoss.toFixed(5)}.` : '');
 }
 
+/** The weekends, drivers, cars and comparisons of the chronological run, from the published model. */
+function fillCoverage(model) {
+  const [first, latest] = [model.snaps[0], model.snaps.at(-1)];
+  const drivers = new Set(model.snaps.flatMap((snap) => snap.drivers.map((row) => row.driverId))).size;
+  const cars = new Set(model.snaps.flatMap((snap) => snap.cars.map((row) => row.carId))).size;
+  const comparisons = model.snaps.reduce((sum, snap) => sum + snap.evidence.qual + snap.evidence.race + snap.evidence.overall, 0);
+  $('methodologyCoverage').textContent =
+    `${model.snaps.length} Grand Prix weekends, from the ${first.year} ${first.name} to the ${latest.year} ${latest.name}, and rates ` +
+    `${drivers} drivers and ${cars} cars from ${comparisons.toLocaleString('en-GB')} comparisons`;
+}
+
 let modelFiguresDrawn = false;
 function render() {
   const model = state.model;
@@ -72,6 +78,7 @@ function render() {
   $('methodologyPublication').textContent =
     `Ratings through ${latest.date}, ${latest.name}. Model version ${model.params.version}. Chronological source: ${state.modelSourceHash || 'loading'}. Historical source: ${state.retrospectiveSourceHash || 'loading'}.`;
   if (model.snaps.length < 2) return; // the first screen carries the latest weekend only; the full history follows
+  fillCoverage(model);
   fillValidation(model);
   if (modelFiguresDrawn || !state.displayModel?.dh?.size) return;
   modelFiguresDrawn = true;
@@ -79,7 +86,7 @@ function render() {
   const name = drawCareerAcrossTeams($('methodologyCareerChart'), state.displayModel);
   if (name)
     $('methodologyCareerCaption').textContent =
-      `${name}: overall strength after every weekend of their career (blue), and the overall strength of the car they drove (red), on the published historical ratings. The driver's line runs on through each team change; the car's line jumps to the new car.`;
+      `${name}: overall strength after every weekend of their career (blue), and the overall strength of the car they drove (red), on the published historical ratings (Section 7). The driver's line runs on through each team change, while the car's line jumps to the new car.`;
 }
 
 export function initMethodology() {
@@ -99,12 +106,9 @@ export function initMethodology() {
     idPrefix: 'methodology',
     title: 'Full methodology',
     before:
-      '<p class="deck-intro">How race results become driver ratings, car ratings and forecasts, and how every step was tested against the future.</p>' +
+      '<p class="deck-intro">How race results become driver ratings, car ratings and forecasts, and how well they hold up.</p>' +
       '<p class="methodology-note">This methodology was written by AI and corrected by the author of this website. For the idea in plain words, read the <a href="#/methodology/simple">simple methodology</a>.</p>',
-    groups: [
-      { title: 'Method', slides: slides.filter((slide) => !APPENDIX.has(slide.id)) },
-      { title: 'Appendix', slides: slides.filter((slide) => APPENDIX.has(slide.id)) },
-    ],
+    groups: [{ title: 'Method', slides }],
     firstShown: () => {
       drawOddsCurve($('methodologyOddsChart'), state.model?.params?.scale ?? 75);
       initSplitLab($('methodologySplitLab'));

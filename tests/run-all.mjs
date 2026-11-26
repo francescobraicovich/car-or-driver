@@ -54,6 +54,7 @@ const TESTS = [
   'test-gp-refresh.mjs',
   'test-gp-build.mjs',
   'test-model-file.mjs',
+  'test-methodology-example.mjs',
   'test-race-laps.mjs',
   'test-compliance.mjs',
   'test-stage.mjs',
