@@ -144,6 +144,10 @@ export const CONTENT_HTML = String.raw`
     <li><b>Cars change faster than drivers.</b> The model lets a car's strength change much more from weekend to weekend, and over the winter, than a driver's. A sudden rise shared by teammates therefore points to the car.</li>
     <li><b>Drivers move.</b> A driver who changes team takes their strength along, so their results in the new car measure that car against the old one.</li>
   </ul>
+  <figure class="method-figure">
+    <div class="method-figure-box" id="methodologyCareerChart"></div>
+    <figcaption id="methodologyCareerCaption">One driver's overall strength after every weekend of their career, and the overall strength of the car they drove.</figcaption>
+  </figure>
 
   <h4>Chains of teammates and the career network</h4>
   <p>
@@ -208,8 +212,8 @@ export const CONTENT_HTML = String.raw`
     The three strengths of a driver or a car change together, with the same correlations as their starting beliefs. Steps add as variances, so a driver's ±14 grows only to about ±14.1 over two weeks, whereas a car's ±40 grows to about ±50 over a winter.
   </p>
   <figure class="method-figure">
-    <div class="method-figure-box" id="methodologyCareerChart"></div>
-    <figcaption id="methodologyCareerCaption">One driver's overall strength after every weekend of their career, and the overall strength of the car they drove.</figcaption>
+    <div class="method-figure-box" id="methodologyUncertaintyChart"></div>
+    <figcaption>The uncertainty of Charles Leclerc's overall strength and of the Ferrari car's after every weekend since 2019, in the chronological run. Each season is drawn as its own line. The car's band widens at the first race of each season, when cars are rebuilt, and narrows as results arrive, while the driver's stays narrow throughout.</figcaption>
   </figure>
 
   <h4>From state to result: the gap equation, and why the car cancels between teammates</h4>
@@ -237,6 +241,10 @@ export const CONTENT_HTML = String.raw`
     Near its centre this distribution resembles a bell curve, but its tails are heavier, so a lap lost to traffic or damage pulls the estimate only a limited distance. The scale <span data-math>s</span> is <span data-setting="noise"></span> in internal units, about 0.58% of a lap in qualifying and 0.49% in race pace. For finishing order, <span data-math>y</span> is 1 if A finished ahead and 0 otherwise, and its probability follows the Bradley–Terry curve of <a href="#" data-jump="method-ratings">Section 3</a>:
   </p>
   <p class="method-equation" data-math-display>\ell(g)=-\log p(y\mid g)=\log\!\left(1+e^{g}\right)-y\,g.</p>
+  <figure class="method-figure">
+    <div class="method-figure-box" id="methodologyMissPullChart"></div>
+    <figcaption>How strongly one qualifying comparison pulls the estimate, against the size of the miss, at the fitted qualifying scale. For small misses the logistic error behaves like a bell curve. With a bell curve the pull grows without limit, whereas the logistic error levels off, so a miss of 3% of a lap pulls little more than a miss of 1.5%.</figcaption>
+  </figure>
 
   <h4>How much each comparison counts</h4>
   <p>
@@ -307,7 +315,7 @@ export const CONTENT_HTML = String.raw`
 
   <h4>One weekend worked through, with real numbers</h4>
   <p>
-    The 2026 Las Vegas Grand Prix shows the three steps at work for one team, Ferrari, with Lewis Hamilton and Charles Leclerc. The numbers are overall strengths from the chronological run, in the model's own coordinates. They therefore differ from the values on the Ratings and History pages, which use the displayed scale of <a href="#" data-jump="method-ratings">Section 3</a> and, for past weekends, the historical run.
+    The 2026 Las Vegas Grand Prix shows the three steps at work for one team, Ferrari, with Lewis Hamilton and Charles Leclerc. The numbers are overall strengths from the chronological run, in the model's own coordinates, and the changes are computed before rounding. They therefore differ from the values on the Ratings and History pages, which use the displayed scale of <a href="#" data-jump="method-ratings">Section 3</a> and, for past weekends, the historical run.
   </p>
   <div class="table-wrap">
     <table class="params">
@@ -315,7 +323,7 @@ export const CONTENT_HTML = String.raw`
       <tbody>
         <tr><th scope="row" class="left">Lewis Hamilton</th><td>1030.8</td><td>1031.8</td><td>+1.0</td></tr>
         <tr><th scope="row" class="left">Charles Leclerc</th><td>1046.4</td><td>1044.7</td><td>−1.7</td></tr>
-        <tr><th scope="row" class="left">Ferrari car</th><td>1134.8</td><td>1124.8</td><td>−10.0</td></tr>
+        <tr><th scope="row" class="left">Ferrari car</th><td>1134.8</td><td>1124.8</td><td>−10.1</td></tr>
       </tbody>
     </table>
   </div>
@@ -328,6 +336,10 @@ export const CONTENT_HTML = String.raw`
   <p>
     The car moved far more than either driver. Both Ferraris qualified outside the top ten, in 11th and 12th, and both finished behind cars rated well below Ferrari, including the two Alpines. Since the shortfall was shared by the two drivers, it was credited mostly to the car, whose larger uncertainty (about ±44 points, against ±14 for each driver) also let it move further. It is the attribution described in <a href="#" data-jump="method-separation">Section 4</a>, applied to one weekend.
   </p>
+  <figure class="method-figure">
+    <div class="method-figure-box" id="methodologyWeekendChart"></div>
+    <figcaption>The 2026 Las Vegas Grand Prix for Ferrari in the chronological run. Each bar is the change in overall strength over the weekend, and the grey band around zero is the uncertainty before it (one standard deviation either way). The car moved further, and its band is three times as wide.</figcaption>
+  </figure>
 
   <h4>What the model learns from, and what it is scored on</h4>
   <p>
@@ -364,7 +376,7 @@ export const CONTENT_HTML = String.raw`
 
   <h4>The latest weekend: where the two runs meet</h4>
   <p>
-    No later race can inform the most recent weekend, so the pages show the chronological run's ratings for the latest weekend and the historical run's ratings for every weekend before it. The two runs agree closely near the end of the record and less further back: the median difference between their overall driver ratings is a few points in the latest seasons, between about 7 and 16 points in the seasons from 1995 to 2022, and about 20 points in 1994. Because the two estimates meet at the latest weekend, the last step of a line on the History page joins two runs, and it can show a small jump that no single race explains.
+    No later race can inform the most recent weekend, so the pages show the chronological run's ratings for the latest weekend and the historical run's ratings for every weekend before it. The two runs agree closely near the end of the record and less further back. Measuring each driver against the leading field of the same run, the median difference between the two runs is a few points in the latest seasons and between about 6 and 16 points in the seasons from 1994 to 2022. Because the two estimates meet at the latest weekend, the last step of a line on the History page joins two runs, and it can show a small jump that no single race explains.
   </p>
 
   <h4>Which pages use which run</h4>
@@ -389,8 +401,12 @@ export const CONTENT_HTML = String.raw`
 
   <h4>The start of history: why 1994–95 is sensitive</h4>
   <p>
-    The first seasons are where the two runs differ most. At the 1994 Brazilian Grand Prix, the first weekend the pages show, the chronological run still rates almost everyone near the starting value: it places Ayrton Senna 1.2 points ahead of Michael Schumacher, and its cars span 104 points. With all later races, the historical run places Schumacher 42 points ahead of Senna and spreads the cars over 355 points, from Williams down to Pacific. Both readings come from the same model. The historical one is better informed, but at the start of the record it also depends most on its assumptions, since the 1990–1993 warm-up has no qualifying and the starting beliefs carry more weight there than anywhere else. The ratings of 1994 and 1995 are consequently the least certain on the site, including the extreme ratings of those seasons shown on the Insights page.
+    At the start of the record the two runs can differ sharply. At the 1994 Brazilian Grand Prix, the first weekend the pages show, the chronological run still rates almost everyone near the starting value: it places Ayrton Senna 1.2 points ahead of Michael Schumacher, and its cars span 104 points. With all later races, the historical run places Schumacher 42 points ahead of Senna and spreads the cars over 355 points, from Williams down to Pacific. Both readings come from the same model. The historical one is better informed, but at the start of the record it also depends most on its assumptions, since the 1990–1993 warm-up has no qualifying and the starting beliefs carry more weight there than anywhere else. The ratings of 1994 and 1995 are consequently the least certain on the site, including the extreme ratings of those seasons shown on the Insights page.
   </p>
+  <figure class="method-figure">
+    <div class="method-figure-box" id="methodologyTwoRunsChart"></div>
+    <figcaption>Michael Schumacher's overall strength above the leading field (the median of the 20 highest-rated drivers at each weekend, in the same run), after every weekend raced from 1994 to 2006. The chronological run starts close to the field and needs most of 1994 to place Schumacher far ahead, whereas the historical run, which uses every race, does so from the first weekend. Later in the career the two runs still differ by tens of points.</figcaption>
+  </figure>
 </section>
 
 <section id="method-forecast" class="method-part">
@@ -475,6 +491,10 @@ export const CONTENT_HTML = String.raw`
   <p>
     A forecast is calibrated if, among all pairs given about 70%, the favourite finishes ahead about 70% of the time. Refitting the slope of the calibrated forecasts within each scored period gives 1.00 for 2008 to 2011, 0.90 for 2012 to 2015, 0.95 for 2016 to 2020 and 1.00 for 2021 to 2025, where 1 means the stated probabilities matched how often things happened and values below 1 mean they were somewhat overconfident. Over the first 19 weekends of 2026 the slope was 0.86.
   </p>
+  <figure class="method-figure">
+    <div class="method-figure-box" id="methodologyReliabilityChart"></div>
+    <figcaption>The race forecasts of 2008 to 2025, grouped by the chance they gave the first driver of a pair. Each dot is the average forecast of a group against how often that driver finished ahead; dots on the dashed line would be perfectly calibrated. Hover or tap a dot for its numbers.</figcaption>
+  </figure>
 
   <h4>Timing forecasts: error and interval coverage</h4>
   <p>The two pace ratings forecast the size of each gap. The table gives the average error, in percent of lap time, and how often the outcome fell inside the forecast's 90% interval.</p>

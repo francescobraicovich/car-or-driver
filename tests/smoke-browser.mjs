@@ -2083,6 +2083,8 @@ check(
       && !!document.querySelector('#simpleSplitLab input')
       && document.querySelectorAll('#simpleCareerGraph .method-network-link').length === 3
       && belief.querySelectorAll('path').length === 2
+      && document.querySelectorAll('#simpleWeekendChart rect').length === 6
+      && document.querySelectorAll('#simpleTwoRunsChart polyline').length === 2
       && belief.querySelector('.method-lab-reading').textContent !== before
       && !/\\{\\{|undefined|NaN/.test(card.textContent);
   })()`),
@@ -2122,14 +2124,19 @@ check(
 `),
 );
 check(
-  'the full methodology draws the odds curve, the split, the career network, a career beside its cars, one result before and after, and every season',
+  'the full methodology draws the odds curve, the split, the career network, a career beside its cars, the uncertainty of a driver and a car, the pull of a miss, one result before and after, one weekend against its uncertainty, a career in both runs, the calibration and every season',
   await evaluate(`
   document.querySelectorAll('#methodologyOddsChart polyline').length === 1 &&
   !!document.querySelector('#methodologySplitLab input') &&
   document.querySelectorAll('#methodologyCareerGraph .method-network-link').length === 3 &&
   document.querySelectorAll('#methodologyCareerChart polyline').length >= 2 &&
   document.querySelectorAll('#methodologyBeliefUpdate path').length === 2 &&
-  document.querySelectorAll('#methodologySeasonChart polyline').length >= 2
+  document.querySelectorAll('#methodologySeasonChart polyline').length >= 2 &&
+  document.querySelectorAll('#methodologyUncertaintyChart polyline').length >= 2 &&
+  document.querySelectorAll('#methodologyMissPullChart polyline').length === 2 &&
+  document.querySelectorAll('#methodologyWeekendChart rect').length === 6 &&
+  document.querySelectorAll('#methodologyTwoRunsChart polyline').length === 2 &&
+  document.querySelectorAll('#methodologyReliabilityChart circle').length === 10
 `),
 );
 check(
@@ -2372,10 +2379,17 @@ for (const slide of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
   await evaluate(`document.querySelector('#methodologyList button[data-slide="${slide}"]').click()`);
   await sleep(250);
   check(
-    `methodology part ${slide} fits a phone`,
+    `methodology part ${slide} fits a phone, with every figure's text inside its figure`,
     await evaluate(`(() => {
     const part = document.querySelector('#methodologyCard .deck-slide:not([inert]) .method-part');
-    return part.scrollWidth <= part.clientWidth + 1;
+    const inside = [...part.querySelectorAll('.method-figure-box')].every((box) => {
+      const bounds = box.getBoundingClientRect();
+      return [...box.querySelectorAll('svg text')].every((text) => {
+        const word = text.getBoundingClientRect();
+        return !word.width || (word.left >= bounds.left - 1 && word.right <= bounds.right + 1);
+      });
+    });
+    return part.scrollWidth <= part.clientWidth + 1 && inside;
   })()`),
   );
 }

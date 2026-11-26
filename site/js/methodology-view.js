@@ -4,7 +4,16 @@
 import { state } from './state.js';
 import { summarizeBacktest } from '../../packages/core/src/backtest.js';
 import { CONTENT_HTML } from './methodology-content.js';
-import { drawCareerAcrossTeams, drawOddsCurve, drawSeasonScores } from './methodology-figures.js';
+import {
+  drawCareerAcrossTeams,
+  drawMissPull,
+  drawOddsCurve,
+  drawReliability,
+  drawSeasonScores,
+  drawTwoRuns,
+  drawUncertaintyOverTime,
+  drawWeekendChange,
+} from './methodology-figures.js';
 import { initBeliefUpdate, initCareerGraph, initSplitLab } from './methodology-interactives.js';
 import { createDeck } from './slide-deck.js';
 
@@ -23,6 +32,7 @@ const LABELS = {
   'method-limits': 'Limits and sources',
 };
 const COIN_FLIP = Math.LN2;
+const PUBLISHED_QUALIFYING_SCALE = 1.944; // the logistic scale of qualifying gaps, for the first screen before the model's settings load
 const PERIODS = [
   ['2008–2011', 2008, 2011],
   ['2012–2015', 2012, 2015],
@@ -83,6 +93,9 @@ function render() {
   if (modelFiguresDrawn || !state.displayModel?.dh?.size) return;
   modelFiguresDrawn = true;
   drawSeasonScores($('methodologySeasonChart'), model);
+  drawUncertaintyOverTime($('methodologyUncertaintyChart'), model);
+  drawWeekendChange($('methodologyWeekendChart'), model);
+  if (state.retrospectiveModel) drawTwoRuns($('methodologyTwoRunsChart'), model, state.retrospectiveModel);
   const name = drawCareerAcrossTeams($('methodologyCareerChart'), state.displayModel);
   if (name)
     $('methodologyCareerCaption').textContent =
@@ -114,6 +127,8 @@ export function initMethodology() {
       initSplitLab($('methodologySplitLab'));
       initCareerGraph($('methodologyCareerGraph'));
       initBeliefUpdate($('methodologyBeliefUpdate'));
+      drawMissPull($('methodologyMissPullChart'), state.model?.params?.parameters?.noise?.[0] ?? PUBLISHED_QUALIFYING_SCALE);
+      drawReliability($('methodologyReliabilityChart'));
       render();
     },
   });

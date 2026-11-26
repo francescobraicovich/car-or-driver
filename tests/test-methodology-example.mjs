@@ -30,7 +30,9 @@ const rows = [
 for (const [name, start, end, quotedStart, quotedEnd] of rows) {
   assert.equal(start.toFixed(1), quotedStart, `${name} before the weekend`);
   assert.equal(end.toFixed(1), quotedEnd, `${name} after the weekend`);
-  assert.ok(CONTENT_HTML.includes(`<td>${quotedStart}</td><td>${quotedEnd}</td>`), `the table quotes ${name}`);
+  const change = end - start;
+  const signed = `${change > 0 ? '+' : '−'}${Math.abs(change).toFixed(1)}`;
+  assert.ok(CONTENT_HTML.includes(`<td>${quotedStart}</td><td>${quotedEnd}</td><td>${signed}</td>`), `the table quotes ${name}`);
 }
 const gapBefore = driver(before, LECLERC).overall - driver(before, HAMILTON).overall;
 const gapAfter = driver(after, LECLERC).overall - driver(after, HAMILTON).overall;

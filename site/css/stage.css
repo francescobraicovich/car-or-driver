@@ -2628,6 +2628,7 @@ body[data-page='graph'] .track-title {
   overflow-wrap: anywhere;
 }
 .deck-text .method-figure {
+  margin-bottom: 20px; /* a clear gap between a figure and the text that follows it */
   padding: 8px 10px 6px;
 }
 .deck-text .method-figure figcaption {

@@ -100,6 +100,10 @@ export const SIMPLE_CONTENT_HTML = String.raw`
   <p>
     Teammate comparisons carry the most weight, because the car cancels out of them. Since drivers and cars are tracked together, a result that lifts or drops both teammates is credited mostly to their car, while a gap between the teammates is credited to the drivers. At the 2026 Las Vegas Grand Prix, for example, both Ferraris finished behind cars the model rated well below them. Because both drivers fell short together, the model lowered the Ferrari car by 10 points, while each driver moved by less than 2 points.
   </p>
+  <figure class="method-figure">
+    <div class="method-figure-box" id="simpleWeekendChart"></div>
+    <figcaption>The Ferrari weekend in Las Vegas. Each bar is how far a rating moved, and the grey band is how unsure the model was before the weekend. The car moved furthest, and the model was least sure about it.</figcaption>
+  </figure>
   <p>
     The model also links what it knows. A driver's three numbers tend to move together, so a strong qualifying lap raises the guess about their race strength too. And a driver who has shared a car with someone stays linked to them, so a surprising result for a former teammate or a former team nudges their rating even on a weekend they did not race.
   </p>
@@ -114,8 +118,12 @@ export const SIMPLE_CONTENT_HTML = String.raw`
     So far the model moves forward through time, rating each weekend with only the races before it. That is exactly what a forecast needs, but it leaves information unused when describing the past: how good a driver was in 2005 also shows in what their later teammates did. For the history, the site therefore runs the same model a second time, over all the races at once, so that every past rating also uses the races that came after it.
   </p>
   <p>
-    The past ratings on the Ratings, History and Graph pages come from this second run. The latest weekend, which no later race can inform, comes from the first. The two runs agree closely in recent seasons and differ most in 1994 and 1995, where the record begins. Ratings from those first seasons are the least certain on the site.
+    The past ratings on the Ratings, History and Graph pages come from this second run. The latest weekend, which no later race can inform, comes from the first. The two runs agree closely in recent seasons. Further back they differ by several points, and at the very start of the record, in 1994 and 1995, they can differ sharply for some drivers and cars. Ratings from those first seasons are the least certain on the site.
   </p>
+  <figure class="method-figure">
+    <div class="method-figure-box" id="simpleTwoRunsChart"></div>
+    <figcaption>Michael Schumacher's rating above the leading field from 1994 to 2006 in both runs. Moving forward through time (the chronological run), the model needs most of 1994 to see how strong Schumacher was; looking back with every race (the historical run), it sees it from the first weekend.</figcaption>
+  </figure>
   <p>
     Because each weekend is forecast before it is used, the forecasts can be scored afterwards. In every season since 2008 they have beaten tossing a coin, and in about three pairs out of four the driver they favoured finished ahead. The weakest season was 2009, the first year of new technical rules, when the favourite finished ahead in 67% of pairs.
   </p>

@@ -1,7 +1,8 @@
 // The simple methodology: a card of slides (slide-deck.js), one for each part of the text (methodology-simple-content.js), with the teaching
-// figures it shares with the full methodology. It is the page `methodology-simple` (#/methodology/simple). It needs no loaded ratings: the odds
-// curve reads the point scale of the model when it has loaded, 75 points per tenfold change in the odds otherwise.
-import { drawOddsCurve } from './methodology-figures.js';
+// figures it shares with the full methodology. It is the page `methodology-simple` (#/methodology/simple). The text needs no loaded ratings:
+// the odds curve reads the point scale of the model when it has loaded, 75 points per tenfold change in the odds otherwise, and the Ferrari
+// weekend and the two runs of one career are drawn once the full model and the historical run have loaded.
+import { drawOddsCurve, drawTwoRuns, drawWeekendChange } from './methodology-figures.js';
 import { initBeliefUpdate, initCareerGraph, initSplitLab } from './methodology-interactives.js';
 import { SIMPLE_CONTENT_HTML } from './methodology-simple-content.js';
 import { state } from './state.js';
@@ -19,6 +20,14 @@ const LABELS = {
 
 const SPLIT_READING =
   'The two drivers stay <b>20 points</b> apart, and each driver with the car stays exactly as fast. No result between these two drivers can tell one division of the credit from another.';
+
+let modelFiguresDrawn = false;
+function drawModelFigures() {
+  if (modelFiguresDrawn || !(state.model?.snaps?.length > 1) || !state.retrospectiveModel || !$('simpleWeekendChart')) return;
+  modelFiguresDrawn = true;
+  drawWeekendChange($('simpleWeekendChart'), state.model);
+  drawTwoRuns($('simpleTwoRunsChart'), state.model, state.retrospectiveModel);
+}
 
 export function initSimpleMethodology() {
   const text = document.createElement('div');
@@ -45,6 +54,8 @@ export function initSimpleMethodology() {
       drawOddsCurve($('simpleOddsChart'), state.model?.params?.scale ?? 75);
       initCareerGraph($('simpleCareerGraph'));
       initBeliefUpdate($('simpleBeliefUpdate'));
+      drawModelFigures();
     },
   });
+  window.addEventListener('f1:model-ready', drawModelFigures);
 }
