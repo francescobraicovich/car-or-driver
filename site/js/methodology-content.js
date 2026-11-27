@@ -452,7 +452,7 @@ export const CONTENT_HTML = String.raw`
   <h4>The prediction grid: expected finishing positions</h4>
   <p>The Prediction page compares each driver of the latest field, in their own car, with every other entrant, using the head-to-head probability with retirements. A driver's expected finishing position is one plus the expected number of opponents who finish ahead:</p>
   <p class="method-equation" data-math-display>\mathbb{E}[\text{position}_A]=1+\sum_{B\neq A}\Pr(B\text{ ahead of }A).</p>
-  <p>Sorting these expectations gives the displayed order, which is neither the most likely complete finishing order nor a probability of winning.</p>
+  <p>Sorting these expectations gives the displayed order, which is not the most likely complete finishing order. The chance of winning, the bar of each row, comes from the same pairwise forecasts: each driver's strength is the mean log-odds of finishing ahead of each opponent before retirements, the finishers are ordered as in a Plackett–Luce model of those strengths, and each driver retires with the forecast's chance over the distance. It is an approximation, since the model forecasts pairs, not whole races.</p>
 
   <h4>What the predictions leave out: circuit, weather, line-up changes</h4>
   <p>

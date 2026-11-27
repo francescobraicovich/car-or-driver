@@ -25,7 +25,6 @@ const SECTIONS = [
   ['Drivers', '/drivers'],
   ['Teams', '/teams'],
   ['Teammates compared', '/teammates'],
-  ['Drivers compared', '/compare'],
   ['Seasons', '/seasons'],
   ['About and privacy', '/about'],
 ];
@@ -39,17 +38,6 @@ const insightLinks = () =>
 function pageText(route, ratings) {
   const meta = PAGE_METADATA[route];
   const opening = `<h1>${escapeHtml(meta.heading ?? 'Who is the best Car or Driver in F1?')}</h1><p>${escapeHtml(meta.description)}</p>`;
-  const recentPairs = [...ratings.pairs.values()]
-    .filter((pair) => pair.races.at(-1).year === ratings.current.weekend.year && pair.races.length >= 5)
-    .map((pair) => `<li><a href="${pair.path}">${escapeHtml(pair.drivers[0].name)} vs ${escapeHtml(pair.drivers[1].name)}</a></li>`)
-    .join('');
-  const comparisonLinks = ratings.comparisons
-    .slice(0, 20)
-    .map(
-      (comparison) =>
-        `<li><a href="${comparison.path}">${escapeHtml(comparison.drivers[0].name)} vs ${escapeHtml(comparison.drivers[1].name)}</a></li>`,
-    )
-    .join('');
   const seasonLinks = ratings.seasons
     .slice(-10)
     .reverse()
@@ -59,7 +47,6 @@ function pageText(route, ratings) {
     '/': `${currentTable(ratings, 'drivers')}<h2>Insights</h2>${insightLinks()}`,
     '/ratings': `${currentTable(ratings, 'drivers')}${currentTable(ratings, 'cars')}<p>Every driver: <a href="/drivers">the drivers since 1994</a>. Every car: <a href="/teams">the teams since 1994</a>.</p><h2>The past seasons</h2><ul>${seasonLinks}</ul><p><a href="/seasons">Every season since 1994</a>.</p>`,
     '/history': `<h2>The rating histories of the current drivers</h2><ul>${ratings.current.drivers.map((row) => `<li><a href="${row.driver.path}">${escapeHtml(row.driver.name)}</a></li>`).join('')}</ul>`,
-    '/head-to-head': `<h2>The teammates of this season</h2><ul>${recentPairs}</ul><p><a href="/teammates">Every pair of teammates since 1994</a>.</p><h2>Drivers who were not teammates</h2><ul>${comparisonLinks}</ul><p><a href="/compare">Every comparison</a>.</p>`,
     '/prediction': `<p>The prediction is computed in the page from the current ratings:</p>${currentTable(ratings, 'drivers')}`,
     '/graph': `<p>The pairs of teammates, compared one by one: <a href="/teammates">every pair since 1994</a>.</p>`,
     '/methodology': `<ul><li><a href="/methodology/simple">How the ratings work, simply explained</a></li><li><a href="/methodology/full">The full methodology</a></li></ul>`,

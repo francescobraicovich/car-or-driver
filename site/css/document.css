@@ -18,31 +18,14 @@
 
 /* the name of the site and the links to its pages, as on the front page */
 .document-head {
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px 28px;
   padding: 16px clamp(18px, 5vw, 72px);
-}
-.document-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--display);
-  font-size: 13px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-.document-brand b {
-  font-weight: 700;
-}
-.brand-car {
-  color: var(--car);
-}
-.brand-driver {
-  color: var(--driver);
 }
 .document-links,
 .document-foot nav {
@@ -75,26 +58,10 @@
   margin: 0 auto;
   padding: 4px 16px 48px;
 }
-.document-trail {
-  font-family: var(--mono);
-  font-size: 12px;
-}
-.document-trail ol {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.document-trail li + li::before {
-  content: '›';
-  margin-right: 4px;
-}
 
 /* a panel: the metal of the site (stage.css), denser because it is read at length */
 .document-panel {
-  --panel-plate: rgb(238 240 244 / 0.88);
+  --panel-plate: rgb(226 230 236 / 0.88);
   padding: 22px clamp(16px, 4vw, 28px) 24px;
   font-size: 15px;
   line-height: 1.55;
@@ -359,6 +326,7 @@
 .document-table th,
 .document-table td {
   padding: 5px 12px 5px 0;
+  background: transparent; /* the metal shows through every cell alike, the headings as the rows */
   border-bottom: 1px solid var(--grid);
   text-align: left;
   vertical-align: top;
@@ -540,19 +508,30 @@
   gap: 16px;
   margin: 18px 0 0;
 }
+.document-neighbours-plain {
+  margin: 0;
+  padding: 0 4px;
+  font-size: 14px;
+}
+
+/* a finding on its own page: the question, one line on what it measures, then the answer and its chart, on one card */
+.insight-alone .list-title {
+  margin: 0 0 6px;
+}
+.insight-introduction {
+  margin: 0 0 14px;
+  color: var(--ink-3);
+  font: 15px / 1.5 var(--text);
+}
 
 .document-foot {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 10px 24px;
   padding: 8px clamp(18px, 5vw, 72px) 28px;
   font-size: 12.5px;
-}
-.document-foot p {
-  max-width: 64ch;
-  margin: 0;
 }
 
 @media (max-width: 600px) {
@@ -581,4 +560,251 @@
     grid-column: 2;
     grid-row: 2;
   }
+}
+
+/* a long list behind a search field (search-list.js): with the script, only what matches what is typed shows */
+.search-field input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.7);
+  color: inherit;
+  font: 15px var(--text);
+}
+.search-field input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.search-status {
+  min-height: 1.2em;
+  margin: 6px 0;
+  color: var(--ink-3);
+  font: 12px var(--mono);
+}
+.search-list li[hidden] {
+  display: none;
+}
+.search-years {
+  color: var(--ink-3);
+  font: 12px var(--mono);
+}
+
+/* ── the head to head of two drivers (head-to-head-content.js): the answer first, in the red of the first driver and the blue of the second ── */
+.pair-pick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin: 14px 0 4px;
+}
+.pair-pick label {
+  flex: 1 1 200px;
+}
+.pair-pick select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.7);
+  color: inherit;
+  font: 600 14px var(--text);
+}
+.pair-pick-versus {
+  font: 12px var(--display);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.head-to-head-answer {
+  margin: 16px 0 10px;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.head-to-head-sides {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  font: 13px var(--display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.head-to-head-sides b {
+  display: block;
+  font: 800 clamp(40px, 9vw, 64px) / 1 var(--mono);
+  letter-spacing: 0;
+}
+.side-first {
+  color: var(--car);
+}
+.side-second {
+  color: var(--driver);
+  text-align: right;
+}
+.head-to-head-split {
+  position: relative;
+  display: flex;
+  height: 14px;
+  margin: 8px 0 6px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.head-to-head-split i:first-child {
+  background: var(--car);
+}
+.head-to-head-split i:last-child {
+  background: var(--driver);
+}
+.head-to-head-split::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  border-left: 2px solid rgb(255 255 255 / 0.9); /* even odds */
+}
+.head-to-head-split.small {
+  height: 8px;
+  margin: 0;
+}
+.head-to-head-when {
+  margin: 0;
+  color: var(--ink-3);
+  font: 12px var(--mono);
+}
+.head-to-head-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 16px 0 6px;
+}
+.head-to-head-modes {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.head-to-head-modes button {
+  padding: 7px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: 10.5px var(--display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.head-to-head-modes button[aria-pressed='true'] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+.head-to-head-modes button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.head-to-head-conditions,
+.head-to-head-details {
+  margin-top: 10px;
+}
+.head-to-head-conditions summary,
+.head-to-head-details summary {
+  font: 10.5px var(--display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.head-to-head-condition-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+.head-to-head-condition-fields input {
+  width: 5em;
+  margin-left: 6px;
+  padding: 5px 6px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.7);
+  font: 13px var(--mono);
+}
+.head-to-head-steps {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.head-to-head-steps li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(80px, 30%) 4.5ch;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--grid);
+}
+.step-label small {
+  display: block;
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 1.35;
+}
+.head-to-head-steps b {
+  font: 800 13px var(--mono);
+  text-align: right;
+}
+.head-to-head-facts {
+  margin: 10px 0 0;
+  color: var(--ink-3);
+  font-size: 13px;
+}
+.chart-marker line {
+  stroke-width: 1.5px;
+  stroke-dasharray: 3 3;
+}
+.chart-marker circle {
+  stroke: #fff;
+  stroke-width: 2px;
+}
+.chart-marker.chart-series-1 line {
+  stroke: var(--car);
+}
+.chart-marker.chart-series-1 circle {
+  fill: var(--car);
+}
+.chart-marker.chart-series-2 line {
+  stroke: var(--driver);
+}
+.chart-marker.chart-series-2 circle {
+  fill: var(--driver);
+}
+.head-to-head-careers svg {
+  cursor: ew-resize;
+  touch-action: pan-y;
+}
+.career-sliders {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 6px 18px;
+  margin-top: 10px;
+}
+.career-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 11px var(--display);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.career-slider input {
+  flex: 1 1 auto;
+}
+.career-slider-1 input {
+  accent-color: var(--car);
+}
+.career-slider-2 input {
+  accent-color: var(--driver);
 }

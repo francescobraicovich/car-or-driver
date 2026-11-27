@@ -27,8 +27,9 @@
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" href="/assets/icons/icon-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/vendor/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/vendor/fonts/lexend-giga-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/vendor/fonts/fonts.css" />
-    <link rel="stylesheet" href="/vendor/katex/katex.min.css" />
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/stage.css" />
     <link rel="preload" href="/assets/art/red.webp" as="image" type="image/webp" />
@@ -61,13 +62,13 @@
     <link rel="modulepreload" href="/js/speed-profile.js" />
     <link rel="modulepreload" href="/js/history-view.js" />
     <link rel="modulepreload" href="/packages/core/src/lineage.js" />
-    <link rel="modulepreload" href="/js/head-to-head-view.js" />
     <link rel="modulepreload" href="/js/address.js" />
     <link rel="modulepreload" href="/js/page-metadata.js" />
     <link rel="modulepreload" href="/js/question-feed.js" />
     <link rel="modulepreload" href="/js/question-pool.js" />
     <link rel="modulepreload" href="/js/insight-page-metadata.js" />
     <link rel="modulepreload" href="/js/page-addresses.js" />
+    <link rel="modulepreload" href="/js/site-head.js" />
     <script src="/js/boot-probe.js"></script>
   </head>
   <body>
@@ -117,11 +118,23 @@
             </div>
           </div>
 
-          <nav class="stage-bar stage-top stage-links" aria-label="Main navigation">
-            <a href="/ratings">ratings</a><a href="/history">history</a><a href="/head-to-head">versus</a><a href="/graph">graph</a
-            ><a href="/prediction">prediction</a><a href="/insights">insights</a><a href="/methodology">method</a
-            ><a href="/drivers">drivers</a><a href="/teams">cars</a>
-          </nav>
+          <header class="stage-bar stage-top site-head" id="siteHead" data-brand="folded">
+            <a class="site-brand" href="/" aria-label="Car or Driver: the front page"
+              ><img class="site-brand-tyre" src="/assets/icons/tyre-96.webp" alt="" width="34" height="34" /><span
+                class="site-brand-name"
+                aria-hidden="true"
+                ><span><b class="brand-car">Car</b> or <b class="brand-driver">Driver</b></span></span
+              ></a
+            >
+            <button type="button" class="site-menu-button" aria-expanded="false" aria-controls="siteLinks" aria-label="Sections">
+              <i></i><i></i><i></i>
+            </button>
+            <nav class="stage-links site-links" id="siteLinks" aria-label="Main navigation">
+              <a href="/ratings">ratings</a><a href="/history">history</a><a href="/head-to-head">head to head</a><a href="/graph">graph</a
+              ><a href="/prediction">prediction</a><a href="/insights">insights</a><a href="/methodology">method</a
+              ><a href="/drivers">drivers</a><a href="/teams">cars</a>
+            </nav>
+          </header>
 
           <h1 class="stage-title" id="stageTitle" aria-label="Car or Driver">
             <span class="title-scrim" aria-hidden="true"></span>
@@ -171,72 +184,6 @@
                 <h2 class="ledger-view-title">History</h2>
               </header>
               <div class="ledger-view-body" id="chartsPanel" hidden></div>
-            </section>
-            <section class="ledger-view" id="headToHeadView" aria-label="Head to head">
-              <header class="ledger-view-head">
-                <button type="button" class="ledger-back">Ratings</button>
-                <h2 class="ledger-view-title">Head to head</h2>
-              </header>
-              <div class="ledger-view-body">
-                <div class="head-to-head" id="headToHeadPanel" hidden>
-                  <p class="sr-only">
-                    Pre-weekend race-result forecasts from unified overall ratings, joint uncertainty and retirement risk.
-                  </p>
-                  <div class="head-to-head-pick">
-                    <div class="head-to-head-side" id="headToHeadSideA">
-                      <div class="head-to-head-label-row">
-                        <span class="head-to-head-label">Driver A</span>
-                        <button type="button" class="toggle head-to-head-prime" id="headToHeadPrimeA" aria-pressed="false">Prime</button>
-                      </div>
-                      <label class="field"
-                        ><span class="sr-only">Driver A</span
-                        ><select id="headToHeadA"></select
-                      ></label>
-                    </div>
-                    <span class="vs" aria-hidden="true">vs</span>
-                    <div class="head-to-head-side" id="headToHeadSideB">
-                      <div class="head-to-head-label-row">
-                        <span class="head-to-head-label">Driver B</span>
-                        <button type="button" class="toggle head-to-head-prime" id="headToHeadPrimeB" aria-pressed="false">Prime</button>
-                      </div>
-                      <label class="field"
-                        ><span class="sr-only">Driver B</span
-                        ><select id="headToHeadB"></select
-                      ></label>
-                    </div>
-                  </div>
-                  <div class="head-to-head-mode">
-                    <button type="button" class="toggle" id="headToHeadSameCar" aria-pressed="true">Same car</button>
-                    <span class="head-to-head-state" id="headToHeadCarName"></span>
-                  </div>
-                  <div id="headToHeadOut" class="head-to-head-result" aria-live="polite"></div>
-                  <div id="headToHeadChartWrap" class="head-to-head-chart" hidden>
-                    <svg id="headToHeadChart" class="chart" role="group"></svg>
-                  </div>
-                  <div class="head-to-head-foot">
-                    <details class="head-to-head-more">
-                      <summary>Conditions <span class="head-to-head-state" id="headToHeadState"></span></summary>
-                      <div class="controls">
-                        <label class="field"
-                          >Laps, for retirement risk<input id="headToHeadLaps" type="number" value="60" min="1" max="100" step="1"
-                        /></label>
-                        <div id="headToHeadGridFields" hidden>
-                          <label class="field"
-                            >Driver A grid<input id="headToHeadGridA" type="number" min="1" max="40" step="1" placeholder="Unknown"
-                          /></label>
-                          <label class="field"
-                            >Driver B grid<input id="headToHeadGridB" type="number" min="1" max="40" step="1" placeholder="Unknown"
-                          /></label>
-                          <p class="head-to-head-grid-note">
-                            Optional: enter both starting positions. With either unknown, the forecast uses pre-weekend information.
-                          </p>
-                        </div>
-                      </div>
-                    </details>
-                    <button type="button" class="info" id="headToHeadNote" hidden>i</button>
-                  </div>
-                </div>
-              </div>
             </section>
           </section>
 
@@ -341,7 +288,6 @@
 
     <!-- PAGE_TEXT: tools/build-pages.mjs writes here the text of the page published at each address, for readers and search engines without scripts -->
     <noscript><p style="padding: 20px; text-align: center">Car or Driver needs JavaScript to show the ratings and charts.</p></noscript>
-    <script src="/vendor/katex/katex.min.js"></script>
     <script type="module" src="/js/app.js"></script>
   </body>
 </html>

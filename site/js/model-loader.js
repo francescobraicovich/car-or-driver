@@ -26,9 +26,24 @@ function showsRatingsFirst() {
 }
 
 /**
+ * The first sign that the visitor is using the page: a touch, a click, a key, the wheel, a pointer moving over it or a move to another page.
+ * The front page fetches the whole history then, not at once: a visit that only reads the front page stays light on a phone.
+ */
+function firstInteraction() {
+  const events = ['pointerdown', 'pointermove', 'touchstart', 'keydown', 'wheel', 'scroll', 'hashchange', 'popstate', 'f1:address-changed'];
+  return new Promise((resolve) => {
+    const done = () => {
+      for (const name of events) window.removeEventListener(name, done, true);
+      resolve();
+    };
+    for (const name of events) window.addEventListener(name, done, { capture: true, passive: true });
+  });
+}
+
+/**
  * Fetch the ratings, show them and tell the pages. Throws if they cannot be had.
  * A visit to the Ratings page first fetches data/model-latest.json (the latest weekend, a few tens of kilobytes) and shows it at once; the whole
- * history (data/model.json) is fetched once that is on screen, so the two do not share the connection, and takes over when it arrives. Any other page waits for the whole file.
+ * history (data/model.json) is fetched at the visitor's first interaction, and takes over when it arrives. Any other page waits for the whole file.
  */
 export async function loadModel() {
   try {
@@ -51,6 +66,7 @@ export async function loadModel() {
       document.body.dataset.ratingsReady = '1';
       window.dispatchEvent(new CustomEvent('f1:ratings-ready'));
     }
+    if (firstScreen) await firstInteraction();
     const [filtered, retrospective] = firstScreen
       ? await Promise.all([fetchFile('model.json'), fetchFile('retrospective.json', 1)])
       : [first, firstRetrospective];

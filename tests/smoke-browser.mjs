@@ -101,6 +101,17 @@ await send('Page.addScriptToEvaluateOnNewDocument', {
 await send('Storage.clearDataForOrigin', { origin: `http://localhost:${HTTP_PORT}`, storageTypes: 'all' });
 await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/` });
 
+// the front page shows the latest weekend, and fetches the whole history (and KaTeX, which only the methodology uses) only once the visitor
+// does something
+for (let i = 0; i < 60; i++) {
+  await sleep(500);
+  if (await evaluate("document.body.dataset.ratingsReady === '1'")) break;
+}
+await sleep(3000);
+const fetchedAtRest = await evaluate(
+  "JSON.stringify(performance.getEntriesByType('resource').map((entry) => new URL(entry.name).pathname).filter((path) => /\\/data\\/(model|retrospective)\\.json$|katex/.test(path)))",
+);
+await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 300, y: 200 }); // (inside the window, 756 by 469 at this point)
 for (let i = 0; i < 120; i++) {
   await sleep(1000);
   const status = (await evaluate("document.querySelector('.stage-tagline')?.textContent || ''")) || '';
@@ -110,6 +121,11 @@ for (let i = 0; i < 120; i++) {
 const ready = await evaluate("document.body.dataset.ready === '1'");
 const checks = [];
 const check = (name, pass, detail = '') => checks.push({ name, pass: !!pass, detail });
+check(
+  'the front page waits for the visitor before fetching the whole history, and does not fetch KaTeX',
+  fetchedAtRest === '[]',
+  fetchedAtRest,
+);
 check('model built', ready);
 check(
   'the first-screen and complete-history ratings agree, while forecast state stays raw',
@@ -122,12 +138,12 @@ check(
   })`),
 );
 
-// The site is the front page and what opens over it: the links at its top are Ratings, History, Versus, Graph, Insights and Method, and the links at its foot
+// The site is the front page and what opens over it: the links at its top are Ratings, History, Head to head, Graph, Insights and Method, and the links at its foot
 // are Privacy, About and the source. Nothing of the old pages (header, loading screen, status line, footer, share button, theme button) is left.
 check(
-  'the links at the top of the front page are exactly ratings, history, versus, graph, prediction, insights, method, drivers and cars',
-  JSON.stringify(await evaluate("[...document.querySelectorAll('.stage-top a')].map((a) => a.textContent)")) ===
-    JSON.stringify(['ratings', 'history', 'versus', 'graph', 'prediction', 'insights', 'method', 'drivers', 'cars']),
+  'the links at the top of the front page are exactly ratings, history, head to head, graph, prediction, insights, method, drivers and cars',
+  JSON.stringify(await evaluate("[...document.querySelectorAll('#siteLinks a')].map((a) => a.textContent)")) ===
+    JSON.stringify(['ratings', 'history', 'head to head', 'graph', 'prediction', 'insights', 'method', 'drivers', 'cars']),
 );
 check(
   'nothing of the old pages is left: no header, loading screen, status line, footer, share button or theme button',
@@ -1297,40 +1313,11 @@ check(
   JSON.stringify({ chipNames, pickedNames }),
 );
 await evaluate("location.hash = '#/ratings'");
-await sleep(600);
-await evaluate("document.getElementById('ratingsCompareHeadToHead').click()");
-await sleep(800);
-const sides = await evaluate(
-  "['headToHeadA', 'headToHeadB'].map((id) => document.getElementById(id).selectedOptions[0].textContent.split(' · ')[0])",
-);
-check(
-  'Head to head from Ratings sets driver A and driver B',
-  JSON.stringify(sides.slice().sort()) === JSON.stringify(pickedNames.slice().sort()),
-  JSON.stringify({ sides, pickedNames }),
-);
-await evaluate("location.hash = '#/ratings'");
 await sleep(300);
 await evaluate("document.getElementById('ratingsClearSelection').click()");
 
-// Head to head and Methodology
-await evaluate("location.hash = '#/head-to-head'");
-await sleep(1200);
-check(
-  'head to head shows a probability',
-  /\d+%/.test((await evaluate("document.querySelector('.head-to-head-figures')?.textContent || ''")) || ''),
-);
-// What-if: choose a career moment for driver B and wet conditions
-await evaluate(
-  "(() => { const w = document.getElementById('headToHeadWhenB'); w.value = 'prime'; w.dispatchEvent(new Event('change', { bubbles: true })); })()",
-);
-await sleep(400);
-check(
-  'what-if matchup shows its two facts and a probability',
-  /\d+%/.test((await evaluate("document.querySelector('.head-to-head-figures')?.textContent || ''")) || '') &&
-    (await evaluate("document.querySelectorAll('.head-to-head-facts > div').length")) === 2,
-);
-// The history and the head to head are views over the ratings, in the panel: a button in the panel opens each, the view covers the panel exactly, Back
-// (and the first Escape) returns to the same weekend with the focus on the button that opened it, the next Escape closes the panel
+// The history is a view over the ratings, in the panel: a button in the panel opens it, the view covers the panel exactly, Back (and the first
+// Escape) returns to the same weekend with the focus on the button that opened it, the next Escape closes the panel
 await evaluate("location.hash = '#/ratings'");
 await sleep(900);
 const ledgerState = () =>
@@ -1437,294 +1424,6 @@ check(
     (await weekendTitle()) === weekendBeforeViews,
   JSON.stringify(backFromHistory),
 );
-await evaluate("document.getElementById('ratingsOpenHeadToHead').click()");
-await sleep(1200);
-const styleOf = (selector, property) => evaluate(`getComputedStyle(document.querySelector('${selector}')).${property}`);
-check(
-  'the Versus button opens the head to head with a forecast, a bar in the colours of the two lines, and no scrolling',
-  JSON.parse(await ledgerState()).view === 'head-to-head' &&
-    /\d+%/.test((await evaluate("document.querySelector('.head-to-head-figures')?.textContent || ''")) || '') &&
-    (await styleOf('.head-to-head-bar i:first-child', 'backgroundColor')) ===
-      (await styleOf('#headToHeadChart g[clip-path] polyline[stroke-width="2"]', 'stroke')) &&
-    (await evaluate(
-      "getComputedStyle(document.querySelector('.head-to-head-bar i:last-child')).backgroundColor === getComputedStyle([...document.querySelectorAll('#headToHeadChart polyline[stroke^=\"var(--s\"]')].find((line) => line.getAttribute('stroke') === 'var(--s2)')).stroke",
-    )) &&
-    (await evaluate(
-      "(() => { const body = document.querySelector('#headToHeadView .ledger-body, #headToHeadView .ledger-view-body'); return body.scrollHeight <= body.clientHeight + 1; })()",
-    )),
-);
-// What explains a row is behind an "i" (and the views carry the figures and the names and little else): pointing at one, or focusing it, opens its
-// note beside it inside the stage; Escape closes the note and nothing else; the steps of the forecast are rows with a bar split between the two drivers
-const stepIcon = "document.querySelectorAll('#headToHeadView .head-to-head-steps li .info')[1]";
-const bars = await evaluate(
-  "(() => [...document.querySelectorAll('#headToHeadView .head-to-head-steps li .head-to-head-step-bar')].map((bar) => [bar.children.length, getComputedStyle(bar.children[0]).backgroundColor, getComputedStyle(bar.children[1]).backgroundColor]))()",
-);
-const resultText = await evaluate("document.getElementById('headToHeadOut').innerText.length");
-check(
-  'the head to head shows the figures, the names and bars for each step of the forecast, with the explanations behind icons',
-  bars.length >= 2 &&
-    bars.every((bar) => bar[0] === 2 && bar[1] === 'rgb(250, 24, 2)' && bar[2] === 'rgb(9, 26, 156)') &&
-    resultText < 520 &&
-    (await evaluate(
-      "[...document.querySelectorAll('#headToHeadView .info:not([hidden])')].length >= 6 && [...document.querySelectorAll('#headToHeadView .info:not([hidden])')].every((icon) => icon.dataset.info.length > 10 && icon.getAttribute('aria-label') === icon.dataset.info)",
-    )),
-  JSON.stringify({ bars, resultText }),
-);
-const iconAt = await evaluate(
-  `(() => { const r = ${stepIcon}.getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; })()`,
-);
-await mouse('mouseMoved', iconAt[0], iconAt[1]);
-await sleep(350);
-const noteOpen = JSON.parse(
-  await evaluate(
-    `JSON.stringify((() => { const tip = document.getElementById('infoTip'); const stage = document.getElementById('stage').getBoundingClientRect(); const r = tip.getBoundingClientRect(); return { shown: !tip.hidden, inside: r.left >= stage.left && r.right <= stage.right && r.top >= stage.top && r.bottom <= stage.bottom, text: tip.textContent === ${stepIcon}.dataset.info, described: ${stepIcon}.getAttribute('aria-describedby') === 'infoTip', floating: getComputedStyle(tip).pointerEvents === 'none' }; })())`,
-  ),
-);
-check('pointing at an "i" opens its note beside it, inside the stage', Object.values(noteOpen).every(Boolean), JSON.stringify(noteOpen));
-await press('Escape', 'Escape', 27);
-await sleep(250);
-check(
-  'Escape closes the note and nothing else: the view is still open',
-  (await evaluate("document.getElementById('infoTip').hidden")) && JSON.parse(await ledgerState()).view === 'head-to-head',
-);
-await mouse('mouseMoved', 8, 300);
-await sleep(200);
-await evaluate(`${stepIcon}.focus()`);
-await sleep(250);
-check(
-  'focusing an "i" with the keyboard opens its note too, and moving on closes it',
-  (await evaluate("!document.getElementById('infoTip').hidden")) &&
-    (await evaluate("(document.activeElement.blur(), document.getElementById('infoTip').hidden)")),
-);
-// Head to head: each driver can be moved independently by its career slider or chart marker.
-await mouse('mouseMoved', 8, 300);
-// (the checks above left driver B at his prime and the conditions wet: start from the standard setting)
-await evaluate(
-  "(() => { for (const s of ['A', 'B']) { const when = document.getElementById('headToHeadWhen' + s); when.value = 'latest'; when.dispatchEvent(new Event('change', { bubbles: true })); } })()",
-);
-await sleep(500);
-const headToHeadState = () =>
-  evaluate(`JSON.stringify({
-    sameCar: document.getElementById('headToHeadSameCar').getAttribute('aria-pressed'),
-    car: document.getElementById('headToHeadCarName').textContent,
-    figures: [...document.querySelectorAll('.head-to-head-figure')].map((figure) => ({ chance: figure.querySelector('b').textContent, rating: figure.querySelector('em').textContent, date: figure.querySelector('small').textContent })),
-    weekend: document.getElementById('ratingsNow').textContent,
-    race: document.getElementById('stageTrack').dataset.raceId,
-    raceShown: !document.getElementById('stageTrack').hidden,
-    lines: new Set([...document.querySelectorAll('#headToHeadChart g[clip-path] polyline[stroke-width="2"]')].map(line => line.getAttribute('stroke'))).size, // careers may contain several disconnected segments
-    markers: [document.querySelectorAll('#headToHeadChart line[stroke="var(--s1)"]').length, document.querySelectorAll('#headToHeadChart line[stroke="var(--s2)"]').length],
-    steps: [...document.querySelectorAll('.head-to-head-steps li > span:first-child')].map((label) => label.firstChild.textContent),
-    lit: ['versus-a', 'versus-b'].map((name) => { const dot = document.querySelector('#stageTrackDots circle.' + name); return dot ? getComputedStyle(dot).fill : null; }),
-    litRows: document.querySelectorAll('#stageTrackTable li.versus-a, #stageTrackTable li.versus-b').length,
-    prime: [document.getElementById('headToHeadPrimeA').getAttribute('aria-pressed'), document.getElementById('headToHeadPrimeB').getAttribute('aria-pressed')],
-    carFields: [...document.querySelectorAll('#headToHeadView [id^="headToHeadCarField"]')].map((field) => field.hidden),
-  })`);
-const standard = JSON.parse(await headToHeadState());
-check(
-  'the same car is the standard setting: it is on, the shared car is named once, the car pickers are not offered, and the plot is there with a marker for each driver',
-  standard.sameCar === 'true' &&
-    standard.car.length > 3 &&
-    standard.carFields.every(Boolean) &&
-    standard.lines === 2 &&
-    standard.markers[0] >= 1 &&
-    standard.markers[1] >= 1,
-  JSON.stringify(standard),
-);
-check(
-  'beside each chance are the rating the forecast takes and the date of the weekend it is from, and the two drivers are lit in the race in the colours of A and of B',
-  standard.figures.length === 2 &&
-    standard.figures.every(
-      (figure) => /^\d+%$/.test(figure.chance) && /^\d{3,4}$/.test(figure.rating) && /^\d{1,2} \w{3} \d{4}$/.test(figure.date),
-    ) &&
-    standard.lit.join() === 'rgb(250, 24, 2),rgb(9, 26, 156)' &&
-    standard.litRows === 2,
-  JSON.stringify(standard),
-);
-// Prime: B's peak is a different date, the race goes to that weekend, and the same button brings him back to his latest
-await evaluate("document.getElementById('headToHeadPrimeB').click()");
-await sleep(900);
-const primed = JSON.parse(await headToHeadState());
-check(
-  'Prime puts a driver at his peak: his date changes (the other stays), the race goes to that weekend, and pressing it again brings him back to his latest',
-  primed.prime.join() === 'false,true' &&
-    primed.figures[1].date !== standard.figures[1].date &&
-    primed.figures[0].date === standard.figures[0].date &&
-    primed.weekend === primed.figures[1].date &&
-    primed.race !== standard.race &&
-    primed.markers[0] >= 1 &&
-    (await (async () => {
-      await evaluate("document.getElementById('headToHeadPrimeB').click()");
-      await sleep(700);
-      const back = JSON.parse(await headToHeadState());
-      return back.prime.join() === 'false,false' && back.figures[1].date === standard.figures[1].date && back.race === standard.race;
-    })()),
-  JSON.stringify({ standard: standard.figures, primed: primed.figures, weekend: primed.weekend }),
-);
-// Drag the marker nearest the pointer: only that driver moves, and the address is updated once on release.
-const dragPlot = await rectangleOfSelector('#headToHeadChart');
-const dragY = dragPlot.y + dragPlot.height * 0.5;
-const entriesBeforeDrag = await evaluate('history.length');
-await mouse('mouseMoved', dragPlot.x + dragPlot.width * 0.85, dragY);
-await mouse('mousePressed', dragPlot.x + dragPlot.width * 0.85, dragY);
-for (const share of [0.8, 0.7, 0.62]) {
-  await mouse('mouseMoved', dragPlot.x + dragPlot.width * share, dragY, { buttons: 1 });
-  await sleep(60);
-}
-const dragging = JSON.parse(await headToHeadState());
-const addressMidDrag = await evaluate(ADDRESS);
-await mouse('mouseReleased', dragPlot.x + dragPlot.width * 0.62, dragY);
-await sleep(1500);
-const dragged = JSON.parse(await headToHeadState());
-check(
-  'dragging one chart marker changes only that driver and updates the race',
-  dragging.figures[1].date === standard.figures[1].date &&
-    dragging.figures[0].date !== standard.figures[0].date &&
-    dragging.raceShown === false &&
-    dragged.raceShown === true &&
-    dragged.race !== standard.race &&
-    dragged.weekend === dragged.figures[0].date &&
-    dragged.lit.join() === 'rgb(250, 24, 2),rgb(9, 26, 156)' &&
-    dragged.litRows === 2,
-  JSON.stringify({ dragging, dragged }),
-);
-check(
-  "the address is told once, when the drag ends (the browser would ignore it after a few hundred), and the browser's history does not grow",
-  !addressMidDrag.includes(`race=${dragged.race}`) &&
-    (await evaluate(ADDRESS)).includes(`race=${dragged.race}`) &&
-    (await evaluate('history.length')) === entriesBeforeDrag,
-  JSON.stringify({ addressMidDrag: addressMidDrag.slice(-24), now: (await evaluate(ADDRESS)).slice(-24) }),
-);
-check('both independently positioned chart markers remain visible', dragged.markers[0] >= 1 && dragged.markers[1] >= 1);
-const markerB = await evaluate(
-  `(() => { const marker = document.querySelector('#headToHeadChart line[stroke="var(--s2)"][stroke-width="2"]'); const box = marker.getBoundingClientRect(); return { x: box.x, y: box.y + box.height / 2 }; })()`,
-);
-await mouse('mouseMoved', markerB.x, markerB.y);
-await mouse('mousePressed', markerB.x, markerB.y);
-await mouse('mouseMoved', dragPlot.x + dragPlot.width * 0.72, markerB.y, { buttons: 1 });
-await mouse('mouseReleased', dragPlot.x + dragPlot.width * 0.72, markerB.y);
-await sleep(500);
-const draggedB = JSON.parse(await headToHeadState());
-check(
-  'dragging driver B’s chart marker leaves driver A at the selected date',
-  draggedB.figures[0].date === dragged.figures[0].date && draggedB.figures[1].date !== dragged.figures[1].date,
-  JSON.stringify(draggedB.figures),
-);
-await evaluate(
-  `(() => { const slider = document.getElementById('headToHeadTimeB'); slider.value = Math.floor(Number(slider.max) / 3); slider.dispatchEvent(new Event('input', { bubbles: true })); slider.dispatchEvent(new Event('change', { bubbles: true })); })()`,
-);
-await sleep(500);
-const sliderMoved = JSON.parse(await headToHeadState());
-check(
-  'the second career slider moves driver B without changing driver A',
-  sliderMoved.figures[0].date === draggedB.figures[0].date &&
-    sliderMoved.figures[1].date !== draggedB.figures[1].date &&
-    sliderMoved.weekend === sliderMoved.figures[1].date &&
-    (await evaluate("!!document.getElementById('headToHeadTimeB').getAttribute('aria-valuetext')")),
-  JSON.stringify(sliderMoved.figures),
-);
-await evaluate("document.getElementById('headToHeadTimeB').focus()");
-await press('Home', 'Home', 36);
-await sleep(300);
-const earliestB = JSON.parse(await headToHeadState());
-check(
-  'each career slider supports keyboard navigation to the start of the driver’s career',
-  earliestB.figures[0].date === sliderMoved.figures[0].date &&
-    earliestB.figures[1].date !== sliderMoved.figures[1].date &&
-    (await evaluate("document.getElementById('headToHeadTimeB').value === '0'")),
-);
-// Same car off, with both drivers at their latest: each in his own car again, and the forecast including retirement risk for the current grid
-await evaluate(
-  "(() => { for (const s of ['A', 'B']) { const when = document.getElementById('headToHeadWhen' + s); when.value = 'latest'; when.dispatchEvent(new Event('change', { bubbles: true })); } })()",
-);
-await sleep(300);
-await evaluate("document.getElementById('headToHeadSameCar').click()");
-await sleep(700);
-const own = JSON.parse(await headToHeadState());
-check(
-  'with the same car off the cars are offered again, and the forecast including retirement risk is back at the latest weekends',
-  own.sameCar === 'false' && own.carFields.every((hidden) => !hidden) && own.car === '' && own.steps.includes('Retirement risk'),
-  JSON.stringify(own),
-);
-const preGridOutput = await evaluate("document.getElementById('headToHeadOut').innerHTML");
-check(
-  'known-grid controls are offered for a current own-car forecast',
-  await evaluate("!document.getElementById('headToHeadGridFields').hidden"),
-);
-await evaluate(
-  "(() => { const a = document.getElementById('headToHeadGridA'), b = document.getElementById('headToHeadGridB'); a.value = '3'; b.value = '8'; b.dispatchEvent(new Event('input', { bubbles: true })); })()",
-);
-check(
-  'two known starting positions add the grid forecast step and explain its conditional meaning',
-  await evaluate(
-    "document.getElementById('headToHeadOut').textContent.includes('Known grid') && document.getElementById('headToHeadState').textContent.includes('grid 3 vs 8') && document.getElementById('headToHeadGridFields').textContent.includes('With either unknown')",
-  ),
-);
-await evaluate(
-  "(() => { const b = document.getElementById('headToHeadGridB'); b.value = ''; b.dispatchEvent(new Event('input', { bubbles: true })); })()",
-);
-check(
-  'one missing grid position restores the exact pre-weekend forecast',
-  (await evaluate("document.getElementById('headToHeadOut').innerHTML")) === preGridOutput,
-);
-await evaluate(
-  "(() => { const b = document.getElementById('headToHeadGridB'); b.value = '3'; b.dispatchEvent(new Event('input', { bubbles: true })); })()",
-);
-check(
-  'duplicate starting positions do not produce a conditional forecast',
-  (await evaluate("document.getElementById('headToHeadOut').innerHTML")) === preGridOutput,
-);
-await evaluate(
-  "(() => { const a = document.getElementById('headToHeadGridA'), b = document.getElementById('headToHeadGridB'); a.value = ''; b.value = ''; b.dispatchEvent(new Event('input', { bubbles: true })); })()",
-);
-await evaluate("document.getElementById('headToHeadSameCar').click()");
-await sleep(300);
-check(
-  'historical and equal-car scenarios hide actual-grid controls',
-  await evaluate(
-    "document.getElementById('headToHeadGridFields').hidden && getComputedStyle(document.getElementById('headToHeadGridFields')).display === 'none'",
-  ),
-);
-// one driver at two moments (his peak against his latest): one line with the two markers, and two dates
-const keepB = await evaluate("document.getElementById('headToHeadB').value");
-await evaluate(
-  "(() => { const b = document.getElementById('headToHeadB'); b.value = document.getElementById('headToHeadA').value; b.dispatchEvent(new Event('change', { bubbles: true })); })()",
-);
-await evaluate("document.getElementById('headToHeadPrimeB').click()");
-await sleep(800);
-const twoMoments = JSON.parse(await headToHeadState());
-check(
-  'the same driver at his peak and at his latest is one line with two markers, and two dates',
-  twoMoments.lines === 1 &&
-    twoMoments.figures[0].date !== twoMoments.figures[1].date &&
-    twoMoments.markers[0] >= 1 &&
-    twoMoments.markers[1] >= 1,
-  JSON.stringify(twoMoments),
-);
-await evaluate("document.getElementById('headToHeadPrimeB').click()");
-await evaluate(
-  `(() => { const b = document.getElementById('headToHeadB'); b.value = '${keepB}'; b.dispatchEvent(new Event('change', { bubbles: true })); })()`,
-);
-await sleep(500);
-await press('Escape', 'Escape', 27);
-await sleep(600);
-const afterFirstEscape = JSON.parse(await ledgerState());
-check(
-  'the first Escape goes back to the ratings from the head to head, the next closes the panel',
-  afterFirstEscape.view === 'ratings' && afterFirstEscape.stage === 'open' && afterFirstEscape.focus === 'ratingsOpenHeadToHead',
-  JSON.stringify(afterFirstEscape),
-);
-check(
-  'Back puts the ratings and the race where they were when the view was opened, after a date was dragged',
-  (await evaluate("document.getElementById('ratingsNow').textContent")) === standard.weekend &&
-    (await evaluate("document.getElementById('stageTrack').dataset.raceId")) === standard.race,
-  JSON.stringify({ standard: standard.weekend, now: await evaluate("document.getElementById('ratingsNow').textContent") }),
-);
-check(
-  'going back from the head to head puts the colours out in the race',
-  (await evaluate(
-    "document.querySelectorAll('#stageTrackDots .versus-a, #stageTrackDots .versus-b, #stageTrackTable .versus-a, #stageTrackTable .versus-b').length",
-  )) === 0,
-);
 await press('Escape', 'Escape', 27);
 await sleep(500);
 check(
@@ -1774,6 +1473,19 @@ check(
   await evaluate(
     "!!document.querySelector('#predictionPage:not([hidden]) tbody tr input') && !!document.getElementById('predictionDate').value",
   ),
+);
+const winChances = await evaluate(
+  "JSON.stringify([...document.querySelectorAll('#predictionPage tbody tr')].map((row) => [row.querySelector('.prediction-win').textContent, parseFloat(row.querySelector('.bar-base').style.width), row.querySelector('.prediction-expected').textContent]))",
+).then(JSON.parse);
+const winTotal = winChances.reduce((sum, [chance]) => sum + (parseInt(chance.replace(/[<>]/g, '')) || 0), 0);
+check(
+  'each bar of the prediction is the chance of winning, with the average finish in its own column',
+  winChances.length >= 20 &&
+    winTotal >= 90 &&
+    winTotal <= 110 &&
+    Math.max(...winChances.map(([, width]) => width)) === 100 &&
+    winChances.every(([, , expected]) => /^\d+\.\d$/.test(expected)),
+  JSON.stringify({ winTotal, first: winChances.slice(0, 3) }),
 );
 check(
   'the starting-grid question is a visible button',
@@ -1975,7 +1687,6 @@ for (const [from, to] of [
   ['#/geek/data', 'ratings'],
   ['#/geek/models', 'methodology'],
   ['#/how-it-works', 'methodology'],
-  ['#/predictor', 'head-to-head'],
 ]) {
   const got = await landing(from);
   check(`the old address ${from} opens ${to}`, got === to, got);
@@ -2023,7 +1734,6 @@ for (const hash of [
   '#/',
   '#/ratings',
   '#/history',
-  '#/head-to-head',
   '#/graph',
   '#/methodology',
   '#/methodology/simple',
@@ -2120,18 +1830,7 @@ check(
 // A phone: no page scrolls sideways
 await send('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 2, mobile: true });
 await sleep(500);
-for (const page of [
-  'home',
-  'ratings',
-  'history',
-  'head-to-head',
-  'graph',
-  'methodology',
-  'methodology/simple',
-  'methodology/full',
-  'privacy',
-  'about',
-]) {
+for (const page of ['home', 'ratings', 'history', 'graph', 'methodology', 'methodology/simple', 'methodology/full', 'privacy', 'about']) {
   await evaluate(`location.hash = '#/${page}'`);
   await sleep(1200);
   const [scroll, inner] = await evaluate('[document.documentElement.scrollWidth, window.innerWidth]');
@@ -2221,8 +1920,7 @@ check(
   linked.hidden === false && linked.moved && /^lap /.test(linked.lap),
   JSON.stringify(linked),
 );
-// Links straight to a view (a shared link): the panel is kept open with the view over the ratings, drawn at once (the head to head loads its
-// forecast on the way in)
+// Links straight to a view (a shared link): the panel is kept open with the view over the ratings, drawn at once
 // an old link to a slide of the Insights (#/insights?…) opens that finding's own page
 await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/?link=slide#/insights?v=1&slide=upsets` }); // (the pages of the findings are in the built site)
 await sleep(2500);
@@ -2231,10 +1929,7 @@ check(
   (await evaluate('location.pathname')) === '/insights/biggest-f1-upsets',
   await evaluate('location.href'),
 );
-for (const [view, ready] of [
-  ['history', "document.querySelectorAll('#driverChart polyline').length >= 3"],
-  ['head-to-head', "/\\d+%/.test(document.querySelector('.head-to-head-figures')?.textContent || '')"],
-]) {
+for (const [view, ready] of [['history', "document.querySelectorAll('#driverChart polyline').length >= 3"]]) {
   await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/${view}?link=${view}` });
   await sleep(5000);
   const opened = await evaluate(
@@ -2246,13 +1941,6 @@ for (const [view, ready] of [
     opened,
   );
 }
-// a link that names two drivers (from the page of a driver or of two teammates) opens the head to head on them
-await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/head-to-head?a=1&b=3` });
-await sleep(5000);
-const namedPair = await evaluate(
-  "JSON.stringify([document.body.dataset.page, document.getElementById('headToHeadA').value, document.getElementById('headToHeadB').value])",
-);
-check('a link that names two drivers opens the head to head on them', namedPair === JSON.stringify(['head-to-head', '1', '3']), namedPair);
 await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/graph?link=graph` });
 await sleep(5000);
 const linkedGraph = await evaluate(
@@ -2658,6 +2346,127 @@ for (const [width, height] of [
   })()`),
   );
 }
+await send('Emulation.clearDeviceMetricsOverride');
+
+// The head to head of two drivers is their page (in the built site): the answer first, in the same car at their best, then the figures; the moment
+// and the car change it at once, and a marker dragged on the chart takes a driver at another date
+await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 900, deviceScaleFactor: 1, mobile: false });
+await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/compare/lewis-hamilton-vs-max-verstappen` });
+await sleep(2000);
+const pairState = () =>
+  evaluate(
+    "JSON.stringify({ chances: [...document.querySelectorAll('[data-chance]')].map((b) => b.textContent), answer: document.querySelector('[data-answer]').textContent, when: document.querySelector('[data-when]').textContent, pressed: [...document.querySelectorAll('#headToHead [aria-pressed=\"true\"]')].map((b) => b.textContent), carDisabled: document.querySelector('[data-car=\"own\"]').disabled, marker: document.querySelector('.chart-marker[data-series=\"0\"]').getAttribute('transform') })",
+  ).then(JSON.parse);
+const atBest = await pairState();
+check(
+  'the page of two drivers opens with who would finish ahead, in the same car at their best',
+  atBest.chances.length === 2 &&
+    parseInt(atBest.chances[0]) + parseInt(atBest.chances[1]) === 100 &&
+    /^In the same car, each at their best, (Hamilton|Verstappen) would finish ahead of (Hamilton|Verstappen) in \d+% of races\.$/.test(
+      atBest.answer,
+    ) &&
+    JSON.stringify(atBest.pressed) === JSON.stringify(['At their best', 'Same car']),
+  JSON.stringify(atBest),
+);
+await evaluate('document.querySelector(\'[data-moment="next"]\').click()');
+const nextRace = await pairState();
+check(
+  'the next race is in their own cars, with its own chance',
+  nextRace.carDisabled && /^In the next race, in their own cars, /.test(nextRace.answer) && /Before the next race/.test(nextRace.when),
+  JSON.stringify(nextRace),
+);
+await evaluate('document.querySelector(\'[data-moment="best"]\').click()');
+await evaluate("document.querySelector('.head-to-head-careers').scrollIntoView({ block: 'center' })");
+await sleep(300);
+const chartBox = await evaluate(
+  "(() => { const r = document.querySelector('[data-chart] svg').getBoundingClientRect(); return [r.x, r.y, r.width, r.height]; })()",
+);
+const [fromX, fromY, toX] = [chartBox[0] + chartBox[2] * 0.42, chartBox[1] + chartBox[3] * 0.5, chartBox[0] + chartBox[2] * 0.3];
+await mouse('mousePressed', fromX, fromY);
+await mouse('mouseMoved', toX, fromY, { buttons: 1 });
+await mouse('mouseReleased', toX, fromY);
+await sleep(5000);
+const draggedPair = await pairState();
+check(
+  'dragging a marker on the chart takes that driver at another date, and the chance follows',
+  draggedPair.pressed.includes('Chosen dates') && /at the dates chosen/.test(draggedPair.answer) && draggedPair.marker !== atBest.marker,
+  JSON.stringify(draggedPair),
+);
+check(
+  'on a page of its own, the tyre lets out the name of the site',
+  (await evaluate("document.getElementById('siteHead').dataset.brand")) === 'released',
+);
+await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/head-to-head?a=1&b=830` });
+await sleep(2500);
+check(
+  'the head to head of two drivers with a page of their own opens that page',
+  (await evaluate('location.pathname')) === '/compare/lewis-hamilton-vs-max-verstappen',
+  await evaluate('location.href'),
+);
+await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/head-to-head` });
+await sleep(2000);
+await evaluate('document.querySelector(\'#headToHeadIndex button[type="submit"]\').click()');
+await sleep(2500);
+check(
+  'the Compare button of the head to head opens the page of the two drivers chosen',
+  /^\/(compare|teammates)\/[a-z-]+-vs-[a-z-]+$/.test(await evaluate('location.pathname')),
+  await evaluate('location.href'),
+);
+await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/head-to-head?a=849&b=102` });
+await sleep(6000);
+check(
+  'the head to head of any other two drivers is drawn in the page, the same way',
+  (await evaluate("document.querySelector('#headToHead .profile-surname')?.textContent || ''")).replace(/\s+/g, ' ') ===
+    'Latifi vs Senna' &&
+    (await evaluate("[...document.querySelectorAll('[data-chance]')].every((b) => /\\d+%/.test(b.textContent))")) &&
+    (await evaluate("document.querySelectorAll('[data-chart] polyline, [data-chart] circle.chart-point').length")) >= 2,
+);
+await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/#/predictor?a=1&b=830` });
+await sleep(3000);
+check(
+  'an old link to the head to head opens the page of the two drivers it named',
+  (await evaluate('location.pathname')) === '/compare/lewis-hamilton-vs-max-verstappen',
+  await evaluate('location.href'),
+);
+// a press on the drawing around the panels closes the page, back to the front page
+await evaluate('window.scrollTo(0, 0)');
+await mouse('mousePressed', 20, 400);
+await mouse('mouseReleased', 20, 400);
+await sleep(2500);
+check('a press beside the panels of a page goes back to the front page', (await evaluate('location.pathname')) === '/');
+check(
+  'back on the front page, the name has folded behind the tyre',
+  (await evaluate("document.getElementById('siteHead').dataset.brand")) === 'folded',
+);
+// the drivers: the current grid, the ten best of all time, and a search for any other
+await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/drivers` });
+await sleep(1500);
+await evaluate(
+  "(() => { const input = document.querySelector('[data-search-list] input'); input.value = 'raikkonen'; input.dispatchEvent(new Event('input', { bubbles: true })); })()",
+);
+const found = await evaluate(
+  "[...document.querySelectorAll('[data-search-list] li:not([hidden])')].map((item) => item.querySelector('a').textContent)",
+);
+check(
+  'the drivers page lists the ten best and finds any driver as the name is typed, accents aside',
+  JSON.stringify(found) === JSON.stringify(['Kimi Räikkönen']) &&
+    (await evaluate("[...document.querySelectorAll('.panel-title')].some((title) => /ten best/i.test(title.textContent))")),
+  JSON.stringify(found),
+);
+// on a phone the links are behind a button of three lines
+await send('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 2, mobile: true });
+await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/drivers` });
+await sleep(1500);
+const linksBefore = await evaluate("getComputedStyle(document.getElementById('siteLinks')).display");
+await evaluate("document.querySelector('.site-menu-button').click()");
+const linksOpen = await evaluate(
+  "[getComputedStyle(document.getElementById('siteLinks')).display, document.querySelector('.site-menu-button').getAttribute('aria-expanded'), document.getElementById('siteLinks').getBoundingClientRect().right <= innerWidth]",
+);
+check(
+  'on a phone the sections open from a button of three lines',
+  linksBefore === 'none' && linksOpen[0] === 'flex' && linksOpen[1] === 'true' && linksOpen[2],
+  JSON.stringify({ linksBefore, linksOpen }),
+);
 await send('Emulation.clearDeviceMetricsOverride');
 
 for (const c of checks) console.log(`${c.pass ? 'ok  ' : 'FAIL'} ${c.name}${c.detail ? ` (${c.detail})` : ''}`);

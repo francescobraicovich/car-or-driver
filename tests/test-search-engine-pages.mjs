@@ -84,7 +84,7 @@ try {
     'the 404 page is left out',
   );
   assert.equal(await readFile(join(DIST, 'robots.txt'), 'utf8'), `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`);
-  assert.equal(await readFile(join(DIST, '_redirects'), 'utf8'), '/site / 301\n/site/* /:splat 301\n');
+  assert.equal(await readFile(join(DIST, '_redirects'), 'utf8'), '/site / 301\n/site/* /:splat 301\n/compare /head-to-head 301\n');
   assert.ok(
     (await readFile(join(DIST, '_headers'), 'utf8')).includes('https://:project.pages.dev/*\n  X-Robots-Tag: noindex'),
     'the copy at pages.dev is left out',
@@ -110,7 +110,7 @@ try {
   const duel = await readFile(fileAt('/teammates/lewis-hamilton-vs-nico-rosberg'), 'utf8');
   assert.ok(duel.includes('>42–34</b>') && duel.includes('>44–29</b>'), 'a teammates page gives their qualifying and race record');
   assert.ok(
-    /<nav class="document-links"[^>]*>.*<a href="\/drivers">drivers<\/a><a href="\/teams">cars<\/a>/.test(hamilton),
+    /<nav class="document-links[^"]*"[^>]*>.*<a href="\/drivers">drivers<\/a><a href="\/teams">cars<\/a>/.test(hamilton),
     'the menu leads to the drivers and the cars',
   );
   // the pages of the questions on the front page: two drivers who were not teammates (for long), and each season that is over
@@ -122,21 +122,50 @@ try {
     return value;
   };
   assert.ok(
-    ['compare', 'compare/lewis-hamilton-vs-max-verstappen', 'seasons', 'seasons/2021'].every((path) =>
+    ['head-to-head', 'compare/lewis-hamilton-vs-max-verstappen', 'seasons', 'seasons/2021'].every((path) =>
       addresses.includes(`${BASE}${path}`),
     ),
-    'the site map lists the comparisons and the seasons',
+    'the site map lists the head to head, the comparisons and the seasons',
   );
+  // the page of two drivers is their head to head: the answer first (who would finish ahead in the same car, at their best), worked out when the page
+  // is written, then the figures; its script has the page's data, and no page shows the trail of pages that led to it
+  const answer = (html) =>
+    html
+      .match(/<b data-chance="0">(\d+)%<\/b>.*<b data-chance="1">(\d+)%<\/b>/)
+      ?.slice(1)
+      .map(Number);
   const compared = await readFile(fileAt('/compare/lewis-hamilton-vs-max-verstappen'), 'utf8');
   assert.ok(
     compared.includes('<title>Lewis Hamilton vs Max Verstappen: who is the better F1 driver?'),
     'a comparison is named as the question',
   );
+  assert.ok(
+    answer(compared) &&
+      answer(compared)[0] + answer(compared)[1] === 100 &&
+      compared.indexOf('data-chance') < compared.indexOf('Who is better'),
+    'a comparison opens with the head to head of the two, in the same car at their best',
+  );
+  const data = JSON.parse(compared.match(/<script type="application\/json" id="pairData">([^<]*)<\/script>/)[1]);
+  assert.ok(
+    data.drivers.length === 2 &&
+      ['best', 'latest'].every((moment) => data.forecasts[moment].same.p > 0 && data.forecasts[moment].own.p > 0) &&
+      data.forecasts.next.p > 0,
+    'the page carries the forecasts it can switch between',
+  );
+  assert.ok(!/document-trail|aria-label="Breadcrumb"/.test(compared + hamilton), 'no page shows a trail of pages');
   assert.equal(figure(compared, 'figure-first'), figure(hamilton, 'figure-peak'), 'a comparison gives the peak of the driver page');
   assert.equal(figure(compared, 'figure-second'), figure(verstappen, 'figure-peak'), 'a comparison gives the peak of each driver page');
   assert.ok(
     hamilton.includes('<a href="/compare/lewis-hamilton-vs-max-verstappen">'),
     'a driver page leads to the comparisons of the driver',
+  );
+  const teammates = await readFile(fileAt('/teammates/lewis-hamilton-vs-nico-rosberg'), 'utf8');
+  assert.ok(answer(teammates) && /Teammates at Mercedes/.test(teammates), 'two teammates have the same page, with their record together');
+  const headToHead = await readFile(fileAt('/head-to-head'), 'utf8');
+  assert.ok(
+    /<form class="pair-pick" action="\/head-to-head" method="get">/.test(headToHead) &&
+      (headToHead.match(/<option value=/g) || []).length > 300,
+    'the head to head offers any two drivers',
   );
   const teammatePages = new Set((await readdir(join(DIST, 'teammates'))).filter((name) => name.endsWith('.html')));
   const comparisonPages = (await readdir(join(DIST, 'compare'))).filter((name) => name.endsWith('.html'));

@@ -8,20 +8,23 @@ Interface modules live in `site/js/`. Related modules share a prefix so they sta
 
 | Area | Entry points and supporting files |
 | --- | --- |
-| Startup and routing | `app.js`, `boot-probe.js`, `workspace.js`, `address.js` (the path of each page; old `#/` links still open), `page-metadata.js` (titles and descriptions), `state.js`, `dom.js`, `model-loader.js` |
+| Startup and routing | `app.js`, `boot-probe.js`, `workspace.js`, `address.js` (the path of each page; old `#/` links still open), `page-metadata.js` (titles and descriptions), `state.js`, `dom.js`, `model-loader.js` (the front page fetches the whole history at the visitor's first interaction) |
+| Head of every page | `site-head.js`: the tyre at the top left, which lets out the name off the front page and folds it back on the way home, and the links, behind a button of three lines on a phone |
 | Front page and overlays | `stage-view.js`, `stage-pages.js`, `stage-geometry.js`, `stage-noise.js`, `slide-deck.js`; `question-feed.js` (the questions scrolling on the front page) and `question-pool.js` (the questions, their pages and how wanted each is: the weights to tune are at its top) |
 | Ratings | `ratings-view.js`, `ratings-bars.js`, `metric-text.js`, `info-tip.js` |
-| History and comparisons | `history-view.js`, `head-to-head-view.js`, `head-to-head-forecasting.js` |
+| History | `history-view.js` |
+| Head to head | The page of two drivers, written by the build for the pairs the front page asks about (`/compare/…`) and every pair of teammates (`/teammates/…`), and drawn in the browser for any other pair (`/head-to-head?a=…&b=…`): `head-to-head-content.js` (the page, from its data), `head-to-head-forecasts.js` (who would finish ahead: at their best, latest, the next race, any dates), `rating-chart.js` (the chart, with a marker for each driver), `pair-page.js` (switching, dragging, the choice of two drivers) |
+| Prediction | `prediction-view.js`, `prediction.js` (the expected finishing positions, and the chance of winning from the pairwise forecasts) |
 | Teammate graph | `graph-view.js` |
 | Race replay | `track-view.js`, `track-geometry.js`, `race-replay.js`, `speed-profile.js` |
 | Insights | `insights-cards.js` (the findings), `insight-card.js` (the card of each), `insights-charts.js`, generated `insights-data.js`; the Insights are pages of the built site (`/insights` and one for each finding), not part of the front page |
 | Methodology | `methodology-selection-view.js` (the choice); `methodology-simple-view.js`, `methodology-simple-content.js` (simple); `methodology-view.js`, `methodology-content.js` (full); `methodology-figures.js`, `methodology-interactives.js` (figures shared by both) |
 | Legal pages and identity | `legal-view.js`, `legal-content.js`, `site-identity.js` |
 | Shared charts and helpers | `charts.js`, `chart-renderer.js`, `chart-math.js`, `utils.js` |
-| Pages of the findings | `insight-page.js` (draws the charts on `/insights` and `/insights/…`), `insight-page-metadata.js` (address, title and introduction of each) |
+| Document pages | `document-page.js` (the head; a press beside the panels goes back to the front page), `search-list.js` (the search field of the drivers and the teams), `insight-page.js` (draws the charts on `/insights` and `/insights/…`), `insight-page-metadata.js` (address, title and introduction of each finding) |
 | Addresses of the generated pages | `page-addresses.js`: the address of a driver's, team's, teammates', comparison or season page, shared by the build and the front page's questions |
 
-`site/css/styles.css` defines shared controls, chart and prose styles; `stage.css` defines the front page, panels and slide decks; `document.css` defines the pages of the drivers, teams, teammates, comparisons, seasons and findings. Active artwork and circuit outlines are in `site/assets/`. Fonts and KaTeX are served locally from `site/vendor/`, with their licences.
+`site/css/styles.css` defines shared controls, chart and prose styles; `stage.css` defines the front page, panels, slide decks and the head of every page; `document.css` defines the pages of the drivers, teams, two drivers, seasons and findings. The build also writes `front-page-questions.json` and `head-to-head-drivers.json` (`tools/generated-files.mjs`), which the local server computes on request. Active artwork and circuit outlines are in `site/assets/`. Fonts and KaTeX are served locally from `site/vendor/`, with their licences.
 
 ## Design and accessibility
 

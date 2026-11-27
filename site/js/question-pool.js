@@ -10,16 +10,16 @@ import { addressName, comparisonPath, seasonPath, TEAMMATE_PAGE_MINIMUM_RACES, t
 
 /** The mix of kinds the feed shows, as shares of its questions (they add up to 1). */
 export const KIND_SHARE = {
-  insight: 0.17, // a finding: "Who is the best F1 driver of all time?"
+  insight: 0.15, // a finding: "Who is the best F1 driver of all time?"
   now: 0.08, // the best driver now, the next race
-  versus: 0.16, // two drivers in the head to head: "Who is better: Verstappen or Leclerc?"
+  versus: 0.22, // two drivers in the head to head: "Who is better: Verstappen or Leclerc?"
   worse: 0.06, // two poor drivers: "Who is worse: Latifi or Mazepin?"
-  teammates: 0.1, // two teammates, on their page
-  graph: 0.1, // a driver against every teammate, in the Graph
-  career: 0.1, // a driver's rating over a career, in History
-  driver: 0.09, // a driver's page
+  teammates: 0.09, // two teammates, on their page
+  graph: 0.09, // a driver against every teammate, in the Graph
+  career: 0.08, // a driver's rating over a career, in History
+  driver: 0.08, // a driver's page
   car: 0.07, // a car's page
-  season: 0.07, // the ratings at the end of a season
+  season: 0.08, // the ratings at the end of a season
 };
 /** How many duels of two drivers the feed asks about, of each kind. */
 export const DUELS = { better: 200, worse: 60 };

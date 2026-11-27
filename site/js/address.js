@@ -9,7 +9,6 @@ export const ROUTES = [
   '/',
   '/ratings',
   '/history',
-  '/head-to-head',
   '/prediction',
   '/graph',
   '/methodology',
@@ -30,8 +29,6 @@ export const ALIASES = {
   '/simple/history': '/history',
   '/geek/explore': '/history',
   lab: '/history',
-  predictor: '/head-to-head',
-  '/predictor': '/head-to-head',
   method: '/methodology',
   '/method': '/methodology',
   '/how-it-works': '/methodology',
@@ -39,13 +36,22 @@ export const ALIASES = {
   '/geek/models': '/methodology',
 };
 
+/** The earlier names of the head to head, which was a view over the ratings and is a document of its own now. */
+const HEAD_TO_HEAD_PATHS = ['/head-to-head', 'predictor', '/predictor'];
+
 /**
- * Where an address of a page that is now a document of its own leads, or null: the Insights were a card of slides over the front page, and are
- * pages now (/insights, and one for each finding), so an old address of a slide (#/insights?v=1&slide=upsets) opens the finding's page.
+ * Where an address of a page that is now a document of its own leads, or null. The Insights were a card of slides over the front page, and are
+ * pages now (/insights, and one for each finding), so an old address of a slide (#/insights?v=1&slide=upsets) opens the finding's page; an old
+ * address of the head to head (#/head-to-head?a=1&b=830) opens the head to head of the two drivers it named.
  */
 export function movedAddress(path, search) {
+  const options = new URLSearchParams(search);
+  if (HEAD_TO_HEAD_PATHS.includes(path)) {
+    const [a, b] = ['a', 'b'].map((key) => options.get(key));
+    return a && b ? `/head-to-head?a=${encodeURIComponent(a)}&b=${encodeURIComponent(b)}` : '/head-to-head';
+  }
   if (path !== '/insights') return null;
-  const page = INSIGHT_PAGES[new URLSearchParams(search).get('slide')];
+  const page = INSIGHT_PAGES[options.get('slide')];
   return page ? `/insights/${page.slug}` : '/insights';
 }
 

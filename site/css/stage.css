@@ -178,7 +178,6 @@ body {
 }
 .stage-top {
   top: 0;
-  justify-content: flex-end;
 }
 .stage-bottom {
   bottom: 0;
@@ -206,6 +205,128 @@ body {
 .stage-links a:hover,
 .stage-links a:focus-visible {
   border-bottom-color: var(--ink);
+}
+
+/* ── the head of every page: the tyre, its name and the links (site-head.js) ── */
+.site-head {
+  --brand-turn: 0.8s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.site-brand {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+.site-brand-tyre {
+  position: relative;
+  z-index: 1; /* the name goes in and out behind it */
+  width: 34px;
+  height: 34px;
+  transition: rotate var(--brand-turn);
+}
+.site-brand-name {
+  display: inline-block;
+  overflow: hidden; /* the name is cut off at the middle of the tyre, behind which it hides */
+  margin-left: -17px;
+  padding: 4px 0 4px 29px;
+}
+.site-brand-name > span {
+  display: inline-block;
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateX(calc(-100% - 30px));
+  transition: transform var(--brand-turn);
+}
+.site-brand b {
+  font-weight: 700;
+}
+.site-brand .brand-car {
+  color: #fa1802;
+}
+.site-brand .brand-driver {
+  color: #0a1a9c;
+}
+.site-head[data-brand='released'] .site-brand-tyre {
+  rotate: 360deg; /* a turn clockwise as the name comes out, and back the other way as it folds in */
+}
+.site-head[data-brand='released'] .site-brand-name > span {
+  transform: none;
+}
+.site-head-still :is(.site-brand-tyre, .site-brand-name > span) {
+  transition: none;
+}
+.site-menu-button {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 36px;
+  padding: 0 9px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.site-menu-button i {
+  display: block;
+  height: 2px;
+  background: currentColor;
+  transition:
+    rotate 0.2s,
+    translate 0.2s,
+    opacity 0.2s;
+}
+.site-head[data-menu='open'] .site-menu-button i:nth-child(1) {
+  translate: 0 7px;
+  rotate: 45deg;
+}
+.site-head[data-menu='open'] .site-menu-button i:nth-child(2) {
+  opacity: 0;
+}
+.site-head[data-menu='open'] .site-menu-button i:nth-child(3) {
+  translate: 0 -7px;
+  rotate: -45deg;
+}
+@media (max-width: 720px) {
+  .site-head {
+    flex-wrap: nowrap;
+  }
+  .site-menu-button {
+    display: inline-flex;
+  }
+  .site-head .site-links {
+    position: absolute;
+    top: calc(100% - 6px);
+    right: clamp(18px, 5vw, 72px);
+    z-index: 30;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 190px;
+    padding: 10px 18px;
+    border: 1px solid rgb(255 255 255 / 0.7);
+    border-radius: 6px;
+    background: rgb(238 240 244 / 0.96);
+    box-shadow: 0 12px 30px rgb(0 0 0 / 0.22);
+    color: #07080b;
+  }
+  .site-head .site-links a {
+    padding: 9px 0;
+    color: inherit;
+  }
+  .site-head[data-menu='open'] .site-links {
+    display: flex;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-brand-tyre,
+  .site-brand-name > span {
+    transition: none;
+  }
 }
 .stage a:focus-visible,
 .stage button:focus-visible {
@@ -710,26 +831,29 @@ body {
   --neg: #560709;
   --form: #fa1802; /* the colour of recent form */
   --form-edge: #5c0a00;
-  --panel-plate: rgb(236 238 242 / 0.18);
+  --panel-plate: rgb(226 230 236 / 0.18);
   --panel-shade: rgb(0 0 0 / 0.11); /* the most the shading below can darken any point: the layers of it together */
-  /* the metal: a lamp's light sweeping across a brushed plate (bright and dark bands), a gloss at the top, the foot of the plate in shade, and the brushing */
+  /* the metal: satin chrome. A chrome mirror dulled to a satin: its reflections are soft bands (the sky bright at the top, a dark horizon a third of the
+     way down, the ground under it), one broad sheen across it, and a fine grain blended into the light (site/assets/textures/satin-grain.svg) */
   background-color: var(--panel-plate);
   background-image:
+    url('/assets/textures/satin-grain.svg'),
+    linear-gradient(115deg, rgb(255 255 255 / 0) 10%, rgb(255 255 255 / 0.32) 25%, rgb(255 255 255 / 0) 42%),
     linear-gradient(
-      115deg,
-      rgb(255 255 255 / 0.52) 0%,
-      rgb(255 255 255 / 0.1) 15%,
-      rgb(255 255 255 / 0) 23%,
-      rgb(255 255 255 / 0.36) 35%,
-      rgb(255 255 255 / 0.04) 45%,
-      rgb(0 0 0 / 0.03) 57%,
-      rgb(255 255 255 / 0.42) 69%,
-      rgb(255 255 255 / 0.05) 81%,
-      rgb(0 0 0 / 0.03) 100%
-    ),
-    radial-gradient(120% 70% at 50% 0%, rgb(255 255 255 / 0.26), transparent 62%),
-    linear-gradient(to bottom, transparent 62%, rgb(0 0 0 / 0.05) 100%),
-    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.08) 0 1px, rgb(0 0 0 / 0.03) 1px 3px);
+      180deg,
+      rgb(255 255 255 / 0.5) 0%,
+      rgb(255 255 255 / 0.2) 22%,
+      rgb(0 0 0 / 0.07) 38%,
+      rgb(255 255 255 / 0.12) 46%,
+      rgb(255 255 255 / 0.26) 62%,
+      rgb(0 0 0 / 0.05) 85%,
+      rgb(255 255 255 / 0.1) 100%
+    );
+  background-size:
+    160px 160px,
+    auto,
+    auto;
+  background-blend-mode: soft-light, normal, normal;
   border: 1px solid rgb(255 255 255 / 0.7);
   border-radius: 6px;
   -webkit-backdrop-filter: blur(9px) saturate(1.2);
@@ -755,7 +879,7 @@ body {
 }
 /* the card on a row: it can cover the sketches, so its fill is denser */
 .rating-card {
-  --panel-plate: rgb(238 240 244 / 0.84);
+  --panel-plate: rgb(226 230 236 / 0.84);
   position: absolute;
   z-index: 6;
   width: 256px;
@@ -833,7 +957,7 @@ body {
   max-height: calc(100% - 68px - var(--bottom-space, 58px) - 8px);
 }
 .stage[data-layout='sheet'] .ledger {
-  --panel-plate: rgb(238 240 244 / 0.84); /* denser than the column: kept open, the sheet can cover the pictures */
+  --panel-plate: rgb(226 230 236 / 0.84); /* denser than the column: kept open, the sheet can cover the pictures */
   left: clamp(18px, 5vw, 72px);
   right: clamp(18px, 5vw, 72px);
   bottom: calc(var(--bottom-space, 58px) + 8px);
@@ -887,8 +1011,7 @@ body {
   flex-direction: column;
   min-height: 0;
 }
-.ledger[data-view='history'] #historyView,
-.ledger[data-view='head-to-head'] #headToHeadView {
+.ledger[data-view='history'] #historyView {
   display: flex;
   animation: ledger-view-in 0.22s ease-out;
 }
@@ -1091,6 +1214,9 @@ body {
   vertical-align: bottom;
   white-space: normal; /* a name wraps over two lines rather than widening the table */
 }
+.deck-card th {
+  background: transparent; /* the headings on the metal, as the rows are (the ratings panel keeps its fill: its table scrolls under its headings) */
+}
 .ledger tbody tr:hover,
 .deck-card tbody tr:hover {
   background: var(--ink); /* inverted, as the rows of the ratings are */
@@ -1222,7 +1348,7 @@ body {
   max-width: min(360px, calc(100% - 16px));
 }
 .info-tip {
-  --panel-plate: rgb(238 240 244 / 0.94);
+  --panel-plate: rgb(226 230 236 / 0.94);
   position: absolute;
   z-index: 9;
   width: max-content;
@@ -1234,421 +1360,6 @@ body {
   pointer-events: none;
 }
 
-/* ── head to head ────────────────────────────────────── */
-/* Two drivers, A in the first colour of the chart's palette and B in the second (over the name, in the bars, and as the two lines under them), the
-   chance that each finishes ahead in large figures, and the forecast one stage at a time as rows like those of the ratings: a bar split between the
-   two drivers with the line at even odds drawn as the ratings draw their average, and the row under the pointer inverted. What explains a row is
-   behind its "i"; what changes the matchup (another season or car for either driver, the conditions) is folded away until it is wanted. */
-.head-to-head {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-height: 100%;
-  padding: 4px 12px 8px;
-}
-.head-to-head-pick {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-  align-items: start;
-  gap: 8px;
-}
-.head-to-head-side {
-  display: grid;
-  gap: 4px;
-  align-content: start;
-  min-width: 0;
-}
-.head-to-head-label-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  min-height: 20px;
-}
-.ledger .head-to-head .head-to-head-prime {
-  min-height: 20px;
-  padding: 0 7px;
-  font-size: 10.5px;
-}
-.head-to-head-mode {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.ledger .head-to-head-mode .toggle {
-  min-height: 22px;
-}
-.ledger .head-to-head .head-to-head-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--ink-3);
-  font-family: var(--display);
-  font-size: 9.5px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.head-to-head-label::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  background: var(--s1);
-  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
-}
-#headToHeadSideB .head-to-head-label::before {
-  background: var(--s2);
-}
-.ledger .head-to-head-pick select {
-  width: 100%;
-  min-height: 28px;
-  padding-left: 8px;
-  font-size: 12px;
-  font-weight: 600;
-}
-.head-to-head-pick .vs {
-  padding-top: 24px;
-  color: var(--ink-3);
-  font-family: var(--mono);
-  font-size: 11px;
-}
-.head-to-head-time {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  color: var(--ink-3);
-  font-size: 10px;
-  font-weight: 600;
-}
-.head-to-head-time input {
-  width: 100%;
-  min-width: 0;
-  min-height: 0;
-  height: 16px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  accent-color: var(--s1);
-}
-#headToHeadSideB .head-to-head-time input {
-  accent-color: var(--s2);
-}
-.head-to-head-extras,
-.head-to-head-more {
-  min-width: 0;
-}
-.head-to-head-extras summary,
-.head-to-head-more summary {
-  min-height: 18px;
-  color: var(--ink-3);
-  font-size: 10.5px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.head-to-head-extras[open] summary {
-  margin-bottom: 6px;
-}
-.head-to-head-when {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.head-to-head-when .field {
-  flex: 1 1 100px;
-}
-.head-to-head-when .field[hidden] {
-  display: none;
-}
-.ledger .head-to-head .field {
-  gap: 2px;
-  color: var(--ink-3);
-  font-size: 10.5px;
-  font-weight: 600;
-}
-.ledger .head-to-head-extras select,
-.ledger .head-to-head-more select {
-  min-height: 22px;
-  font-size: 11px;
-  font-weight: 500;
-}
-.ledger .head-to-head input[type='number'],
-.ledger .head-to-head input[type='date'] {
-  min-height: 22px;
-  padding: 0 6px;
-  background: rgb(255 255 255 / 0.3);
-}
-.ledger .head-to-head .field,
-.ledger .head-to-head .field input,
-.ledger .head-to-head .field select {
-  width: 100%;
-}
-.head-to-head-result {
-  margin-top: 2px;
-}
-.head-to-head-names {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-.head-to-head-names > div {
-  flex: 1 1 0;
-  min-width: 0;
-  padding-top: 5px;
-  border-top: 3px solid var(--s1);
-  font-family: var(--display);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  line-height: 1.25;
-  text-transform: uppercase;
-}
-.head-to-head-names > div:last-child {
-  border-top-color: var(--s2);
-  text-align: right;
-}
-.head-to-head-figure {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-.head-to-head-figure:last-child {
-  flex-direction: row-reverse;
-}
-.head-to-head-moment {
-  display: grid;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0;
-  line-height: 1.25;
-}
-.head-to-head-figure:last-child .head-to-head-moment {
-  text-align: right;
-}
-.head-to-head-moment em {
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 800;
-}
-.head-to-head-moment small {
-  color: var(--ink-3);
-}
-.head-to-head-names small {
-  display: block;
-  color: var(--ink-3);
-  font-family: var(--mono);
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
-}
-.head-to-head-figures {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  margin: 4px 0;
-  font-family: var(--mono);
-  font-size: clamp(30px, 9vw, 42px);
-  font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
-/* the two bars (the main one and the one of each step): A and B side by side, and the line at even odds as the ratings draw their average */
-.head-to-head-bar,
-.head-to-head-step-bar {
-  --line: var(--ink);
-  --halo: rgb(255 255 255 / 0.85);
-  position: relative;
-  display: flex;
-}
-.head-to-head-bar {
-  height: 12px;
-}
-.head-to-head-bar i,
-.head-to-head-step-bar i {
-  display: block;
-  min-width: 2px;
-}
-.head-to-head-bar i:first-child,
-.head-to-head-step-bar i:first-child {
-  background: var(--s1);
-}
-.head-to-head-bar i:last-child,
-.head-to-head-step-bar i:last-child {
-  background: var(--s2);
-}
-.head-to-head-bar::after,
-.head-to-head-step-bar::after {
-  content: '';
-  position: absolute;
-  top: -2px;
-  bottom: -2px;
-  left: 50%;
-  width: 2px;
-  margin-left: -1px;
-  background: var(--line);
-  box-shadow: 0 0 0 1px var(--halo);
-}
-.head-to-head-steps {
-  margin-top: 10px;
-  padding-top: 8px;
-  border-top: 1px solid var(--border);
-}
-.head-to-head-steps h3 {
-  display: flex;
-  align-items: center;
-  margin: 0 0 4px;
-  color: var(--ink-3);
-  font-family: var(--display);
-  font-size: 9.5px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.head-to-head-steps ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.head-to-head-steps li {
-  display: grid;
-  grid-template-columns: 9.5em minmax(0, 1fr) 4ch;
-  align-items: center;
-  gap: 10px;
-  min-height: 26px;
-  padding: 0 6px;
-  border-radius: 2px;
-}
-.head-to-head-steps li > span:first-child {
-  display: flex;
-  align-items: center;
-  font-size: 11.5px;
-  font-weight: 650;
-  white-space: nowrap;
-}
-.head-to-head-step-bar {
-  height: 10px;
-}
-.head-to-head-steps li b {
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 800;
-  text-align: right;
-}
-/* The row under the pointer is inverted, as in the ratings. */
-.head-to-head-steps li:hover {
-  background: var(--ink);
-  color: var(--surface);
-}
-.head-to-head-steps li:hover .head-to-head-step-bar {
-  --line: var(--surface);
-  --halo: rgb(10 11 15 / 0.85);
-}
-.head-to-head-steps li:hover .head-to-head-step-bar i {
-  box-shadow: inset 0 0 0 1px rgb(238 240 243 / 0.75);
-}
-.ledger .head-to-head-steps li:hover .info {
-  border-color: var(--surface);
-  color: var(--surface);
-}
-.ledger .head-to-head-steps li:hover .info:hover {
-  background: var(--surface);
-  color: var(--ink);
-}
-.head-to-head-why {
-  display: flex;
-  align-items: center;
-  margin: 6px 0 0;
-  font-size: 11px;
-  font-weight: 550;
-}
-.head-to-head-facts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: 8px 0 0;
-}
-.head-to-head-facts > div {
-  padding: 6px 8px 2px 0;
-}
-.head-to-head-facts dt {
-  color: var(--ink-3);
-  font-family: var(--display);
-  font-size: 9.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-.head-to-head-facts dt .info {
-  vertical-align: middle;
-}
-.head-to-head-facts dd {
-  margin: 2px 0 0;
-  font-family: var(--mono);
-  font-size: 14px;
-  font-weight: 800;
-}
-.head-to-head-facts dd small {
-  color: var(--ink-3);
-  font-family: var(--text);
-  font-size: 10.5px;
-  font-weight: 450;
-}
-.head-to-head-pair {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-.head-to-head-pair i {
-  width: 8px;
-  height: 8px;
-  background: var(--s1);
-  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.25);
-}
-.head-to-head-pair i.b {
-  margin-left: 8px;
-  background: var(--s2);
-}
-.head-to-head-chart {
-  flex: 1 1 120px;
-  min-height: 120px;
-  padding: 4px 6px;
-  overflow: hidden;
-  border-radius: 4px;
-  background: rgb(255 255 255 / 0.4);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.6);
-}
-.head-to-head-foot {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-.head-to-head-more {
-  flex: 1 1 auto;
-}
-.head-to-head-state {
-  margin-left: 6px;
-  color: var(--ink-3);
-  font-family: var(--mono);
-  font-weight: 500;
-}
-.head-to-head-more .controls {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px 10px;
-  margin-top: 6px;
-}
-.head-to-head-more .controls > .field {
-  grid-column: 1 / -1;
-}
-#headToHeadGridFields {
-  display: contents;
-}
-.head-to-head-grid-note {
-  grid-column: 1 / -1;
-  margin: 0;
-  font-size: 11px;
-  line-height: 1.4;
-  color: var(--ink-3);
-}
 /* ── the insights ────────────────────────────────────── */
 /* A card in the middle of the picture (grey, as behind the panel), on the panel's metal and denser, because it covers the sketches: the contents, then one
    slide for each finding, sliding. The list of the slides stands beside it on the left, on the picture itself, when there is room; the ticks under the
@@ -1660,7 +1371,7 @@ body {
   --deck-top: calc(68px + (100% - 76px - var(--bottom-space, 58px) - var(--deck-height)) / 2);
 }
 .deck-card {
-  --panel-plate: rgb(238 240 244 / 0.93); /* denser than the card of a row: it is large, and the title and the sketches are behind it */
+  --panel-plate: rgb(226 230 236 / 0.93); /* denser than the card of a row: it is large, and the title and the sketches are behind it */
   --deck-width: min(900px, calc(100% - 2 * clamp(18px, 5vw, 72px)));
   position: absolute;
   z-index: 5;
@@ -1742,7 +1453,7 @@ body {
 /* The dated teammate network has its own broad plate. The mini GP remains to
    the right on roomy screens, so a highlighted node can light its race dot. */
 .graph-page {
-  --panel-plate: rgb(238 240 244 / 0.93);
+  --panel-plate: rgb(226 230 236 / 0.93);
   position: absolute;
   z-index: 5;
   top: 68px;
@@ -3207,7 +2918,7 @@ body[data-page='graph'] .track-title {
 }
 /* the tooltip of a chart on the panel: the panel's metal, the lines' own colours */
 #chartValueTooltip.metal {
-  --panel-plate: rgb(238 240 244 / 0.92);
+  --panel-plate: rgb(226 230 236 / 0.92);
   padding: 8px 10px;
   font-size: 11px;
   line-height: 1.4;
@@ -3769,16 +3480,6 @@ body[data-page='graph'] .track-title {
   box-shadow: inset 3px 0 0 var(--hot);
   font-weight: 800;
 }
-.track-table li.versus-a {
-  background: rgb(250 24 2 / 0.22);
-  box-shadow: inset 3px 0 0 var(--s1);
-  font-weight: 800;
-}
-.track-table li.versus-b {
-  background: rgb(9 26 156 / 0.18);
-  box-shadow: inset 3px 0 0 var(--s2);
-  font-weight: 800;
-}
 .track-halo,
 .track-line {
   fill: none;
@@ -3814,13 +3515,6 @@ body[data-page='graph'] .track-title {
 }
 .track-dot.hot {
   fill: var(--hot);
-}
-/* the two drivers of the Head to head: A in the first colour of the chart's palette and B in the second (the white edge keeps the blue on the black line) */
-.track-dot.versus-a {
-  fill: var(--s1);
-}
-.track-dot.versus-b {
-  fill: var(--s2);
 }
 .track-speeds {
   display: flex;
@@ -3910,7 +3604,7 @@ body[data-page='graph'] .track-title {
 
 /* The forecast uses the same compact ranked rows and blue bars as Ratings. */
 .prediction-page {
-  --panel-plate: rgb(238 240 244 / 0.84);
+  --panel-plate: rgb(226 230 236 / 0.84);
   right: auto;
   width: min(520px, calc(100% - 36px));
   max-width: none;
@@ -4078,7 +3772,7 @@ body[data-page='graph'] .track-title {
 }
 .prediction-table tr {
   display: grid;
-  grid-template-columns: 3ch minmax(0, 1fr) 4.5ch minmax(35px, 30%);
+  grid-template-columns: 3ch minmax(0, 1fr) 4.5ch minmax(35px, 28%) 4.5ch; /* place, driver, chance of winning (figure and bar), average finish */
   align-items: center;
   gap: 0 1ch;
   padding: 0 4px;
@@ -4113,10 +3807,11 @@ body[data-page='graph'] .track-title {
   display: none;
 }
 .prediction-table .prediction-rank,
+.prediction-table .prediction-win,
 .prediction-table .prediction-expected {
   text-align: right;
 }
-.prediction-expected {
+.prediction-win {
   font-weight: 800;
 }
 .prediction-table .prediction-team,
@@ -4124,7 +3819,7 @@ body[data-page='graph'] .track-title {
   display: none;
 }
 .prediction-page[data-edit-grid='true'] .prediction-table tr {
-  grid-template-columns: 3ch minmax(0, 1fr) 4.5ch minmax(25px, 25%) 4ch;
+  grid-template-columns: 3ch minmax(0, 1fr) 4.5ch minmax(25px, 22%) 4.5ch 4ch;
 }
 .prediction-page[data-edit-grid='true'] .prediction-start {
   display: flex;
@@ -4194,10 +3889,10 @@ body[data-page='graph'] .track-title {
     gap: 0 0.5ch;
   }
   .prediction-table tbody tr {
-    grid-template-columns: 2.5ch minmax(0, 1fr) 4.5ch;
+    grid-template-columns: 2.5ch minmax(0, 1fr) 4.5ch 4.5ch;
   }
   .prediction-page[data-edit-grid='true'] .prediction-table tbody tr {
-    grid-template-columns: 2.5ch minmax(0, 1fr) 4.5ch 4ch;
+    grid-template-columns: 2.5ch minmax(0, 1fr) 4.5ch 4.5ch 4ch;
   }
   .prediction-table tbody .prediction-bar {
     display: none;

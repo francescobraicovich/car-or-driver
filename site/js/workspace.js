@@ -9,7 +9,7 @@ import { PAGE_METADATA } from './page-metadata.js';
 // Every route is the front page: the ratings are the panel on it, kept open; the history and the head to head are views over the ratings, in the
 // panel; Insights, Prediction, Methodology and About & Privacy each open a card over it.
 const DEFAULT_ROUTE = '/';
-const VIEW_IDS = { history: 'historyView', 'head-to-head': 'headToHeadView' };
+const VIEW_IDS = { history: 'historyView' };
 const $ = (id) => document.getElementById(id);
 
 export function initWorkspace() {
@@ -37,7 +37,6 @@ export function initWorkspace() {
   function setPage() {
     document.body.dataset.page = pageName();
     $('stageLedger').dataset.view = panelView(pageName());
-    if (panelView(pageName()) !== 'head-to-head') window.dispatchEvent(new CustomEvent('f1:versus-drivers', { detail: null })); // the two drivers lit in the race
   }
 
   function display() {
@@ -165,9 +164,6 @@ export function initWorkspace() {
     history.compare(event.detail, snap ? +snap.year : history.state.to);
     openView('/history');
   });
-  window.addEventListener('f1:compare-head-to-head', () => {
-    openView('/head-to-head');
-  });
   window.addEventListener('f1:graph-driver', (event) => {
     graphDriver = event.detail.id;
     if (route === '/graph') saveURL();
@@ -178,9 +174,8 @@ export function initWorkspace() {
     saveURL();
   });
   window.addEventListener('f1:open-view', (event) => {
-    const { view, entity } = event.detail;
-    if (view === 'history') history.show(entity);
-    openView(view === 'history' ? '/history' : '/head-to-head');
+    history.show(event.detail.entity);
+    openView('/history');
   });
   for (const button of document.querySelectorAll('.ledger-back')) button.addEventListener('click', goBack);
   window.addEventListener('f1:ledger-back', goBack);

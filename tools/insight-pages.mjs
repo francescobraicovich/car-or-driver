@@ -1,7 +1,8 @@
 // The page of each finding of the Insights at its own address (/insights/best-f1-driver-of-all-time), written by the publishing script
-// (tools/build-pages.mjs): the question as people search for it (site/js/insight-page-metadata.js), the finding's own slide from the data
-// (site/js/insights-view.js), the nearby questions people also ask with their answers from the ratings (the best driver right now, the best of each
-// decade), how it is computed, and links to the others. The chart is drawn in the browser (site/js/insight-page.js), as on the card of the Insights.
+// (tools/build-pages.mjs): the question as people search for it and one line on what it measures (site/js/insight-page-metadata.js), the answer and
+// its chart (site/js/insight-card.js, with how it is computed behind an "i"), the nearby questions people also ask with their answers from the
+// ratings (the best driver right now, the best of each decade), and the findings before and after it. The chart is drawn in the browser
+// (site/js/insight-page.js).
 import { INSIGHTS_DATA } from '../site/js/insights-data.js';
 import { INSIGHT_CARDS, INSIGHT_TOPICS } from '../site/js/insights-cards.js';
 import { INSIGHT_PAGES } from '../site/js/insight-page-metadata.js';
@@ -85,28 +86,20 @@ function nearbyQuestions(card, ratings) {
 export function insightPages({ base, ratings }) {
   const list = insightList();
   return list.map(({ card, page, path, answer }, index) => {
-    const topic = INSIGHT_TOPICS.find((entry) => entry.id === card.topic);
-    const how = plain(typeof card.how === 'function' ? card.how(INSIGHTS_DATA) : card.how);
     const [previous, next] = [list[index - 1], list[index + 1]];
-    const others = list.filter((entry) => entry !== list[index]);
     const questions = nearbyQuestions(card, ratings);
     const content = [
-      `      <section class="document-panel profile">
-        <p class="profile-subject">Insight · ${escapeHtml(topic.title)}</p>
-        <h1 class="list-title">${escapeHtml(page.heading)}</h1>
-        <p class="profile-meta">${escapeHtml(page.introduction)}</p>
-      </section>`,
       `      <div class="insight-document" id="stage">
-        <section class="deck-card" data-deck="insights" data-open aria-label="${escapeHtml(card.title)}"><div class="deck-slide">${insightCardHtml(card, INSIGHTS_DATA)}</div></section>
+        <section class="deck-card insight-alone" data-deck="insights" data-open aria-labelledby="insightHeading">
+          <h1 class="list-title" id="insightHeading">${escapeHtml(page.heading)}</h1>
+          <p class="insight-introduction">${escapeHtml(page.introduction)}</p>
+          <div class="deck-slide">${insightCardHtml(card, INSIGHTS_DATA, { alone: true })}</div>
+        </section>
       </div>`,
       questions.length
         ? `      <section class="document-panel"><h2 class="panel-title">People also ask</h2><dl class="questions">${questions.map(([question, reply]) => `<dt>${question}</dt><dd>${reply}</dd>`).join('')}</dl></section>`
         : '',
-      `      <section class="document-panel"><h2 class="panel-title">How it is computed</h2><p class="panel-note">${escapeHtml(how)}</p>
-        <nav class="document-neighbours" aria-label="Other insights">${previous ? `<a rel="prev" href="${previous.path}">← ${escapeHtml(previous.page.heading)}</a>` : '<span></span>'}${next ? `<a rel="next" href="${next.path}">${escapeHtml(next.page.heading)} →</a>` : ''}</nav>
-        <div class="profile-actions"><a class="document-button primary" href="/insights#finding-${card.id}">See it among all the insights</a><a class="document-button" href="/methodology">How the ratings work</a></div>
-      </section>`,
-      `      <section class="document-panel"><h2 class="panel-title">More questions</h2><ul class="question-list">${others.map((entry) => `<li><a href="${entry.path}">${escapeHtml(entry.page.heading)}</a></li>`).join('')}</ul></section>`,
+      `      <nav class="document-neighbours document-neighbours-plain" aria-label="Other insights">${previous ? `<a rel="prev" href="${previous.path}">← ${escapeHtml(previous.page.heading)}</a>` : '<span></span>'}${next ? `<a rel="next" href="${next.path}">${escapeHtml(next.page.heading)} →</a>` : ''}</nav>`,
     ]
       .filter(Boolean)
       .join('\n');
@@ -152,10 +145,6 @@ export function insightPages({ base, ratings }) {
               : []),
           ],
         }),
-        trail: [
-          ['Insights', '/insights'],
-          [page.heading, path],
-        ],
         content,
         scripts: ['/js/insight-page.js'],
       }),
@@ -217,7 +206,6 @@ export function insightIndexPage({ base }) {
           },
         ],
       }),
-      trail: [['Insights', '/insights']],
       content,
       scripts: ['/js/insight-page.js'],
     }),

@@ -87,7 +87,6 @@ export function initTrack() {
     frame: 0,
     hotRatings: null, // the id of the row of the ratings under the pointer (a driver or a team, whichever the ratings show)
     hotTable: null, // the driver id of the row of the table under the pointer
-    versus: null, // the two drivers compared in the Head to head: { a, b } (driver ids; b may be null), lit in the colours of A and of B
     waiting: 0, // the timer for the race of the weekend the ratings stop at, while the weekends go by
   };
 
@@ -126,21 +125,13 @@ export function initTrack() {
 
   function paintHot() {
     const hot = hotDrivers();
-    const versus = view.versus;
-    const sideOf = (id) => (versus?.a === id ? 'a' : versus?.b === id ? 'b' : null);
     for (const [id, circle] of view.dots) {
-      const on = hot.has(id) || sideOf(id) !== null;
-      circle.classList.toggle('hot', hot.has(id));
-      circle.classList.toggle('versus-a', sideOf(id) === 'a');
-      circle.classList.toggle('versus-b', sideOf(id) === 'b');
+      const on = hot.has(id);
+      circle.classList.toggle('hot', on);
       circle.setAttribute('r', radius(on ? HOT_DOT : DOT).toFixed(1));
       if (on) parts.dots.append(circle); // on top of the others
     }
-    for (const [id, row] of view.rows) {
-      row.classList.toggle('hot', hot.has(id));
-      row.classList.toggle('versus-a', sideOf(id) === 'a');
-      row.classList.toggle('versus-b', sideOf(id) === 'b');
-    }
+    for (const [id, row] of view.rows) row.classList.toggle('hot', hot.has(id));
   }
 
   /** How the table is laid out: one column or two, and how high a row is, from the room there is beside the map. */
@@ -361,10 +352,6 @@ export function initTrack() {
       return;
     }
     show();
-  });
-  window.addEventListener('f1:versus-drivers', (event) => {
-    view.versus = event.detail;
-    paintHot();
   });
   window.addEventListener('f1:row-hover', (event) => {
     view.hotRatings = event.detail.id;

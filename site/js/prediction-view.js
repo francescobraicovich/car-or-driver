@@ -11,7 +11,7 @@ export function initPrediction() {
   page.setAttribute('aria-label', 'Race prediction');
   page.hidden = true;
   page.innerHTML = `<button type="button" class="graph-close" aria-label="Close prediction">×</button>
-    <header class="prediction-header"><h2>Race prediction</h2><span>Expected finish</span></header>
+    <header class="prediction-header"><h2>Race prediction</h2><span>Chance of winning</span></header>
     <div class="prediction-toolbar">
       <label class="prediction-race"><span class="sr-only">Grand Prix</span><select id="predictionRace"></select></label>
       <details class="prediction-settings"><summary>Settings</summary><div class="prediction-settings-panel">
@@ -23,8 +23,8 @@ export function initPrediction() {
     </div>
     <button type="button" class="prediction-grid-toggle" aria-controls="predictionGrid" aria-pressed="false">How does the starting grid change the prediction?</button>
     <div class="prediction-actions"><button type="button" data-action="apply">Apply grid</button><button type="button" data-action="clear">Clear grid</button><span>Enter every position.</span></div>
-    <p class="prediction-caption"><span class="prediction-caption-full">Average finishing position · lower is better</span><span class="prediction-caption-short">Avg. finish · lower is better</span></p>
-    <div class="prediction-table-wrap"><table class="prediction-table" id="predictionGrid"><thead><tr><th scope="col" aria-label="Predicted position">#</th><th scope="col">Driver</th><th class="prediction-team" scope="col">Car</th><th scope="col">Avg.</th><th class="prediction-bar-heading" scope="col"><span class="sr-only">Relative expected finish</span></th><th class="prediction-start" scope="col">Grid</th></tr></thead><tbody></tbody></table></div>
+    <p class="prediction-caption"><span class="prediction-caption-full">Chance of winning · and the average finishing position</span><span class="prediction-caption-short">Win chance · avg. finish</span></p>
+    <div class="prediction-table-wrap"><table class="prediction-table" id="predictionGrid"><thead><tr><th scope="col" aria-label="Predicted position">#</th><th scope="col">Driver</th><th class="prediction-team" scope="col">Car</th><th class="prediction-win" scope="col">Win</th><th class="prediction-bar-heading" scope="col"><span class="sr-only">Chance of winning, as a bar</span></th><th class="prediction-expected" scope="col">Avg.</th><th class="prediction-start" scope="col">Grid</th></tr></thead><tbody></tbody></table></div>
     <p class="prediction-status" role="status" aria-live="polite"></p>`;
   document.getElementById('stage').append(page);
   const race = page.querySelector('#predictionRace');
@@ -67,10 +67,12 @@ export function initPrediction() {
     } catch (error) {
       status.textContent = error.message;
     }
+    const mostLikely = Math.max(...rows.map((row) => row.winProbability ?? 0), 1e-9);
+    const chance = (p) => (p == null ? '—' : p >= 0.995 ? '>99%' : p < 0.005 ? '<1%' : `${Math.round(100 * p)}%`);
     table.innerHTML = rows
       .map(
-        ({ driver, expectedPosition }, index) =>
-          `<tr><td class="prediction-rank">${expectedPosition == null ? '—' : index + 1}</td><th scope="row" aria-label="${esc(driver.name)}, ${esc(driver.car)}" title="${esc(driver.name)} · ${esc(driver.car)}"><span class="prediction-name-full">${esc(driver.name)}</span><span class="prediction-name-short" aria-hidden="true">${esc(driver.name.split(' ').at(-1))}</span></th><td class="prediction-team">${esc(driver.car)}</td><td class="prediction-expected">${expectedPosition == null ? '—' : expectedPosition.toFixed(1)}</td><td class="prediction-bar" aria-hidden="true"><i class="bar-track"></i><i class="bar-base" style="width:${expectedPosition == null ? 0 : Math.max(0, Math.min(100, (100 * (drivers.length - expectedPosition)) / (drivers.length - 1)))}%"></i></td><td class="prediction-start"><input type="number" min="1" max="${drivers.length}" step="1" inputmode="numeric" aria-label="Starting position for ${esc(driver.name)}" data-driver="${esc(driver.driverId)}" value="${esc(String(positions.get(driver.driverId) ?? ''))}"></td></tr>`,
+        ({ driver, expectedPosition, winProbability }, index) =>
+          `<tr><td class="prediction-rank">${expectedPosition == null ? '—' : index + 1}</td><th scope="row" aria-label="${esc(driver.name)}, ${esc(driver.car)}" title="${esc(driver.name)} · ${esc(driver.car)}"><span class="prediction-name-full">${esc(driver.name)}</span><span class="prediction-name-short" aria-hidden="true">${esc(driver.name.split(' ').at(-1))}</span></th><td class="prediction-team">${esc(driver.car)}</td><td class="prediction-win">${chance(winProbability)}</td><td class="prediction-bar" aria-hidden="true"><i class="bar-track"></i><i class="bar-base" style="width:${winProbability == null ? 0 : Math.max(0, Math.min(100, (100 * winProbability) / mostLikely))}%"></i></td><td class="prediction-expected">${expectedPosition == null ? '—' : expectedPosition.toFixed(1)}</td><td class="prediction-start"><input type="number" min="1" max="${drivers.length}" step="1" inputmode="numeric" aria-label="Starting position for ${esc(driver.name)}" data-driver="${esc(driver.driverId)}" value="${esc(String(positions.get(driver.driverId) ?? ''))}"></td></tr>`,
       )
       .join('');
   }

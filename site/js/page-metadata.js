@@ -25,12 +25,6 @@ export const PAGE_METADATA = {
     description:
       'Chart any Formula 1 driver’s or car’s rating over time, weekend by weekend since 1994, and compare drivers across seasons and eras.',
   },
-  '/head-to-head': {
-    title: pageTitle('F1 head to head: compare any two drivers'),
-    heading: 'F1 head to head',
-    description:
-      'Compare two Formula 1 drivers or cars head to head: the rating gap between them and the chance that one finishes ahead of the other.',
-  },
   '/prediction': {
     title: pageTitle('F1 race prediction for the next Grand Prix'),
     heading: 'F1 race prediction',

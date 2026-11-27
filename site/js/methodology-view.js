@@ -102,7 +102,19 @@ function render() {
       `${name}: overall strength after every weekend of their career (blue), and the overall strength of the car they drove (red), on the published historical ratings (Section 7). The driver's line runs on through each team change, while the car's line jumps to the new car.`;
 }
 
-export function initMethodology() {
+/** KaTeX, which only this page uses: its style sheet and script, fetched the first time the page opens. */
+function loadKatex() {
+  document.head.append(Object.assign(document.createElement('link'), { rel: 'stylesheet', href: '/vendor/katex/katex.min.css' }));
+  return new Promise((resolve, reject) => {
+    const script = Object.assign(document.createElement('script'), { src: '/vendor/katex/katex.min.js' });
+    script.addEventListener('load', resolve);
+    script.addEventListener('error', () => reject(Error('KaTeX could not be loaded')));
+    document.head.append(script);
+  });
+}
+
+export async function initMethodology() {
+  await loadKatex();
   const text = document.createElement('div');
   text.innerHTML = CONTENT_HTML;
   for (const node of text.querySelectorAll('[data-math], [data-math-display]')) {

@@ -12,6 +12,8 @@ import { fileURLToPath } from 'node:url';
 import { readDeployHeaders } from './deploy-headers.mjs';
 import { repositoryFile } from './site-addresses.mjs';
 import { isPagePath } from '../site/js/address.js';
+import { GENERATED_FILES } from './generated-files.mjs';
+import { readRatings } from './driver-and-team-pages.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const HEADERS = (await readDeployHeaders())['/*']; // the live site's headers, so local runs and tests meet the same policy
@@ -33,6 +35,8 @@ const TYPES = {
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
 };
+
+let ratings = null; // the ratings the computed files come from (tools/generated-files.mjs), read on first use
 
 /** The file of the built site at an address, as Cloudflare Pages finds it, or null. */
 async function builtFile(pathname) {
@@ -62,6 +66,11 @@ createServer(async (req, res) => {
     res
       .writeHead(file ? 200 : 404, { ...HEADERS, 'Content-Type': TYPES[extname(found)] || 'application/octet-stream' })
       .end(await readFile(found));
+    return;
+  }
+  if (url.pathname in GENERATED_FILES) {
+    ratings ??= readRatings(ROOT); // (read once, at the first request for a computed file)
+    res.writeHead(200, { ...HEADERS, 'Content-Type': TYPES['.json'] }).end(GENERATED_FILES[url.pathname](await ratings));
     return;
   }
   const page = isPagePath(url.pathname.replace(/\/+$/, '') || '/'); // a page of the site is the front page with something over it

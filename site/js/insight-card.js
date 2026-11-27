@@ -15,14 +15,21 @@ export const INTRO_NOTE =
 const plain = (html) => html.replace(/<[^>]+>/g, ''); // the notes carry a little markup (bold run-in heads); the note behind an icon is plain text
 const topicOf = (card) => INSIGHT_TOPICS.find((topic) => topic.id === card.topic);
 
-/** The card of a finding, from the data of the Insights. */
-export function insightCardHtml(card, data) {
+/**
+ * The card of a finding, from the data of the Insights. On the finding's own page (`{ alone: true }`) the page's heading asks the question, so the
+ * card has no title of its own: the answer comes first, with how it was computed behind the "i" beside it.
+ */
+export function insightCardHtml(card, data, { alone = false } = {}) {
   const how = typeof card.how === 'function' ? card.how(data) : card.how;
   const [kind, kindNote] = KINDS[card.kind];
+  const note = infoHtml(`${kind}: ${kindNote} How it is computed: ${plain(how)}`);
+  const head = alone
+    ? `<p class="insight-lead">${card.lead(data)}${note}</p>`
+    : `<p class="insight-kind"><span class="insight-topic-name">${topicOf(card).title}</span><span class="insight-chip">${kind}</span></p>
+      <h3 class="insight-title">${card.title}${note}</h3>
+      <p class="insight-lead">${card.lead(data)}</p>`;
   return `<article class="insight" id="insight-${card.id}" data-card="${card.id}">
-      <p class="insight-kind"><span class="insight-topic-name">${topicOf(card).title}</span><span class="insight-chip">${kind}</span></p>
-      <h3 class="insight-title">${card.title}${infoHtml(`${kind}: ${kindNote} How it is computed: ${plain(how)}`)}</h3>
-      <p class="insight-lead">${card.lead(data)}</p>
+      ${head}
       ${card.body(data)}
     </article>`;
 }

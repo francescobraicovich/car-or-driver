@@ -2,11 +2,11 @@
 import { initDom } from './dom.js';
 import { loadModel } from './model-loader.js';
 import { initWorkspace } from './workspace.js';
-import { initHeadToHead } from './head-to-head-view.js';
 import { initStage } from './stage-view.js';
 import { initTrack } from './track-view.js';
 import { initInfoTips } from './info-tip.js';
 import { initQuestionFeed } from './question-feed.js';
+import { initSiteHead } from './site-head.js';
 
 // The additional pages are fetched the first time they are opened, not on every visit.
 const lazyPages = {
@@ -22,7 +22,8 @@ window.addEventListener('f1:workspace-changed', async (event) => {
   const page = document.body.dataset.page;
   if (!lazyPages[page] || started.has(page)) return;
   started.add(page);
-  (await lazyPages[page]())();
+  const init = await lazyPages[page]();
+  await init(); // (the full methodology first fetches KaTeX)
   window.dispatchEvent(new CustomEvent('f1:workspace-changed', { detail: event.detail })); // so the page that has just started draws itself
 });
 
@@ -35,7 +36,8 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('pageText')?.remove(); // the page's text for readers without scripts: the site shows it its own way
   initDom();
   window.__appBooted = true;
-  initHeadToHead();
+  const showPage = initSiteHead(document.getElementById('siteHead'));
+  window.addEventListener('f1:workspace-changed', () => showPage(document.body.dataset.page === 'home')); // the tyre lets the name out off the front page
   initWorkspace();
   initTrack(); // before the stage, which says at once if the ratings are shown (a link to /ratings)
   initStage();

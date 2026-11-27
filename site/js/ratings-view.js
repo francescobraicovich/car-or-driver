@@ -177,7 +177,7 @@ function ensurePanel() {
       <span class="notes">CC BY-NC-SA 4.0 · <a href="/about?v=1&slide=credits">credits</a></span>
       <span class="foot-views" role="group" aria-label="Open over the ratings">
         <button type="button" id="ratingsOpenHistory">History</button>
-        <button type="button" id="ratingsOpenHeadToHead">Versus</button>
+        <button type="button" id="ratingsOpenHeadToHead">Head to head</button>
       </span>
     </footer>`;
   el.ratingsHost.append(panel);
@@ -236,13 +236,13 @@ function ensurePanel() {
   });
   controls.ratingsCompareHeadToHead.addEventListener('click', () => {
     const ids = [...preferences.driver.selected];
-    if (entity === 'driver' && ids.length === 2) window.dispatchEvent(new CustomEvent('f1:compare-head-to-head', { detail: { ids } }));
+    if (entity === 'driver' && ids.length === 2)
+      location.assign(`/head-to-head?a=${encodeURIComponent(ids[0])}&b=${encodeURIComponent(ids[1])}`); // (its own page)
   });
-  for (const [id, view] of [
-    ['ratingsOpenHistory', 'history'],
-    ['ratingsOpenHeadToHead', 'head-to-head'],
-  ])
-    controls[id].addEventListener('click', () => window.dispatchEvent(new CustomEvent('f1:open-view', { detail: { view, entity } })));
+  controls.ratingsOpenHistory.addEventListener('click', () =>
+    window.dispatchEvent(new CustomEvent('f1:open-view', { detail: { view: 'history', entity } })),
+  );
+  controls.ratingsOpenHeadToHead.addEventListener('click', () => location.assign('/head-to-head'));
   controls.ratingsClearSelection.addEventListener('click', () => {
     preferences[entity].selected.clear();
     renderRatings();

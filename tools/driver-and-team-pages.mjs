@@ -11,9 +11,13 @@ import { withAnnualUncertainty } from '../site/js/retrospective-uncertainty.js';
 import { pageTitle } from '../site/js/page-metadata.js';
 import { INSIGHT_PAGES } from '../site/js/insight-page-metadata.js';
 import { comparisonPath, seasonPath, TEAMMATE_PAGE_MINIMUM_RACES, teammatePath } from '../site/js/page-addresses.js';
-import { comparedPairs } from '../site/js/question-pool.js';
+import { comparedPairs, questionPool } from '../site/js/question-pool.js';
 import { INSIGHTS_DATA } from '../site/js/insights-data.js';
 import { addressName, breadcrumbData, documentPage, escapeHtml, headTags } from './page-template.mjs';
+import { ratingChart } from '../site/js/rating-chart.js';
+import { withHistories } from '../packages/core/src/weekend-histories.js';
+import { headToHeadForecasts } from '../site/js/head-to-head-forecasts.js';
+import { headToHeadPanels, pageData, pairAddress } from '../site/js/head-to-head-content.js';
 
 export const DRIVER_PEAK_MINIMUM_STARTS = 20; // as DRIVER_PEAK_MINIMUM_STARTS in compute-findings.py
 const NOT_STARTED = ['Did not start', 'Did not qualify', 'Did not prequalify', 'Withdrew']; // as NOT_STARTED in compute-findings.py
@@ -84,7 +88,8 @@ export async function readRatings(root) {
     read('rating-reference.json'),
     read('model.json'),
   ]);
-  const display = centredRatings(withAnnualUncertainty(retrospective.model), reference, retrospective.refitHash);
+  const historical = withAnnualUncertainty(retrospective.model);
+  const display = centredRatings(historical, reference, retrospective.refitHash);
   const people = new Map(csv(await readFile(join(root, 'data/drivers.csv'), 'utf8')).map((person) => [person.driverId, person]));
   const starts = await startDates(root);
 
@@ -203,6 +208,8 @@ export async function readRatings(root) {
     pairs,
     comparisons,
     seasons,
+    questions: questionPool(display, filtered.driverProfiles, INSIGHTS_DATA.champions), // the front page's, which it reads before the ratings
+    models: { historical: withHistories(historical), filtered: filtered.model }, // for the forecasts of the head to head
     lastRace: filtered.lastRace,
     firstDate: display.snaps[0].date,
     current: {
@@ -225,68 +232,6 @@ export async function readRatings(root) {
 /** The first row by `order`; on a tie, the earliest weekend. */
 function best(rows, order) {
   return rows.reduce((found, row) => (order(row, found) < 0 ? row : found));
-}
-
-// ── the chart of a rating over time, drawn at build time (no script: it is part of the page) ─────────────────
-
-const CHART = { width: 760, height: 260, left: 46, right: 14, top: 14, bottom: 28 };
-const GAP_DAYS = 300; // a break in the line where a driver or car missed more than this (a season; the delayed start of 2020 was 217 days)
-
-/**
- * An SVG chart of one or two ratings over time, with the level of the leading field (1000).
- * @param {{label: string, rows: {date: string, rating: number}[]}[]} series
- * @param {string} title  what the chart shows, for screen readers
- * @param {'driver'|'car'|'pair'} kind  whose: a driver's line is blue, a car's red, and of two teammates the first red and the second blue
- */
-export function ratingChart(series, title, kind) {
-  const all = series.flatMap((entry) => entry.rows);
-  const time = (date) => Date.parse(date);
-  const [start, end] = [Math.min(...all.map((row) => time(row.date))), Math.max(...all.map((row) => time(row.date)))];
-  const low = Math.floor(Math.min(1000, ...all.map((row) => row.rating)) / 25) * 25;
-  const high = Math.ceil(Math.max(1000, ...all.map((row) => row.rating)) / 25) * 25;
-  const plotWidth = CHART.width - CHART.left - CHART.right;
-  const plotHeight = CHART.height - CHART.top - CHART.bottom;
-  const x = (date) => (CHART.left + (end === start ? plotWidth / 2 : ((time(date) - start) / (end - start)) * plotWidth)).toFixed(1);
-  const y = (value) => (CHART.top + ((high - value) / (high - low)) * plotHeight).toFixed(1);
-  const runs = (rows) => {
-    const parts = [[]];
-    rows.forEach((row, index) => {
-      if (index && time(row.date) - time(rows[index - 1].date) > GAP_DAYS * 864e5) parts.push([]);
-      parts.at(-1).push(row);
-    });
-    return parts;
-  };
-  const step = high - low > 300 ? 100 : high - low > 120 ? 50 : 25;
-  const ticks = [];
-  for (let value = low; value <= high; value += step) ticks.push(value);
-  const [firstYear, lastYear] = [new Date(start).getUTCFullYear(), new Date(end).getUTCFullYear()];
-  const yearStep = Math.max(1, Math.ceil((lastYear - firstYear + 1) / 8));
-  const years = [];
-  for (let year = firstYear; year <= lastYear; year += yearStep) years.push(year);
-  const yearX = (year) => x(new Date(Math.max(start, Math.min(end, time(`${year}-01-01`)))).toISOString().slice(0, 10));
-  const drawn = series
-    .map((entry, index) =>
-      runs(entry.rows)
-        .map((run) =>
-          run.length === 1
-            ? `<circle class="chart-point chart-series-${index + 1}" cx="${x(run[0].date)}" cy="${y(run[0].rating)}" r="3" />`
-            : `<polyline class="chart-line chart-series-${index + 1}" points="${run.map((row) => `${x(row.date)},${y(row.rating)}`).join(' ')}" />`,
-        )
-        .join(''),
-    )
-    .join('');
-  const legend =
-    series.length > 1
-      ? `<p class="chart-legend">${series.map((entry, index) => `<span class="chart-key chart-series-${index + 1}">${escapeHtml(entry.label)}</span>`).join('')}</p>`
-      : '';
-  return `<figure class="rating-chart rating-chart-${kind}">
-  <svg viewBox="0 0 ${CHART.width} ${CHART.height}" role="img" aria-label="${escapeHtml(title)}" preserveAspectRatio="xMidYMid meet">
-    ${ticks.map((value) => `<line class="chart-grid${value === 1000 ? ' chart-field' : ''}" x1="${CHART.left}" x2="${CHART.width - CHART.right}" y1="${y(value)}" y2="${y(value)}" /><text class="chart-tick" x="${CHART.left - 8}" y="${y(value)}" text-anchor="end" dominant-baseline="middle">${value}</text>`).join('')}
-    ${years.map((year) => `<text class="chart-tick" x="${yearX(year)}" y="${CHART.height - 8}" text-anchor="middle">${year}</text>`).join('')}
-    ${drawn}
-  </svg>
-  ${legend}<figcaption>1000, the dashed line, is the level of the leading field.</figcaption>
-</figure>`;
 }
 
 // ── the parts of a page ─────────────────────────────────────────────────
@@ -340,7 +285,6 @@ const page = ({ base, path, title, description, trail, content, data = [], type 
   path,
   html: documentPage({
     head: headTags({ base, path, title, description, type, data: [breadcrumbData(base, trail), ...data] }),
-    trail,
     content,
   }),
 });
@@ -421,7 +365,7 @@ function driverPage(ratings, driver, base) {
         ${buttons([
           [
             latestMate ? `Head to head with ${escapeHtml(latestMate.surname)}` : 'Head to head',
-            `/head-to-head?a=${driver.id}${latestMate ? `&amp;b=${latestMate.id}` : ''}`,
+            latestMate ? pairAddress(pairPagesByKey(ratings), driver.id, latestMate.id).replace(/&/g, '&amp;') : '/head-to-head',
           ],
           ['Compare in history', historyHref],
         ])}
@@ -568,83 +512,34 @@ function teamPage(ratings, team, base) {
   });
 }
 
-function pairPage(ratings, pair, base) {
-  const [first, second] = pair.drivers;
-  const [own, other] = pair.flip ? ['b', 'a'] : ['a', 'b'];
-  const races = pair.races.map((race) => ({ ...race, first: race[own], second: race[other] }));
-  const teams = [...new Set(races.map((race) => race.team))];
-  const seasons = new Map();
-  for (const race of races) {
-    if (!seasons.has(race.year)) seasons.set(race.year, []);
-    seasons.get(race.year).push(race);
-  }
-  const gap = mean(races.map((race) => race.first - race.second));
-  const versus = (kind) => [pair.record[first.id][kind], pair.record[second.id][kind]];
-  const [a, b] = [escapeHtml(first.surname), escapeHtml(second.surname)];
-  const span = yearSpan(races[0].year, races.at(-1).year);
-  const leader = Math.abs(gap) < 0.5 ? null : gap > 0 ? a : b;
-  const shared = (driver) => driver.rows.filter((row) => races.some((race) => race.raceId === row.raceId));
-  const content = [
-    `      <section class="document-panel profile">
-        ${nameHeading('F1 teammates compared', '', `${a} <span class="profile-versus">vs</span> ${b}`)}
-        <p class="profile-meta">${link(first)} and ${link(second)} · ${escapeHtml(listOf(teams))} · ${span}</p>
-        ${figures([
-          { label: 'Average gap', value: signed(Math.abs(gap)), note: leader ? `In favour of ${leader}` : 'Level' },
-          { label: 'Qualifying', value: score(versus('qualifying')), note: `${a}–${b}: qualified ahead` },
-          { label: 'Races', value: score(versus('races')), note: `${a}–${b}: finished ahead, in ${races.length} races together` },
-        ])}
-        ${buttons([
-          ['Head to head', `/head-to-head?a=${first.id}&amp;b=${second.id}`],
-          [
-            'Compare in history',
-            `/history?v=1&amp;h=driver&amp;drivers=${first.id}%2C${second.id}&amp;from=${races[0].year}&amp;to=${races.at(-1).year}`,
-          ],
-        ])}
-      </section>`,
-    panel(
-      'Race by race',
-      ratingChart(
-        [
-          { label: first.name, rows: shared(first) },
-          { label: second.name, rows: shared(second) },
-        ],
-        `The driver ratings of ${first.name} and ${second.name} in their races together`,
-        'pair',
-      ),
-      'Teammates share the car, so the gap between their driver ratings compares the two drivers alone.',
-    ),
-    panel(
-      'Season by season',
-      `<table class="document-table"><thead><tr><th scope="col">Season</th><th scope="col">Team</th><th scope="col" class="number">${a}</th><th scope="col" class="number">${b}</th><th scope="col" class="number">Gap</th></tr></thead><tbody>${[
-        ...seasons,
-      ]
-        .reverse()
-        .map(
-          ([year, rows]) =>
-            `<tr><th scope="row">${year}</th><td>${escapeHtml(listOf([...new Set(rows.map((row) => row.team))]))}</td><td class="number rating">${rounded(mean(rows.map((row) => row.first)))}</td><td class="number rating">${rounded(mean(rows.map((row) => row.second)))}</td><td class="number">${signed(mean(rows.map((row) => row.first - row.second)))}</td></tr>`,
-        )
-        .join('')}</tbody></table>`,
-      `The average ratings over the season; the gap is ${a}’s minus ${b}’s.`,
-    ),
-  ].join('\n');
-  return page({
-    base,
-    path: pair.path,
-    title: pageTitle(`${first.name} vs ${second.name}: who was better at ${listOf(teams)}?`),
-    description: `${first.name} vs ${second.name}: who was the better driver when they were teammates at ${listOf(teams)} (${span})? Their driver ratings compared, race by race.`,
-    trail: [
-      ['Teammates', '/teammates'],
-      [`${first.name} vs ${second.name}`, pair.path],
-    ],
-    content,
-  });
-}
-
 /** The first panel of a list: its name and what it lists. */
 const listHeading = (title, lead) => `      <section class="document-panel profile">
         <h1 class="list-title">${title}</h1>
         <p class="profile-meta">${lead}</p>
       </section>`;
+
+/** The ten highest peaks of all time, with the weekend of each. */
+function topTen(entities, noun) {
+  const best = entities
+    .filter((entity) => entity.peak)
+    .sort((x, y) => y.peak.rating - x.peak.rating)
+    .slice(0, 10);
+  return `<table class="document-table"><thead><tr><th scope="col" class="place">#</th><th scope="col">${noun}</th><th scope="col">Peak</th><th scope="col" class="number">Rating</th></tr></thead><tbody>${best
+    .map(
+      (entity, index) =>
+        `<tr><td class="number place">${index + 1}</td><th scope="row">${link(entity)}</th><td>${dayOf(entity.peak)} · ${escapeHtml(shortGrandPrix(entity.peak.grandPrix))}</td><td class="number rating">${rounded(entity.peak.rating)}</td></tr>`,
+    )
+    .join('')}</tbody></table>`;
+}
+
+/** Every entry, as links to their pages, behind a search field (site/js/search-list.js shows only what matches what is typed). */
+function searchList(entities, noun, plural) {
+  return `<div class="search-list" data-search-list>
+        <label class="search-field"><span class="sr-only">Find ${noun === 'driver' ? 'a driver' : 'a team'}</span><input type="search" placeholder="Find any of the ${entities.length} ${plural}" autocomplete="off" spellcheck="false" /></label>
+        <p class="search-status" role="status"></p>
+        <ul class="driver-list">${entities.map((entity) => `<li>${link(entity)} <span class="search-years">${yearSpan(entity.first, entity.last)}</span></li>`).join('')}</ul>
+      </div>`;
+}
 
 function driverIndex(ratings, base) {
   const everyone = [...ratings.drivers.values()].sort(
@@ -657,21 +552,21 @@ function driverIndex(ratings, base) {
     ),
     panel('The current grid', currentTable(ratings, 'drivers')),
     panel(
+      'The ten best of all time',
+      topTen(everyone, 'Driver'),
+      `By the highest rating, counted after ${DRIVER_PEAK_MINIMUM_STARTS} Grand Prix starts. <a href="${insightPath('driver-peak-ratings')}">The full ranking</a>.`,
+    ),
+    panel(
       'Every driver since 1994',
-      `<table class="document-table"><thead><tr><th scope="col">Driver</th><th scope="col">Seasons</th><th scope="col" class="number">Peak</th></tr></thead><tbody>${everyone
-        .map(
-          (driver) =>
-            `<tr><th scope="row">${link(driver)}</th><td>${yearSpan(driver.first, driver.last)}</td><td class="number rating">${driver.peak ? rounded(driver.peak.rating) : '—'}</td></tr>`,
-        )
-        .join('')}</tbody></table>`,
-      `By surname. The peak counts after ${DRIVER_PEAK_MINIMUM_STARTS} Grand Prix starts. Every pair of teammates: <a href="/teammates">teammates compared</a>. Drivers who were not teammates: <a href="/compare">drivers compared</a>.`,
+      searchList(everyone, 'driver', 'drivers'),
+      'Two drivers side by side: <a href="/head-to-head">head to head</a>. Every pair of teammates: <a href="/teammates">teammates compared</a>.',
     ),
   ].join('\n');
   return page({
     base,
     path: '/drivers',
     title: pageTitle('F1 driver ratings: every driver since 1994'),
-    description: `Every Formula 1 driver since 1994 rated with the car taken out: the current grid and all ${everyone.length} drivers, their peaks and their teammates.`,
+    description: `Every Formula 1 driver since 1994 rated with the car taken out: the current grid, the ten best of all time and all ${everyone.length} drivers.`,
     trail: [['Drivers', '/drivers']],
     content,
   });
@@ -686,21 +581,17 @@ function teamIndex(ratings, base) {
     ),
     panel('The current cars', currentTable(ratings, 'cars')),
     panel(
-      'Every team since 1994',
-      `<table class="document-table"><thead><tr><th scope="col">Team</th><th scope="col">Seasons</th><th scope="col" class="number">Peak</th></tr></thead><tbody>${all
-        .map(
-          (team) =>
-            `<tr><th scope="row">${link(team)}</th><td>${yearSpan(team.first, team.last)}</td><td class="number rating">${rounded(team.peak.rating)}</td></tr>`,
-        )
-        .join('')}</tbody></table>`,
-      'The fastest car of each season: <a href="/seasons">the seasons since 1994</a>.',
+      'The ten best of all time',
+      topTen(all, 'Car'),
+      `By the highest rating. <a href="${insightPath('car-peak-ratings')}">The full ranking</a>. The fastest car of each season: <a href="/seasons">the seasons since 1994</a>.`,
     ),
+    panel('Every team since 1994', searchList(all, 'team', 'teams')),
   ].join('\n');
   return page({
     base,
     path: '/teams',
     title: pageTitle('F1 car ratings: every team since 1994'),
-    description: `Every Formula 1 car since 1994 rated with the drivers taken out: the current cars and all ${all.length} teams, with their peaks and their drivers.`,
+    description: `Every Formula 1 car since 1994 rated with the drivers taken out: the current cars, the ten best of all time and all ${all.length} teams.`,
     trail: [['Teams', '/teams']],
     content,
   });
@@ -746,116 +637,149 @@ function teammateIndex(ratings, base) {
 /** The most a driver reached: the peak (after the starts the Insights require), or else the highest rating. */
 const highest = (driver) => driver.peak ?? best(driver.rows, (x, y) => y.rating - x.rating);
 
-function comparisonPage(ratings, comparison, base) {
-  const [first, second] = comparison.drivers;
-  const [a, b] = [escapeHtml(first.surname), escapeHtml(second.surname)];
-  const current = (driver) => ratings.current.drivers.some((row) => row.driver === driver);
-  const [peakA, peakB] = [highest(first), highest(second)];
-  const [averageA, averageB] = [first, second].map((driver) => mean(driver.rows.map((row) => row.rating)));
-  const ahead = (x, y) => (Math.round(x) === Math.round(y) ? 'level' : x > y ? a : b);
-  const gap = (x, y) => Math.abs(Math.round(x) - Math.round(y));
-  const answer = (measure, x, y) =>
-    ahead(x, y) === 'level' ? `level on ${measure}` : `${ahead(x, y)} is ahead on ${measure} by ${gap(x, y)}`;
-  const leader = ahead(peakA.rating, peakB.rating);
-  const summary =
-    leader !== 'level' && leader === ahead(averageA, averageB)
-      ? `${leader} is ahead on peak rating by ${gap(peakA.rating, peakB.rating)} and on career average by ${gap(averageA, averageB)}`
-      : `${answer('peak rating', peakA.rating, peakB.rating)}, and ${answer('career average', averageA, averageB)}`;
-  const row = (label, x, y) =>
-    `<tr><th scope="row">${label}</th><td class="number rating">${x}</td><td class="number rating">${y}</td></tr>`;
-  const span = (driver) => yearSpan(driver.first, driver.last);
-  const content = [
-    `      <section class="document-panel profile">
-        ${nameHeading('F1 drivers compared', '', `${a} <span class="profile-versus">vs</span> ${b}`)}
-        <p class="profile-meta">${link(first)} (${span(first)}) and ${link(second)} (${span(second)}): ${summary}.</p>
-        ${figures([
-          {
-            label: `${a}’s peak`,
-            value: rounded(peakA.rating),
-            note: `${dayOf(peakA)} · ${escapeHtml(shortGrandPrix(peakA.grandPrix))}`,
-            tone: 'first',
-          },
-          {
-            label: `${b}’s peak`,
-            value: rounded(peakB.rating),
-            note: `${dayOf(peakB)} · ${escapeHtml(shortGrandPrix(peakB.grandPrix))}`,
-            tone: 'second',
-          },
-        ])}
-        ${buttons([
-          ['Head to head', `/head-to-head?a=${first.id}&amp;b=${second.id}`],
-          [
-            'Compare in history',
-            `/history?v=1&amp;h=driver&amp;drivers=${first.id}%2C${second.id}&amp;from=${Math.min(first.first, second.first)}&amp;to=${Math.max(first.last, second.last)}`,
-          ],
-        ])}
-      </section>`,
-    panel(
-      'Side by side',
-      `<table class="document-table"><thead><tr><th scope="col"></th><th scope="col" class="number">${a}</th><th scope="col" class="number">${b}</th></tr></thead><tbody>${[
-        row('Peak rating', rounded(peakA.rating), rounded(peakB.rating)),
-        row('Career average', rounded(averageA), rounded(averageB)),
-        row(
-          current(first) && current(second) ? 'Current rating' : 'Current or final rating',
-          rounded(first.latest.rating),
-          rounded(second.latest.rating),
-        ),
-        row('Grands Prix rated', first.rows.length, second.rows.length),
-        row('Seasons', span(first), span(second)),
-      ].join('')}</tbody></table>`,
-      `The peak counts after ${DRIVER_PEAK_MINIMUM_STARTS} Grand Prix starts (the highest rating, for a shorter career). Each rating measures a driver against the leading field of the day, so drivers of different years share one scale; comparing eras is still a thought experiment.`,
+const tenth = (value) => Math.round(value * 10) / 10;
+
+/** What the page of two drivers says about one of them (site/js/head-to-head-content.js). */
+export function driverSummary(ratings, driver) {
+  const best = highest(driver);
+  return {
+    id: driver.id,
+    name: driver.name,
+    surname: driver.surname,
+    path: driver.path,
+    first: driver.first,
+    last: driver.last,
+    current: ratings.current.drivers.some((row) => row.driver === driver),
+    best: { rating: tenth(best.rating), date: best.date, grandPrix: best.grandPrix },
+    average: tenth(mean(driver.rows.map((row) => row.rating))),
+    latest: { rating: tenth(driver.latest.rating), date: driver.latest.date },
+    races: driver.rows.length,
+  };
+}
+
+/** Two teammates in their races together: the teams, the record, the average gap and each season (first named first). */
+function teammatesSummary(pair, [first, second]) {
+  const flip = pair.a !== first.id;
+  const races = pair.races.map((race) => ({ ...race, first: flip ? race.b : race.a, second: flip ? race.a : race.b }));
+  const seasons = new Map();
+  for (const race of races) {
+    if (!seasons.has(race.year)) seasons.set(race.year, []);
+    seasons.get(race.year).push(race);
+  }
+  const record = (kind) => [pair.record[first.id][kind], pair.record[second.id][kind]];
+  return {
+    teams: [...new Set(races.map((race) => race.team))],
+    races: races.length,
+    gap: tenth(mean(races.map((race) => race.first - race.second))),
+    record: { qualifying: record('qualifying'), races: record('races') },
+    seasons: [...seasons].reverse().map(([year, rows]) => ({
+      year,
+      teams: [...new Set(rows.map((row) => row.team))],
+      first: tenth(mean(rows.map((row) => row.first))),
+      second: tenth(mean(rows.map((row) => row.second))),
+    })),
+  };
+}
+
+/** The pages of two drivers: the pairs the front page asks about (/compare/…) and every pair of teammates with enough races (/teammates/…). */
+export function pairPages(ratings) {
+  const teammates = [...ratings.pairs.values()]
+    .filter((pair) => pair.races.length >= TEAMMATE_PAGE_MINIMUM_RACES)
+    .map((pair) => ({ path: pair.path, drivers: pair.drivers, pair }));
+  return [...ratings.comparisons.map((comparison) => ({ ...comparison, pair: null })), ...teammates];
+}
+
+/** The address of the page of each pair that has one, keyed by the two ids in order ("1:830"). */
+export function pairPagesByKey(ratings) {
+  ratings.pairPages ??= Object.fromEntries(
+    pairPages(ratings).map((entry) => [
+      entry.drivers
+        .map((driver) => driver.id)
+        .sort()
+        .join(':'),
+      entry.path,
+    ]),
+  );
+  return ratings.pairPages;
+}
+
+/** Everything the page of two drivers shows (site/js/head-to-head-content.js), with the forecasts worked out here. */
+function pairData(ratings, { path, drivers, pair }) {
+  return {
+    path,
+    drivers: drivers.map((driver) => ({
+      ...driverSummary(ratings, driver),
+      rows: driver.rows.map((row) => ({ date: row.date, rating: tenth(row.rating) })),
+    })),
+    teammates: pair ? teammatesSummary(pair, drivers) : null,
+    forecasts: headToHeadForecasts(
+      ratings.models,
+      drivers.map((driver) => ({ id: driver.id, best: highest(driver).date })),
     ),
-    panel(
-      'Race by race',
-      ratingChart(
-        [
-          { label: first.name, rows: first.rows },
-          { label: second.name, rows: second.rows },
-        ],
-        `The driver ratings of ${first.name} and ${second.name} after each Grand Prix`,
-        'pair',
-      ),
-    ),
-    panel(
-      'More',
-      `<p>Each career on its own: ${link(first)} and ${link(second)}. Every comparison: <a href="/compare">drivers compared</a>.</p>`,
-    ),
-  ].join('\n');
+  };
+}
+
+function headToHeadPage(ratings, entry, base) {
+  const [first, second] = entry.drivers;
+  const teams = entry.pair ? listOf([...new Set(entry.pair.races.map((race) => race.team))]) : null;
+  const data = pairData(ratings, entry);
   return page({
     base,
-    path: comparison.path,
-    title: pageTitle(`${first.name} vs ${second.name}: who is the better F1 driver?`),
-    description: `Who is the better Formula 1 driver, ${first.name} or ${second.name}? Their driver ratings with the car taken out, compared: peaks, career averages and every race.`,
+    path: entry.path,
+    title: pageTitle(
+      teams
+        ? `${first.name} vs ${second.name}: who was better at ${teams}?`
+        : `${first.name} vs ${second.name}: who is the better F1 driver?`,
+    ),
+    description: teams
+      ? `${first.name} vs ${second.name}: who was the better driver when they were teammates at ${teams}? Their head to head, their record and their ratings, race by race.`
+      : `Who is the better Formula 1 driver, ${first.name} or ${second.name}? In the same car, at their best: who would finish ahead, with their ratings compared.`,
     trail: [
-      ['Drivers compared', '/compare'],
-      [`${first.name} vs ${second.name}`, comparison.path],
+      ['Head to head', '/head-to-head'],
+      [`${first.name} vs ${second.name}`, entry.path],
     ],
-    content,
+    content: `${headToHeadPanels(data)}\n      ${pageData(data)}`,
   });
 }
 
-function comparisonIndex(ratings, base) {
+/** The head to head of any two drivers: the choice of two, and the pairs most asked about. */
+function headToHeadIndex(ratings, base) {
+  const grid = ratings.current.drivers.map((row) => row.driver);
+  const others = [...ratings.drivers.values()]
+    .filter((driver) => !grid.includes(driver))
+    .sort((x, y) => x.name.localeCompare(y.name, 'en'));
+  const options = (selected) =>
+    `<optgroup label="${ratings.current.weekend.year} grid">${grid.map((driver) => `<option value="${driver.id}"${driver === selected ? ' selected' : ''}>${escapeHtml(driver.name)}</option>`).join('')}</optgroup><optgroup label="Other drivers, A–Z">${others.map((driver) => `<option value="${driver.id}">${escapeHtml(driver.name)}</option>`).join('')}</optgroup>`;
+  const pairLink = ({ path, drivers: [first, second] }) =>
+    `<li><a href="${path}">${escapeHtml(first.name)} vs ${escapeHtml(second.name)}</a></li>`;
+  const currentTeammates = pairPages(ratings).filter(
+    (entry) => entry.pair && entry.pair.races.at(-1).year === ratings.current.weekend.year,
+  );
   const content = [
-    listHeading(
-      'F1 drivers compared',
-      `${ratings.comparisons.length} comparisons of two Formula 1 drivers, with the car taken out, the most asked about first. Drivers who were teammates are compared on <a href="/teammates">their own pages</a>.`,
-    ),
+    `      <section class="document-panel profile" id="headToHeadIndex">
+        <h1 class="list-title">F1 head to head</h1>
+        <p class="profile-meta">Any two Formula 1 drivers since 1994: who is better, and who would finish ahead in the same car. Choose two.</p>
+        <form class="pair-pick" action="/head-to-head" method="get">
+          <label><span class="sr-only">First driver</span><select name="a">${options(grid[0])}</select></label>
+          <span class="pair-pick-versus" aria-hidden="true">vs</span>
+          <label><span class="sr-only">Second driver</span><select name="b">${options(grid[1])}</select></label>
+          <button type="submit" class="document-button primary">Compare</button>
+        </form>
+      </section>`,
+    panel('The most asked', `<ul class="driver-list">${ratings.comparisons.slice(0, 24).map(pairLink).join('')}</ul>`),
     panel(
-      'Every comparison',
-      `<ul class="driver-list">${ratings.comparisons
-        .map(
-          ({ path, drivers: [first, second] }) =>
-            `<li><a href="${path}">${escapeHtml(first.name)} vs ${escapeHtml(second.name)}</a> <span class="versus-meta">${yearSpan(Math.min(first.first, second.first), Math.max(first.last, second.last))}</span></li>`,
-        )
-        .join('')}</ul>`,
+      `Teammates in ${ratings.current.weekend.year}`,
+      `<ul class="driver-list">${currentTeammates.map(pairLink).join('')}</ul>`,
+      'Every pair since 1994: <a href="/teammates">teammates compared</a>.',
     ),
   ].join('\n');
   return page({
     base,
-    path: '/compare',
-    title: pageTitle('F1 drivers compared: who is the better driver?'),
-    description: `Who is the better Formula 1 driver? ${ratings.comparisons.length} comparisons of two drivers, with the car taken out: peaks, career averages and every race.`,
-    trail: [['Drivers compared', '/compare']],
+    path: '/head-to-head',
+    title: pageTitle('F1 head to head: compare any two drivers'),
+    description:
+      'Who is the better Formula 1 driver? Any two drivers since 1994, compared with the car taken out: who would finish ahead in the same car, at their best.',
+    trail: [['Head to head', '/head-to-head']],
     content,
   });
 }
@@ -951,14 +875,11 @@ export function driverAndTeamPages(ratings, base) {
     driverIndex(ratings, base),
     teamIndex(ratings, base),
     teammateIndex(ratings, base),
-    comparisonIndex(ratings, base),
+    headToHeadIndex(ratings, base),
     seasonIndex(ratings, base),
-    ...ratings.comparisons.map((comparison) => comparisonPage(ratings, comparison, base)),
+    ...pairPages(ratings).map((entry) => headToHeadPage(ratings, entry, base)),
     ...ratings.seasons.map((season, index) => seasonPage(ratings, season, index, base)),
     ...[...ratings.drivers.values()].map((driver) => driverPage(ratings, driver, base)),
     ...[...ratings.teams.values()].map((team) => teamPage(ratings, team, base)),
-    ...[...ratings.pairs.values()]
-      .filter((pair) => pair.races.length >= TEAMMATE_PAGE_MINIMUM_RACES)
-      .map((pair) => pairPage(ratings, pair, base)),
   ];
 }

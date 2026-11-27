@@ -77,7 +77,7 @@ export const breadcrumbData = (base, trail) => ({
 const NAVIGATION = [
   ['ratings', '/ratings'],
   ['history', '/history'],
-  ['versus', '/head-to-head'],
+  ['head to head', '/head-to-head'],
   ['graph', '/graph'],
   ['prediction', '/prediction'],
   ['insights', '/insights'],
@@ -87,24 +87,14 @@ const NAVIGATION = [
 ];
 
 /**
- * A document page: the head, the name of the site and the links to its pages, then the trail to the page and its panels of brushed metal over the
- * grey drawing of the front page, and the foot.
+ * A document page: the head, the name of the site and the links to its pages, then its panels of brushed metal over the grey drawing of the
+ * front page, and the foot. (The trail from the front page to the page is for search engines only: breadcrumbData, in the head.)
  * @param {object} page
  * @param {string} page.head            the tags from headTags
- * @param {[string, string][]} page.trail the trail to the page, without the front page
  * @param {string} page.content         the panels of the page (the first holds its <h1>)
  * @param {string[]} [page.scripts]     modules the page runs (a finding draws its chart)
  */
-export function documentPage({ head, trail, content, scripts = [] }) {
-  const crumbs = trail.length
-    ? `<nav class="document-trail" aria-label="Breadcrumb"><ol><li><a href="/">${SITE_NAME}</a></li>${trail
-        .map(([name, path], index) =>
-          index === trail.length - 1
-            ? `<li aria-current="page">${escapeHtml(name)}</li>`
-            : `<li><a href="${path}">${escapeHtml(name)}</a></li>`,
-        )
-        .join('')}</ol></nav>`
-    : '';
+export function documentPage({ head, content, scripts = [] }) {
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -117,19 +107,18 @@ export function documentPage({ head, trail, content, scripts = [] }) {
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/stage.css" />
     <link rel="stylesheet" href="/css/document.css" />
-    ${scripts.map((src) => `<script type="module" src="${src}"></script>`).join('\n    ')}
+    ${['/js/document-page.js', ...scripts].map((src) => `<script type="module" src="${src}"></script>`).join('\n    ')}
   </head>
   <body class="document-page">
-    <header class="document-head">
-      <a class="document-brand" href="/"><img src="/assets/icons/tyre-96.webp" alt="" width="34" height="34" /><span><b class="brand-car">Car</b> or <b class="brand-driver">Driver</b></span></a>
-      <nav class="document-links" aria-label="Main navigation">${NAVIGATION.map(([name, path]) => `<a href="${path}">${name}</a>`).join('')}</nav>
+    <header class="document-head site-head" id="siteHead" data-brand="folded">
+      <a class="site-brand" href="/" aria-label="${SITE_NAME}: the front page"><img class="site-brand-tyre" src="/assets/icons/tyre-96.webp" alt="" width="34" height="34" /><span class="site-brand-name" aria-hidden="true"><span><b class="brand-car">Car</b> or <b class="brand-driver">Driver</b></span></span></a>
+      <button type="button" class="site-menu-button" aria-expanded="false" aria-controls="siteLinks" aria-label="Sections"><i></i><i></i><i></i></button>
+      <nav class="document-links site-links" id="siteLinks" aria-label="Main navigation">${NAVIGATION.map(([name, path]) => `<a href="${path}">${name}</a>`).join('')}</nav>
     </header>
     <main class="document" id="content">
-      ${crumbs}
 ${content.replace(/<table class="document-table">[\s\S]*?<\/table>/g, (table) => `<div class="document-table-scroll">${table}</div>`)}
     </main>
     <footer class="document-foot">
-      <p>Every Formula 1 driver and car rated after every Grand Prix since 1994, with the car and the driver separated. Ratings and findings: ${escapeHtml(SITE.dataLicence.name)}.</p>
       <nav aria-label="About this site"><a href="/about">about &amp; privacy</a><a href="/methodology">how the ratings work</a><a href="${SITE.repositoryUrl}" rel="noopener noreferrer">source</a></nav>
     </footer>
   </body>

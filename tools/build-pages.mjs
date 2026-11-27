@@ -15,6 +15,7 @@ import { appPages } from './app-pages.mjs';
 import { driverAndTeamPages, readRatings } from './driver-and-team-pages.mjs';
 import { insightIndexPage, insightPages } from './insight-pages.mjs';
 import { documentPage, headTags } from './page-template.mjs';
+import { GENERATED_FILES } from './generated-files.mjs';
 import { pageTitle } from '../site/js/page-metadata.js';
 import { SITE } from '../site/js/site-identity.js';
 
@@ -61,7 +62,11 @@ async function buildPages() {
     // Keep the archived 3D experiment available locally, outside the restored website.
     filter: (path) => !referenceFiles.includes(path),
   });
-  const entries = [...scriptEntries(await readFile(join(ROOT, 'site/index.html'), 'utf8')), 'site/js/insight-page.js']; // (the page of a finding runs its own module)
+  const entries = [
+    ...scriptEntries(await readFile(join(ROOT, 'site/index.html'), 'utf8')),
+    'site/js/document-page.js',
+    'site/js/insight-page.js',
+  ]; // (the document pages run their own modules)
   const modules = await browserModules(ROOT, entries);
   for (const path of modules) {
     const name = relative(ROOT, path);
@@ -81,8 +86,9 @@ async function buildPages() {
   ])
     await cp(join(ROOT, 'data', name), join(DIST, 'data', name)); // the CSVs the model was computed from are not published
   await cp(join(ROOT, 'data/race-laps'), join(DIST, 'data/race-laps'), { recursive: true }); // the laps of each season, for the racing dots
-  // Cloudflare Pages reads _redirects: the site used to be under /site/, and links to it keep working.
-  await writeFile(join(DIST, '_redirects'), '/site / 301\n/site/* /:splat 301\n');
+  // Cloudflare Pages reads _redirects: the site used to be under /site/, and links to it keep working; the list of the pairs of drivers compared is
+  // the head to head now.
+  await writeFile(join(DIST, '_redirects'), '/site / 301\n/site/* /:splat 301\n/compare /head-to-head 301\n');
 
   // Cloudflare Pages applies this file to every response. It is written from the parsed rules, without the comments, so the published file is exactly the policy.
   const rules = await readDeployHeaders();
@@ -116,6 +122,7 @@ async function buildPages() {
     await mkdir(dirname(file), { recursive: true });
     await writeFile(file, html);
   }
+  for (const [path, contents] of Object.entries(GENERATED_FILES)) await writeFile(join(DIST, path.slice(1)), contents(ratings));
   await writeFile(join(DIST, '404.html'), notFoundPage(base));
   await writeFile(
     join(DIST, 'sitemap.xml'),
@@ -137,7 +144,6 @@ function notFoundPage(base) {
       description: 'There is no page at this address.',
       index: false,
     }),
-    trail: [],
     content: `      <section class="document-panel profile">
         <h1 class="list-title">Page not found</h1>
         <p class="profile-meta">There is no page at this address. It may have moved: the site now has an address for each page.</p>

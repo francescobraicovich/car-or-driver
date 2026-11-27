@@ -2,7 +2,9 @@
 // move down along a thread, and the oldest leaves at the bottom. The next question is drawn from the pool (question-pool.js), the more wanted ones
 // more often and in a mix of kinds, never one about a topic already on the screen or shown lately. Each line is a link to the page that answers it. The feed shows only
 // on the front page with nothing open, as many lines as fit (up to ten), waits while it is pointed at or holds the focus or the tab is hidden, and
-// with reduced motion changes its lines without moving them. No storage, no requests beyond the Insights' data for the champions.
+// with reduced motion changes its lines without moving them. The questions come from the publication (front-page-questions.json, written with the
+// pages), so that the duels and the seasons are there before the ratings; without that file they are drawn from the ratings once they arrive.
+// No storage.
 import { state } from './state.js';
 import { drawQuestion, questionPool, questionsWithoutRatings } from './question-pool.js';
 
@@ -11,6 +13,7 @@ const FEWEST_LINES = 4; // with less room than this the feed is not shown
 const EVERY = 3200; // milliseconds between two questions
 const RECENT = 40; // a topic shown among the last this many questions waits before it comes back
 const TYPING = 22; // milliseconds a character of a new question takes to appear
+const REFILL_WITHIN = 1500; // milliseconds after the start within which the published questions replace the first lines, before anyone reads them
 
 /** @param {{random?: () => number}} [options] the number generator of the draws (tests pass a fixed one) */
 export function initQuestionFeed({ random = Math.random } = {}) {
@@ -151,7 +154,23 @@ export function initQuestionFeed({ random = Math.random } = {}) {
     measure();
     run();
   }).observe(feed);
+  let published = false;
+  const started = performance.now();
+  fetch('/front-page-questions.json')
+    .then((response) => (response.ok ? response.json() : Promise.reject(Error(`HTTP ${response.status}`))))
+    .then((questions) => {
+      if (!Array.isArray(questions) || !questions.length) return;
+      pool = questions;
+      published = true;
+      if (performance.now() - started < REFILL_WITHIN) {
+        list.replaceChildren();
+        recent.length = 0;
+        measure();
+      }
+    })
+    .catch(() => {}); // (the questions are drawn from the ratings instead, once they arrive)
   window.addEventListener('f1:model-ready', async () => {
+    if (published) return;
     const { INSIGHTS_DATA } = await import('./insights-data.js'); // the points leader of each season: a driver's titles
     pool = questionPool(state.displayModel, state.profiles, INSIGHTS_DATA.champions);
   });
