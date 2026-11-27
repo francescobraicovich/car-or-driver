@@ -1,22 +1,22 @@
-// The Insights: the findings as a card of slides (slide-deck.js). The first slide is the contents (the topics and the finding of each), then one
-// slide for each finding: what it claims, a chart, and a note behind an "i" on how it was computed and where it can mislead. The numbers are a snapshot
-// computed offline (insights-data.js); the page needs neither the loaded model nor the network.
-import { INSIGHTS_DATA } from './insights-data.js';
-import { INSIGHT_CARDS, INSIGHT_TOPICS } from './insights-cards.js';
+// The card of a finding of the Insights: what it claims, a place for its chart, and a note behind an "i" on how it was computed and where it can
+// mislead. The pages of the findings (tools/insight-pages.mjs) are made of these cards, and draw their charts in the browser (insight-page.js). The
+// numbers are a snapshot computed offline (insights-data.js).
+import { INSIGHT_TOPICS } from './insights-cards.js';
 import { infoHtml } from './info-tip.js';
-import { createDeck } from './slide-deck.js';
 
-const KINDS = {
+/** The two kinds of finding, and what each rests on. */
+export const KINDS = {
   direct: ['Direct', 'Counted from the race results, with no rating involved.'],
   model: ['Model-based', 'Depends on how the ratings split a team’s result between driver and car.'],
 };
-const INTRO_NOTE =
+/** How to read the findings, for the page of all of them. */
+export const INTRO_NOTE =
   'Each finding is a claim, a chart, and a note on how it was computed and where it can mislead. The rating extremes use the same retrospective display ratings as Ratings and History. Other model-based findings use the filtered ratings available at each date. Direct findings use the raw race results. Ratings, History and Graph use a recent-era display reference with a 20-weekend half-life. Other findings use the underlying model estimates: those labelled above the field subtract the actual weekend average, including its covariance when calculating uncertainty. A 75-point overall gap gives 10:1 raw odds before forecast adjustments. Comparisons across eras are thought experiments.';
 const plain = (html) => html.replace(/<[^>]+>/g, ''); // the notes carry a little markup (bold run-in heads); the note behind an icon is plain text
 const topicOf = (card) => INSIGHT_TOPICS.find((topic) => topic.id === card.topic);
 
-/** The slide of a finding: also the body of its own page (tools/insight-pages.mjs). */
-export function slideHtml(card, data) {
+/** The card of a finding, from the data of the Insights. */
+export function insightCardHtml(card, data) {
   const how = typeof card.how === 'function' ? card.how(data) : card.how;
   const [kind, kindNote] = KINDS[card.kind];
   return `<article class="insight" id="insight-${card.id}" data-card="${card.id}">
@@ -25,25 +25,4 @@ export function slideHtml(card, data) {
       <p class="insight-lead">${card.lead(data)}</p>
       ${card.body(data)}
     </article>`;
-}
-
-export function initInsights() {
-  createDeck({
-    page: 'insights',
-    title: 'Insights',
-    before: `<p class="deck-intro">Thirteen findings on one question: how much of a Formula 1 result is the driver, and how much is the car?${infoHtml(INTRO_NOTE)}</p>`,
-    after: `<p class="insights-kinds"><span class="insight-chip">${KINDS.direct[0]}</span><span class="insight-chip">${KINDS.model[0]}</span>${infoHtml(`${KINDS.direct[0]}: ${KINDS.direct[1]} ${KINDS.model[0]}: ${KINDS.model[1]}`)}</p>`,
-    groups: INSIGHT_TOPICS.map((topic) => ({
-      title: topic.title,
-      slides: INSIGHT_CARDS.filter((card) => card.topic === topic.id).map((card) => ({
-        id: card.id,
-        label: card.label,
-        title: card.title,
-        html: slideHtml(card, INSIGHTS_DATA),
-      })),
-    })),
-    firstShown: () => {
-      for (const card of INSIGHT_CARDS) card.draw(INSIGHTS_DATA, document.getElementById(`insight-${card.id}`));
-    },
-  });
 }

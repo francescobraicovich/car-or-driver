@@ -6,12 +6,12 @@ import { initHeadToHead } from './head-to-head-view.js';
 import { initStage } from './stage-view.js';
 import { initTrack } from './track-view.js';
 import { initInfoTips } from './info-tip.js';
+import { initQuestionFeed } from './question-feed.js';
 
 // The additional pages are fetched the first time they are opened, not on every visit.
 const lazyPages = {
   prediction: async () => (await import('./prediction-view.js')).initPrediction,
   graph: async () => (await import('./graph-view.js')).initGraph,
-  insights: async () => (await import('./insights-view.js')).initInsights,
   methodology: async () => (await import('./methodology-selection-view.js')).initMethodologySelection,
   'methodology-simple': async () => (await import('./methodology-simple-view.js')).initSimpleMethodology,
   'methodology-full': async () => (await import('./methodology-view.js')).initMethodology,
@@ -40,5 +40,6 @@ window.addEventListener('DOMContentLoaded', () => {
   initTrack(); // before the stage, which says at once if the ratings are shown (a link to /ratings)
   initStage();
   initInfoTips();
+  initQuestionFeed();
   loadModel().catch(showLoadError);
 });

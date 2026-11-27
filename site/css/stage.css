@@ -35,6 +35,9 @@ body {
   --ink: #fff1e8;
   --title-ink: #fff;
   --scrim: rgb(90 0 0 / 0.42);
+  /* the glow around the letters of the questions (question-feed.js): dense next to each stroke, so the cream reads on the brightest red, with no
+     card behind them */
+  --feed-glow: rgb(70 0 0 / 0.85);
   --word-dim: 0.5;
   --glow: 0 0 0.03em #fff, 0 0 0.12em #bff4ff, 0 0 0.3em #35d3ff, 0 0 0.7em #0a8cff, 0 0 1.3em rgb(10 100 255 / 0.7);
   --word-fill: rgb(255 255 255 / 0.14);
@@ -216,6 +219,144 @@ body {
 }
 .stage-tagline:empty {
   display: none;
+}
+
+/* ── the questions ───────────────────────────────────── */
+/* On the front page with nothing open, questions scroll like the lines of a terminal (question-feed.js): the ratings' monospaced type in the cream
+   of the small text on the drawing, along a thread with a mark at each line, the newest with a filled mark and a cursor. Wide, they take the column
+   the ratings open in; on a narrow screen, the room below the car and the hands. Only the lines take the pointer, the room around them does not. */
+.question-feed {
+  --feed-line: 30px;
+  position: absolute;
+  z-index: 4;
+  left: clamp(18px, 5vw, 72px);
+  right: clamp(18px, 5vw, 72px);
+  bottom: calc(var(--bottom-space, 58px) + 8px);
+  height: var(--ledger-room, 40%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  visibility: hidden;
+  pointer-events: none;
+}
+.stage[data-layout='wide'] .question-feed {
+  left: var(--panel-left);
+  right: auto;
+  width: min(var(--panel-width), 560px);
+  top: 92px;
+  bottom: calc(var(--bottom-space, 58px) + 24px);
+  height: auto;
+}
+.question-feed[data-shown] {
+  visibility: visible;
+}
+.question-feed-list {
+  height: calc(var(--feed-lines, 0) * var(--feed-line));
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+  pointer-events: auto;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: clamp(11px, 2.9vw, 13px);
+  font-weight: 500;
+  text-shadow:
+    0 0 1px var(--feed-glow),
+    0 0 3px var(--feed-glow),
+    0 0 8px rgb(70 0 0 / 0.55);
+}
+.feed-row {
+  position: relative;
+  height: var(--feed-line);
+  opacity: calc(1 - var(--depth, 0) * 0.045); /* the older a question, the fainter */
+}
+/* the thread: a piece on each line, so that it moves down with them */
+.feed-row::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  border-left: 1px solid rgb(255 241 232 / 0.7);
+  filter: drop-shadow(0 0 2px var(--feed-glow));
+}
+.feed-link {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-left: 22px;
+  color: inherit;
+  text-decoration: none;
+}
+/* the mark of a line on the thread: a square, as on the line from the title to the pictures */
+.feed-link::before {
+  content: '';
+  position: absolute;
+  top: calc(50% - 4px);
+  left: 1px;
+  box-sizing: border-box;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--ink);
+  background: var(--stage-bg);
+  box-shadow: 0 0 3px var(--feed-glow);
+}
+.feed-row:first-child .feed-link::before {
+  background: var(--ink);
+}
+.feed-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.feed-row:first-child .feed-text::after {
+  content: '\258D';
+  margin-left: 1px;
+  animation: feed-cursor 1.1s steps(1) infinite;
+}
+.feed-link:hover,
+.feed-link:focus-visible {
+  color: #fff;
+}
+.feed-link:hover .feed-text,
+.feed-link:focus-visible .feed-text {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.feed-link:focus-visible {
+  outline: 2px dashed var(--ink);
+  outline-offset: -3px;
+}
+.feed-row.arriving {
+  animation: feed-arrive 0.55s cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+.feed-row.leaving {
+  animation: feed-leave 0.55s ease forwards;
+}
+@keyframes feed-arrive {
+  from {
+    margin-top: calc(-1 * var(--feed-line));
+    opacity: 0;
+  }
+}
+@keyframes feed-leave {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes feed-cursor {
+  50% {
+    opacity: 0;
+  }
+}
+.question-feed:not([data-shown]) .feed-text::after {
+  animation: none; /* hidden, the cursor does not blink */
+}
+@media (prefers-reduced-motion: reduce) {
+  .feed-row:first-child .feed-text::after {
+    animation: none;
+  }
 }
 /* About & Privacy at the left, source at the right. */
 .stage-footer-links {
@@ -507,8 +648,10 @@ body {
 }
 
 /* ── the colours of the lines ────────────────────────── */
-/* On the stage (the panel, the two drivers lit in the race, the notes) and in the tooltip of a chart on the panel. */
+/* On the stage (the panel, the two drivers lit in the race, the notes), on the cards of the pages of the Insights (document.css), and in the
+   tooltip of a chart on the panel. */
 .stage,
+.insight-document,
 #chartValueTooltip.metal {
   /* the colours of the lines of a chart on the panel: the project owner's five (red, blue, turquoise, dark green, magenta), then violet, orange and
      azure in the same vivid spirit; the same on the panel whatever theme another page was set to (Insights keeps the site's own palette). Checked

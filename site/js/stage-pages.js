@@ -3,7 +3,7 @@
 // card of slides in the middle; the methodology offers simple and full explanations, and About & Privacy shares a document.
 
 export const PINNED_PAGES = ['ratings', 'history', 'head-to-head']; // the panel is kept open
-export const DECK_PAGES = ['graph', 'prediction', 'insights', 'methodology', 'methodology-simple', 'methodology-full', 'about']; // a card over the picture, with no ratings panel
+export const DECK_PAGES = ['graph', 'prediction', 'methodology', 'methodology-simple', 'methodology-full', 'about']; // a card over the picture, with no ratings panel
 
 /** What the panel shows on a page: the ratings, or a view over them. */
 export const panelView = (page) => (page === 'history' || page === 'head-to-head' ? page : 'ratings');

@@ -64,6 +64,10 @@
     <link rel="modulepreload" href="/js/head-to-head-view.js" />
     <link rel="modulepreload" href="/js/address.js" />
     <link rel="modulepreload" href="/js/page-metadata.js" />
+    <link rel="modulepreload" href="/js/question-feed.js" />
+    <link rel="modulepreload" href="/js/question-pool.js" />
+    <link rel="modulepreload" href="/js/insight-page-metadata.js" />
+    <link rel="modulepreload" href="/js/page-addresses.js" />
     <script src="/js/boot-probe.js"></script>
   </head>
   <body>
@@ -115,7 +119,8 @@
 
           <nav class="stage-bar stage-top stage-links" aria-label="Main navigation">
             <a href="/ratings">ratings</a><a href="/history">history</a><a href="/head-to-head">versus</a><a href="/graph">graph</a
-            ><a href="/prediction">prediction</a><a href="/insights">insights</a><a href="/methodology">method</a>
+            ><a href="/prediction">prediction</a><a href="/insights">insights</a><a href="/methodology">method</a
+            ><a href="/drivers">drivers</a><a href="/teams">cars</a>
           </nav>
 
           <h1 class="stage-title" id="stageTitle" aria-label="Car or Driver">
@@ -152,6 +157,10 @@
 
           <div class="stage-frame" id="stageFrame" aria-hidden="true"><span class="stage-frame-hint">click to open</span></div>
           <div class="stage-cursor" id="stageCursor" aria-hidden="true"></div>
+
+          <nav class="question-feed" id="questionFeed" aria-label="Questions to explore" inert>
+            <ol class="question-feed-list" id="questionFeedList"></ol>
+          </nav>
 
           <section class="ledger" id="stageLedger" aria-label="Ratings" hidden>
             <button type="button" class="ledger-close" id="stageLedgerClose" aria-label="Close the ratings" hidden>×</button>

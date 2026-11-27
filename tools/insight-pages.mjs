@@ -5,8 +5,9 @@
 import { INSIGHTS_DATA } from '../site/js/insights-data.js';
 import { INSIGHT_CARDS, INSIGHT_TOPICS } from '../site/js/insights-cards.js';
 import { INSIGHT_PAGES } from '../site/js/insight-page-metadata.js';
-import { slideHtml } from '../site/js/insights-view.js';
-import { pageTitle, SITE_NAME } from '../site/js/page-metadata.js';
+import { INTRO_NOTE, insightCardHtml, KINDS } from '../site/js/insight-card.js';
+import { infoHtml } from '../site/js/info-tip.js';
+import { PAGE_METADATA, pageTitle, SITE_NAME } from '../site/js/page-metadata.js';
 import { SITE } from '../site/js/site-identity.js';
 import { DRIVER_PEAK_MINIMUM_STARTS } from './driver-and-team-pages.mjs';
 import { breadcrumbData, documentPage, escapeHtml, headTags, SHARE_IMAGE } from './page-template.mjs';
@@ -96,14 +97,14 @@ export function insightPages({ base, ratings }) {
         <p class="profile-meta">${escapeHtml(page.introduction)}</p>
       </section>`,
       `      <div class="insight-document" id="stage">
-        <section class="deck-card" data-deck="insights" data-open aria-label="${escapeHtml(card.title)}"><div class="deck-slide">${slideHtml(card, INSIGHTS_DATA)}</div></section>
+        <section class="deck-card" data-deck="insights" data-open aria-label="${escapeHtml(card.title)}"><div class="deck-slide">${insightCardHtml(card, INSIGHTS_DATA)}</div></section>
       </div>`,
       questions.length
         ? `      <section class="document-panel"><h2 class="panel-title">People also ask</h2><dl class="questions">${questions.map(([question, reply]) => `<dt>${question}</dt><dd>${reply}</dd>`).join('')}</dl></section>`
         : '',
       `      <section class="document-panel"><h2 class="panel-title">How it is computed</h2><p class="panel-note">${escapeHtml(how)}</p>
         <nav class="document-neighbours" aria-label="Other insights">${previous ? `<a rel="prev" href="${previous.path}">← ${escapeHtml(previous.page.heading)}</a>` : '<span></span>'}${next ? `<a rel="next" href="${next.path}">${escapeHtml(next.page.heading)} →</a>` : ''}</nav>
-        <div class="profile-actions"><a class="document-button primary" href="/insights?v=1&amp;slide=${card.id}">See it among all the insights</a><a class="document-button" href="/methodology">How the ratings work</a></div>
+        <div class="profile-actions"><a class="document-button primary" href="/insights#finding-${card.id}">See it among all the insights</a><a class="document-button" href="/methodology">How the ratings work</a></div>
       </section>`,
       `      <section class="document-panel"><h2 class="panel-title">More questions</h2><ul class="question-list">${others.map((entry) => `<li><a href="${entry.path}">${escapeHtml(entry.page.heading)}</a></li>`).join('')}</ul></section>`,
     ]
@@ -160,4 +161,65 @@ export function insightPages({ base, ratings }) {
       }),
     };
   });
+}
+
+/** The page of all the findings (/insights): the questions by topic, then the card of every finding with its chart, each leading to its own page. */
+export function insightIndexPage({ base }) {
+  const list = insightList();
+  const meta = PAGE_METADATA['/insights'];
+  const topics = INSIGHT_TOPICS.map((topic) => ({ topic, entries: list.filter(({ card }) => card.topic === topic.id) }));
+  const kinds = Object.values(KINDS);
+  const content = [
+    `      <section class="document-panel profile">
+        <p class="profile-subject">Insights</p>
+        <h1 class="list-title">${escapeHtml(meta.heading)}: driver or car, answered with data</h1>
+        <p class="profile-meta">${list.length} findings on one question: how much of a Formula 1 result is the driver, and how much is the car? Each is a claim, a chart, and a note behind the "i" on how it was computed.${infoHtml(INTRO_NOTE)}</p>
+        <p class="insight-kinds-note">${kinds.map(([name, note]) => `<span class="insight-chip">${name}</span> ${escapeHtml(note)}`).join('<br />')}</p>
+      </section>`,
+    `      <section class="document-panel"><h2 class="panel-title">The questions</h2><div class="insight-contents">${topics
+      .map(
+        ({ topic, entries }) =>
+          `<section><h3>${escapeHtml(topic.title)}</h3><ol>${entries.map(({ card, page }) => `<li><a href="#finding-${card.id}">${escapeHtml(page.heading)}</a></li>`).join('')}</ol></section>`,
+      )
+      .join('')}</div></section>`,
+    `      <div class="insight-document" id="stage">${topics
+      .map(
+        ({ topic, entries }) =>
+          `<h2 class="document-section-title">${escapeHtml(topic.title)}</h2>${entries
+            .map(
+              ({ card, page, path }) =>
+                `<section class="deck-card" data-deck="insights" data-open id="finding-${card.id}" aria-label="${escapeHtml(card.title)}"><div class="deck-slide">${insightCardHtml(card, INSIGHTS_DATA)}</div><p class="insight-more"><a href="${path}">${escapeHtml(page.heading)} On its own page, with the questions people also ask →</a></p></section>`,
+            )
+            .join('')}`,
+      )
+      .join('')}</div>`,
+  ].join('\n');
+  return {
+    path: '/insights',
+    html: documentPage({
+      head: headTags({
+        base,
+        path: '/insights',
+        title: meta.title,
+        description: meta.description,
+        data: [
+          breadcrumbData(base, [['Insights', '/insights']]),
+          {
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: meta.title,
+            itemListElement: list.map(({ page, path }, index) => ({
+              '@type': 'ListItem',
+              position: index + 1,
+              name: page.heading,
+              url: new URL(path, base).href,
+            })),
+          },
+        ],
+      }),
+      trail: [['Insights', '/insights']],
+      content,
+      scripts: ['/js/insight-page.js'],
+    }),
+  };
 }

@@ -27,6 +27,11 @@ export function initGraph() {
   let publishedById = new Map();
 
   const current = () => document.body.dataset.page === 'graph' && !page.hidden;
+  /** A new choice of driver, which the page shell keeps in the address (driver=), so that a link can open the graph on a driver. */
+  const choose = (id) => {
+    chosen = id;
+    window.dispatchEvent(new CustomEvent('f1:graph-driver', { detail: { id } }));
+  };
   const active = () => hover ?? (scoreById.has(chosen) ? chosen : null);
   const nameOf = (id) => state.profiles[id]?.slice(0, 2).join(' ') || state.model?.dname?.get?.(id) || `Driver ${id}`;
   const selectedSnap = () => state.model?.snaps[state.raceIndex];
@@ -326,13 +331,13 @@ export function initGraph() {
   });
   canvas.addEventListener('click', () => {
     if (hover) {
-      chosen = hover;
+      choose(hover);
       picker.value = chosen;
       showDetail();
     }
   });
   picker.addEventListener('change', () => {
-    chosen = picker.value || null;
+    choose(picker.value || null);
     hover = null;
     showDetail();
     draw(performance.now());
@@ -340,7 +345,7 @@ export function initGraph() {
   detail.addEventListener('click', (event) => {
     const button = event.target.closest('button[data-driver]');
     if (!button || !scoreById.has(button.dataset.driver)) return;
-    chosen = button.dataset.driver;
+    choose(button.dataset.driver);
     hover = null;
     picker.value = chosen;
     showDetail();
@@ -358,7 +363,8 @@ export function initGraph() {
   window.addEventListener('f1:model-ready', () => {
     if (current()) load();
   });
-  window.addEventListener('f1:workspace-changed', () => {
+  window.addEventListener('f1:workspace-changed', (event) => {
+    if (event.detail?.driver) chosen = event.detail.driver; // a link to the graph on a driver
     page.hidden = document.body.dataset.page !== 'graph';
     if (current() && state.model) load();
     else sync();

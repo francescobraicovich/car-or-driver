@@ -5,7 +5,7 @@
 //
 // Needs Chrome/Chromium (not part of `npm test`, which is Node-only). Starts its
 // own static server, so nothing else needs to be running.
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { mkdtemp, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -15,11 +15,18 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const latestRace = JSON.parse(await readFile(join(ROOT, 'data/manifest.json'), 'utf8')).lastRace;
 const CHROME = process.argv[2] || process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const HTTP_PORT = 8765;
+const BUILT_PORT = 8766; // the built site (dist), served as Cloudflare Pages does: the pages of the Insights, the drivers and the teams are only there
 const CDP_PORT = 9333;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const ADDRESS = 'location.pathname + location.search'; // the page's path and options (setting location.hash to an old address, #/ratings, still opens a page)
 
 const server = spawn(process.execPath, ['tools/serve.mjs', String(HTTP_PORT)], { cwd: ROOT, stdio: 'ignore' });
+const build = spawnSync(process.execPath, ['tools/build-pages.mjs', `http://localhost:${BUILT_PORT}/`], { cwd: ROOT, encoding: 'utf8' });
+if (build.status !== 0) {
+  console.error(`FAIL the site could not be built: ${build.stderr}`);
+  process.exit(1);
+}
+const builtServer = spawn(process.execPath, ['tools/serve.mjs', String(BUILT_PORT), 'dist'], { cwd: ROOT, stdio: 'ignore' });
 const profile = await mkdtemp(join(tmpdir(), 'f1elo-chrome-'));
 const chrome = spawn(
   CHROME,
@@ -28,6 +35,7 @@ const chrome = spawn(
 );
 const cleanup = () => {
   server.kill();
+  builtServer.kill();
   chrome.kill();
 };
 process.on('exit', cleanup);
@@ -117,9 +125,9 @@ check(
 // The site is the front page and what opens over it: the links at its top are Ratings, History, Versus, Graph, Insights and Method, and the links at its foot
 // are Privacy, About and the source. Nothing of the old pages (header, loading screen, status line, footer, share button, theme button) is left.
 check(
-  'the links at the top of the front page are exactly ratings, history, versus, graph, prediction, insights and method',
+  'the links at the top of the front page are exactly ratings, history, versus, graph, prediction, insights, method, drivers and cars',
   JSON.stringify(await evaluate("[...document.querySelectorAll('.stage-top a')].map((a) => a.textContent)")) ===
-    JSON.stringify(['ratings', 'history', 'versus', 'graph', 'prediction', 'insights', 'method']),
+    JSON.stringify(['ratings', 'history', 'versus', 'graph', 'prediction', 'insights', 'method', 'drivers', 'cars']),
 );
 check(
   'nothing of the old pages is left: no header, loading screen, status line, footer, share button or theme button',
@@ -1822,238 +1830,6 @@ await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, dev
 await sleep(400);
 await evaluate("document.querySelector('#predictionPage .prediction-grid-toggle').click()");
 
-// The Insights: a card in the middle of the front page (the picture is grey, no panel is open), a slide show: the contents first, then a slide for each
-// finding with its chart, sliding; a list of the slides beside the card, the ticks under its title, the arrows and the keys move along it; the slide is in
-// the address
-await evaluate("location.hash = '#/insights'");
-await sleep(1500);
-const insightsState = () =>
-  evaluate(`JSON.stringify({
-    page: document.body.dataset.page,
-    mode: document.getElementById('stage').dataset.mode,
-    state: document.getElementById('stage').dataset.state,
-    panelShown: !document.getElementById('stageLedger').hidden,
-    position: document.getElementById('insightsPosition').textContent,
-    name: document.getElementById('insightsName').textContent,
-    open: [...document.querySelectorAll('#insightsCard .deck-slide')].map((slide) => !slide.inert).map((open, index) => (open ? index : -1)).filter((index) => index >= 0),
-    transform: document.getElementById('insightsTrack').style.transform,
-    current: [...document.querySelectorAll('#insightsList button[aria-current="true"], #insightsTicks button[aria-current="true"]')].map((button) => button.dataset.slide),
-    path: location.pathname,
-    slide: (location.search.match(/slide=([a-z0-9-]*)/) || [])[1] ?? null,
-  })`);
-const insightsAtStart = JSON.parse(await insightsState());
-const insightsBox = await rectangleOfSelector('#insightsCard');
-const stageBox = await rectangleOfSelector('#stage');
-check(
-  'the Insights are a card in the middle of the front page, over the grey picture, with no panel open and no pointing at the pictures',
-  insightsAtStart.page === 'insights' &&
-    insightsAtStart.mode === 'deck' &&
-    insightsAtStart.state === 'open' &&
-    !insightsAtStart.panelShown &&
-    Math.abs(insightsBox.x + insightsBox.width / 2 - (stageBox.x + stageBox.width / 2)) <= 1.5 &&
-    insightsBox.y > 60 &&
-    insightsBox.y + insightsBox.height < stageBox.y + stageBox.height &&
-    (await evaluate("getComputedStyle(document.getElementById('hotspotCar')).visibility")) === 'hidden',
-  JSON.stringify({ insightsAtStart, insightsBox }),
-);
-check(
-  'the first slide is the contents: the thirteen findings under three topics, and a slide for each after it, all drawn',
-  insightsAtStart.position === '1 / 14' &&
-    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents button[data-slide]').length")) === 13 &&
-    (await evaluate("document.querySelectorAll('#insightsCard .deck-contents h3').length")) === 3 &&
-    (await evaluate("document.querySelectorAll('article.insight').length")) === 13 &&
-    (await evaluate(
-      "[...document.querySelectorAll('article.insight')].every((card) => card.querySelector('svg, table') && card.querySelector('.info'))",
-    )) &&
-    !(await evaluate("/undefined|NaN/.test(document.getElementById('insightsCard').textContent)")),
-);
-check(
-  'in every chart of the card what is drawn stays inside its svg, and a chart is not shorter than it was drawn for (no chart spills over the plate under it)',
-  await evaluate(`[...document.querySelectorAll('.deck-card [data-chart] svg')].every((svg) => {
-    const box = svg.getBBox();
-    return box.y + box.height <= svg.height.baseVal.value + 2 && svg.parentElement.getBoundingClientRect().bottom + 1 >= svg.getBoundingClientRect().bottom;
-  })`),
-);
-check(
-  'title comparison draws the two requested scatter plots from the same drivers',
-  await evaluate(`(() => {
-    const card = document.getElementById('insight-equal-car-titles');
-    const first = card.querySelector('[data-chart="actual-years"] svg');
-    const second = card.querySelector('[data-chart="other-eras"] svg');
-    const firstPoint = [...first.querySelectorAll('circle.insight-point')].find((point) => point.getAttribute('aria-label').startsWith('Michael Schumacher:'));
-    const secondPoint = [...second.querySelectorAll('circle.insight-point')].find((point) => point.getAttribute('aria-label').startsWith('Michael Schumacher:'));
-    return first && second && first.querySelectorAll('circle.insight-point').length > 10 &&
-      first.querySelectorAll('circle.insight-point').length === second.querySelectorAll('circle.insight-point').length &&
-      first.textContent.includes('actual titles') && second.textContent.includes('actual titles') &&
-      firstPoint && secondPoint && firstPoint.getAttribute('cx') === secondPoint.getAttribute('cx') &&
-      firstPoint.getAttribute('aria-label').includes('expected titles with equal cars (their own years)') &&
-      secondPoint.getAttribute('aria-label').includes('expected titles with equal cars (median in other eras)');
-  })()`),
-);
-check(
-  'Schumacher is inside the career scatter plot',
-  await evaluate(`(() => {
-    const svg = document.querySelector('#insight-career-driver-and-car svg');
-    const point = [...svg.querySelectorAll('circle.insight-point')].find((dot) => dot.getAttribute('aria-label').startsWith('Michael Schumacher:'));
-    return point && +point.getAttribute('cx') >= 44 && +point.getAttribute('cx') <= svg.width.baseVal.value - 14 &&
-      +point.getAttribute('cy') >= 24 && +point.getAttribute('cy') <= svg.height.baseVal.value - 34;
-  })()`),
-);
-check(
-  'the champion chart fits every stacked bar and package marker, including 1995 Schumacher',
-  await evaluate(`(() => {
-    const svg = document.querySelector('#insight-champions svg');
-    const width = svg.viewBox.baseVal.width;
-    const bars = [...svg.querySelectorAll('rect')];
-    const markers = [...svg.querySelectorAll('circle')];
-    return bars.some((bar) => bar.querySelector('title')?.textContent.includes('1995  Schumacher')) &&
-      bars.every((bar) => +bar.getAttribute('x') >= 110 && +bar.getAttribute('x') + +bar.getAttribute('width') <= width - 46) &&
-      markers.every((marker) => +marker.getAttribute('cx') >= 110 && +marker.getAttribute('cx') <= width - 46);
-  })()`),
-);
-check(
-  'all four rating extremes show 25 entries',
-  await evaluate(`['driver-peak-ratings', 'driver-low-ratings', 'car-peak-ratings', 'car-low-ratings'].every((id) =>
-    document.querySelectorAll('#insight-' + id + ' tbody tr').length === 25)`),
-);
-// jumping from the contents, and sliding there
-await evaluate('document.querySelector(\'#insightsCard .deck-contents button[data-slide="10"]\').click()');
-await sleep(900);
-const jumped = JSON.parse(await insightsState());
-check(
-  'a finding on the contents slide takes the card there (the track slides, the others are put out of reach, the address names it)',
-  jumped.position === '11 / 14' &&
-    jumped.open.join() === '10' &&
-    jumped.transform === 'translateX(-1000%)' &&
-    jumped.current.join() === '10,10' &&
-    jumped.path === '/insights' &&
-    jumped.slide === 'ageing',
-  JSON.stringify(jumped),
-);
-for (let attempt = 0; attempt < 50 && !(await evaluate("!!document.querySelector('#insight-ageing .insight-point')")); attempt++)
-  await sleep(100);
-const interactiveDot = JSON.parse(
-  await evaluate(`(() => {
-  const dot = document.querySelector('#insight-ageing .insight-point');
-  if (!dot) return JSON.stringify({ focused: false, tapped: false, escaped: false, missing: true });
-  dot.focus();
-  const tooltip = dot.closest('[data-chart]').querySelector('.insight-point-tooltip');
-  const focused = !tooltip.hidden && tooltip.textContent === dot.getAttribute('aria-label');
-  dot.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-  const tapped = tooltip.dataset.pinned === 'true' && !tooltip.hidden;
-  dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-  dot.focus();
-  dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-  const keyboard = tooltip.dataset.pinned === 'true' && !tooltip.hidden;
-  dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-  return JSON.stringify({ focused, tapped, keyboard, escaped: tooltip.hidden });
-})()`),
-);
-check(
-  'insight dots reveal exact values on focus and tap, and Escape dismisses them',
-  interactiveDot.focused && interactiveDot.tapped && interactiveDot.keyboard && interactiveDot.escaped,
-);
-check(
-  'slides slide (an animation, not a cut), and the same under reduced motion is a cut',
-  (await evaluate("getComputedStyle(document.getElementById('insightsTrack')).transitionDuration")) !== '0s' &&
-    (await (async () => {
-      await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
-      await sleep(100);
-      const still = await evaluate("getComputedStyle(document.getElementById('insightsTrack')).transitionDuration");
-      await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
-      return still === '0s';
-    })()),
-);
-// the arrows, the keys, the list and the ticks
-await evaluate("document.getElementById('insightsNext').click()");
-await sleep(700);
-const afterNext = JSON.parse(await insightsState());
-await press('ArrowLeft', 'ArrowLeft', 37);
-await sleep(500);
-await press('ArrowLeft', 'ArrowLeft', 37);
-await sleep(500);
-const afterKeys = JSON.parse(await insightsState());
-await press('Home', 'Home', 36);
-await sleep(600);
-const atHome = JSON.parse(await insightsState());
-await press('End', 'End', 35);
-await sleep(600);
-const atEnd = JSON.parse(await insightsState());
-check(
-  'Next, the arrow keys, Home and End move along the slides',
-  afterNext.position === '12 / 14' &&
-    afterKeys.position === '10 / 14' &&
-    atHome.position === '1 / 14' &&
-    atEnd.position === '14 / 14' &&
-    (await evaluate("document.getElementById('insightsNext').disabled")),
-  JSON.stringify({ afterNext: afterNext.position, afterKeys: afterKeys.position, atHome: atHome.position, atEnd: atEnd.position }),
-);
-const list = JSON.parse(
-  await evaluate(`JSON.stringify({
-    shown: getComputedStyle(document.getElementById('insightsList')).display !== 'none',
-    buttons: document.querySelectorAll('#insightsList button').length,
-    topics: document.querySelectorAll('#insightsList h3').length,
-    right: document.getElementById('insightsList').getBoundingClientRect().right,
-    cardLeft: document.getElementById('insightsCard').getBoundingClientRect().left,
-  })`),
-);
-await evaluate('document.querySelector(\'#insightsList button[data-slide="5"]\').click()');
-await sleep(700);
-const fromList = JSON.parse(await insightsState());
-await evaluate('document.querySelector(\'#insightsTicks button[data-slide="9"]\').click()');
-await sleep(700);
-const fromTicks = JSON.parse(await insightsState());
-check(
-  'the list of slides beside the card (three topics, the contents and the thirteen findings, clear of the card) and the ticks under its title move to a slide',
-  list.shown &&
-    list.buttons === 14 &&
-    list.topics === 3 &&
-    list.right < list.cardLeft &&
-    fromList.position === '6 / 14' &&
-    fromList.current.join() === '5,5' &&
-    fromTicks.position === '10 / 14',
-  JSON.stringify({ list, fromList: fromList.position, fromTicks: fromTicks.position }),
-);
-const topicHeads = JSON.parse(
-  await evaluate(`JSON.stringify({
-    heads: [...document.querySelectorAll('#insightsList h3')].map((head) => ({ rule: getComputedStyle(head).borderTopWidth, weight: getComputedStyle(head).fontWeight, marker: getComputedStyle(head, '::before').width })),
-    guide: [...document.querySelectorAll('#insightsList ol')].map((items) => getComputedStyle(items).borderLeftWidth),
-    marked: [...document.querySelectorAll('#insightsList section[data-current] h3')].map((head) => head.textContent),
-  })`),
-);
-check(
-  'the topics in the list of slides are headings of their own (a rule over each, bold, a square before it, the findings set in under it with a guide) and the topic of the slide shown is marked',
-  topicHeads.heads.length === 3 &&
-    topicHeads.heads.every((head) => head.rule === '2px' && Number(head.weight) >= 700 && head.marker === '7px') &&
-    topicHeads.guide.every((width) => width === '1px') &&
-    topicHeads.marked.join() === 'Drivers and championships',
-  JSON.stringify(topicHeads),
-);
-await mouse('mouseMoved', 8, 300);
-const insightsInfo = await evaluate("document.querySelector('#insightsCard .deck-slide:not([inert]) .insight-title .info').dataset.info");
-check(
-  'what a finding rests on is behind the "i" beside its title: how much weight it carries, and how it was computed',
-  /^(Direct|Model-based): .* How it is computed: /.test(insightsInfo) && !/</.test(insightsInfo),
-  insightsInfo.slice(0, 120),
-);
-// the card is metal, and the lines in it are in the palette of the History and the Head to head
-check(
-  "the charts in the card are in the palette of the panel (a bar is red or blue), on the panel's metal",
-  (await evaluate(
-    "(() => { const fills = new Set([...document.querySelectorAll('#insight-explained-share rect')].map((rect) => getComputedStyle(rect).fill)); return fills.has('rgb(250, 24, 2)') && fills.has('rgb(9, 26, 156)'); })()",
-  )) && (await evaluate("getComputedStyle(document.getElementById('insightsCard')).backdropFilter")) !== 'none',
-);
-await press('Escape', 'Escape', 27);
-await sleep(700);
-check(
-  'Escape closes the card: the address is the front page',
-  (await evaluate(ADDRESS)) === '/' && (await evaluate("getComputedStyle(document.getElementById('insightsCard')).display")) === 'none',
-);
-await evaluate("location.hash = '#/insights'");
-await sleep(400);
-await click(stageBox.x + 8, stageBox.y + stageBox.height / 2);
-await sleep(300);
-check('clicking outside the Insights card closes it', (await evaluate(ADDRESS)) === '/');
 await evaluate("location.hash = '#/methodology'");
 await sleep(800);
 check(
@@ -2206,7 +1982,7 @@ for (const [from, to] of [
 }
 await evaluate("location.hash = '#/'");
 await sleep(500);
-await evaluate('window.__sameDocument = true; document.querySelector(\'.stage-top a[href="/insights"]\').click()');
+await evaluate('window.__sameDocument = true; document.querySelector(\'.stage-top a[href="/prediction"]\').click()');
 await sleep(900);
 const followed = JSON.parse(
   await evaluate(
@@ -2215,7 +1991,10 @@ const followed = JSON.parse(
 );
 check(
   'a link to a page changes the path without loading a new document, and the title names the page',
-  followed.address.startsWith('/insights') && followed.page === 'insights' && followed.same && followed.title.startsWith('F1 insights'),
+  followed.address.startsWith('/prediction') &&
+    followed.page === 'prediction' &&
+    followed.same &&
+    followed.title.startsWith('F1 race prediction'),
   JSON.stringify(followed),
 );
 await evaluate('history.back()');
@@ -2246,7 +2025,6 @@ for (const hash of [
   '#/history',
   '#/head-to-head',
   '#/graph',
-  '#/insights',
   '#/methodology',
   '#/methodology/simple',
   '#/methodology/full',
@@ -2348,7 +2126,6 @@ for (const page of [
   'history',
   'head-to-head',
   'graph',
-  'insights',
   'methodology',
   'methodology/simple',
   'methodology/full',
@@ -2370,22 +2147,6 @@ for (const page of ['privacy', 'about']) {
     ),
   );
 }
-await send('Emulation.setDeviceMetricsOverride', { width: 320, height: 640, deviceScaleFactor: 1, mobile: true });
-await evaluate("location.hash = '#/insights?v=1&slide=car-low-ratings'");
-await sleep(900);
-check(
-  'on a narrow phone every rating ranking fits its card, ranked from 1 with its ratings in view',
-  await evaluate(`(() => {
-  const card = document.getElementById('insightsCard').getBoundingClientRect();
-  const ranking = document.querySelector('#insight-car-low-ratings .table-wrap');
-  const rows = [...ranking.querySelectorAll('tbody tr')];
-  return ['driver-peak-ratings', 'driver-low-ratings', 'car-peak-ratings', 'car-low-ratings'].every((id) => {
-    const wrap = document.querySelector('#insight-' + id + ' .table-wrap');
-    return wrap.scrollWidth <= wrap.clientWidth + 1;
-  }) && rows.length === 25 && rows.every((row, index) => row.cells[0].textContent === String(index + 1) &&
-    row.cells[3].getBoundingClientRect().right <= card.right);
-})()`),
-);
 await send('Emulation.setDeviceMetricsOverride', { width: 375, height: 812, deviceScaleFactor: 2, mobile: true });
 await evaluate("location.hash = '#/graph'");
 await sleep(400);
@@ -2420,24 +2181,6 @@ for (const slide of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
   })()`),
   );
 }
-// On a phone the Insights are a card across the screen, with no list beside it, and a swipe turns the slide
-await evaluate("location.hash = '#/insights'");
-await sleep(1200);
-const phoneCard = await rectangleOfSelector('#insightsCard');
-await send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 300, y: 500 }] });
-await send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 230, y: 503 }] });
-await send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 120, y: 505 }] });
-await send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-await sleep(900);
-check(
-  'on a phone the Insights are a card across the screen, without the list of slides, and a swipe turns to the next slide',
-  phoneCard.x >= 0 &&
-    phoneCard.x + phoneCard.width <= 375 &&
-    phoneCard.width > 300 &&
-    (await evaluate("getComputedStyle(document.getElementById('insightsList')).display")) === 'none' &&
-    (await evaluate("document.getElementById('insightsPosition').textContent")) === '2 / 14',
-  JSON.stringify({ phoneCard, position: await evaluate("document.getElementById('insightsPosition').textContent") }),
-);
 // On a phone the ratings are a sheet: a tap on the car keeps it open, it stays clear of both pictures and above the text at the bottom
 await evaluate("location.hash = '#/'");
 await sleep(900);
@@ -2480,19 +2223,13 @@ check(
 );
 // Links straight to a view (a shared link): the panel is kept open with the view over the ratings, drawn at once (the head to head loads its
 // forecast on the way in)
-// a link straight to a finding opens the card on its slide; this one is in the old form (#/insights?…), which becomes the page's path
-await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/?link=slide#/insights?v=1&slide=upsets` });
-await sleep(5000);
-const linkedSlide = await evaluate(
-  "JSON.stringify({ position: document.getElementById('insightsPosition').textContent, name: document.getElementById('insightsName').textContent, drawn: !!document.querySelector('#insightsCard .deck-slide:not([inert]) svg'), address: location.pathname + location.search + location.hash })",
-);
+// an old link to a slide of the Insights (#/insights?…) opens that finding's own page
+await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/?link=slide#/insights?v=1&slide=upsets` }); // (the pages of the findings are in the built site)
+await sleep(2500);
 check(
-  'a link straight to a finding opens the card on that slide, drawn, and an old-form address becomes the path',
-  JSON.parse(linkedSlide).position === '14 / 14' &&
-    JSON.parse(linkedSlide).name === 'Who beat the odds?' &&
-    JSON.parse(linkedSlide).drawn &&
-    /^\/insights\?v=1&.*slide=upsets/.test(JSON.parse(linkedSlide).address),
-  linkedSlide,
+  'an old link to a slide of the Insights opens the page of that finding',
+  (await evaluate('location.pathname')) === '/insights/biggest-f1-upsets',
+  await evaluate('location.href'),
 );
 for (const [view, ready] of [
   ['history', "document.querySelectorAll('#driverChart polyline').length >= 3"],
@@ -2700,6 +2437,227 @@ check(
     "(() => { const params = new URLSearchParams(location.search); return params.get('dm') === 'overall' && params.get('cm') === 'overall'; })()",
   ),
 );
+// The questions on the front page (question-feed.js): as many lines as fit beside the picture (wide) or under it (narrow), clear of the title, the
+// car, the hands and the two rows of links; a new one at the top every few seconds; waiting while pointed at; gone while the ratings or a card are
+// open; a question of two drivers opens the head to head on them, and one about a driver's teammates the Graph on that driver, without a new page
+const feedState = async () =>
+  JSON.parse(
+    await evaluate(`(() => {
+      const box = (element) => { const r = element.getBoundingClientRect(); return { top: r.top, bottom: r.bottom, left: r.left, right: r.right }; };
+      const list = document.getElementById('questionFeedList');
+      return JSON.stringify({
+        shown: document.getElementById('questionFeed').hasAttribute('data-shown'),
+        lines: list.querySelectorAll('.feed-row').length,
+        first: list.querySelector('.feed-link')?.getAttribute('aria-label') ?? '',
+        list: box(list),
+        others: [document.getElementById('stageTitle'), ...document.querySelectorAll('.hotspot'), document.querySelector('.stage-top'), document.querySelector('.stage-bottom')].map(box),
+      });
+    })()`),
+  );
+const overlaps = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+for (const [width, height, mobile] of [
+  [1440, 900, false],
+  [1024, 768, false],
+  [375, 812, true],
+  [812, 375, true],
+]) {
+  await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile });
+  await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/?feed=${width}` });
+  await sleep(4500);
+  const layout = await feedState();
+  check(
+    `${width}x${height}: the questions show as many lines as fit (or none where too few fit), clear of the title, the car, the hands and the links`,
+    layout.shown ? layout.lines >= 4 && layout.lines <= 10 && layout.others.every((other) => !overlaps(layout.list, other)) : height < 500,
+    JSON.stringify({ shown: layout.shown, lines: layout.lines, list: layout.list }),
+  );
+}
+await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/?feed=moves` });
+await sleep(3000);
+await mouse('mouseMoved', 1300, 860);
+await sleep(1500);
+const firstBefore = (await feedState()).first;
+await sleep(4000);
+const firstAfter = (await feedState()).first;
+check(
+  'a new question arrives at the top every few seconds',
+  firstBefore && firstAfter && firstBefore !== firstAfter,
+  `${firstBefore} → ${firstAfter}`,
+);
+const feedBox = (await feedState()).list;
+await mouse('mouseMoved', feedBox.left + 80, feedBox.top + 15);
+await sleep(600);
+const firstWhilePointed = (await feedState()).first;
+await sleep(4200);
+check('the questions wait while they are pointed at', (await feedState()).first === firstWhilePointed, firstWhilePointed);
+await mouse('mouseMoved', 1300, 860);
+await evaluate("location.hash = '#/ratings'");
+await sleep(900);
+const withRatings = await feedState();
+await evaluate("location.hash = '#/methodology'");
+await sleep(900);
+const withCard = await feedState();
+await evaluate("location.hash = '#/'");
+await sleep(1500);
+check(
+  'the questions are gone while the ratings or a card are open, and back on the front page',
+  !withRatings.shown && !withCard.shown && (await feedState()).shown,
+  JSON.stringify([withRatings.shown, withCard.shown]),
+);
+const followFeed = async (href) => {
+  await evaluate(`(() => {
+    window.__sameDocument = true;
+    const item = document.createElement('li');
+    item.className = 'feed-row';
+    item.innerHTML = '<a class="feed-link" href="${href}">question</a>';
+    document.getElementById('questionFeedList').prepend(item);
+    item.querySelector('a').click();
+  })()`);
+  await sleep(3000);
+};
+await followFeed('/graph?v=1&driver=852');
+const feedGraph = await evaluate(
+  "JSON.stringify([document.body.dataset.page, document.getElementById('graphDriver').value, new URLSearchParams(location.search).get('driver'), window.__sameDocument === true])",
+);
+check(
+  'a question about a driver and every teammate opens the Graph on that driver, in its address',
+  feedGraph === JSON.stringify(['graph', '852', '852', true]),
+  feedGraph,
+);
+// The Insights are a page of their own (/insights, in the built site): the questions by topic, then the card of each finding with its chart, on the
+// metal of the site in its red and blue, each leading to the finding's own page
+await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/insights` });
+await sleep(2500);
+check(
+  'the Insights page lists the thirteen questions under three topics, and draws the card of each, with its note',
+  (await evaluate('document.querySelectorAll(\'.insight-contents a[href^="#finding-"]\').length')) === 13 &&
+    (await evaluate("document.querySelectorAll('.insight-contents h3').length")) === 3 &&
+    (await evaluate("document.querySelectorAll('article.insight').length")) === 13 &&
+    (await evaluate(
+      "[...document.querySelectorAll('article.insight')].every((card) => card.querySelector('svg, table') && card.querySelector('.info'))",
+    )) &&
+    !(await evaluate("/undefined|NaN/.test(document.querySelector('.insight-document').textContent)")),
+);
+check(
+  'each card leads to the page of its finding',
+  await evaluate(
+    "(() => { const links = [...document.querySelectorAll('.insight-more a')].map((a) => a.getAttribute('href')); return links.length === 13 && new Set(links).size === 13 && links.every((href) => /^\\/insights\\/[a-z0-9-]+$/.test(href)); })()",
+  ),
+);
+check(
+  'in every chart what is drawn stays inside its svg, and a chart is not shorter than it was drawn for (no chart spills over the plate under it)',
+  await evaluate(`[...document.querySelectorAll('.deck-card [data-chart] svg')].every((svg) => {
+    const box = svg.getBBox();
+    return box.y + box.height <= svg.height.baseVal.value + 2 && svg.parentElement.getBoundingClientRect().bottom + 1 >= svg.getBoundingClientRect().bottom;
+  })`),
+);
+check(
+  'title comparison draws the two requested scatter plots from the same drivers',
+  await evaluate(`(() => {
+    const card = document.getElementById('insight-equal-car-titles');
+    const first = card.querySelector('[data-chart="actual-years"] svg');
+    const second = card.querySelector('[data-chart="other-eras"] svg');
+    const firstPoint = [...first.querySelectorAll('circle.insight-point')].find((point) => point.getAttribute('aria-label').startsWith('Michael Schumacher:'));
+    const secondPoint = [...second.querySelectorAll('circle.insight-point')].find((point) => point.getAttribute('aria-label').startsWith('Michael Schumacher:'));
+    return first && second && first.querySelectorAll('circle.insight-point').length > 10 &&
+      first.querySelectorAll('circle.insight-point').length === second.querySelectorAll('circle.insight-point').length &&
+      first.textContent.includes('actual titles') && second.textContent.includes('actual titles') &&
+      firstPoint && secondPoint && firstPoint.getAttribute('cx') === secondPoint.getAttribute('cx') &&
+      firstPoint.getAttribute('aria-label').includes('expected titles with equal cars (their own years)') &&
+      secondPoint.getAttribute('aria-label').includes('expected titles with equal cars (median in other eras)');
+  })()`),
+);
+check(
+  'Schumacher is inside the career scatter plot',
+  await evaluate(`(() => {
+    const svg = document.querySelector('#insight-career-driver-and-car svg');
+    const point = [...svg.querySelectorAll('circle.insight-point')].find((dot) => dot.getAttribute('aria-label').startsWith('Michael Schumacher:'));
+    return point && +point.getAttribute('cx') >= 44 && +point.getAttribute('cx') <= svg.width.baseVal.value - 14 &&
+      +point.getAttribute('cy') >= 24 && +point.getAttribute('cy') <= svg.height.baseVal.value - 34;
+  })()`),
+);
+check(
+  'the champion chart fits every stacked bar and package marker, including 1995 Schumacher',
+  await evaluate(`(() => {
+    const svg = document.querySelector('#insight-champions svg');
+    const width = svg.viewBox.baseVal.width;
+    const bars = [...svg.querySelectorAll('rect')];
+    const markers = [...svg.querySelectorAll('circle')];
+    return bars.some((bar) => bar.querySelector('title')?.textContent.includes('1995  Schumacher')) &&
+      bars.every((bar) => +bar.getAttribute('x') >= 110 && +bar.getAttribute('x') + +bar.getAttribute('width') <= width - 46) &&
+      markers.every((marker) => +marker.getAttribute('cx') >= 110 && +marker.getAttribute('cx') <= width - 46);
+  })()`),
+);
+check(
+  'all four rating extremes show 25 entries',
+  await evaluate(`['driver-peak-ratings', 'driver-low-ratings', 'car-peak-ratings', 'car-low-ratings'].every((id) =>
+    document.querySelectorAll('#insight-' + id + ' tbody tr').length === 25)`),
+);
+await send('Emulation.setFocusEmulationEnabled', { enabled: true }); // (a page reached by an address alone has no focus in a headless browser)
+const pageDot = JSON.parse(
+  await evaluate(`(() => {
+  const dot = document.querySelector('#insight-ageing .insight-point');
+  if (!dot) return JSON.stringify({ missing: true });
+  dot.focus();
+  const tooltip = dot.closest('[data-chart]').querySelector('.insight-point-tooltip');
+  const focused = !tooltip.hidden && tooltip.textContent === dot.getAttribute('aria-label');
+  dot.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  const tapped = tooltip.dataset.pinned === 'true' && !tooltip.hidden;
+  dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  dot.focus();
+  dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+  const keyboard = tooltip.dataset.pinned === 'true' && !tooltip.hidden;
+  dot.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  return JSON.stringify({ focused, tapped, keyboard, escaped: tooltip.hidden });
+})()`),
+);
+check(
+  'insight dots reveal exact values on focus and tap, and Escape dismisses them',
+  pageDot.focused && pageDot.tapped && pageDot.keyboard && pageDot.escaped,
+  JSON.stringify(pageDot),
+);
+const findingInfo = await evaluate("document.querySelector('#insight-upsets .insight-title .info').dataset.info");
+check(
+  'what a finding rests on is behind the "i" beside its title: how much weight it carries, and how it was computed',
+  /^(Direct|Model-based): .* How it is computed: /.test(findingInfo) && !/</.test(findingInfo),
+  findingInfo.slice(0, 120),
+);
+check(
+  "the charts are in the site's red and blue (the car's share red, the driver's blue), on its metal",
+  (await evaluate(
+    "(() => { const fills = new Set([...document.querySelectorAll('#insight-explained-share rect')].map((rect) => getComputedStyle(rect).fill)); return fills.has('rgb(250, 24, 2)') && fills.has('rgb(9, 26, 156)'); })()",
+  )) && (await evaluate("getComputedStyle(document.getElementById('finding-explained-share')).backdropFilter")) !== 'none',
+);
+await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/insights/biggest-f1-upsets` });
+await sleep(2000);
+check(
+  "a finding's own page draws its card and answers in its head as its own address",
+  (await evaluate("!!document.querySelector('#insight-upsets svg, #insight-upsets table')")) &&
+    (await evaluate("document.querySelector('link[rel=canonical]').href")) === `http://localhost:${BUILT_PORT}/insights/biggest-f1-upsets`,
+);
+for (const [width, height] of [
+  [375, 812],
+  [320, 640],
+]) {
+  await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 2, mobile: true });
+  await send('Page.navigate', { url: `http://localhost:${BUILT_PORT}/insights` });
+  await sleep(2000);
+  const [scroll, inner] = await evaluate('[document.documentElement.scrollWidth, window.innerWidth]');
+  check(`on a ${width} phone the Insights page does not scroll sideways`, scroll <= inner, `${scroll} wide in ${inner}`);
+  check(
+    `on a ${width} phone every rating ranking fits its card, ranked from 1 with its ratings in view`,
+    await evaluate(`(() => {
+    const card = document.getElementById('finding-car-low-ratings').getBoundingClientRect();
+    const rows = [...document.querySelectorAll('#insight-car-low-ratings tbody tr')];
+    return ['driver-peak-ratings', 'driver-low-ratings', 'car-peak-ratings', 'car-low-ratings'].every((id) => {
+      const wrap = document.querySelector('#insight-' + id + ' .table-wrap');
+      return wrap.scrollWidth <= wrap.clientWidth + 1;
+    }) && rows.length === 25 && rows.every((row, index) => row.cells[0].textContent === String(index + 1) &&
+      row.cells[3].getBoundingClientRect().right <= card.right);
+  })()`),
+  );
+}
 await send('Emulation.clearDeviceMetricsOverride');
 
 for (const c of checks) console.log(`${c.pass ? 'ok  ' : 'FAIL'} ${c.name}${c.detail ? ` (${c.detail})` : ''}`);

@@ -38,6 +38,7 @@ export function initStage() {
     trackSpeeds: $('stageTrackSpeeds'),
     tagline: stage.querySelector('.stage-tagline'),
     bottomBar: stage.querySelector('.stage-bottom'),
+    topLinks: [...stage.querySelectorAll('.stage-top a')],
     hotspots: { car: $('hotspotCar'), driver: $('hotspotDriver') },
     words: { car: title.querySelector('.word-car'), driver: title.querySelector('.word-driver') },
   };
@@ -150,7 +151,8 @@ export function initStage() {
     stage.style.setProperty('--ledger-room', `${Math.max(0, box.height - parts.bottomBar.offsetHeight - 8 - lowest - 12)}px`);
     // the track is drawn at the bottom right, under the car and the hands (and the label under their box): this much height
     stage.style.setProperty('--track-room', `${Math.max(0, box.height - parts.bottomBar.offsetHeight - 16 - (lowest + 44))}px`);
-    view.layout = titleLayout(view.geometry, box.width, box.height);
+    const linksBottom = Math.max(...parts.topLinks.map((link) => link.getBoundingClientRect().bottom)) - box.top;
+    view.layout = titleLayout(view.geometry, box.width, box.height, linksBottom);
     stage.style.setProperty('--title-size', `${view.layout.size}px`);
     stage.style.setProperty('--title-top', `${view.layout.top}px`);
     stage.style.setProperty('--title-x', `${view.layout.centre}px`);

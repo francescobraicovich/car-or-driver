@@ -97,18 +97,20 @@ export const subjectRectangle = (geometry, subject) => toViewport(geometry, SUBJ
 /** The title's lines are this many times the font size tall, and the title needs this much clear space above the car and the hands. */
 const TITLE_LINE_HEIGHT = 1.08;
 const TITLE_GAP = 54;
+const LINKS_GAP = 12; // between the last line of the links at the top and the title
 const TITLE_MINIMUM = 26;
 const TITLE_MAXIMUM = 118;
 
 /**
- * Where the two-line title goes and how large it is: centred over the car and the hands, near the top, as large as the screen allows without
- * coming closer than TITLE_GAP pixels to them. Returns the font size, the top of the first line, and the horizontal centre.
+ * Where the two-line title goes and how large it is: centred over the car and the hands, near the top (and below the row of links at the top,
+ * whose last line ends at `linksBottom`, however many lines it wraps to), as large as the screen allows without coming closer than TITLE_GAP pixels
+ * to them. Returns the font size, the top of the first line, and the horizontal centre.
  */
-export function titleLayout(geometry, viewportWidth, viewportHeight) {
+export function titleLayout(geometry, viewportWidth, viewportHeight, linksBottom = 0) {
   const car = subjectRectangle(geometry, 'car');
   const driver = subjectRectangle(geometry, 'driver');
   const subjectTop = Math.min(car.y, driver.y);
-  const top = viewportWidth <= 720 ? 74 : Math.min(112, Math.max(58, viewportHeight * 0.09));
+  const top = Math.max(viewportWidth <= 720 ? 74 : Math.min(112, Math.max(58, viewportHeight * 0.09)), linksBottom + LINKS_GAP);
   const preferred = Math.min(
     TITLE_MAXIMUM,
     geometry.wide ? geometry.region.width * 0.105 : viewportWidth * (viewportWidth <= 720 ? 0.112 : 0.072),

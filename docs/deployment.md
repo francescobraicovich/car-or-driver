@@ -13,7 +13,7 @@ Keep Cloudflare Web Analytics, Logpush, Bot Fight Mode, Waiting Room, Email Addr
 
 ## Search engines
 
-The build publishes a page for every address: each page of the site (`/ratings`, `/methodology/full`, …) with its own title, description and text for readers without scripts, a page for each finding (`/insights/best-f1-driver-of-all-time`), driver, team and pair of teammates, a site map (`/sitemap.xml`), `robots.txt` and a `404.html` that Cloudflare Pages serves for addresses with no page. `_redirects` sends the old addresses under `/site/` to the root, and `_headers` asks search engines to leave out the copy at `car-or-driver.pages.dev`. Verify the site in Google Search Console (a Domain property) and Bing Webmaster Tools with DNS records, so that no script is added to the pages, and submit `https://carordriver.com/sitemap.xml` in both.
+The build publishes a page for every address: each page of the site (`/ratings`, `/methodology/full`, …) with its own title, description and text for readers without scripts, a page for each finding (`/insights/best-f1-driver-of-all-time`), driver, team and pair of teammates, a page comparing two drivers the front page asks about (`/compare/lewis-hamilton-vs-max-verstappen`), a page for each season that is over (`/seasons/2021`), a site map (`/sitemap.xml`), `robots.txt` and a `404.html` that Cloudflare Pages serves for addresses with no page. `_redirects` sends the old addresses under `/site/` to the root, and `_headers` asks search engines to leave out the copy at `car-or-driver.pages.dev`. Verify the site in Google Search Console (a Domain property) and Bing Webmaster Tools with DNS records, so that no script is added to the pages, and submit `https://carordriver.com/sitemap.xml` in both.
 
 ## Refresh data
 

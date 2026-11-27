@@ -7,15 +7,7 @@ import { SITE } from '../site/js/site-identity.js';
 export const escapeHtml = (text) =>
   String(text).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 
-/** A name as part of an address: `Kimi Räikkönen` is `kimi-raikkonen`. */
-export const addressName = (name) =>
-  name
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/&amp;|&/g, ' and ')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
+export { addressName } from '../site/js/page-addresses.js';
 
 export const SHARE_IMAGE = { path: '/assets/share-image.jpg', width: 1200, height: 630 };
 
@@ -91,7 +83,7 @@ const NAVIGATION = [
   ['insights', '/insights'],
   ['method', '/methodology'],
   ['drivers', '/drivers'],
-  ['teams', '/teams'],
+  ['cars', '/teams'],
 ];
 
 /**

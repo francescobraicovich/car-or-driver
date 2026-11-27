@@ -2,19 +2,22 @@
 
 How much of a Formula 1 result is the driver, and how much is the car? This static, non-commercial website separates their ratings after every race weekend since 1994. It includes rating histories, head-to-head forecasts, a teammate graph, race replays, a race prediction, thirteen findings and the methodology behind them.
 
+**The website: [carordriver.com](https://carordriver.com)**
+
 It is an independent personal project. It is not affiliated with Formula 1, the FIA or any team or driver.
 
 ## What is on the site
 
 | Page | What it shows |
 | --- | --- |
-| **Front page and ratings** | A drawing of a car and a driver's hands under the title. Point at either (or at its word in the title) and a box opens, the picture turns black and white, the blue version shows inside the box and a panel opens on the left with the ratings of the cars or of the drivers: a ranking after any weekend since 1994, each row with its error and a bar, with scrolling for large historical fields on short screens; a slider to play through the seasons as a bar-chart race (the rows glide to their new places and the bars grow); the rating to show; and a way to select entries and compare them. Press to keep the panel open (the address then is `#/ratings`). Where a circuit outline is available, the real race of the weekend is replayed at the bottom right, at 1 to 50 times the real speed (you choose), from the lap times of every car (overtakes, pit stops, safety cars and red flags included), with a live timing table of places and gaps; pointing at a driver highlights his dot and his row of the table. |
-| **History** | Rating lines for the drivers or cars you choose, over any range of seasons. It opens over the ratings, in the panel, with a button to go back (`#/history`). |
-| **Head to head** | A pre-weekend race-result forecast with historical and same-car comparisons. Each driver has an independent career slider and chart marker (`#/head-to-head`). |
-| **Graph** | Every driver in the data, positioned by mean year raced and their published overall rating at their latest appearance. Scrub to any weekend, inspect each driver's published rating, age and complete teammate record, and follow favorable and unfavorable links. On wide screens, selecting a driver also lights their dot in the mini GP (`#/graph`). |
-| **Prediction** | Expected finishing positions for the latest modelled field, with a race date, distance and optional starting grid (`#/prediction`). The forecast has no circuit-specific or wet-weather correction. |
-| **Insights** | Thirteen model-driven findings in three topics, each with a chart and an explanation (`#/insights`). |
-| **Methodology** | A choice between a plain-language explanation and the complete method, from observations through driver–car separation to forecasts and limitations. |
+| **[Front page](https://carordriver.com/) and [ratings](https://carordriver.com/ratings)** | A drawing of a car and a driver's hands under the title. Point at either (or at its word in the title) and a box opens, the picture turns black and white, the blue version shows inside the box and a panel opens on the left with the ratings of the cars or of the drivers: a ranking after any weekend since 1994, each row with its error and a bar, with scrolling for large historical fields on short screens; a slider to play through the seasons as a bar-chart race (the rows glide to their new places and the bars grow); the rating to show; and a way to select entries and compare them. Press to keep the panel open (the address then is [`/ratings`](https://carordriver.com/ratings)). Where a circuit outline is available, the real race of the weekend is replayed at the bottom right, at 1 to 50 times the real speed (you choose), from the lap times of every car (overtakes, pit stops, safety cars and red flags included), with a live timing table of places and gaps; pointing at a driver highlights his dot and his row of the table. |
+| **[History](https://carordriver.com/history)** | Rating lines for the drivers or cars you choose, over any range of seasons. It opens over the ratings, in the panel, with a button to go back ([`/history`](https://carordriver.com/history)). |
+| **[Head to head](https://carordriver.com/head-to-head)** | A pre-weekend race-result forecast with historical and same-car comparisons. Each driver has an independent career slider and chart marker ([`/head-to-head`](https://carordriver.com/head-to-head)). |
+| **[Graph](https://carordriver.com/graph)** | Every driver in the data, positioned by mean year raced and their published overall rating at their latest appearance. Scrub to any weekend, inspect each driver's published rating, age and complete teammate record, and follow favorable and unfavorable links. On wide screens, selecting a driver also lights their dot in the mini GP ([`/graph`](https://carordriver.com/graph)). |
+| **[Prediction](https://carordriver.com/prediction)** | Expected finishing positions for the latest modelled field, with a race date, distance and optional starting grid ([`/prediction`](https://carordriver.com/prediction)). The forecast has no circuit-specific or wet-weather correction. |
+| **[Insights](https://carordriver.com/insights)** | Thirteen model-driven findings in three topics, each with a chart and an explanation ([`/insights`](https://carordriver.com/insights)), and a page for each finding, such as [the best F1 driver of all time](https://carordriver.com/insights/best-f1-driver-of-all-time). |
+| **Drivers, cars and seasons** | A page for every driver ([`/drivers`](https://carordriver.com/drivers)) and car ([`/teams`](https://carordriver.com/teams)) since 1994, every pair of teammates ([`/teammates`](https://carordriver.com/teammates)), the most asked-about comparisons of two drivers ([`/compare`](https://carordriver.com/compare)) and every finished season ([`/seasons`](https://carordriver.com/seasons)). |
+| **[Methodology](https://carordriver.com/methodology)** | A choice between a plain-language explanation and the complete method, from observations through driver–car separation to forecasts and limitations. |
 
 ## How it works, in one paragraph
 
@@ -40,7 +43,7 @@ npm run evaluate       # chronological production-model scorecard
 npm run build          # assemble the deployable static website in dist/
 ```
 
-ES modules require HTTP. `npm run serve` serves the site at the root, with `packages/core/` and `data/` at their deployed paths. The generated pages (drivers, teams, teammates, findings) exist only in the build: `npm run build` and `node tools/serve.mjs 8000 dist` serve it as Cloudflare Pages does.
+ES modules require HTTP. `npm run serve` serves the site at the root, with `packages/core/` and `data/` at their deployed paths. The generated pages (drivers, teams, teammates, comparisons, seasons, findings) exist only in the build: `npm run build` and `node tools/serve.mjs 8000 dist` serve it as Cloudflare Pages does.
 
 The 3D design experiment is retained in [the reference archive](research/interface-design/three-dimensional-stage/README.md), including the editable Blender project, optimized models, implementation snapshot, previews and model credits. The original source assets remain in `site/assets/f1-mercedes-car` and `site/assets/f1-driver`; the optimized GLBs remain in `site/assets/models`. Rebuild them with `node tools/build-stage-models.mjs /absolute/path/to/blender`. These reference files are not loaded by the restored landing page or included in production builds.
 

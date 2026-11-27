@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { readDeployHeaders } from './deploy-headers.mjs';
 import { appPages } from './app-pages.mjs';
 import { driverAndTeamPages, readRatings } from './driver-and-team-pages.mjs';
-import { insightPages } from './insight-pages.mjs';
+import { insightIndexPage, insightPages } from './insight-pages.mjs';
 import { documentPage, headTags } from './page-template.mjs';
 import { pageTitle } from '../site/js/page-metadata.js';
 import { SITE } from '../site/js/site-identity.js';
@@ -102,7 +102,12 @@ async function buildPages() {
   // drivers/lewis-hamilton.html, the front page is index.html.
   const ratings = await readRatings(ROOT);
   const template = await readFile(join(ROOT, 'site/index.html'), 'utf8');
-  const pages = [...appPages({ template, base, ratings }), ...insightPages({ base, ratings }), ...driverAndTeamPages(ratings, base)];
+  const pages = [
+    ...appPages({ template, base, ratings }),
+    insightIndexPage({ base }),
+    ...insightPages({ base, ratings }),
+    ...driverAndTeamPages(ratings, base),
+  ];
   const paths = new Set();
   for (const { path, html } of pages) {
     if (paths.has(path)) throw Error(`two pages at ${path}`);

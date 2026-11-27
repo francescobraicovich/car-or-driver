@@ -191,6 +191,39 @@
   line-height: 1;
   letter-spacing: -0.03em;
 }
+.figure-first .figure-value {
+  color: var(--car);
+}
+.figure-second .figure-value {
+  color: var(--driver);
+}
+.profile-figures.compact {
+  margin: 8px 0 14px;
+}
+.profile-figures.compact .figure-value {
+  font-size: clamp(32px, 6vw, 42px);
+}
+.figure-value b,
+.versus-record b {
+  font-weight: inherit;
+}
+.figure-value .ahead,
+.versus-record .ahead {
+  color: var(--ahead);
+}
+.figure-value .behind,
+.versus-record .behind {
+  color: var(--behind);
+}
+.versus-record {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+}
+.versus-record b {
+  font-weight: 800;
+}
 .figure-peak .figure-value {
   color: var(--car);
 }
@@ -329,6 +362,7 @@
   border-bottom: 1px solid var(--grid);
   text-align: left;
   vertical-align: top;
+  white-space: normal; /* a long name or heading wraps, so that the ratings stay in view on a phone */
 }
 .document-table thead th {
   color: var(--ink-3);
@@ -344,6 +378,9 @@
 .document-table .number {
   text-align: right;
   white-space: nowrap;
+}
+.document-table thead .number {
+  white-space: normal;
 }
 .document-table .rating {
   font-weight: 800;
@@ -429,6 +466,10 @@
   background: var(--line);
 }
 
+.rating-chart + .profile-actions {
+  margin-top: 14px;
+}
+
 /* the page of a finding: its slide, as on the card of the Insights, in the flow of the page */
 .insight-document {
   position: relative; /* the notes behind the "i" are placed in it (info-tip.js) */
@@ -445,6 +486,53 @@
   height: auto;
   overflow: visible;
   padding: 0;
+}
+/* the page of all the findings: the questions by topic, then a card for each under its topic */
+.insight-kinds-note {
+  margin: 12px 0 0;
+  color: var(--ink-3);
+  font-size: 13px;
+  line-height: 1.9;
+}
+.insight-contents {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 8px 28px;
+}
+.insight-contents h3 {
+  margin: 10px 0 4px;
+  font-size: 14px;
+}
+.insight-contents ol {
+  margin: 0;
+  padding-left: 20px;
+}
+.insight-contents li {
+  padding: 3px 0;
+}
+.document-section-title {
+  margin: 22px 0 10px;
+  font-family: var(--display);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.insight-document .document-section-title:first-child {
+  margin-top: 4px;
+}
+.insight-document .deck-card + .deck-card {
+  margin-top: 16px;
+}
+.insight-document .deck-card[id] {
+  scroll-margin-top: 16px;
+}
+.insight-more {
+  margin: 10px 0 6px;
+  font-size: 13.5px;
+}
+.insight-more a {
+  color: var(--accent);
 }
 .document-neighbours {
   display: flex;
@@ -468,6 +556,16 @@
 }
 
 @media (max-width: 600px) {
+  .document-table .place {
+    display: none; /* the order of the rows gives the place */
+  }
+  .document-table th,
+  .document-table td {
+    padding-right: 8px;
+  }
+  .document-table :is(th, td):last-child {
+    padding-right: 0;
+  }
   .versus-row {
     grid-template-columns: minmax(0, 1fr) 56px;
   }

@@ -574,6 +574,14 @@ for (const [width, height] of VIEWPORTS) {
       'hot-row',
     );
   }
+  // the questions on the front page (question-feed.js), on the red drawing: wide, in the column the ratings open in; narrow, under the car and the
+  // hands, above the bottom row (as stage.css places them)
+  const feedColumn = panelColumn(width);
+  const feedRegion = feedColumn
+    ? { x: feedColumn.left, y: 92, width: Math.min(feedColumn.width, 560), height: height - BOTTOM_ROW - 24 - 92 }
+    : { x: margin, y: lowestSubject + 12, width: width - 2 * margin, height: height - BOTTOM_ROW - 8 - (lowestSubject + 12) };
+  check(`${width}x${height} questions`, 'red', red, geometry, feedRegion, [['questions', 4.5, 'ink']], 'feed-glow'); // (against the glow at each stroke)
+
   // the panel (a column beside the picture on a wide screen, a sheet under it on a narrow one) only exists on the black and white drawing; the region
   // is the largest it can cover: down to the bottom row of links, and up to the top of the column, or to the top of a sheet kept open (78% of
   // the height, covering the pictures, which is why its fill is denser)

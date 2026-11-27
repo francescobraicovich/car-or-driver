@@ -3,7 +3,7 @@ import { state } from './state.js';
 import { setRace } from './ratings-view.js';
 import { createHistoryView } from './history-view.js';
 import { DECK_PAGES, panelView } from './stage-pages.js';
-import { ALIASES, ROUTES, currentAddress, goTo, isOldAddress, isPagePath } from './address.js';
+import { ALIASES, ROUTES, currentAddress, goTo, isOldAddress, isPagePath, movedAddress } from './address.js';
 import { PAGE_METADATA } from './page-metadata.js';
 
 // Every route is the front page: the ratings are the panel on it, kept open; the history and the head to head are views over the ratings, in the
@@ -20,6 +20,7 @@ export function initWorkspace() {
   let raceId = null;
   let deckSlide = null; // the id of the slide on the card of the page, if it is a card of slides (none: the contents)
   let raceDate = null;
+  let graphDriver = null; // the driver the Graph shows, when the address names one (driver=)
   let restoring = false;
 
   const history = createHistoryView({
@@ -43,7 +44,7 @@ export function initWorkspace() {
     setPage();
     document.title = PAGE_METADATA[route].title;
     $('chartValueTooltip')?.setAttribute('hidden', '');
-    window.dispatchEvent(new CustomEvent('f1:workspace-changed', { detail: { page: route, slide: deckSlide } }));
+    window.dispatchEvent(new CustomEvent('f1:workspace-changed', { detail: { page: route, slide: deckSlide, driver: graphDriver } }));
   }
 
   function parseURL() {
@@ -59,6 +60,7 @@ export function initWorkspace() {
   function readURLState(params) {
     history.readURL(params);
     deckSlide = /^[a-z0-9-]{1,48}$/.test(params.get('slide') || '') ? params.get('slide') : null;
+    graphDriver = /^\d{1,6}$/.test(params.get('driver') || '') ? params.get('driver') : null;
     if (/^[A-Za-z0-9_-]{1,64}$/.test(params.get('race') || '')) {
       raceId = params.get('race');
       raceDate = null;
@@ -75,6 +77,7 @@ export function initWorkspace() {
     history.writeURL(params);
     if (raceId) params.set('race', raceId);
     if (DECK_PAGES.includes(pageName()) && deckSlide) params.set('slide', deckSlide);
+    if (route === '/graph' && graphDriver) params.set('driver', graphDriver);
     window.history.replaceState(null, '', `${route}?${params}`);
   }
 
@@ -127,7 +130,16 @@ export function initWorkspace() {
     else goTo('/ratings');
   }
 
+  /** An address of a page that is a document of its own now (the Insights) opens that document. */
+  function leaveIfMoved() {
+    const { path, search } = currentAddress();
+    const moved = movedAddress(path, search);
+    if (moved) location.replace(moved);
+    return Boolean(moved);
+  }
+
   function navigate() {
+    if (leaveIfMoved()) return;
     const target = parseURL();
     if (panelView(target.route.slice(1)) === 'ratings') openedFromRatings = false;
     const was = panelView(pageName());
@@ -155,6 +167,10 @@ export function initWorkspace() {
   });
   window.addEventListener('f1:compare-head-to-head', () => {
     openView('/head-to-head');
+  });
+  window.addEventListener('f1:graph-driver', (event) => {
+    graphDriver = event.detail.id;
+    if (route === '/graph') saveURL();
   });
   window.addEventListener('f1:deck-slide', (event) => {
     if (event.detail.page !== pageName()) return;
@@ -208,6 +224,7 @@ export function initWorkspace() {
     display();
     if (!restoring) saveURL();
   });
+  if (leaveIfMoved()) return;
   const initial = parseURL();
   route = initial.route;
   readURLState(initial.params);

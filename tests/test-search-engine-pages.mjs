@@ -72,7 +72,7 @@ try {
   assert.deepEqual([...broken].slice(0, 10), [], 'every link between the pages leads to a page or a file');
 
   // the generated words about drivers use their names
-  for (const file of pages.filter((name) => /\/(drivers|teams|teammates)\//.test(name))) {
+  for (const file of pages.filter((name) => /\/(drivers|teams|teammates|compare|seasons)\//.test(name))) {
     const text = (await readFile(file, 'utf8')).replace(/<[^>]+>/g, ' ');
     assert.ok(!/\b(he|him|his|she|her|hers)\b/i.test(text), `${relative(DIST, file)} refers to a driver by a pronoun`);
   }
@@ -96,6 +96,67 @@ try {
     'the Ratings page has its text',
   );
   assert.ok(ratingsPage.includes('<a href="/drivers/max-verstappen">Max Verstappen</a>'), 'the Ratings page links to the drivers');
+  // a driver's page: the way to History beside the rating as well as at the top
+  const hamilton = await readFile(fileAt('/drivers/lewis-hamilton'), 'utf8');
+  assert.equal((hamilton.match(/>Compare in history</g) || []).length, 2, 'History is offered at the top and beside the rating chart');
+  // the record against each teammate, as the Graph counts it (Verstappen against Pérez: 81–6 in qualifying, 75–7 in races)
+  const verstappen = await readFile(fileAt('/drivers/max-verstappen'), 'utf8');
+  assert.ok(
+    /Sergio Pérez<\/a><span class="versus-meta">[^<]*<\/span><span class="versus-record">Qualifying <b class="ahead">81–6<\/b> · Races <b class="ahead">75–7<\/b>/.test(
+      verstappen,
+    ),
+    'a driver page gives the qualifying and race record against each teammate',
+  );
+  const duel = await readFile(fileAt('/teammates/lewis-hamilton-vs-nico-rosberg'), 'utf8');
+  assert.ok(duel.includes('>42–34</b>') && duel.includes('>44–29</b>'), 'a teammates page gives their qualifying and race record');
+  assert.ok(
+    /<nav class="document-links"[^>]*>.*<a href="\/drivers">drivers<\/a><a href="\/teams">cars<\/a>/.test(hamilton),
+    'the menu leads to the drivers and the cars',
+  );
+  // the pages of the questions on the front page: two drivers who were not teammates (for long), and each season that is over
+  const figure = (html, tone) => {
+    const value = html.match(
+      new RegExp(`profile-figure ${tone}"><span class="figure-label">[^<]*</span><span class="figure-value">(\\d+)<`),
+    )?.[1];
+    assert.ok(value, `the page has its ${tone}`);
+    return value;
+  };
+  assert.ok(
+    ['compare', 'compare/lewis-hamilton-vs-max-verstappen', 'seasons', 'seasons/2021'].every((path) =>
+      addresses.includes(`${BASE}${path}`),
+    ),
+    'the site map lists the comparisons and the seasons',
+  );
+  const compared = await readFile(fileAt('/compare/lewis-hamilton-vs-max-verstappen'), 'utf8');
+  assert.ok(
+    compared.includes('<title>Lewis Hamilton vs Max Verstappen: who is the better F1 driver?'),
+    'a comparison is named as the question',
+  );
+  assert.equal(figure(compared, 'figure-first'), figure(hamilton, 'figure-peak'), 'a comparison gives the peak of the driver page');
+  assert.equal(figure(compared, 'figure-second'), figure(verstappen, 'figure-peak'), 'a comparison gives the peak of each driver page');
+  assert.ok(
+    hamilton.includes('<a href="/compare/lewis-hamilton-vs-max-verstappen">'),
+    'a driver page leads to the comparisons of the driver',
+  );
+  const teammatePages = new Set((await readdir(join(DIST, 'teammates'))).filter((name) => name.endsWith('.html')));
+  const comparisonPages = (await readdir(join(DIST, 'compare'))).filter((name) => name.endsWith('.html'));
+  assert.ok(comparisonPages.length > 100, `many comparisons (${comparisonPages.length})`);
+  assert.deepEqual(
+    comparisonPages.filter((name) => teammatePages.has(name)),
+    [],
+    'two drivers with a teammates page are compared there, not twice',
+  );
+  const seasonPages = (await readdir(join(DIST, 'seasons'))).filter((name) => name.endsWith('.html')).sort();
+  assert.equal(seasonPages[0], '1994.html', 'the seasons start with the ratings');
+  assert.equal(seasonPages.length, Number(seasonPages.at(-1).slice(0, 4)) - 1993, 'every season has a page');
+  const season = await readFile(fileAt('/seasons/2021'), 'utf8');
+  assert.ok(season.includes('<h1 class="list-title">Who was the best F1 driver in 2021?</h1>'), 'a season is named as the question');
+  const [, leader] =
+    season.match(
+      /<tbody><tr><td class="number place">1<\/td><th scope="row"><a href="[^"]+">[^<]+<\/a><\/th><td>.*?<\/td><td class="number rating">(\d+)</,
+    ) ?? [];
+  assert.equal(figure(season, 'figure-second'), leader, 'the best driver of a season heads its table');
+  assert.ok(hamilton.includes('<th scope="row"><a href="/seasons/2021">2021</a></th>'), 'a driver page leads to the seasons of the driver');
 } finally {
   await rm(DIST, { recursive: true, force: true });
 }

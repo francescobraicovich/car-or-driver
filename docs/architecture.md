@@ -9,18 +9,19 @@ Interface modules live in `site/js/`. Related modules share a prefix so they sta
 | Area | Entry points and supporting files |
 | --- | --- |
 | Startup and routing | `app.js`, `boot-probe.js`, `workspace.js`, `address.js` (the path of each page; old `#/` links still open), `page-metadata.js` (titles and descriptions), `state.js`, `dom.js`, `model-loader.js` |
-| Front page and overlays | `stage-view.js`, `stage-pages.js`, `stage-geometry.js`, `stage-noise.js`, `slide-deck.js` |
+| Front page and overlays | `stage-view.js`, `stage-pages.js`, `stage-geometry.js`, `stage-noise.js`, `slide-deck.js`; `question-feed.js` (the questions scrolling on the front page) and `question-pool.js` (the questions, their pages and how wanted each is: the weights to tune are at its top) |
 | Ratings | `ratings-view.js`, `ratings-bars.js`, `metric-text.js`, `info-tip.js` |
 | History and comparisons | `history-view.js`, `head-to-head-view.js`, `head-to-head-forecasting.js` |
 | Teammate graph | `graph-view.js` |
 | Race replay | `track-view.js`, `track-geometry.js`, `race-replay.js`, `speed-profile.js` |
-| Insights | `insights-view.js`, `insights-cards.js`, `insights-charts.js`, generated `insights-data.js` |
+| Insights | `insights-cards.js` (the findings), `insight-card.js` (the card of each), `insights-charts.js`, generated `insights-data.js`; the Insights are pages of the built site (`/insights` and one for each finding), not part of the front page |
 | Methodology | `methodology-selection-view.js` (the choice); `methodology-simple-view.js`, `methodology-simple-content.js` (simple); `methodology-view.js`, `methodology-content.js` (full); `methodology-figures.js`, `methodology-interactives.js` (figures shared by both) |
 | Legal pages and identity | `legal-view.js`, `legal-content.js`, `site-identity.js` |
 | Shared charts and helpers | `charts.js`, `chart-renderer.js`, `chart-math.js`, `utils.js` |
-| Pages of the findings | `insight-page.js` (draws the chart on `/insights/…`), `insight-page-metadata.js` (address, title and introduction of each) |
+| Pages of the findings | `insight-page.js` (draws the charts on `/insights` and `/insights/…`), `insight-page-metadata.js` (address, title and introduction of each) |
+| Addresses of the generated pages | `page-addresses.js`: the address of a driver's, team's, teammates', comparison or season page, shared by the build and the front page's questions |
 
-`site/css/styles.css` defines shared controls, chart and prose styles; `stage.css` defines the front page, panels and slide decks; `document.css` defines the pages of the drivers, teams, teammates and findings. Active artwork and circuit outlines are in `site/assets/`. Fonts and KaTeX are served locally from `site/vendor/`, with their licences.
+`site/css/styles.css` defines shared controls, chart and prose styles; `stage.css` defines the front page, panels and slide decks; `document.css` defines the pages of the drivers, teams, teammates, comparisons, seasons and findings. Active artwork and circuit outlines are in `site/assets/`. Fonts and KaTeX are served locally from `site/vendor/`, with their licences.
 
 ## Design and accessibility
 
