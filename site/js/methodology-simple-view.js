@@ -1,5 +1,5 @@
 // The simple methodology: a card of slides (slide-deck.js), one for each part of the text (methodology-simple-content.js), with the teaching
-// figures it shares with the full methodology. It is the page `methodology-simple` (#/methodology/simple). The text needs no loaded ratings:
+// figures it shares with the full methodology. It is the page `methodology-simple` (/methodology/simple). The text needs no loaded ratings:
 // the odds curve reads the point scale of the model when it has loaded, 75 points per tenfold change in the odds otherwise, and the Ferrari
 // weekend and the two runs of one career are drawn once the full model and the historical run have loaded.
 import { drawOddsCurve, drawTwoRuns, drawWeekendChange } from './methodology-figures.js';
@@ -38,7 +38,7 @@ export function initSimpleMethodology() {
     title: 'Simple methodology',
     before:
       '<p class="deck-intro">How the ratings work, in plain words and without formulas.</p>' +
-      '<p class="methodology-note">For every formula, setting and test, read the <a href="#/methodology/full">full methodology</a>.</p>',
+      '<p class="methodology-note">For every formula, setting and test, read the <a href="/methodology/full">full methodology</a>.</p>',
     groups: [
       {
         slides: [...text.querySelectorAll(':scope > .method-part')].map((part) => ({

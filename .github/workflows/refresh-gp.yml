@@ -56,7 +56,7 @@ jobs:
           npm run lint
           npm test
           npm run check:publication
-          node tools/build-pages.mjs https://car-or-driver.pages.dev/
+          node tools/build-pages.mjs https://carordriver.com/
       - name: Publish the checked data to main
         if: steps.race.outputs.updated == 'true'
         run: |

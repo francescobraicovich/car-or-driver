@@ -3,80 +3,71 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Car or Driver</title>
+    <!-- PAGE_HEAD: what this page says about itself. tools/build-pages.mjs writes it again for the page published at each address. -->
+    <title>Who is the best Car or Driver in F1?</title>
     <meta
       name="description"
-      content="Car or Driver separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 1994, head to head forecasts and thirteen findings."
+      content="Car or Driver separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 1994, head to head forecasts and findings."
     />
-    <meta name="theme-color" content="#d90a04" />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='20' height='20' fill='%23fa1802'/%3E%3Crect x='12' y='12' width='20' height='20' fill='%23091a9c'/%3E%3C/svg%3E"
-    />
-    <!-- CANONICAL_TAGS: replaced at deploy time by .github/workflows/deploy.yml with canonical + og:url for the Pages URL -->
-
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Car or Driver" />
+    <meta property="og:site_name" content="Car or Driver" />
+    <meta property="og:title" content="Who is the best Car or Driver in F1?" />
     <meta
       property="og:description"
-      content="Who is really fastest? Ratings that separate driver pace from car speed, with error bars, for every F1 weekend since 1994."
+      content="Car or Driver separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 1994, head to head forecasts and findings."
     />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Car or Driver" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Who is the best Car or Driver in F1?" />
     <meta
       name="twitter:description"
-      content="Ratings that separate driver pace from car speed, with error bars, for every F1 weekend since 1994."
+      content="Car or Driver separates how much of a Formula 1 result is the driver and how much is the car. Ratings with error bars for every weekend since 1994, head to head forecasts and findings."
     />
-    <link rel="stylesheet" href="./vendor/fonts/fonts.css" />
-    <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
-    <link rel="stylesheet" href="./css/styles.css" />
-    <link rel="stylesheet" href="./css/stage.css" />
-    <link rel="preload" href="./assets/art/red.webp" as="image" type="image/webp" />
-    <link rel="preload" href="../data/model-latest.json" as="fetch" crossorigin />
-    <link rel="modulepreload" href="js/app.js" />
-    <link rel="modulepreload" href="js/dom.js" />
-    <link rel="modulepreload" href="js/model-loader.js" />
-    <link rel="modulepreload" href="js/rating-reference.js" />
-    <link rel="modulepreload" href="js/retrospective-uncertainty.js" />
-    <link rel="modulepreload" href="js/state.js" />
-    <link rel="modulepreload" href="js/utils.js" />
-    <link rel="modulepreload" href="js/ratings-view.js" />
-    <link rel="modulepreload" href="js/ratings-bars.js" />
-    <link rel="modulepreload" href="../packages/core/src/math.js" />
-    <link rel="modulepreload" href="js/charts.js" />
-    <link rel="modulepreload" href="js/chart-renderer.js" />
-    <link rel="modulepreload" href="js/chart-math.js" />
-    <link rel="modulepreload" href="js/metric-text.js" />
-    <link rel="modulepreload" href="../packages/core/src/weekend-histories.js" />
-    <link rel="modulepreload" href="../packages/core/src/json-serialization.js" />
-    <link rel="modulepreload" href="js/workspace.js" />
-    <link rel="modulepreload" href="js/stage-pages.js" />
-    <link rel="modulepreload" href="js/info-tip.js" />
-    <link rel="modulepreload" href="js/stage-view.js" />
-    <link rel="modulepreload" href="js/stage-geometry.js" />
-    <link rel="modulepreload" href="js/stage-noise.js" />
-    <link rel="modulepreload" href="js/track-view.js" />
-    <link rel="modulepreload" href="js/track-geometry.js" />
-    <link rel="modulepreload" href="js/race-replay.js" />
-    <link rel="modulepreload" href="js/speed-profile.js" />
-    <link rel="modulepreload" href="js/history-view.js" />
-    <link rel="modulepreload" href="../packages/core/src/lineage.js" />
-    <link rel="modulepreload" href="js/head-to-head-view.js" />
-    <script src="./js/boot-probe.js"></script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Car or Driver",
-        "applicationCategory": "SportsApplication",
-        "operatingSystem": "Web",
-        "description": "Ratings that separate F1 driver pace from car speed, with uncertainty, since 1994."
-      }
-    </script>
+    <!-- /PAGE_HEAD -->
+    <meta name="theme-color" content="#d90a04" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/assets/icons/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="stylesheet" href="/vendor/fonts/fonts.css" />
+    <link rel="stylesheet" href="/vendor/katex/katex.min.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/stage.css" />
+    <link rel="preload" href="/assets/art/red.webp" as="image" type="image/webp" />
+    <link rel="preload" href="/data/model-latest.json" as="fetch" crossorigin />
+    <link rel="modulepreload" href="/js/app.js" />
+    <link rel="modulepreload" href="/js/dom.js" />
+    <link rel="modulepreload" href="/js/model-loader.js" />
+    <link rel="modulepreload" href="/js/rating-reference.js" />
+    <link rel="modulepreload" href="/js/retrospective-uncertainty.js" />
+    <link rel="modulepreload" href="/js/state.js" />
+    <link rel="modulepreload" href="/js/utils.js" />
+    <link rel="modulepreload" href="/js/ratings-view.js" />
+    <link rel="modulepreload" href="/js/ratings-bars.js" />
+    <link rel="modulepreload" href="/packages/core/src/math.js" />
+    <link rel="modulepreload" href="/js/charts.js" />
+    <link rel="modulepreload" href="/js/chart-renderer.js" />
+    <link rel="modulepreload" href="/js/chart-math.js" />
+    <link rel="modulepreload" href="/js/metric-text.js" />
+    <link rel="modulepreload" href="/packages/core/src/weekend-histories.js" />
+    <link rel="modulepreload" href="/packages/core/src/json-serialization.js" />
+    <link rel="modulepreload" href="/js/workspace.js" />
+    <link rel="modulepreload" href="/js/stage-pages.js" />
+    <link rel="modulepreload" href="/js/info-tip.js" />
+    <link rel="modulepreload" href="/js/stage-view.js" />
+    <link rel="modulepreload" href="/js/stage-geometry.js" />
+    <link rel="modulepreload" href="/js/stage-noise.js" />
+    <link rel="modulepreload" href="/js/track-view.js" />
+    <link rel="modulepreload" href="/js/track-geometry.js" />
+    <link rel="modulepreload" href="/js/race-replay.js" />
+    <link rel="modulepreload" href="/js/speed-profile.js" />
+    <link rel="modulepreload" href="/js/history-view.js" />
+    <link rel="modulepreload" href="/packages/core/src/lineage.js" />
+    <link rel="modulepreload" href="/js/head-to-head-view.js" />
+    <link rel="modulepreload" href="/js/address.js" />
+    <link rel="modulepreload" href="/js/page-metadata.js" />
+    <script src="/js/boot-probe.js"></script>
   </head>
   <body>
-    <a class="skip-link" href="#/ratings">Skip to ratings</a>
+    <a class="skip-link" href="/ratings">Skip to ratings</a>
 
     <p class="start-error" id="startError" role="alert" hidden></p>
 
@@ -109,22 +100,22 @@
           <div class="scene" id="stageScene" aria-hidden="true">
             <img
               class="layer layer-red"
-              src="./assets/art/red.webp"
+              src="/assets/art/red.webp"
               alt=""
               width="1536"
               height="1024"
               decoding="async"
               fetchpriority="high"
             />
-            <img class="layer layer-mono" src="./assets/art/mono.webp" alt="" width="1536" height="1024" decoding="async" />
+            <img class="layer layer-mono" src="/assets/art/mono.webp" alt="" width="1536" height="1024" decoding="async" />
             <div class="blue-window">
-              <img class="layer layer-blue" src="./assets/art/blue.webp" alt="" width="1536" height="1024" decoding="async" />
+              <img class="layer layer-blue" src="/assets/art/blue.webp" alt="" width="1536" height="1024" decoding="async" />
             </div>
           </div>
 
           <nav class="stage-bar stage-top stage-links" aria-label="Main navigation">
-            <a href="#/ratings">ratings</a><a href="#/history">history</a><a href="#/head-to-head">versus</a><a href="#/graph">graph</a
-            ><a href="#/prediction">prediction</a><a href="#/insights">insights</a><a href="#/methodology">method</a>
+            <a href="/ratings">ratings</a><a href="/history">history</a><a href="/head-to-head">versus</a><a href="/graph">graph</a
+            ><a href="/prediction">prediction</a><a href="/insights">insights</a><a href="/methodology">method</a>
           </nav>
 
           <h1 class="stage-title" id="stageTitle" aria-label="Car or Driver">
@@ -331,7 +322,7 @@
             </p>
             <p class="stage-tagline" role="status"></p>
             <nav class="stage-links stage-footer-links" aria-label="About this site">
-              <a href="#/about">about &amp; privacy</a
+              <a href="/about">about &amp; privacy</a
               ><a href="https://github.com/francescobraicovich/car-or-driver" rel="noopener noreferrer">source</a>
             </nav>
           </footer>
@@ -339,8 +330,9 @@
       </section>
     </main>
 
+    <!-- PAGE_TEXT: tools/build-pages.mjs writes here the text of the page published at each address, for readers and search engines without scripts -->
     <noscript><p style="padding: 20px; text-align: center">Car or Driver needs JavaScript to show the ratings and charts.</p></noscript>
-    <script src="./vendor/katex/katex.min.js"></script>
-    <script type="module" src="./js/app.js"></script>
+    <script src="/vendor/katex/katex.min.js"></script>
+    <script type="module" src="/js/app.js"></script>
   </body>
 </html>

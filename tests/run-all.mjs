@@ -67,6 +67,7 @@ const TESTS = [
   'test-site-imports.mjs',
   'test-repository-structure.mjs',
   'test-build-pages.mjs',
+  'test-search-engine-pages.mjs',
 ];
 
 for (const t of TESTS) {

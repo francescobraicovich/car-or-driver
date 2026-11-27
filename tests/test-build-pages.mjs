@@ -6,8 +6,10 @@ import { join, resolve } from 'node:path';
 import { browserModules, scriptEntries } from '../tools/build-pages.mjs';
 
 assert.deepEqual(
-  scriptEntries(`<script src="./js/boot.js"></script><script type="module" src='js/app.js'></script><script>inline()</script>`),
-  ['site/js/boot.js', 'site/js/app.js'],
+  scriptEntries(
+    `<script src="/js/boot.js"></script><script type="module" src='js/app.js'></script><script src="./js/probe.js"></script><script>inline()</script>`,
+  ),
+  ['site/js/boot.js', 'site/js/app.js', 'site/js/probe.js'],
 );
 
 const root = await mkdtemp(join(tmpdir(), 'site-modules-'));

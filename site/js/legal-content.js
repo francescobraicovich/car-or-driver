@@ -51,7 +51,7 @@ export const PRIVACY_HTML = String.raw`
 </p>
 <ul>
   <li><b>Legal basis:</b> legitimate interests (GDPR Article 6(1)(f)) in analysing and discussing a public sport from public results. The estimates are labelled as estimates and can be wrong; they describe a driver's results in a car, not the person.</li>
-  <li><b>Where it comes from:</b> the public data tables listed in the <a href="#/about?v=1&slide=credits">credits on this page</a>, not from the drivers themselves.</li>
+  <li><b>Where it comes from:</b> the public data tables listed in the <a href="/about?v=1&slide=credits">credits on this page</a>, not from the drivers themselves.</li>
   <li><b>How long:</b> the historical statistics are kept as long as the site exists, since the purpose is a lasting record of past seasons.</li>
   <li><b>If you are named here</b> and want something corrected or want to object, write to <a data-contact-email></a>; I will answer within one month.</li>
 </ul>
@@ -88,7 +88,7 @@ export const ABOUT_HTML = String.raw`
 
 <h3>Who runs this site</h3>
 <p>
-  {{name}} is a personal project by {{operatorName}} ({{operatorCountry}}). It is run as a private individual, not as a business: there is no company, nothing is sold, there is no advertising and the site earns no income. Contact: <a data-contact-email></a>. How the site handles data is in the <a href="#/privacy">privacy and cookies notice</a>.
+  {{name}} is a personal project by {{operatorName}} ({{operatorCountry}}). It is run as a private individual, not as a business: there is no company, nothing is sold, there is no advertising and the site earns no income. Contact: <a data-contact-email></a>. How the site handles data is in the <a href="/about?v=1&slide=privacy">privacy and cookies notice</a>.
 </p>
 
 <h3>Not affiliated with Formula 1</h3>
@@ -98,7 +98,7 @@ export const ABOUT_HTML = String.raw`
 
 <h3>What the numbers are, and are not</h3>
 <p>
-  The ratings, forecasts and findings are statistical estimates computed from past results by the method described under <a href="#/methodology">Methodology</a>, with their uncertainty shown. They are offered for interest and discussion. They are not facts about any person, they are not betting or gambling tips, and they are not financial or professional advice. They can be wrong. The site is provided as it is, free of charge, without any warranty, and to the extent the law allows I am not liable for losses arising from its use; nothing here limits any liability that the law does not allow to be limited, or any right you have as a consumer.
+  The ratings, forecasts and findings are statistical estimates computed from past results by the method described under <a href="/methodology">Methodology</a>, with their uncertainty shown. They are offered for interest and discussion. They are not facts about any person, they are not betting or gambling tips, and they are not financial or professional advice. They can be wrong. The site is provided as it is, free of charge, without any warranty, and to the extent the law allows I am not liable for losses arising from its use; nothing here limits any liability that the law does not allow to be limited, or any right you have as a consumer.
 </p>
 
 <h3 id="about-data">Data sources, licences and credits</h3>
@@ -128,14 +128,14 @@ export const ABOUT_HTML = String.raw`
 <h3>Software and fonts that come with the site</h3>
 <p>These are served from this site's own address, so your browser contacts no one else. Each keeps its own licence, and the licence texts are published with the files.</p>
 <ul>
-  <li><b>Inter</b> and <b>Lexend Giga</b> (typefaces): SIL Open Font License 1.1. <a href="./vendor/licenses/inter-OFL-1.1.txt">Inter licence</a>, <a href="./vendor/licenses/lexend-giga-OFL-1.1.txt">Lexend Giga licence</a>.</li>
-  <li><b>KaTeX</b> 0.16.9 (formulas): MIT licence. <a href="./vendor/licenses/katex-MIT.txt">Licence</a>.</li>
-  <li><b>Circuit outlines</b> (the track drawn on the front page): from <a href="https://github.com/bacinger/f1-circuits" rel="noopener noreferrer">bacinger/f1-circuits</a> by Tomislav Bacinger, MIT licence, Copyright (c) 2019-2025 Tomislav Bacinger. I projected and scaled them, and reversed the direction of two (Paul Ricard and Marina Bay) to match how they are raced. They are not official, and not approved or endorsed by Formula One Licensing B.V. <a href="./assets/tracks-licence.txt">Licence</a>.</li>
-  <li><a href="./vendor/NOTICE.txt">Where each file came from</a>.</li>
+  <li><b>Inter</b> and <b>Lexend Giga</b> (typefaces): SIL Open Font License 1.1. <a href="/vendor/licenses/inter-OFL-1.1.txt">Inter licence</a>, <a href="/vendor/licenses/lexend-giga-OFL-1.1.txt">Lexend Giga licence</a>.</li>
+  <li><b>KaTeX</b> 0.16.9 (formulas): MIT licence. <a href="/vendor/licenses/katex-MIT.txt">Licence</a>.</li>
+  <li><b>Circuit outlines</b> (the track drawn on the front page): from <a href="https://github.com/bacinger/f1-circuits" rel="noopener noreferrer">bacinger/f1-circuits</a> by Tomislav Bacinger, MIT licence, Copyright (c) 2019-2025 Tomislav Bacinger. I projected and scaled them, and reversed the direction of two (Paul Ricard and Marina Bay) to match how they are raced. They are not official, and not approved or endorsed by Formula One Licensing B.V. <a href="/assets/tracks-licence.txt">Licence</a>.</li>
+  <li><a href="/vendor/NOTICE.txt">Where each file came from</a>.</li>
 </ul>
 
 <h3>References</h3>
-<p>The methods behind the ratings and the findings, with full references, are listed in <a href="#/methodology/full?v=1&slide=method-limits">the last part of the full Methodology</a>.</p>
+<p>The methods behind the ratings and the findings, with full references, are listed in <a href="/methodology/full?v=1&slide=method-limits">the last part of the full Methodology</a>.</p>
 
 <h3>Corrections and feedback</h3>
 <p>If you find an error in the numbers, the text or the credits, please write to <a data-contact-email></a> or open an issue in <a href="{{repositoryUrl}}" rel="noopener noreferrer">the repository</a>.</p>

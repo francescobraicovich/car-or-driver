@@ -4,6 +4,7 @@
 // (an element with `data-jump` names the element it leads to); the slide on the card is in the address (`slide=`), so that a link opens it. A deck is
 // made the first time its page is shown (the module of the page calls createDeck), and shown only on its page. No storage, no requests.
 import { esc } from './utils.js';
+import { goTo } from './address.js';
 
 const attribute = (text) => esc(text);
 
@@ -149,7 +150,7 @@ export function createDeck({ page, idPrefix = page, title, before = '', after = 
   list.addEventListener('click', reach);
   $('Previous').addEventListener('click', () => go(current - 1));
   $('Next').addEventListener('click', () => go(current + 1));
-  $('Close').addEventListener('click', () => (location.hash = '#/'));
+  $('Close').addEventListener('click', () => goTo('/'));
 
   // a swipe, with a finger (a mouse selects text and drags the scroll bar: it has the buttons and the keys)
   let swipe = null;
@@ -176,18 +177,17 @@ export function createDeck({ page, idPrefix = page, title, before = '', after = 
     if (to !== undefined) {
       event.preventDefault();
       go(to);
-    } else if (event.key === 'Escape') location.hash = '#/';
+    } else if (event.key === 'Escape') goTo('/');
   });
 
   // the slide in the address, when the page is shown (or the address changes); the card is shown only on its page
-  const slideInAddress = () => {
-    const id = new URLSearchParams(location.hash.split('?')[1] || '').get('slide');
+  const slideNamed = (id) => {
     const found = entries.findIndex((entry) => entry.id === id);
     return found < 0 ? 0 : found + 1;
   };
   let shown = false;
   let wasOpen = false;
-  window.addEventListener('f1:workspace-changed', () => {
+  window.addEventListener('f1:workspace-changed', (event) => {
     const open = document.body.dataset.page === page;
     card.toggleAttribute('data-open', open);
     list.toggleAttribute('data-open', open);
@@ -195,7 +195,7 @@ export function createDeck({ page, idPrefix = page, title, before = '', after = 
       wasOpen = false;
       return;
     }
-    go(slideInAddress(), { animate: false, announce: false });
+    go(slideNamed(event.detail.slide), { animate: false, announce: false });
     if (!wasOpen) card.focus({ preventScroll: true });
     wasOpen = true;
     if (shown) return;

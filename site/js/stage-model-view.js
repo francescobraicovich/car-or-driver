@@ -171,7 +171,7 @@ export async function initStageModels() {
   if (!canvas || !stage) return;
   stage.dataset.models = 'loading';
   const fallback = () => {
-    document.getElementById('stageModelFallback').src = './assets/art/mono.webp';
+    document.getElementById('stageModelFallback').src = '/assets/art/mono.webp';
     stage.dataset.models = 'fallback';
   };
   const gl = canvas.getContext('webgl', {
@@ -253,8 +253,8 @@ export async function initStageModels() {
   let assets;
   try {
     const [car, driver] = await Promise.all([
-      loadStageModel('./assets/models/racing-car.glb'),
-      loadStageModel('./assets/models/racing-driver.glb'),
+      loadStageModel('/assets/models/racing-car.glb'),
+      loadStageModel('/assets/models/racing-driver.glb'),
     ]);
     assets = { car: normalizeStageModel(car, camera), driver: normalizeStageModel(driver, camera) };
     const textures = new Map();

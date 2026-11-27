@@ -32,7 +32,7 @@ You need Node.js 24 or newer. Building ratings and running the complete tests al
 
 ```bash
 npm ci
-npm run serve          # http://localhost:8000/ redirects to /site/
+npm run serve          # http://localhost:8000/ (the site, laid out as deployed)
 npm test               # model, data, website and deployment regression tests
 npm run lint           # ESLint and Prettier
 npm run test:browser   # drives the real site in headless Chrome
@@ -40,7 +40,7 @@ npm run evaluate       # chronological production-model scorecard
 npm run build          # assemble the deployable static website in dist/
 ```
 
-ES modules require HTTP. Serve the repository root so the website can load `packages/core/` and `data/` at their deployed paths.
+ES modules require HTTP. `npm run serve` serves the site at the root, with `packages/core/` and `data/` at their deployed paths. The generated pages (drivers, teams, teammates, findings) exist only in the build: `npm run build` and `node tools/serve.mjs 8000 dist` serve it as Cloudflare Pages does.
 
 The 3D design experiment is retained in [the reference archive](research/interface-design/three-dimensional-stage/README.md), including the editable Blender project, optimized models, implementation snapshot, previews and model credits. The original source assets remain in `site/assets/f1-mercedes-car` and `site/assets/f1-driver`; the optimized GLBs remain in `site/assets/models`. Rebuild them with `node tools/build-stage-models.mjs /absolute/path/to/blender`. These reference files are not loaded by the restored landing page or included in production builds.
 

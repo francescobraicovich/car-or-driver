@@ -7,6 +7,7 @@ import { moveTimeCursor } from './chart-renderer.js';
 import { esc } from './utils.js';
 import { hideInfoTip, infoHtml, setInfo } from './info-tip.js';
 import { scrubWeekends, setRace } from './ratings-view.js';
+import { currentAddress } from './address.js';
 
 const percent = (x) => `${Math.round(100 * x)}%`;
 const surname = (name) => name.trim().split(/\s+/).slice(-1)[0];
@@ -473,6 +474,9 @@ export function renderHeadToHead() {
 }
 
 export function initHeadToHead() {
+  // a link can name the two drivers (/head-to-head?a=1&b=3, from the page of a driver or of two teammates): they are chosen once the ratings arrive
+  const named = new URLSearchParams(currentAddress().search);
+  let requested = ['a', 'b'].map((key) => named.get(key)).map((id) => (/^\d{1,6}$/.test(id ?? '') ? id : null));
   let chartHeight = 0;
   new ResizeObserver(() => {
     const height = el.headToHeadChartWrap.clientHeight;
@@ -514,6 +518,14 @@ export function initHeadToHead() {
   });
   window.addEventListener('f1:model-ready', () => {
     refreshHeadToHead();
+    if (requested?.some(Boolean)) {
+      requested.forEach((id, i) => {
+        const select = [el.headToHeadA, el.headToHeadB][i];
+        if (id && [...select.options].some((option) => option.value === id)) select.value = id;
+      });
+      if (el.headToHeadA.value === el.headToHeadB.value) el.headToHeadB.selectedIndex = el.headToHeadA.selectedIndex === 0 ? 1 : 0;
+    }
+    requested = null;
     renderHeadToHead();
   });
   // the ratings and the race go back to the weekend they were at when the view was opened, however it is left (a date dragged here is an exploration)

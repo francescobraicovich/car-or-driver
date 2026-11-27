@@ -1,6 +1,6 @@
 // Checks the deployed site against what the privacy notice says, because the tests run on a local server and a host can add things a local server
 // never does (a cookie from a bot-protection feature, an injected script, a missing header). Run it after every deploy:
-//   node tools/check-live-site.mjs https://car-or-driver.pages.dev/
+//   node tools/check-live-site.mjs https://carordriver.com/
 // It fetches the home page, every file the page names, and the data files, and fails if any response sets a cookie, if the security headers are
 // missing or different from tools/deploy-headers.txt, or if the page loads or embeds anything from another origin or from the host's own scripts
 // (/cdn-cgi/). It also tells you what it cannot see: scripts that run in a browser; open the site once with the browser's developer tools
@@ -12,7 +12,7 @@ if (!process.argv[2]) {
   console.error('usage: node tools/check-live-site.mjs https://your-domain/');
   process.exit(2);
 }
-const home = new URL('site/', base);
+const home = base;
 const expected = (await readDeployHeaders())['/*'];
 const problems = [];
 
@@ -60,13 +60,13 @@ const files = new Set(
   [...html.matchAll(/\b(?:src|href)="([^"#]+)"/g)].map((m) => m[1]).filter((address) => !/^(?:[a-z]+:|\/\/|#)/i.test(address)),
 );
 for (const extra of [
-  '../data/model-latest.json',
-  '../data/model.json',
-  '../data/teammate-graph.json',
-  '../data/race-laps/2026.json',
-  './assets/tracks.json',
-  './assets/tracks-licence.txt',
-  './vendor/NOTICE.txt',
+  '/data/model-latest.json',
+  '/data/model.json',
+  '/data/teammate-graph.json',
+  '/data/race-laps/2026.json',
+  '/assets/tracks.json',
+  '/assets/tracks-licence.txt',
+  '/vendor/NOTICE.txt',
 ])
   files.add(extra);
 for (const address of files) {
@@ -74,11 +74,34 @@ for (const address of files) {
   checkResponse(url, await get(url));
 }
 
+// One page of each kind, from the site map: each is served at its own address, without a redirect, and names that address as its own (the
+// routing of the host decides this, so only the live site can show it).
+const sitemap = await get(new URL('/sitemap.xml', base));
+const listed = sitemap.ok ? [...(await sitemap.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]) : [];
+if (!listed.length) problems.push('/sitemap.xml: no pages listed');
+const kinds = ['', 'ratings', 'methodology/full', 'insights', 'insights/', 'drivers', 'drivers/', 'teams/', 'teammates/'];
+const samples = kinds.map((kind) =>
+  listed.find(
+    (address) => address.slice(base.href.length).startsWith(kind) && (kind.endsWith('/') || address === new URL(kind, base).href),
+  ),
+);
+for (const address of new Set(samples.filter(Boolean))) {
+  const response = await fetch(address, { redirect: 'manual', cache: 'no-store' });
+  const canonical = response.ok ? (await response.text()).match(/<link rel="canonical" href="([^"]+)"/)?.[1] : null;
+  if (response.status !== 200)
+    problems.push(
+      `${address}: HTTP ${response.status}${response.headers.get('location') ? ` to ${response.headers.get('location')}` : ''}`,
+    );
+  else if (canonical !== address) problems.push(`${address}: names ${canonical} as its address`);
+}
+const missing = await fetch(new URL('/an-address-with-no-page', base), { cache: 'no-store' });
+if (missing.status !== 404) problems.push(`an address with no page answers ${missing.status}, not 404`);
+
 if (problems.length) {
   console.error([...new Set(problems)].join('\n'));
   console.error(`FAIL live site: ${new Set(problems).size} problem(s) at ${home.href}`);
   process.exit(1);
 }
 console.log(
-  `PASS live site: ${files.size + 1} responses from ${home.origin} set no cookie and carry the policy headers; the page loads nothing from another origin`,
+  `PASS live site: ${files.size + 1} responses from ${home.origin} set no cookie and carry the policy headers; the page loads nothing from another origin; one page of each kind is served at its own address`,
 );

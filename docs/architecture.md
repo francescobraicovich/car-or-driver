@@ -8,7 +8,7 @@ Interface modules live in `site/js/`. Related modules share a prefix so they sta
 
 | Area | Entry points and supporting files |
 | --- | --- |
-| Startup and routing | `app.js`, `boot-probe.js`, `workspace.js`, `state.js`, `dom.js`, `model-loader.js` |
+| Startup and routing | `app.js`, `boot-probe.js`, `workspace.js`, `address.js` (the path of each page; old `#/` links still open), `page-metadata.js` (titles and descriptions), `state.js`, `dom.js`, `model-loader.js` |
 | Front page and overlays | `stage-view.js`, `stage-pages.js`, `stage-geometry.js`, `stage-noise.js`, `slide-deck.js` |
 | Ratings | `ratings-view.js`, `ratings-bars.js`, `metric-text.js`, `info-tip.js` |
 | History and comparisons | `history-view.js`, `head-to-head-view.js`, `head-to-head-forecasting.js` |
@@ -18,8 +18,9 @@ Interface modules live in `site/js/`. Related modules share a prefix so they sta
 | Methodology | `methodology-selection-view.js` (the choice); `methodology-simple-view.js`, `methodology-simple-content.js` (simple); `methodology-view.js`, `methodology-content.js` (full); `methodology-figures.js`, `methodology-interactives.js` (figures shared by both) |
 | Legal pages and identity | `legal-view.js`, `legal-content.js`, `site-identity.js` |
 | Shared charts and helpers | `charts.js`, `chart-renderer.js`, `chart-math.js`, `utils.js` |
+| Pages of the findings | `insight-page.js` (draws the chart on `/insights/…`), `insight-page-metadata.js` (address, title and introduction of each) |
 
-`site/css/styles.css` defines shared controls, chart and prose styles; `stage.css` defines the front page, panels and slide decks. Active artwork and circuit outlines are in `site/assets/`. Fonts and KaTeX are served locally from `site/vendor/`, with their licences.
+`site/css/styles.css` defines shared controls, chart and prose styles; `stage.css` defines the front page, panels and slide decks; `document.css` defines the pages of the drivers, teams, teammates and findings. Active artwork and circuit outlines are in `site/assets/`. Fonts and KaTeX are served locally from `site/vendor/`, with their licences.
 
 ## Design and accessibility
 
@@ -46,7 +47,8 @@ Core code cannot import interface or research code. Browser-reachable JavaScript
 | Circuit shapes | `tools/build-tracks.mjs`; add the licensed GeoJSON source and its `SOURCE_FILES` entry, then run `test-gp-build.mjs` |
 | Artwork | `tools/sample-stage-backgrounds.py` refreshes contrast samples; requires Pillow and NumPy |
 | Privacy or licence text | Update legal content and compliance record; run publication and compliance checks |
-| Static deployment | `npm run build -- https://your-site.example/`; `dist/` receives browser-reachable core modules and website data |
+| Static deployment | `npm run build -- https://carordriver.com/` (the address defaults to `SITE.address`); `dist/` receives the site at its root, browser-reachable core modules and website data, a page for every address, the site map, `robots.txt`, `404.html`, `_headers` and `_redirects` |
+| Pages for search engines | `tools/build-pages.mjs` writes them with `app-pages.mjs` (each page of the site, with its own head and text), `insight-pages.mjs`, `driver-and-team-pages.mjs` and `page-template.mjs`; edit titles and descriptions in `site/js/page-metadata.js` and `insight-page-metadata.js`; `test-search-engine-pages.mjs` checks addresses, titles, links and figures |
 
 The Grand Prix workflow fetches into ignored `tmp/`, validates complete new weekends, rebuilds data and findings, updates regression fingerprints and runs checks before committing to `main`. Deployment configuration is in `.github/workflows/` and [deployment.md](deployment.md).
 
@@ -54,6 +56,6 @@ The Grand Prix workflow fetches into ignored `tmp/`, validates complete new week
 
 `npm test` runs the Node suite and Python numerical tests, including golden output checks, forecast parity, model/data freshness, source imports, documentation links and deployment contents. `npm run lint` checks JavaScript and formatting. `npm run test:browser` checks the interface with headless Chrome; pass a Chrome path after `--` or set `CHROME` if needed.
 
-`npm run check:publication` checks configured identity and publication requirements. `tools/check-live-site.mjs` checks response headers and published resources after deployment. Generated `dist/`, temporary analysis files and dependencies are ignored by Git.
+`npm run check:publication` checks configured identity and publication requirements. `tools/check-live-site.mjs` checks response headers, published resources and that one page of each kind is served at its own address after deployment. To look at the built site locally, run `npm run build` and `node tools/serve.mjs 8000 dist`, which serves it as Cloudflare Pages does. Generated `dist/`, temporary analysis files and dependencies are ignored by Git.
 
 Model format 3 carries the three ratings, dated overall covariance and calibration bundles. The latest file omits covariance and forecast state for a small initial download. Python is required at build and test time; the published site remains static.

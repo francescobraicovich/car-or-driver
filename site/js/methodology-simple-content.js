@@ -70,7 +70,7 @@ export const SIMPLE_CONTENT_HTML = String.raw`
     <figcaption>An invented example. Move the slider to add teammate pairings one at a time and watch the comparison between A and the last driver build up along the chain.</figcaption>
   </figure>
   <p>
-    Done for every teammate pairing since 1994, this gives a network: every driver is a point, and every pair of teammates is a line between two points. The <a href="#/graph">Graph page</a> draws this network for every driver, with each driver placed at their rating on the site.
+    Done for every teammate pairing since 1994, this gives a network: every driver is a point, and every pair of teammates is a line between two points. The <a href="/graph">Graph page</a> draws this network for every driver, with each driver placed at their rating on the site.
   </p>
   <p>
     One could rate drivers from the network alone, by finding one number per driver whose differences agree as closely as possible with all the teammate records. That is a helpful way to think about it, but the site does not compute such a score. A teammate score says nothing about cars, ignores lap times, treats a result from ten years ago like one from last week, and struggles with a driver who only ever had one teammate. The ratings on this site come instead from a model that reads every teammate result directly, together with everything a teammate score leaves out.
@@ -131,7 +131,7 @@ export const SIMPLE_CONTENT_HTML = String.raw`
     Good forecasts do not prove that the credit is divided correctly, because a model can predict a driver and car together well while splitting them wrongly. The hardest real test uses drivers who change team: their rating, frozen before the move, predicts how they will fare against their new teammate. Over 51 moves it does better than a coin toss, but only slightly, and on finishing order alone it does not. In simulated seasons where the true split is known, the model's driver ratings had typical errors of about 12 points and its car ratings of about 15, and when a car suddenly became faster, the gain went to the car. It did worse when some drivers suited some cars particularly well, which the model does not allow for.
   </p>
   <p>
-    The ratings are estimates with real uncertainty, above all in the split between driver and car. The <a href="#/methodology/full">full methodology</a> gives every step, setting and test in detail.
+    The ratings are estimates with real uncertainty, above all in the split between driver and car. The <a href="/methodology/full">full methodology</a> gives every step, setting and test in detail.
   </p>
 </section>
 `;

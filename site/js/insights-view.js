@@ -15,7 +15,8 @@ const INTRO_NOTE =
 const plain = (html) => html.replace(/<[^>]+>/g, ''); // the notes carry a little markup (bold run-in heads); the note behind an icon is plain text
 const topicOf = (card) => INSIGHT_TOPICS.find((topic) => topic.id === card.topic);
 
-function slideHtml(card, data) {
+/** The slide of a finding: also the body of its own page (tools/insight-pages.mjs). */
+export function slideHtml(card, data) {
   const how = typeof card.how === 'function' ? card.how(data) : card.how;
   const [kind, kindNote] = KINDS[card.kind];
   return `<article class="insight" id="insight-${card.id}" data-card="${card.id}">

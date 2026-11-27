@@ -948,3 +948,14 @@ summary {
 .method-part code {
   overflow-wrap: anywhere;
 }
+
+/* The text of a page for readers and search engines without scripts (tools/build-pages.mjs writes it); the site replaces it. */
+.page-text {
+  max-width: 76ch;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+  line-height: 1.55;
+}
+html[data-scripts] .page-text {
+  display: none;
+}

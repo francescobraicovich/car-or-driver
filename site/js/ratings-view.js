@@ -155,7 +155,7 @@ function ensurePanel() {
     <div class="ratings-guide-detail" id="ratingsGuideDetail" hidden>
       <p id="ratingsGuideText"></p>
       <p>Historical strength ratings use later races and may change. Early estimates depend strongly on the 1990 starting assumptions. Historical ± values are yearly averages, not individual error bars.</p>
-      <a href="#/methodology/full">Full method</a>
+      <a href="/methodology/full">Full method</a>
     </div>
     <ol class="ratings-list" id="ratingsList"></ol>
     <div class="selection-bar" id="ratingsSelection" role="region" aria-label="Selected for comparison" hidden>
@@ -174,7 +174,7 @@ function ensurePanel() {
       </div>
     </div>
     <footer class="frame-foot">
-      <span class="notes">CC BY-NC-SA 4.0 · <a href="#/about?v=1&slide=credits">credits</a></span>
+      <span class="notes">CC BY-NC-SA 4.0 · <a href="/about?v=1&slide=credits">credits</a></span>
       <span class="foot-views" role="group" aria-label="Open over the ratings">
         <button type="button" id="ratingsOpenHistory">History</button>
         <button type="button" id="ratingsOpenHeadToHead">Versus</button>

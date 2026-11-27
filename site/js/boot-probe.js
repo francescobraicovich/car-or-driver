@@ -1,6 +1,8 @@
 // Boot probe (plain script on purpose): runs even when ES modules are blocked
 // (e.g. opening index.html via file://) and explains a site that does not start.
 window.__appBooted = false;
+// Scripts run: the text written into the page for readers and search engines without them (#pageText) is hidden at once, and the site replaces it.
+document.documentElement.dataset.scripts = 'on';
 (function () {
   function show(msg) {
     var box = document.getElementById('startError');

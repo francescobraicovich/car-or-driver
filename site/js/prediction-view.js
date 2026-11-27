@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { esc } from './utils.js';
 import { predictGrid } from './prediction.js';
+import { goTo } from './address.js';
 
 export function initPrediction() {
   const page = document.createElement('section');
@@ -78,9 +79,9 @@ export function initPrediction() {
     page.dataset.editGrid = String(editing);
     gridToggle.setAttribute('aria-pressed', String(editing));
   });
-  page.querySelector('.graph-close').addEventListener('click', () => (location.hash = '#/'));
+  page.querySelector('.graph-close').addEventListener('click', () => goTo('/'));
   window.addEventListener('keydown', (event) => {
-    if (!page.hidden && event.key === 'Escape' && !event.defaultPrevented) location.hash = '#/';
+    if (!page.hidden && event.key === 'Escape' && !event.defaultPrevented) goTo('/');
   });
   page.addEventListener('input', (event) => {
     const target = event.target;
@@ -119,7 +120,7 @@ export function initPrediction() {
     }
   });
   window.addEventListener('f1:model-ready', render);
-  fetch('./assets/prediction-calendar.json', { cache: 'no-cache' })
+  fetch('/assets/prediction-calendar.json', { cache: 'no-cache' })
     .then((response) => {
       if (!response.ok) throw Error(`HTTP ${response.status}`);
       return response.json();

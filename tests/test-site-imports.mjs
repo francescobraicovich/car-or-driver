@@ -6,6 +6,7 @@ import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { repositoryFile, sitePath } from '../tools/site-addresses.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const problems = [];
@@ -63,8 +64,9 @@ async function visit(file, isEager = true) {
 }
 
 const html = await readFile(`${ROOT}site/index.html`, 'utf8');
-for (const m of html.matchAll(/<(\w+)([^>]*?)(?:src|href)="(\.[^"#]+)"/g)) {
-  const target = resolve(ROOT, 'site', m[3]);
+for (const m of html.matchAll(/<(\w+)([^>]*?)(?:src|href)="(\/[^"#/][^"#]*)"/g)) {
+  if (m[1] === 'a') continue; // a link to follow, not a file the page loads
+  const target = repositoryFile(m[3], ROOT);
   const classicScript = m[1] === 'script' && !/type="module"/.test(m[0]); // a plain script is not a module and is not preloaded as one
   if (!existsSync(target)) problems.push(`site/index.html: cannot resolve ${m[3]}`);
   else if (m[3].endsWith('.js') && !classicScript) await visit(target);
@@ -73,15 +75,15 @@ for (const m of html.matchAll(/<(\w+)([^>]*?)(?:src|href)="(\.[^"#]+)"/g)) {
 // Every module the page loads at start is announced in the HTML, so the browser fetches them together instead of discovering each import after
 // the one that imports it (on a slow connection every level of that chain costs a round trip).
 for (const file of eager) {
-  const path = relative(resolve(ROOT, 'site'), file);
+  const path = sitePath(file, ROOT);
   if (file.endsWith('.js') && !html.includes(`<link rel="modulepreload" href="${path}" />`))
     problems.push(`site/index.html: add <link rel="modulepreload" href="${path}" />`);
 }
 
 // and nothing else, so the list cannot go stale
-const announced = new Set([...html.matchAll(/<link rel="modulepreload" href="([^"]+)"/g)].map((m) => resolve(ROOT, 'site', m[1])));
+const announced = new Set([...html.matchAll(/<link rel="modulepreload" href="([^"]+)"/g)].map((m) => repositoryFile(m[1], ROOT)));
 for (const file of announced)
-  if (!eager.has(file)) problems.push(`site/index.html: remove the modulepreload of ${relative(ROOT, file)}, which is not loaded at start`);
+  if (!eager.has(file)) problems.push(`site/index.html: remove the modulepreload of ${sitePath(file, ROOT)}, which is not loaded at start`);
 
 if (problems.length) {
   console.error(problems.join('\n'));

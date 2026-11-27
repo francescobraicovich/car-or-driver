@@ -17,6 +17,7 @@ const CHROME = process.argv[2] || process.env.CHROME || '/Applications/Google Ch
 const HTTP_PORT = 8765;
 const CDP_PORT = 9333;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const ADDRESS = 'location.pathname + location.search'; // the page's path and options (setting location.hash to an old address, #/ratings, still opens a page)
 
 const server = spawn(process.execPath, ['tools/serve.mjs', String(HTTP_PORT)], { cwd: ROOT, stdio: 'ignore' });
 const profile = await mkdtemp(join(tmpdir(), 'f1elo-chrome-'));
@@ -84,13 +85,13 @@ await send('Network.enable');
 await send('Page.enable');
 await send('Page.addScriptToEvaluateOnNewDocument', {
   source: `window.addEventListener('f1:ratings-ready', async () => {
-    const { state } = await import('/site/js/state.js');
+    const { state } = await import('/js/state.js');
     window.initialDisplayedRatings = state.displayModel.snaps[0];
   });`,
 });
 // start from empty browser storage, so that what the site stores by itself is all that is found later
 await send('Storage.clearDataForOrigin', { origin: `http://localhost:${HTTP_PORT}`, storageTypes: 'all' });
-await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/` });
+await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/` });
 
 for (let i = 0; i < 120; i++) {
   await sleep(1000);
@@ -104,7 +105,7 @@ const check = (name, pass, detail = '') => checks.push({ name, pass: !!pass, det
 check('model built', ready);
 check(
   'the first-screen and complete-history ratings agree, while forecast state stays raw',
-  await evaluate(`import('/site/js/state.js').then(({ state }) => {
+  await evaluate(`import('/js/state.js').then(({ state }) => {
     const first = window.initialDisplayedRatings;
     const full = state.displayModel.snaps.at(-1);
     return first && ['drivers', 'cars'].every((kind) => JSON.stringify(first[kind]) === JSON.stringify(full[kind])) &&
@@ -135,7 +136,7 @@ check(
 check(
   'the foot of the front page links to About & Privacy and the source',
   JSON.stringify(await evaluate("[...document.querySelectorAll('.stage-footer-links a')].map((a) => a.getAttribute('href'))")) ===
-    JSON.stringify(['#/about', 'https://github.com/francescobraicovich/car-or-driver']),
+    JSON.stringify(['/about', 'https://github.com/francescobraicovich/car-or-driver']),
 );
 
 // The front page: a red drawing with a white two-line title and a square cursor. Pointing at the car or the hands (or at the matching word) opens a
@@ -218,7 +219,7 @@ check(
     )?.join('|') === 'CAR OR|DRIVER' &&
     (await evaluate(
       "[document.title, document.querySelector('meta[property=\\\"og:title\\\"]')?.content, document.querySelector('meta[name=\\\"twitter:title\\\"]')?.content].join('|')",
-    )) === 'Car or Driver|Car or Driver|Car or Driver' &&
+    )) === 'Who is the best Car or Driver in F1?|Who is the best Car or Driver in F1?|Who is the best Car or Driver in F1?' &&
     (await evaluate("getComputedStyle(document.getElementById('stageTitle')).color")) === 'rgb(255, 255, 255)' &&
     wordCar.y + wordCar.height <= wordDriver.y + 2,
   JSON.stringify({ wordDriver, wordCar }),
@@ -403,13 +404,13 @@ check(
   (await isState('open', 'car')) && (await evaluate("document.getElementById('ratingsNow').textContent")) !== weekendBefore,
   `${weekendBefore} -> ${await evaluate("document.getElementById('ratingsNow').textContent")}`,
 );
-check('the address is the Ratings page while the panel is kept open', (await evaluate('location.hash')).startsWith('#/ratings?'));
+check('the address is the Ratings page while the panel is kept open', (await evaluate(ADDRESS)).startsWith('/ratings?'));
 await evaluate(
   "(() => { const slider = document.getElementById('ratingsScrub'); slider.value = slider.max; slider.dispatchEvent(new Event('input')); })()",
 ); // back to the latest weekend, which the checks below assume
 await click(8, 300);
 await sleep(400);
-check('letting go of the panel puts the address back to the front page', (await evaluate('location.hash')) === '#/');
+check('letting go of the panel puts the address back to the front page', (await evaluate(ADDRESS)) === '/');
 // the choice made in the panel stands even though the pointer came to it from a picture: point at the car, go into the panel, press Drivers, then Cars
 const pressInPanel = async (id) => {
   const box = await rectangleOf(id);
@@ -555,7 +556,7 @@ check(
 );
 // The largest historical field stays accessible within a short laptop viewport.
 await evaluate(
-  "import('/site/js/state.js').then(({ state }) => { const sizes = state.model.snaps.map((snap) => snap.drivers.length); window.__crowded = sizes.indexOf(Math.max(...sizes)); })",
+  "import('/js/state.js').then(({ state }) => { const sizes = state.model.snaps.map((snap) => snap.drivers.length); window.__crowded = sizes.indexOf(Math.max(...sizes)); })",
 );
 await sleep(300);
 const crowded = await evaluate('window.__crowded');
@@ -611,7 +612,7 @@ check(
     !card.tooltip,
   JSON.stringify(card),
 );
-const cardPace = await evaluate(`import('/site/js/state.js').then(({ state }) => {
+const cardPace = await evaluate(`import('/js/state.js').then(({ state }) => {
   const id = document.querySelector('#ratingsList .ledger-row').dataset.id;
   const row = state.displayModel.snaps.at(-1).drivers.find((driver) => String(driver.driverId) === id);
   const displayed = [...document.querySelectorAll('#ratingCard dd')].map((cell) => Number.parseFloat(cell.firstChild.textContent.replaceAll(',', '')));
@@ -872,7 +873,7 @@ await evaluate("document.getElementById('ratingsDrivers').click()");
 await sleep(300);
 // a circuit with no outline (Korea) shows no race; the ratings are as usual
 await evaluate(
-  "import('/site/js/state.js').then(({ state }) => { window.__korea = state.model.snaps.findIndex((snap) => snap.year === 2012 && /Korean/.test(snap.name)); window.__monaco = state.model.snaps.findIndex((snap) => snap.year === 2024 && /Monaco/.test(snap.name)); })",
+  "import('/js/state.js').then(({ state }) => { window.__korea = state.model.snaps.findIndex((snap) => snap.year === 2012 && /Korean/.test(snap.name)); window.__monaco = state.model.snaps.findIndex((snap) => snap.year === 2024 && /Monaco/.test(snap.name)); })",
 );
 await sleep(300);
 const korea = await evaluate('window.__korea');
@@ -1326,7 +1327,7 @@ await evaluate("location.hash = '#/ratings'");
 await sleep(900);
 const ledgerState = () =>
   evaluate(
-    "JSON.stringify({ view: document.getElementById('stageLedger').dataset.view, page: document.body.dataset.page, stage: document.getElementById('stage').dataset.state, hash: location.hash.split('?')[0], focus: document.activeElement.id || document.activeElement.className })",
+    "JSON.stringify({ view: document.getElementById('stageLedger').dataset.view, page: document.body.dataset.page, stage: document.getElementById('stage').dataset.state, path: location.pathname, focus: document.activeElement.id || document.activeElement.className })",
   );
 const weekendTitle = () => evaluate("document.getElementById('ratingsTitle').textContent");
 const panelBeforeViews = await rectangleOfSelector('#stageLedger');
@@ -1340,7 +1341,7 @@ const panelWithView = await rectangleOfSelector('#stageLedger');
 const inHistory = JSON.parse(await ledgerState());
 check(
   'the History button in the panel opens the history over the ratings, kept open as a page of the front page',
-  inHistory.view === 'history' && inHistory.page === 'history' && inHistory.stage === 'open' && inHistory.hash === '#/history',
+  inHistory.view === 'history' && inHistory.page === 'history' && inHistory.stage === 'open' && inHistory.path === '/history',
   JSON.stringify(inHistory),
 );
 check(
@@ -1422,7 +1423,7 @@ check(
 check(
   'Back returns to the ratings of the same weekend, with the focus on the button that opened the history',
   backFromHistory.view === 'ratings' &&
-    backFromHistory.hash === '#/ratings' &&
+    backFromHistory.path === '/ratings' &&
     backFromHistory.stage === 'open' &&
     backFromHistory.focus === 'ratingsOpenHistory' &&
     (await weekendTitle()) === weekendBeforeViews,
@@ -1562,7 +1563,7 @@ for (const share of [0.8, 0.7, 0.62]) {
   await sleep(60);
 }
 const dragging = JSON.parse(await headToHeadState());
-const addressMidDrag = await evaluate('location.hash');
+const addressMidDrag = await evaluate(ADDRESS);
 await mouse('mouseReleased', dragPlot.x + dragPlot.width * 0.62, dragY);
 await sleep(1500);
 const dragged = JSON.parse(await headToHeadState());
@@ -1581,9 +1582,9 @@ check(
 check(
   "the address is told once, when the drag ends (the browser would ignore it after a few hundred), and the browser's history does not grow",
   !addressMidDrag.includes(`race=${dragged.race}`) &&
-    (await evaluate('location.hash')).includes(`race=${dragged.race}`) &&
+    (await evaluate(ADDRESS)).includes(`race=${dragged.race}`) &&
     (await evaluate('history.length')) === entriesBeforeDrag,
-  JSON.stringify({ addressMidDrag: addressMidDrag.slice(-24), now: (await evaluate('location.hash')).slice(-24) }),
+  JSON.stringify({ addressMidDrag: addressMidDrag.slice(-24), now: (await evaluate(ADDRESS)).slice(-24) }),
 );
 check('both independently positioned chart markers remain visible', dragged.markers[0] >= 1 && dragged.markers[1] >= 1);
 const markerB = await evaluate(
@@ -1720,7 +1721,7 @@ await press('Escape', 'Escape', 27);
 await sleep(500);
 check(
   'and the ratings are no longer kept open (the keyboard is put back on the picture, which previews them)',
-  JSON.parse(await ledgerState()).stage !== 'open' && (await evaluate('location.hash')) === '#/',
+  JSON.parse(await ledgerState()).stage !== 'open' && (await evaluate(ADDRESS)) === '/',
 );
 await evaluate("location.hash = '#/history'");
 await sleep(900);
@@ -1729,7 +1730,7 @@ await sleep(500);
 check(
   'the cross closes the panel and its view at once: the address is the front page',
   JSON.parse(await ledgerState()).stage !== 'open' &&
-    (await evaluate('location.hash')) === '#/' &&
+    (await evaluate(ADDRESS)) === '/' &&
     JSON.parse(await ledgerState()).view === 'ratings',
   await ledgerState(),
 );
@@ -1837,8 +1838,8 @@ const insightsState = () =>
     open: [...document.querySelectorAll('#insightsCard .deck-slide')].map((slide) => !slide.inert).map((open, index) => (open ? index : -1)).filter((index) => index >= 0),
     transform: document.getElementById('insightsTrack').style.transform,
     current: [...document.querySelectorAll('#insightsList button[aria-current="true"], #insightsTicks button[aria-current="true"]')].map((button) => button.dataset.slide),
-    hash: location.hash.split('?')[0],
-    slide: (location.hash.match(/slide=([a-z0-9-]*)/) || [])[1] ?? null,
+    path: location.pathname,
+    slide: (location.search.match(/slide=([a-z0-9-]*)/) || [])[1] ?? null,
   })`);
 const insightsAtStart = JSON.parse(await insightsState());
 const insightsBox = await rectangleOfSelector('#insightsCard');
@@ -1925,7 +1926,7 @@ check(
     jumped.open.join() === '10' &&
     jumped.transform === 'translateX(-1000%)' &&
     jumped.current.join() === '10,10' &&
-    jumped.hash === '#/insights' &&
+    jumped.path === '/insights' &&
     jumped.slide === 'ageing',
   JSON.stringify(jumped),
 );
@@ -2046,14 +2047,13 @@ await press('Escape', 'Escape', 27);
 await sleep(700);
 check(
   'Escape closes the card: the address is the front page',
-  (await evaluate('location.hash')) === '#/' &&
-    (await evaluate("getComputedStyle(document.getElementById('insightsCard')).display")) === 'none',
+  (await evaluate(ADDRESS)) === '/' && (await evaluate("getComputedStyle(document.getElementById('insightsCard')).display")) === 'none',
 );
 await evaluate("location.hash = '#/insights'");
 await sleep(400);
 await click(stageBox.x + 8, stageBox.y + stageBox.height / 2);
 await sleep(300);
-check('clicking outside the Insights card closes it', (await evaluate('location.hash')) === '#/');
+check('clicking outside the Insights card closes it', (await evaluate(ADDRESS)) === '/');
 await evaluate("location.hash = '#/methodology'");
 await sleep(800);
 check(
@@ -2061,10 +2061,10 @@ check(
   await evaluate(`(() => {
     const card = document.getElementById('methodologySelectionCard');
     const links = [...card.querySelectorAll('.methodology-selection-option')].map((link) => link.getAttribute('href'));
-    return card.hasAttribute('data-open') && JSON.stringify(links) === JSON.stringify(['#/methodology/simple', '#/methodology/full']);
+    return card.hasAttribute('data-open') && JSON.stringify(links) === JSON.stringify(['/methodology/simple', '/methodology/full']);
   })()`),
 );
-await evaluate('document.querySelector(\'#methodologySelectionCard a[href="#/methodology/simple"]\').click()');
+await evaluate('document.querySelector(\'#methodologySelectionCard a[href="/methodology/simple"]\').click()');
 await sleep(1200);
 check(
   'the simple methodology has its five parts and draws its figures, and the before-and-after figure reacts to its controls',
@@ -2093,7 +2093,7 @@ await evaluate("location.hash = '#/methodology?v=1&slide=method-limits'");
 await sleep(1200);
 check(
   'a link to a slide of the methodology opens the full methodology at that slide',
-  (await evaluate('location.hash')).startsWith('#/methodology/full?') &&
+  (await evaluate(ADDRESS)).startsWith('/methodology/full?') &&
     (await evaluate("document.getElementById('methodologyPosition').textContent")) === '11 / 11',
 );
 await evaluate("location.hash = '#/methodology/full'");
@@ -2143,7 +2143,7 @@ check(
   'the full methodology says it was written by AI and corrected by the author, and links to the simple methodology',
   /written by AI and corrected by the author/.test(
     (await evaluate("document.querySelector('#methodologyCard .methodology-note')?.textContent")) || '',
-  ) && (await evaluate('!!document.querySelector(\'#methodologyCard .methodology-note a[href="#/methodology/simple"]\')')),
+  ) && (await evaluate('!!document.querySelector(\'#methodologyCard .methodology-note a[href="/methodology/simple"]\')')),
 );
 check(
   'the methodology describes only the published model, with no trace of earlier versions',
@@ -2153,7 +2153,7 @@ check(
 );
 await evaluate('document.querySelector(\'#methodologyList button[data-slide="4"]\').click()');
 await sleep(500);
-check('the separation explanation has a stable link', (await evaluate('location.hash')).includes('method-separation'));
+check('the separation explanation has a stable link', (await evaluate(ADDRESS)).includes('method-separation'));
 await evaluate('document.querySelector(\'#methodologyCard [data-jump="ref-1"]\').click()');
 await sleep(500);
 check(
@@ -2169,8 +2169,12 @@ await evaluate(
 );
 await sleep(500);
 const chosen = await evaluate("document.getElementById('ratingsTitle').textContent");
-const hash = await evaluate('location.hash');
-check('choosing a season puts the weekend in the URL', /^#\/ratings\?v=1&.*race=/.test(hash) && /2015/.test(chosen), `${hash} / ${chosen}`);
+const address = await evaluate(ADDRESS);
+check(
+  'choosing a season puts the weekend in the URL',
+  /^\/ratings\?v=1&.*race=/.test(address) && /2015/.test(chosen),
+  `${address} / ${chosen}`,
+);
 await send('Page.reload');
 for (let i = 0; i < 120; i++) {
   await sleep(1000);
@@ -2200,6 +2204,29 @@ for (const [from, to] of [
   const got = await landing(from);
   check(`the old address ${from} opens ${to}`, got === to, got);
 }
+await evaluate("location.hash = '#/'");
+await sleep(500);
+await evaluate('window.__sameDocument = true; document.querySelector(\'.stage-top a[href="/insights"]\').click()');
+await sleep(900);
+const followed = JSON.parse(
+  await evaluate(
+    'JSON.stringify({ address: location.pathname + location.search, page: document.body.dataset.page, same: window.__sameDocument === true, title: document.title })',
+  ),
+);
+check(
+  'a link to a page changes the path without loading a new document, and the title names the page',
+  followed.address.startsWith('/insights') && followed.page === 'insights' && followed.same && followed.title.startsWith('F1 insights'),
+  JSON.stringify(followed),
+);
+await evaluate('history.back()');
+await sleep(900);
+check(
+  'Back returns to the front page and its title',
+  (await evaluate(ADDRESS)) === '/' &&
+    (await evaluate('document.body.dataset.page')) === 'home' &&
+    (await evaluate('document.title')) === 'Who is the best Car or Driver in F1?',
+  await evaluate(`JSON.stringify([${ADDRESS}, document.title])`),
+);
 
 // Compliance (see docs/compliance.md): the site talks only to its own origin, sets no cookies, stores nothing in the browser, and its legal pages are there
 const ownOrigin = `http://localhost:${HTTP_PORT}/`;
@@ -2435,7 +2462,7 @@ await send('Emulation.clearDeviceMetricsOverride');
 // A link straight to the ratings (a shared link): the panel is kept open from the start and the race is running
 await send('Emulation.clearDeviceMetricsOverride');
 await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
-await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/?link=1#/ratings` });
+await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/ratings?link=1` });
 await sleep(5000);
 const linkedDot = () => evaluate("document.querySelector('#stageTrackDots circle')?.getAttribute('cx')");
 const linkedBefore = await linkedDot();
@@ -2447,39 +2474,49 @@ const linked = {
   moved: linkedBefore !== null && linkedBefore !== linkedAfter,
 };
 check(
-  'a link straight to #/ratings shows the track and the race is running',
+  'a link straight to /ratings shows the track and the race is running',
   linked.hidden === false && linked.moved && /^lap /.test(linked.lap),
   JSON.stringify(linked),
 );
 // Links straight to a view (a shared link): the panel is kept open with the view over the ratings, drawn at once (the head to head loads its
 // forecast on the way in)
-// a link straight to a finding opens the card on its slide
-await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/?link=slide#/insights?v=1&slide=upsets` });
+// a link straight to a finding opens the card on its slide; this one is in the old form (#/insights?…), which becomes the page's path
+await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/?link=slide#/insights?v=1&slide=upsets` });
 await sleep(5000);
 const linkedSlide = await evaluate(
-  "JSON.stringify({ position: document.getElementById('insightsPosition').textContent, name: document.getElementById('insightsName').textContent, drawn: !!document.querySelector('#insightsCard .deck-slide:not([inert]) svg') })",
+  "JSON.stringify({ position: document.getElementById('insightsPosition').textContent, name: document.getElementById('insightsName').textContent, drawn: !!document.querySelector('#insightsCard .deck-slide:not([inert]) svg'), address: location.pathname + location.search + location.hash })",
 );
 check(
-  'a link straight to a finding opens the card on that slide, drawn',
-  JSON.parse(linkedSlide).position === '14 / 14' && JSON.parse(linkedSlide).name === 'Who beat the odds?' && JSON.parse(linkedSlide).drawn,
+  'a link straight to a finding opens the card on that slide, drawn, and an old-form address becomes the path',
+  JSON.parse(linkedSlide).position === '14 / 14' &&
+    JSON.parse(linkedSlide).name === 'Who beat the odds?' &&
+    JSON.parse(linkedSlide).drawn &&
+    /^\/insights\?v=1&.*slide=upsets/.test(JSON.parse(linkedSlide).address),
   linkedSlide,
 );
 for (const [view, ready] of [
   ['history', "document.querySelectorAll('#driverChart polyline').length >= 3"],
   ['head-to-head', "/\\d+%/.test(document.querySelector('.head-to-head-figures')?.textContent || '')"],
 ]) {
-  await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/?link=${view}#/${view}` });
+  await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/${view}?link=${view}` });
   await sleep(5000);
   const opened = await evaluate(
     `JSON.stringify({ view: document.getElementById('stageLedger').dataset.view, stage: document.getElementById('stage').dataset.state, shown: ${ready}, ledgerHidden: document.getElementById('stageLedger').hidden })`,
   );
   check(
-    `a link straight to #/${view} opens the ${view} over the ratings, drawn`,
+    `a link straight to /${view} opens the ${view} over the ratings, drawn`,
     JSON.parse(opened).view === view && JSON.parse(opened).stage === 'open' && JSON.parse(opened).shown && !JSON.parse(opened).ledgerHidden,
     opened,
   );
 }
-await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/?link=graph#/graph` });
+// a link that names two drivers (from the page of a driver or of two teammates) opens the head to head on them
+await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/head-to-head?a=1&b=3` });
+await sleep(5000);
+const namedPair = await evaluate(
+  "JSON.stringify([document.body.dataset.page, document.getElementById('headToHeadA').value, document.getElementById('headToHeadB').value])",
+);
+check('a link that names two drivers opens the head to head on them', namedPair === JSON.stringify(['head-to-head', '1', '3']), namedPair);
+await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/graph?link=graph` });
 await sleep(5000);
 const linkedGraph = await evaluate(
   "(() => ({ shown: !document.getElementById('graphPage').hidden, drawn: document.getElementById('graphPlot').width > 0, drivers: document.getElementById('graphDriver').options.length, selected: document.getElementById('graphDriver').value, detail: document.getElementById('graphDetail').textContent, track: !document.getElementById('stageTrack').hidden, table: !document.getElementById('stageTrackTable').hidden, hot: document.querySelector('#stageTrackDots circle[data-id=\"830\"]')?.classList.contains('hot') }))()",
@@ -2542,7 +2579,7 @@ check(
 );
 check(
   'graph details match dated History ratings for current and retired drivers',
-  await evaluate(`import('/site/js/state.js').then(({ state }) => {
+  await evaluate(`import('/js/state.js').then(({ state }) => {
     const picker = document.getElementById('graphDriver');
     const matches = ['30', '830'].map((id) => {
       picker.value = id;
@@ -2583,7 +2620,7 @@ const graphHover = JSON.parse(
   await evaluate(`(async () => {
   const source = await (await fetch('../data/teammate-graph.json')).json();
   const snap = source.snapshots.at(-1);
-  const { state } = await import('/site/js/state.js');
+  const { state } = await import('/js/state.js');
   const published = new Map([...state.displayModel.dh].map(([id, points]) => [id, points.at(-1).overall]));
   const box = document.getElementById('graphPlot').getBoundingClientRect();
   const year = Math.max(2027, Number(document.getElementById('graphLast').textContent) + 1);
@@ -2618,7 +2655,7 @@ await evaluate(
 );
 await sleep(350);
 const oldGraph = await evaluate(
-  "(() => ({ drivers: document.getElementById('graphDriver').options.length, selected: document.getElementById('graphDriver').value, detail: document.getElementById('graphDetail').textContent, weekend: document.getElementById('graphWeekend').textContent, race: new URLSearchParams(location.hash.split('?')[1]).get('race') }))()",
+  "(() => ({ drivers: document.getElementById('graphDriver').options.length, selected: document.getElementById('graphDriver').value, detail: document.getElementById('graphDetail').textContent, weekend: document.getElementById('graphWeekend').textContent, race: new URLSearchParams(location.search).get('race') }))()",
 );
 check(
   'the graph timeline rewinds the driver network and URL without future links',
@@ -2641,13 +2678,13 @@ check(
 );
 await evaluate("document.getElementById('graphClose').click()");
 await sleep(300);
-check('the graph close button returns home', (await evaluate('location.hash')) === '#/');
+check('the graph close button returns home', (await evaluate(ADDRESS)) === '/');
 await evaluate("location.hash = '#/graph'");
 await sleep(500);
 const graphStage = await rectangleOfSelector('#stage');
 await click(graphStage.x + 8, graphStage.y + graphStage.height / 2);
 await sleep(300);
-check('clicking outside the graph card closes it', (await evaluate('location.hash')) === '#/');
+check('clicking outside the graph card closes it', (await evaluate(ADDRESS)) === '/');
 await evaluate("location.hash = '#/history?v=1&h=driver&dm=combined&cm=combined&drivers=863%2C847&from=2025&to=2026'");
 await sleep(700);
 check(
@@ -2660,7 +2697,7 @@ await evaluate("document.getElementById('historyMetric').dispatchEvent(new Event
 check(
   'history writes Overall choices into the URL after opening an old Combined link',
   await evaluate(
-    "(() => { const params = new URLSearchParams(location.hash.split('?')[1]); return params.get('dm') === 'overall' && params.get('cm') === 'overall'; })()",
+    "(() => { const params = new URLSearchParams(location.search); return params.get('dm') === 'overall' && params.get('cm') === 'overall'; })()",
   ),
 );
 await send('Emulation.clearDeviceMetricsOverride');

@@ -18,12 +18,12 @@ const lazyPages = {
   about: async () => (await import('./legal-view.js')).initLegal,
 };
 const started = new Set();
-window.addEventListener('f1:workspace-changed', async () => {
+window.addEventListener('f1:workspace-changed', async (event) => {
   const page = document.body.dataset.page;
   if (!lazyPages[page] || started.has(page)) return;
   started.add(page);
   (await lazyPages[page]())();
-  window.dispatchEvent(new CustomEvent('f1:workspace-changed', { detail: { page } })); // so the page that has just started draws itself
+  window.dispatchEvent(new CustomEvent('f1:workspace-changed', { detail: event.detail })); // so the page that has just started draws itself
 });
 
 /** The ratings could not be loaded: the front page says why, in the line at its foot (stage-view.js). */
@@ -32,11 +32,12 @@ function showLoadError(error) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('pageText')?.remove(); // the page's text for readers without scripts: the site shows it its own way
   initDom();
   window.__appBooted = true;
   initHeadToHead();
   initWorkspace();
-  initTrack(); // before the stage, which says at once if the ratings are shown (a link to #/ratings)
+  initTrack(); // before the stage, which says at once if the ratings are shown (a link to /ratings)
   initStage();
   initInfoTips();
   loadModel().catch(showLoadError);

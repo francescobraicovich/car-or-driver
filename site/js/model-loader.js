@@ -7,11 +7,12 @@ import { withHistories } from '../../packages/core/src/weekend-histories.js';
 import { deserialize } from '../../packages/core/src/json-serialization.js';
 import { centredRatings } from './rating-reference.js';
 import { withAnnualUncertainty } from './retrospective-uncertainty.js';
+import { currentAddress } from './address.js';
 
 const FILE_FORMAT = 3; // must match tools/build-model.mjs
 
 async function fetchFile(name, format = FILE_FORMAT) {
-  const response = await fetch(`../data/${name}`, { cache: 'no-cache' });
+  const response = await fetch(`/data/${name}`, { cache: 'no-cache' });
   if (!response.ok) throw Error(`${name}: HTTP ${response.status}`);
   const file = deserialize(await response.text());
   if (file.format !== format) throw Error(`${name} has format ${file.format}; this page reads format ${format}. Reload the page.`);
@@ -20,8 +21,8 @@ async function fetchFile(name, format = FILE_FORMAT) {
 
 /** The Ratings page at its latest weekend: the address names no other page and no particular weekend. */
 function showsRatingsFirst() {
-  const [path, query = ''] = location.hash.slice(1).split('?');
-  return ['', '/', '/ratings'].includes(path) && !new URLSearchParams(query).has('race');
+  const { path, search } = currentAddress();
+  return ['', '/', '/ratings'].includes(path) && !new URLSearchParams(search).has('race');
 }
 
 /**

@@ -541,12 +541,14 @@ body {
 /* The panel holds the ratings list of ratings-view.js, which reads its colours from the site's tokens. Here they are set again for dark ink on
    brushed metal, so the list needs no styles of its own; the card that opens on a row has the same surface. The fill under the text is almost clear
    (the drawing shows through, blurred), and the metal is light and shade on top of it: tests/test-stage.mjs checks that every text colour still
-   reads on the lightest and darkest pixel behind it, with the fill and with the darkest the shading can make. */
+   reads on the lightest and darkest pixel behind it, with the fill and with the darkest the shading can make. The panels of the document pages
+   (document.css) are the same metal. */
 .ledger,
 #chartValueTooltip.metal,
 .info-tip,
 .deck-card,
 .graph-page,
+.document-panel,
 .rating-card {
   --ink: #07080b;
   --ink-2: #14171c;

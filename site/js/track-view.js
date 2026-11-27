@@ -91,9 +91,9 @@ export function initTrack() {
     waiting: 0, // the timer for the race of the weekend the ratings stop at, while the weekends go by
   };
 
-  const loadTracks = () => (view.tracks ??= fetchJson('./assets/tracks.json', 2).then((file) => file.tracks));
+  const loadTracks = () => (view.tracks ??= fetchJson('/assets/tracks.json', 2).then((file) => file.tracks));
   const loadSeason = (year) => {
-    if (!view.seasons.has(year)) view.seasons.set(year, fetchJson(`../data/race-laps/${year}.json`, 2));
+    if (!view.seasons.has(year)) view.seasons.set(year, fetchJson(`/data/race-laps/${year}.json`, 2));
     return view.seasons.get(year);
   };
 

@@ -69,7 +69,7 @@ let fetchedAtReady = [];
 for (let run = 0; run < 3; run++) {
   await send('Page.navigate', { url: 'about:blank' });
   const started = Date.now();
-  await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/site/` });
+  await send('Page.navigate', { url: `http://localhost:${HTTP_PORT}/` });
   let shown;
   while (!(shown = await evaluate('window.__shown'))) {
     if (Date.now() - started > 120000) throw Error('the ratings did not show within 120 s');
@@ -86,7 +86,7 @@ for (let run = 0; run < 3; run++) {
     .filter((url) => url.origin === `http://localhost:${HTTP_PORT}`)
     .map((url) => url.pathname);
 }
-const paths = [...new Set(['/site/', ...fetchedAtReady])]; // what had to arrive before the ratings showed
+const paths = [...new Set(['/', ...fetchedAtReady])]; // what had to arrive before the ratings showed
 let compressed = 0;
 const rows = [];
 for (const path of paths) {

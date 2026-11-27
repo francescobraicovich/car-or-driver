@@ -1,15 +1,16 @@
 // The card that opens the Methodology: two boxes, one for the simple methodology (methodology-simple-view.js) and one for the full methodology
 // (methodology-view.js). It has the head of a card of slides (slide-deck.js) and no slides. No storage, no requests.
+import { goTo } from './address.js';
 
 const OPTIONS = [
   {
-    href: '#/methodology/simple',
+    href: '/methodology/simple',
     kind: 'Simple',
     title: 'The idea in plain words',
     text: 'Five short slides without formulas: why the split between driver and car is hard, ratings as chances of finishing ahead, what teammates reveal, a model that keeps learning, and how it looks back and how well it works.',
   },
   {
-    href: '#/methodology/full',
+    href: '/methodology/full',
     kind: 'Full',
     title: 'The complete method',
     text: 'Ten parts with every comparison, formula, setting and test: the data, the state-space model and how it is computed, the predictions, the evidence, the limitations and the references.',
@@ -47,10 +48,10 @@ export function initMethodologySelection() {
   card.dataset.deck = 'methodology';
   card.setAttribute('aria-label', 'Methodology');
   document.getElementById('stage').append(card);
-  card.querySelector('.deck-close').addEventListener('click', () => (location.hash = '#/'));
+  card.querySelector('.deck-close').addEventListener('click', () => goTo('/'));
   window.addEventListener('keydown', (event) => {
     if (document.body.dataset.page !== 'methodology' || event.defaultPrevented || event.key !== 'Escape') return;
-    location.hash = '#/';
+    goTo('/');
   });
   let wasOpen = false;
   const show = () => {

@@ -43,7 +43,7 @@ export const CONTENT_HTML = String.raw`
 
   <h4>How the rest of this methodology answers the question</h4>
   <p>
-    The remaining sections build the answer in order. <a href="#" data-jump="method-data">Section 2</a> describes the data, <a href="#" data-jump="method-ratings">Section 3</a> defines what a rating means, and <a href="#" data-jump="method-separation">Section 4</a> explains which comparisons separate drivers from cars. <a href="#" data-jump="method-model">Section 5</a> states the model, a state-space model of the strength of every driver and car, and Sections <a href="#" data-jump="method-filter">6</a> and <a href="#" data-jump="method-history">7</a> compute it in two ways: forward, one weekend at a time, and over the whole history at once. <a href="#" data-jump="method-forecast">Section 8</a> turns the ratings into predictions, <a href="#" data-jump="method-evidence">Section 9</a> reports how well they hold up, and <a href="#" data-jump="method-limits">Section 10</a> collects the limitations, the settings and the sources. The findings on the <a href="#/insights">Insights page</a> use the same ratings, or the raw results where no rating is needed, and each finding carries its own note on how it was computed.
+    The remaining sections build the answer in order. <a href="#" data-jump="method-data">Section 2</a> describes the data, <a href="#" data-jump="method-ratings">Section 3</a> defines what a rating means, and <a href="#" data-jump="method-separation">Section 4</a> explains which comparisons separate drivers from cars. <a href="#" data-jump="method-model">Section 5</a> states the model, a state-space model of the strength of every driver and car, and Sections <a href="#" data-jump="method-filter">6</a> and <a href="#" data-jump="method-history">7</a> compute it in two ways: forward, one weekend at a time, and over the whole history at once. <a href="#" data-jump="method-forecast">Section 8</a> turns the ratings into predictions, <a href="#" data-jump="method-evidence">Section 9</a> reports how well they hold up, and <a href="#" data-jump="method-limits">Section 10</a> collects the limitations, the settings and the sources. The findings on the <a href="/insights">Insights page</a> use the same ratings, or the raw results where no rating is needed, and each finding carries its own note on how it was computed.
   </p>
 </section>
 
@@ -162,7 +162,7 @@ export const CONTENT_HTML = String.raw`
     <figcaption>An illustrative career network, revealed in date order. The win–loss records are invented.</figcaption>
   </figure>
   <p>
-    Over three decades these chains join drivers of different teams and eras into one network. The <a href="#/graph">Graph page</a> draws it: every driver, placed at their published overall rating and linked to each of their teammates. The model holds the same network in another form, as relations between the uncertainties of its estimates (<a href="#" data-jump="method-filter">Section 6</a>).
+    Over three decades these chains join drivers of different teams and eras into one network. The <a href="/graph">Graph page</a> draws it: every driver, placed at their published overall rating and linked to each of their teammates. The model holds the same network in another form, as relations between the uncertainties of its estimates (<a href="#" data-jump="method-filter">Section 6</a>).
   </p>
 
   <h4>A teammate-only score as intuition, and why the site does not use one</h4>

@@ -1,0 +1,486 @@
+/* The document pages: drivers, teams, teammates, the page of each finding, the lists, and the page for an address that does not exist
+   (tools/page-template.mjs). They look like the site with a panel open: the grey drawing of the front page behind, panels of the same brushed metal
+   in front (stage.css), names in the display type, figures in the monospaced type of the ratings, the red of the car for a peak and the blue of the
+   ratings' buttons for the way into the site. */
+.document-page {
+  --display: 'Lexend Giga', system-ui, sans-serif;
+  --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --text: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --car: #fa1802;
+  --driver: #091a9c;
+  --ahead: #0b7a45;
+  --behind: #c2185b;
+  min-height: 100vh;
+  margin: 0;
+  color: #07080b;
+  background: #c4c6cb url('/assets/art/mono.webp') center top / cover fixed;
+}
+
+/* the name of the site and the links to its pages, as on the front page */
+.document-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 28px;
+  padding: 16px clamp(18px, 5vw, 72px);
+}
+.document-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--display);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.document-brand b {
+  font-weight: 700;
+}
+.brand-car {
+  color: var(--car);
+}
+.brand-driver {
+  color: var(--driver);
+}
+.document-links,
+.document-foot nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  font-family: var(--display);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.document-links a,
+.document-foot nav a {
+  padding: 3px 0;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.document-links a:hover,
+.document-links a:focus-visible,
+.document-foot nav a:hover,
+.document-foot nav a:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+.document {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 4px 16px 48px;
+}
+.document-trail {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.document-trail ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.document-trail li + li::before {
+  content: '›';
+  margin-right: 4px;
+}
+
+/* a panel: the metal of the site (stage.css), denser because it is read at length */
+.document-panel {
+  --panel-plate: rgb(238 240 244 / 0.88);
+  padding: 22px clamp(16px, 4vw, 28px) 24px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.document-panel a {
+  color: var(--accent);
+}
+.panel-title {
+  margin: 0 0 4px;
+  font-family: var(--display);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.panel-note {
+  margin: 0 0 14px;
+  color: var(--ink-3);
+  font-size: 13.5px;
+}
+
+/* the first panel: the name, then the two figures and the ways into the site */
+.profile-name {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  line-height: 1.05;
+}
+.profile-subject {
+  margin: 0 0 10px;
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.profile-first {
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.profile-surname {
+  font-family: var(--display);
+  font-size: clamp(30px, 6vw, 46px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+}
+.profile-versus {
+  color: var(--ink-3);
+  font-size: 0.5em;
+  letter-spacing: 0.14em;
+  vertical-align: middle;
+}
+.list-title {
+  margin: 0;
+  font-size: clamp(26px, 4.5vw, 36px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+.profile-meta {
+  margin: 10px 0 0;
+  color: var(--ink-2);
+}
+.profile-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px 28px;
+  margin: 22px 0 0;
+}
+.profile-figure {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.figure-label {
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.figure-value {
+  margin: 4px 0 2px;
+  font-family: var(--mono);
+  font-size: clamp(52px, 10vw, 76px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.figure-peak .figure-value {
+  color: var(--car);
+}
+.figure-note {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+.document-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 20px;
+  border: 1px solid var(--ink);
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.45);
+  font-family: var(--display);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.document-panel a.document-button {
+  color: var(--ink);
+}
+.document-panel a.document-button.primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.document-panel a.document-button:hover,
+.document-panel a.document-button:focus-visible {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+
+/* teammates: who, where and when, and the gap as a bar either side of level (green ahead, pink behind, as in the Graph) */
+.versus-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.versus-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(70px, 1fr) 56px 74px;
+  align-items: center;
+  gap: 4px 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--grid);
+}
+.versus-who {
+  min-width: 0;
+  font-weight: 600;
+}
+.versus-meta {
+  display: block;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 400;
+}
+.versus-bar {
+  position: relative;
+  height: 12px;
+  background:
+    linear-gradient(var(--rule), var(--rule)) center / 1px 100% no-repeat,
+    rgb(10 11 15 / 0.06);
+}
+.versus-bar i {
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+}
+.versus-bar i.ahead {
+  left: 50%;
+  background: var(--ahead);
+}
+.versus-bar i.behind {
+  right: 50%;
+  background: var(--behind);
+}
+.versus-gap {
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 800;
+  text-align: right;
+}
+.versus-gap.ahead {
+  color: var(--ahead);
+}
+.versus-gap.behind {
+  color: var(--behind);
+}
+.versus-link {
+  font-family: var(--display);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-align: right;
+  text-transform: uppercase;
+}
+.driver-list,
+.question-list {
+  columns: 2 240px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.driver-list li,
+.question-list li {
+  padding: 4px 0;
+  break-inside: avoid;
+}
+
+/* tables, as the ratings list them */
+.document-table-scroll {
+  overflow-x: auto; /* a wide table scrolls on a narrow screen, the page does not */
+}
+.document-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+.document-table th,
+.document-table td {
+  padding: 5px 12px 5px 0;
+  border-bottom: 1px solid var(--grid);
+  text-align: left;
+  vertical-align: top;
+}
+.document-table thead th {
+  color: var(--ink-3);
+  font-family: var(--display);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.document-table tbody th {
+  font-weight: 600;
+}
+.document-table .number {
+  text-align: right;
+  white-space: nowrap;
+}
+.document-table .rating {
+  font-weight: 800;
+}
+
+/* the questions people also ask, with their answers */
+.questions {
+  margin: 0;
+}
+.questions dt {
+  margin-top: 14px;
+  font-weight: 700;
+}
+.questions dt:first-child {
+  margin-top: 6px;
+}
+.questions dd {
+  margin: 2px 0 0;
+}
+
+/* the chart of a rating over time, drawn when the page is written */
+.rating-chart {
+  margin: 6px 0 0;
+}
+.rating-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.rating-chart figcaption,
+.chart-legend {
+  margin: 6px 0 0;
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+.chart-grid {
+  stroke: var(--grid);
+  stroke-width: 1;
+}
+.chart-field {
+  stroke: var(--rule);
+  stroke-dasharray: 4 4;
+}
+.chart-tick {
+  fill: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.chart-line {
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linejoin: round;
+}
+.rating-chart-driver .chart-series-1 {
+  --line: var(--driver);
+}
+.rating-chart-car .chart-series-1,
+.rating-chart-pair .chart-series-1 {
+  --line: var(--car);
+}
+.rating-chart-pair .chart-series-2 {
+  --line: var(--driver);
+}
+.chart-line,
+.chart-key::before {
+  stroke: var(--line);
+}
+.chart-point {
+  fill: var(--line);
+}
+.chart-legend {
+  display: flex;
+  gap: 18px;
+}
+.chart-key::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 3px;
+  margin-right: 6px;
+  vertical-align: middle;
+  background: var(--line);
+}
+
+/* the page of a finding: its slide, as on the card of the Insights, in the flow of the page */
+.insight-document {
+  position: relative; /* the notes behind the "i" are placed in it (info-tip.js) */
+}
+.insight-document .deck-card {
+  position: static;
+  display: block;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  padding: 18px clamp(12px, 3vw, 20px) 8px;
+}
+.insight-document .deck-slide {
+  height: auto;
+  overflow: visible;
+  padding: 0;
+}
+.document-neighbours {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 18px 0 0;
+}
+
+.document-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 24px;
+  padding: 8px clamp(18px, 5vw, 72px) 28px;
+  font-size: 12.5px;
+}
+.document-foot p {
+  max-width: 64ch;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .versus-row {
+    grid-template-columns: minmax(0, 1fr) 56px;
+  }
+  .versus-bar {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .versus-gap {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .versus-link {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}

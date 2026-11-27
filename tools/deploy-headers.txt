@@ -10,3 +10,7 @@
   X-Content-Type-Options: nosniff
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
   Cross-Origin-Opener-Policy: same-origin
+
+# The same site at Cloudflare's own address (car-or-driver.pages.dev) is a copy: search engines leave it out and list carordriver.com.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex

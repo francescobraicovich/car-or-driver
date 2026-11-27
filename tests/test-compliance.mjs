@@ -141,22 +141,23 @@ try {
   const published = (await walk('dist')).map((file) => relative('dist', file));
   assert.ok(!published.some((file) => file.endsWith('.csv')), 'the source tables are not published');
   assert.ok(
-    !published.some((file) => /^site\/(?:assets\/(?:models|f1-driver|f1-mercedes-car)\/|js\/stage-model-)/.test(file)),
+    !published.some((file) => /^(?:assets\/(?:models|f1-driver|f1-mercedes-car)\/|js\/stage-model-)/.test(file)),
     'the reference-only 3D experiment is retained outside the restored production site',
   );
   assert.ok(published.includes('_headers'), 'the headers file is published');
+  assert.ok(published.includes('_redirects'), 'the redirects from the old addresses under /site/ are published');
   assert.ok(published.includes('packages/core/src/unified/scenario.js'), 'the lazy forecast dependency is published');
   assert.ok(!published.includes('packages/core/src/dataset.js'), 'model-building code is not published');
   // Inspect the assembled JavaScript independently of the builder's traversal, including lazy imports and re-exports.
-  for (const file of published.filter((name) => /^(?:site\/js|packages\/core)\/.*\.js$/.test(name))) {
+  for (const file of published.filter((name) => /^(?:js|packages\/core)\/.*\.js$/.test(name))) {
     const source = await read(join('dist', file));
     const references = source.matchAll(/(?:\bfrom\s*|\bimport\s*(?:\(\s*)?)["'](\.[^"']+)["']/g);
     for (const [, reference] of references)
       assert.ok(existsSync(resolve('dist', dirname(file), reference)), `${file} imports missing ${reference}`);
   }
   for (const file of [
-    'site/assets/tracks.json',
-    'site/assets/tracks-licence.txt',
+    'assets/tracks.json',
+    'assets/tracks-licence.txt',
     'data/race-laps/2026.json',
     'data/teammate-graph.json',
     'data/retrospective.json',

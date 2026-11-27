@@ -1,6 +1,6 @@
 // The full methodology: a card of slides (slide-deck.js), one for each part of the text (methodology-content.js), with its formulas typeset, its
 // settings filled from the loaded model, its teaching figures (methodology-interactives.js) and the figures and tables drawn from the published
-// model (methodology-figures.js). It is the page `methodology-full` (#/methodology/full); its ids keep the prefix `methodology`.
+// model (methodology-figures.js). It is the page `methodology-full` (/methodology/full); its ids keep the prefix `methodology`.
 import { state } from './state.js';
 import { summarizeBacktest } from '../../packages/core/src/backtest.js';
 import { CONTENT_HTML } from './methodology-content.js';
@@ -120,7 +120,7 @@ export function initMethodology() {
     title: 'Full methodology',
     before:
       '<p class="deck-intro">How race results become driver ratings, car ratings and forecasts, and how well they hold up.</p>' +
-      '<p class="methodology-note">This methodology was written by AI and corrected by the author of this website. For the idea in plain words, read the <a href="#/methodology/simple">simple methodology</a>.</p>',
+      '<p class="methodology-note">This methodology was written by AI and corrected by the author of this website. For the idea in plain words, read the <a href="/methodology/simple">simple methodology</a>.</p>',
     groups: [{ title: 'Method', slides }],
     firstShown: () => {
       drawOddsCurve($('methodologyOddsChart'), state.model?.params?.scale ?? 75);

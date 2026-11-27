@@ -3,6 +3,7 @@
 // `contactEmail` must be set before the site is published: `npm run check:publication` fails while it is empty, and the deploy workflow runs that check.
 export const SITE = {
   name: 'Car or Driver',
+  address: 'https://carordriver.com/', // where the site is published: the pages give it as their own address (tools/build-pages.mjs)
   operatorName: 'Francesco Braicovich',
   operatorCountry: 'Italy',
   contactEmail: 'carordriver@proton.me',

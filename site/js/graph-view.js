@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { setRace } from './ratings-view.js';
 import { esc } from './utils.js';
+import { goTo } from './address.js';
 
 const $ = (id) => document.getElementById(id);
 const fullDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
@@ -284,7 +285,7 @@ export function initGraph() {
   async function load() {
     if (data) return sync();
     try {
-      const response = await fetch('../data/teammate-graph.json', { cache: 'no-cache' });
+      const response = await fetch('/data/teammate-graph.json', { cache: 'no-cache' });
       if (!response.ok) throw Error(`HTTP ${response.status}`);
       data = await response.json();
       if (data.format !== 4 || data.sourceHash !== state.modelSourceHash) throw Error('Graph data does not match the ratings');
@@ -347,9 +348,9 @@ export function initGraph() {
     picker.focus();
   });
   timeline.addEventListener('input', () => setRace(Number(timeline.value)));
-  $('graphClose').addEventListener('click', () => (location.hash = '#/'));
+  $('graphClose').addEventListener('click', () => goTo('/'));
   window.addEventListener('keydown', (event) => {
-    if (current() && event.key === 'Escape' && !event.defaultPrevented) location.hash = '#/';
+    if (current() && event.key === 'Escape' && !event.defaultPrevented) goTo('/');
   });
   window.addEventListener('f1:race-changed', () => {
     if (current() && data) buildAt(state.raceIndex);

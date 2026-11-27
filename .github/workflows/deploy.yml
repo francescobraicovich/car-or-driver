@@ -4,7 +4,7 @@ name: Deploy to Cloudflare Pages
 # every response. Only Cloudflare Pages reads _headers, so this is the only deploy target that matches the notice.
 #
 # One-time setup (see docs/deployment.md, route B): create the Pages project named below, add the secrets CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID,
-# and set the repository variable SITE_URL to the address of the site (for example https://car-or-driver.pages.dev/). The job is skipped until SITE_URL
+# and set the repository variable SITE_URL to the address of the site (for example https://carordriver.com/). The job is skipped until SITE_URL
 # is set, and in forks, which have no access to the secrets.
 
 on:

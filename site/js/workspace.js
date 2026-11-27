@@ -1,45 +1,14 @@
-// Page shell: hash routing between the pages, and the weekend and history state kept in the URL.
+// Page shell: moving between the pages by their paths (address.js), and the weekend and history state kept in the URL.
 import { state } from './state.js';
 import { setRace } from './ratings-view.js';
 import { createHistoryView } from './history-view.js';
 import { DECK_PAGES, panelView } from './stage-pages.js';
+import { ALIASES, ROUTES, currentAddress, goTo, isOldAddress, isPagePath } from './address.js';
+import { PAGE_METADATA } from './page-metadata.js';
 
 // Every route is the front page: the ratings are the panel on it, kept open; the history and the head to head are views over the ratings, in the
 // panel; Insights, Prediction, Methodology and About & Privacy each open a card over it.
-const ROUTES = [
-  '/',
-  '/ratings',
-  '/history',
-  '/head-to-head',
-  '/prediction',
-  '/graph',
-  '/insights',
-  '/methodology',
-  '/methodology/simple',
-  '/methodology/full',
-  '/about',
-];
 const DEFAULT_ROUTE = '/';
-// Hashes from earlier versions of the site (and of the shared links in the wild).
-const ALIASES = {
-  '/home': '/',
-  '/geek/weekend': '/ratings',
-  '/geek/data': '/ratings',
-  ratings: '/ratings',
-  '/simple/ratings': '/ratings',
-  '/simple/rankings': '/ratings',
-  charts: '/history',
-  '/simple/history': '/history',
-  '/geek/explore': '/history',
-  lab: '/history',
-  predictor: '/head-to-head',
-  '/predictor': '/head-to-head',
-  method: '/methodology',
-  '/method': '/methodology',
-  '/how-it-works': '/methodology',
-  backtest: '/methodology',
-  '/geek/models': '/methodology',
-};
 const VIEW_IDS = { history: 'historyView', 'head-to-head': 'headToHeadView' };
 const $ = (id) => document.getElementById(id);
 
@@ -72,13 +41,14 @@ export function initWorkspace() {
 
   function display() {
     setPage();
+    document.title = PAGE_METADATA[route].title;
     $('chartValueTooltip')?.setAttribute('hidden', '');
-    window.dispatchEvent(new CustomEvent('f1:workspace-changed', { detail: { page: route } }));
+    window.dispatchEvent(new CustomEvent('f1:workspace-changed', { detail: { page: route, slide: deckSlide } }));
   }
 
   function parseURL() {
-    const [path, search = ''] = location.hash.slice(1).split('?');
-    let nextRoute = path === '/privacy' ? '/about' : ROUTES.includes(path) ? path : ALIASES[path] || DEFAULT_ROUTE;
+    const { path, search } = currentAddress();
+    let nextRoute = ROUTES.includes(path) ? path : ALIASES[path] || DEFAULT_ROUTE;
     const params = new URLSearchParams(search.length <= 16000 ? search : '');
     const accepted = params.get('v') === '1' ? params : new URLSearchParams();
     if (nextRoute === '/methodology' && /^method-/.test(accepted.get('slide') || '')) nextRoute = '/methodology/full';
@@ -98,14 +68,14 @@ export function initWorkspace() {
   function saveURL() {
     if (restoring) return;
     if (route === '/') {
-      window.history.replaceState(null, '', '#/'); // the front page has no options to remember
+      window.history.replaceState(null, '', '/'); // the front page has no options to remember
       return;
     }
     const params = new URLSearchParams({ v: '1' });
     history.writeURL(params);
     if (raceId) params.set('race', raceId);
     if (DECK_PAGES.includes(pageName()) && deckSlide) params.set('slide', deckSlide);
-    window.history.replaceState(null, '', `#${route}?${params}`);
+    window.history.replaceState(null, '', `${route}?${params}`);
   }
 
   function rememberRace() {
@@ -149,12 +119,12 @@ export function initWorkspace() {
   let openedFromRatings = false;
   function openView(path) {
     openedFromRatings = true;
-    location.hash = path;
+    goTo(path);
   }
   /** Back to the ratings: one step back in the browser's history when the view was opened from them (so that its Back button does not make the browser's back button return to the view), otherwise to the ratings. */
   function goBack() {
     if (openedFromRatings) window.history.back();
-    else location.hash = '/ratings';
+    else goTo('/ratings');
   }
 
   function navigate() {
@@ -207,11 +177,26 @@ export function initWorkspace() {
     setPage();
     saveURL();
   });
-  window.addEventListener('hashchange', navigate);
+  window.addEventListener('f1:address-changed', navigate);
+  window.addEventListener('popstate', navigate);
+  window.addEventListener('hashchange', () => {
+    if (isOldAddress()) navigate(); // a link in the old form (#/ratings) opens its page, and the address becomes its path
+  });
+  // a link to a page is followed without loading a new document (a link to another document, such as a driver's page, loads it)
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest?.('a[href]');
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (link.target || link.hasAttribute('download')) return;
+    if (link.getAttribute('href').startsWith('#')) return; // a place on this page, or a link in the old form (which the hashchange follows)
+    const url = new URL(link.href);
+    if (url.origin !== location.origin || !isPagePath(url.pathname.replace(/\/+$/, '') || '/')) return;
+    event.preventDefault();
+    goTo(`${url.pathname}${url.search}`);
+  });
   $('stage').addEventListener('pointerdown', (event) => {
     if (!DECK_PAGES.includes(pageName())) return;
     if (event.target.closest('.deck-card, .deck-list, .graph-page, .prediction-page, .stage-top, .stage-bottom, .track')) return;
-    location.hash = '#/';
+    goTo('/');
   });
   window.addEventListener('f1:race-changed', () => {
     rememberRace();
